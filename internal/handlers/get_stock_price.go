@@ -29,6 +29,12 @@ func GetStockPrice(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("Inquiring current stock value of id=%v", params.ID)
 
+	if params.ID == 0 {
+		log.Debugf("Request without an ID (id=%v), as such rejected the request", params.ID)
+		api.RequestMalformedHandler(w, "Could not process the request as it is missing an ID to lookup!")
+		return
+	}
+
 	db, err := sql.Open("sqlite", "./data.db")
 	defer db.Close()
 
@@ -43,6 +49,11 @@ func GetStockPrice(w http.ResponseWriter, r *http.Request) {
 	err = resp.Scan(&price)
 
 	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			log.Debugf("No rows found for the given ID (id=%v)", params.ID)
+			api.RequestNothingFoundHandler(w, "Could not find a stock with the provided id")
+			return
+		}
 		log.Error(err)
 		api.InternalErrorHandler(w)
 		return
