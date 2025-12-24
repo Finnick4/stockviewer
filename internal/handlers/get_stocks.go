@@ -10,22 +10,11 @@ import (
 
 	_ "github.com/glebarez/go-sqlite"
 
-	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
 func GetStocks(w http.ResponseWriter, r *http.Request) {
-	var params = api.StockGetParams{}
-	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
-
-	// get parameters
-	err = decoder.Decode(&params, r.URL.Query())
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
 
 	log.Debugf("Inquiring all stocks")
 

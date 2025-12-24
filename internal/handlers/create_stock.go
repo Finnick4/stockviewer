@@ -30,6 +30,12 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		api.InternalErrorHandler(w)
 		return
 	}
+	if params.Name == "" || params.InitPrice <= 0 {
+		log.Debugf("Could not accept the request as at least one parameter is invalid (Either the name is missing or the initial price is nonexistent or <= 0): name='%v', initprice=%v", params.Name, params.InitPrice)
+		api.RequestMalformedHandler(w, "Could not process the request as the parameters are malformed: Either the name is missing or the initial price is nonexistent or <= 0")
+		return
+	}
+
 	currentTimeStamp := time.Now().Unix()
 
 	db, err := sql.Open("sqlite", "./data.db")

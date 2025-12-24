@@ -15,9 +15,6 @@ type StockGetPriceParams struct {
 	ID int64
 }
 
-type StockGetParams struct {
-}
-
 /* Responses */
 
 type CreateStockResponse struct {
