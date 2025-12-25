@@ -3,10 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"stockviewer/internal/database"
 
 	"stockviewer/api"
-
-	"database/sql"
 
 	_ "github.com/glebarez/go-sqlite"
 
@@ -29,24 +28,13 @@ func GetStockPrice(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("Inquiring current stock value of id=%v", params.ID)
 
-	if params.ID == 0 {
+	if params.ID <= 0 {
 		log.Debugf("Request without an ID (id=%v), as such rejected the request", params.ID)
 		api.RequestMalformedHandler(w, "Could not process the request as it is missing an ID to lookup!")
 		return
 	}
 
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
-
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
-
-	resp := db.QueryRow(`SELECT price FROM stockprice WHERE stockid=? AND timestamp=(SELECT latestUpdate FROM stocks WHERE id=?);`, params.ID, params.ID)
-	var price float64
-	err = resp.Scan(&price)
+	price, err := database.GetStockPrice(params.ID)
 
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {

@@ -5,12 +5,9 @@ import (
 	"net/http"
 
 	"stockviewer/api"
-
-	"database/sql"
+	"stockviewer/internal/database"
 
 	_ "github.com/glebarez/go-sqlite"
-
-	"time"
 
 	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
@@ -36,40 +33,12 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currentTimeStamp := time.Now().Unix()
-
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
-
+	lastID, err := database.CreateStock(params.Name, params.InitPrice)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
 		return
 	}
-
-	resp, err := db.Exec(`INSERT INTO stocks (name, latestUpdate) VALUES (?, ?);`, params.Name, currentTimeStamp)
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
-
-	lastID, err := resp.LastInsertId()
-
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
-
-	_, err = db.Exec(`INSERT INTO stockprice (stockid, price, timestamp) VALUES (?, ?, ?);`, lastID, params.InitPrice, currentTimeStamp)
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
-
-	log.Debugf("Successfully created stock '%v' (id=%v) at t=%v with an initial value of %v\n", params.Name, lastID, currentTimeStamp, params.InitPrice)
 
 	var response = api.CreateStockResponse{
 		Code: http.StatusOK,
