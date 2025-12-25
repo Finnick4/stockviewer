@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"stockviewer/internal/database"
 )
 
 /* Parameters */
@@ -26,15 +27,9 @@ type StockGetPriceResponse struct {
 	Price float64
 }
 
-type CurrentStockData struct {
-	ID    int64
-	Name  string
-	Price float64
-}
-
 type StockGetResponse struct {
 	Code int
-	Data []CurrentStockData
+	Data []database.CurrentStockData
 }
 
 /* Others */

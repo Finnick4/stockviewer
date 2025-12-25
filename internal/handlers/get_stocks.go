@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"stockviewer/internal/database"
 
 	"stockviewer/api"
 
@@ -36,10 +37,10 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var data []api.CurrentStockData
+	var data []database.CurrentStockData
 
 	for rows.Next() {
-		var currentData api.CurrentStockData
+		var currentData database.CurrentStockData
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price)
 		if err != nil {
 			log.Error(err)
