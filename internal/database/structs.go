@@ -1,7 +1,12 @@
 package database
 
 type CurrentStockData struct {
-	ID    int64
+	Id    int64
 	Name  string
+	Price float64
+}
+
+type StockPrice struct {
+	Id    int64
 	Price float64
 }
