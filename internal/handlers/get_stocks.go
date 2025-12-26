@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/internal/database"
+	"time"
 
 	"stockviewer/api"
 
@@ -13,6 +14,7 @@ import (
 )
 
 func GetStocks(w http.ResponseWriter, r *http.Request) {
+	t := time.Now()
 	log.Debugf("Inquiring all stocks")
 
 	data, err := database.GetCurrentStocksSnapshot()
@@ -35,4 +37,5 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 		api.InternalErrorHandler(w)
 		return
 	}
+	log.Debugf("Time took to get all stocks was %v", time.Since(t))
 }

@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"stockviewer/api"
 	"stockviewer/internal/database"
@@ -14,6 +15,7 @@ import (
 )
 
 func CreateStock(w http.ResponseWriter, r *http.Request) {
+	t := time.Now()
 	var params = api.StockCreateParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
@@ -52,4 +54,5 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		api.InternalErrorHandler(w)
 		return
 	}
+	log.Debugf("Time took to create stock was %v", time.Since(t))
 }

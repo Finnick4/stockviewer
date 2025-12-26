@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/internal/database"
+	"time"
 
 	"stockviewer/api"
 
@@ -14,6 +15,7 @@ import (
 )
 
 func GetStockPrice(w http.ResponseWriter, r *http.Request) {
+	t := time.Now()
 	var params = api.StockGetPriceParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
@@ -59,4 +61,5 @@ func GetStockPrice(w http.ResponseWriter, r *http.Request) {
 		api.InternalErrorHandler(w)
 		return
 	}
+	log.Debugf("Time took to get a stock price was %v", time.Since(t))
 }

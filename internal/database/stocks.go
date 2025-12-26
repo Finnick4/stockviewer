@@ -164,9 +164,9 @@ func SetStockPrices(stocks []StockPrice) {
 
 	currentTimeStamp := time.Now().Unix()
 
-	var placeholders []string
-	var vals []interface{}
-	var ids []int64
+	placeholders := make([]string, 0, len(stocks))
+	vals := make([]interface{}, 0, len(stocks))
+	ids := make([]int64, 0, len(stocks))
 
 	for _, elem := range stocks {
 		placeholders = append(placeholders, "(?, ?, ?)")
