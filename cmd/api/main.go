@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 	"stockviewer/internal/handlers"
+	"stockviewer/internal/stocks"
+	"time"
 
 	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
@@ -42,6 +44,19 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// action loops
+	go func() {
+		log.Info("Started Stepper Loop")
+		// stepper
+		for {
+			log.Debug("Initialising one step")
+			go func() {
+				stocks.Step()
+			}()
+			time.Sleep(time.Duration(60) * time.Second)
+		}
+	}()
 
 	log.Info("Starting GO API service...")
 
