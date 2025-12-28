@@ -47,7 +47,7 @@ func Step() {
 		stock.Id = val.Id
 
 		var factor float64 = float64((rand.Int63()%2050)-1000) / 1000.0
-		stock.Price = val.Price + math.Pow(math.Log10(val.Price), 2)*factor
+		stock.Price = val.Price + math.Pow(math.Log10(val.Price)+1, 2)*factor
 
 		newStocks = append(newStocks, *stock)
 
