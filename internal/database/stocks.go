@@ -159,6 +159,38 @@ func GetStockIds() ([]int64, error) {
 	return data, nil
 }
 
+func GetStockPricesBetween(id int64, timeFirst int64, timeLast int64) ([]StockPriceTime, error) {
+	log.Debugf("Getting all prices of stock %v between %v and %v", id, timeFirst, timeLast)
+
+	db, err := sql.Open("sqlite", "./data.db")
+	defer db.Close()
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	rows, err := db.Query(`SELECT price, timestamp FROM stockprice WHERE timestamp >= ? AND timestamp <= ? AND stockid = ?;`, timeFirst, timeLast, id)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var data []StockPriceTime
+
+	for rows.Next() {
+		currentData := StockPriceTime{Id: id}
+		err = rows.Scan(&currentData.Price, &currentData.Timestamp)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+	return data, nil
+}
+
 func SetStockPrices(stocks []StockPrice) {
 	log.Debug("Setting new stock prices")
 
