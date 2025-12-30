@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -12,28 +11,23 @@ import (
 func CreateStock(name string, initPrice float64) (int64, error) {
 	currentTimeStamp := time.Now().Unix()
 
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
+	db := getDB()
+
+	resp := db.QueryRow(`INSERT INTO stocks (name, "latestUpdate") VALUES ($1, $2) RETURNING id;`, name, currentTimeStamp)
+
+	if resp.Err() != nil {
+		log.Error(resp.Err())
+		return 0, resp.Err()
+	}
+	var lastID int64
+	err := resp.Scan(&lastID)
 
 	if err != nil {
 		log.Error(err)
 		return 0, err
 	}
 
-	resp, err := db.Exec(`INSERT INTO stocks (Name, latestUpdate) VALUES (?, ?);`, name, currentTimeStamp)
-	if err != nil {
-		log.Error(err)
-		return 0, err
-	}
-
-	lastID, err := resp.LastInsertId()
-
-	if err != nil {
-		log.Error(err)
-		return 0, err
-	}
-
-	_, err = db.Exec(`INSERT INTO stockprice (stockid, Price, timestamp) VALUES (?, ?, ?);`, lastID, initPrice, currentTimeStamp)
+	_, err = db.Exec(`INSERT INTO stockprice (stockid, price, timestamp) VALUES ($1, $2, $3);`, lastID, initPrice, currentTimeStamp)
 	if err != nil {
 		log.Error(err)
 		return 0, err
@@ -44,17 +38,11 @@ func CreateStock(name string, initPrice float64) (int64, error) {
 }
 
 func GetStockPrice(id int64) (float64, error) {
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
+	db := getDB()
 
-	if err != nil {
-		log.Error(err)
-		return 0, err
-	}
-
-	resp := db.QueryRow(`SELECT Price FROM stockprice WHERE stockid=? AND timestamp=(SELECT latestUpdate FROM stocks WHERE Id=?);`, id, id)
+	resp := db.QueryRow(`SELECT price FROM stockprice WHERE stockid=$1 AND timestamp=(SELECT "latestUpdate" FROM stocks WHERE id=$1);`, id)
 	var price float64
-	err = resp.Scan(&price)
+	err := resp.Scan(&price)
 
 	if err != nil {
 		log.Error(err)
@@ -64,17 +52,10 @@ func GetStockPrice(id int64) (float64, error) {
 }
 
 func GetStockPrices() ([]StockPrice, error) {
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
+	db := getDB()
 
 	log.Debug("Getting all current stock prices")
-
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-
-	rows, err := db.Query(`SELECT stocks.Id, stockprice.Price FROM stocks JOIN stockprice ON stocks.Id = stockprice.stockid AND stockprice.timestamp=stocks.latestUpdate;`)
+	rows, err := db.Query(`SELECT "stocks".id, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate";`)
 
 	if err != nil {
 		log.Error(err)
@@ -97,15 +78,9 @@ func GetStockPrices() ([]StockPrice, error) {
 }
 
 func GetCurrentStocksSnapshot() ([]CurrentStockData, error) {
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
+	db := getDB()
 
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-
-	rows, err := db.Query(`SELECT stocks.Id, stocks.Name, stockprice.Price FROM stocks JOIN stockprice ON stocks.Id = stockprice.stockid AND stockprice.timestamp=stocks.latestUpdate;`)
+	rows, err := db.Query(`SELECT stocks.id, stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate";`)
 
 	if err != nil {
 		log.Error(err)
@@ -130,13 +105,7 @@ func GetCurrentStocksSnapshot() ([]CurrentStockData, error) {
 func GetStockIds() ([]int64, error) {
 	log.Debug("Getting all stock IDs")
 
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
-
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
+	db := getDB()
 
 	rows, err := db.Query(`SELECT stocks.id from stocks;`)
 	if err != nil {
@@ -162,15 +131,9 @@ func GetStockIds() ([]int64, error) {
 func GetStockPricesBetween(id int64, timeFirst int64, timeLast int64) ([]StockPriceTime, error) {
 	log.Debugf("Getting all prices of stock %v between %v and %v", id, timeFirst, timeLast)
 
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
+	db := getDB()
 
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-
-	rows, err := db.Query(`SELECT price, timestamp FROM stockprice WHERE timestamp >= ? AND timestamp <= ? AND stockid = ?;`, timeFirst, timeLast, id)
+	rows, err := db.Query(`SELECT price, timestamp FROM stockprice WHERE timestamp >= $1 AND timestamp <= $2 AND stockid = $3;`, timeFirst, timeLast, id)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -206,15 +169,10 @@ func SetStockPrices(stocks []StockPrice) {
 		ids = append(ids, elem.Id)
 	}
 
-	db, err := sql.Open("sqlite", "./data.db")
-	defer db.Close()
+	db := getDB()
 
-	if err != nil {
-		log.Error(err)
-		return
-	}
 	insertStatement := fmt.Sprintf(`INSERT INTO stockprice (stockid, price, timestamp) VALUES %v;`, strings.Join(placeholders, ","))
-	_, err = db.Exec(insertStatement, vals...)
+	_, err := db.Exec(insertStatement, vals...)
 
 	if err != nil {
 		log.Error(err)

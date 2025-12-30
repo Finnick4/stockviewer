@@ -21,6 +21,10 @@ func Step() {
 		log.Error(err)
 		return
 	}
+	if len(stocks) == 0 {
+		log.Debug("As there are no stocks with prices present, stepping was aborted!")
+		return
+	}
 
 	newStocks := make([]database.StockPrice, 0, len(stocks))
 
