@@ -6,8 +6,11 @@ services:
     shm_size: 128mb
     ports:
       - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - pg_volume:/var/lib/postgresql
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-
+volumes:
+  pg_volume:
