@@ -162,9 +162,10 @@ func SetStockPrices(stocks []StockPrice) {
 	placeholders := make([]string, 0, len(stocks))
 	vals := make([]interface{}, 0, len(stocks))
 	ids := make([]int64, 0, len(stocks))
-
+	count := 1
 	for _, elem := range stocks {
-		placeholders = append(placeholders, "(?, ?, ?)")
+		placeholders = append(placeholders, fmt.Sprintf("($%v, $%v, $%v)", count, count+1, count+2))
+		count += 3
 		vals = append(vals, elem.Id, elem.Price, currentTimeStamp)
 		ids = append(ids, elem.Id)
 	}
@@ -180,7 +181,7 @@ func SetStockPrices(stocks []StockPrice) {
 	}
 
 	qIds := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(ids)), ","), "[]")
-	insertStatement = fmt.Sprintf("UPDATE stocks SET latestUpdate = %v WHERE id IN (%v);", currentTimeStamp, qIds)
+	insertStatement = fmt.Sprintf(`UPDATE stocks SET "latestUpdate" = %v WHERE id IN (%v);`, currentTimeStamp, qIds)
 
 	_, err = db.Exec(insertStatement)
 	if err != nil {
