@@ -3,16 +3,16 @@ package database
 type CurrentStockData struct {
 	Id    int64
 	Name  string
-	Price float64
+	Price int64
 }
 
 type StockPrice struct {
 	Id    int64
-	Price float64
+	Price int64
 }
 
 type StockPriceTime struct {
 	Id        int64
-	Price     float64
+	Price     int64
 	Timestamp int64
 }

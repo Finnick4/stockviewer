@@ -24,7 +24,7 @@ type CreateStockResponse struct {
 }
 type StockGetPriceResponse struct {
 	Code  int
-	Price float64
+	Price int64
 }
 
 type StockGetResponse struct {

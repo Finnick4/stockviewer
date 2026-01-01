@@ -37,11 +37,11 @@ func CreateStock(name string, initPrice float64) (int64, error) {
 	return lastID, nil
 }
 
-func GetStockPrice(id int64) (float64, error) {
+func GetStockPrice(id int64) (int64, error) {
 	db := getDB()
 
 	resp := db.QueryRow(`SELECT price FROM stockprice WHERE stockid=$1 AND timestamp=(SELECT "latestUpdate" FROM stocks WHERE id=$1);`, id)
-	var price float64
+	var price int64
 	err := resp.Scan(&price)
 
 	if err != nil {
@@ -102,12 +102,12 @@ func GetCurrentStocksSnapshot() ([]CurrentStockData, error) {
 	return data, nil
 }
 
-func GetStockIds() ([]int64, error) {
+func GetActiveStockIds() ([]int64, error) {
 	log.Debug("Getting all stock IDs")
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT stocks.id from stocks;`)
+	rows, err := db.Query(`SELECT stocks.id from stocks WHERE stocks.status = 1;`)
 	if err != nil {
 		log.Error(err)
 		return nil, err

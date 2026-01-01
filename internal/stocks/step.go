@@ -28,7 +28,7 @@ func Step() {
 
 	newStocks := make([]database.StockPrice, 0, len(stocks))
 
-	ids, err := database.GetStockIds()
+	ids, err := database.GetActiveStockIds()
 
 	if err != nil {
 		log.Error(err)
@@ -51,7 +51,7 @@ func Step() {
 		stock.Id = val.Id
 
 		var factor float64 = float64((rand.Int63()%2050)-1000) / 1000.0
-		stock.Price = val.Price + math.Pow(math.Log10(val.Price)+1, 2)*factor
+		stock.Price = int64((float64(val.Price) + math.Pow(math.Log10(float64(val.Price/100))+1, 2)*factor) * 100)
 
 		newStocks = append(newStocks, *stock)
 
