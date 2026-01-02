@@ -73,7 +73,7 @@ func InitialiseDB() {
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS "stocks" (
 	"id"	SERIAL PRIMARY KEY NOT NULL UNIQUE,
 	"name"	VARCHAR(32) NOT NULL,
-	"latestUpdate"	INTEGER NOT NULL,
+	"latestUpdate"	TIMESTAMPTZ NOT NULL,
 	"status" INTEGER DEFAULT 1
 );`)
 	if err != nil {
@@ -83,7 +83,7 @@ func InitialiseDB() {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockprice" (
 	"stockid"	INTEGER NOT NULL,
 	"price"	BIGINT NOT NULL,
-	"timestamp"	INTEGER NOT NULL,
+	"timestamp"	TIMESTAMPTZ NOT NULL,
 	CONSTRAINT "fk_stockid" FOREIGN KEY("stockid") REFERENCES stocks(id) ON DELETE CASCADE
 );`)
 	if err != nil {

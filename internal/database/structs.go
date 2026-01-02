@@ -1,5 +1,7 @@
 package database
 
+import "time"
+
 type CurrentStockData struct {
 	Id    int64
 	Name  string
@@ -14,5 +16,5 @@ type StockPrice struct {
 type StockPriceTime struct {
 	Id        int64
 	Price     int64
-	Timestamp int64
+	Timestamp time.Time
 }

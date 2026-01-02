@@ -9,7 +9,7 @@ import (
 )
 
 func CreateStock(name string, initPrice float64) (int64, error) {
-	currentTimeStamp := time.Now().Unix()
+	currentTimeStamp := time.Now()
 
 	db := getDB()
 
@@ -128,36 +128,10 @@ func GetActiveStockIds() ([]int64, error) {
 	return data, nil
 }
 
-func GetStockPricesBetween(id int64, timeFirst int64, timeLast int64) ([]StockPriceTime, error) {
-	log.Debugf("Getting all prices of stock %v between %v and %v", id, timeFirst, timeLast)
-
-	db := getDB()
-
-	rows, err := db.Query(`SELECT price, timestamp FROM stockprice WHERE timestamp >= $1 AND timestamp <= $2 AND stockid = $3;`, timeFirst, timeLast, id)
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	var data []StockPriceTime
-
-	for rows.Next() {
-		currentData := StockPriceTime{Id: id}
-		err = rows.Scan(&currentData.Price, &currentData.Timestamp)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-		data = append(data, currentData)
-	}
-	return data, nil
-}
-
 func SetStockPrices(stocks []StockPrice) {
 	log.Debug("Setting new stock prices")
 
-	currentTimeStamp := time.Now().Unix()
+	currentTimeStamp := time.Now()
 
 	placeholders := make([]string, 0, len(stocks))
 	vals := make([]interface{}, 0, len(stocks))
@@ -181,9 +155,9 @@ func SetStockPrices(stocks []StockPrice) {
 	}
 
 	qIds := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(ids)), ","), "[]")
-	insertStatement = fmt.Sprintf(`UPDATE stocks SET "latestUpdate" = %v WHERE id IN (%v);`, currentTimeStamp, qIds)
+	insertStatement = fmt.Sprintf(`UPDATE stocks SET "latestUpdate" = $1 WHERE id IN (%v);`, qIds)
 
-	_, err = db.Exec(insertStatement)
+	_, err = db.Exec(insertStatement, currentTimeStamp)
 	if err != nil {
 		log.Error(err)
 		return
