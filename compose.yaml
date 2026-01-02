@@ -1,7 +1,6 @@
 services:
-
   db:
-    image: postgres
+    image: timescale/timescaledb-ha:pg18
     restart: always
     shm_size: 128mb
     ports:
