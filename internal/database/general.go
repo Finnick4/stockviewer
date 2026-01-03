@@ -85,6 +85,10 @@ func InitialiseDB() {
 	"price"	BIGINT NOT NULL,
 	"timestamp"	TIMESTAMPTZ NOT NULL,
 	CONSTRAINT "fk_stockid" FOREIGN KEY("stockid") REFERENCES stocks(id) ON DELETE CASCADE
+)WITH (
+  timescaledb.hypertable,
+  timescaledb.partition_column='timestamp',
+  timescaledb.segmentby='stockid'
 );`)
 	if err != nil {
 		log.Fatal(err)
