@@ -15,6 +15,10 @@ type StockCreateParams struct {
 type StockGetPriceParams struct {
 	ID int64
 }
+type StockGetHistoryParams struct {
+	ID        int64
+	Timeframe int64
+}
 
 /* Responses */
 
@@ -30,6 +34,11 @@ type StockGetPriceResponse struct {
 type StockGetResponse struct {
 	Code int
 	Data []database.CurrentStockData
+}
+
+type StockGetHistoryResponse struct {
+	Code    int
+	History []database.StockPriceTime
 }
 
 /* Others */

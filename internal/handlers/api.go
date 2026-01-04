@@ -13,5 +13,6 @@ func Handler(r *chi.Mux) {
 		router.Post("/", CreateStock)
 		router.Get("/price", GetStockPrice)
 		router.Get("/", GetStocks)
+		router.Get("/history", GetStockHistory)
 	})
 }
