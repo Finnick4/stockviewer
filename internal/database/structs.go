@@ -14,7 +14,6 @@ type StockPrice struct {
 }
 
 type StockPriceTime struct {
-	Id        int64
 	Price     int64
 	Timestamp time.Time
 }

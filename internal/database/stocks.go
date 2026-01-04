@@ -144,7 +144,7 @@ func GetStockPriceHistory(id int64, timeframe int64) ([]StockPriceTime, error) {
 			log.Error(err)
 			return nil, err
 		}
-		data = append(data, StockPriceTime{Id: id, Timestamp: ts, Price: int64(avPrice)})
+		data = append(data, StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
 	}
 	return data, nil
 }

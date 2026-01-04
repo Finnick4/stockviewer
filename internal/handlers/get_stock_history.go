@@ -31,12 +31,18 @@ func GetStockHistory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debugf("Getting history in timeframe %v of stock %v", params.Timeframe, params.ID)
+	log.Debugf("Getting history of stock %v in timeframe %v", params.ID, params.Timeframe)
 
 	history, err := database.GetStockPriceHistory(params.ID, params.Timeframe)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
+		return
+	}
+
+	if len(history) == 0 {
+		log.Debugf("As the DB response is empty there is no stock with the id %v", params.ID)
+		api.RequestNothingFoundHandler(w, "Could not find a stock with the provided id")
 		return
 	}
 
