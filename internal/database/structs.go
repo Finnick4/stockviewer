@@ -18,3 +18,8 @@ type StockPriceTime struct {
 	Price     int64
 	Timestamp time.Time
 }
+
+type Timeframe struct {
+	count       int64
+	bucketWidth string
+}
