@@ -17,7 +17,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 	log.Debugf("Inquiring all stocks")
 
-	data, err := database.GetCurrentStocksSnapshot()
+	data, err := database.GetCurrentStockInformation()
 
 	if err != nil {
 		log.Error(err)

@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// CreateStock creates a new stock with the given name and initial price and returns the ID of the new stock. The newly created stock is active.
 func CreateStock(name string, initPrice float64) (int64, error) {
 	currentTimeStamp := time.Now()
 
@@ -37,6 +38,7 @@ func CreateStock(name string, initPrice float64) (int64, error) {
 	return lastID, nil
 }
 
+// GetStockPrice returns the current price of a stock of the given ID
 func GetStockPrice(id int64) (int64, error) {
 	db := getDB()
 
@@ -51,6 +53,7 @@ func GetStockPrice(id int64) (int64, error) {
 	return price, nil
 }
 
+// GetStockPrices returns all stock IDs and their respective current price
 func GetStockPrices() ([]StockPrice, error) {
 	db := getDB()
 
@@ -77,7 +80,8 @@ func GetStockPrices() ([]StockPrice, error) {
 	return data, nil
 }
 
-func GetCurrentStocksSnapshot() ([]CurrentStockData, error) {
+// GetCurrentStockInformation queries all stocks for their ID, name and current price
+func GetCurrentStockInformation() ([]CurrentStockData, error) {
 	db := getDB()
 
 	rows, err := db.Query(`SELECT stocks.id, stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate";`)
@@ -102,6 +106,7 @@ func GetCurrentStocksSnapshot() ([]CurrentStockData, error) {
 	return data, nil
 }
 
+// GetActiveStockIds returns all IDs of active stocks
 func GetActiveStockIds() ([]int64, error) {
 	log.Debug("Getting all stock IDs")
 
@@ -128,6 +133,7 @@ func GetActiveStockIds() ([]int64, error) {
 	return data, nil
 }
 
+// SetStockPrices creates a new price entry at the current time for all provided stocks with the given price. Furthermore, this entry is also set to be the current price.
 func SetStockPrices(stocks []StockPrice) {
 	log.Debug("Setting new stock prices")
 
