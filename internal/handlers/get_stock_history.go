@@ -25,7 +25,7 @@ func GetStockHistory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.Timeframe <= 0 || params.Timeframe > 4 {
+	if !database.IsValidTimeframeScope(params.Timeframe) {
 		log.Debugf("Could not handle request due to invalid timeframe %v", params.Timeframe)
 		api.RequestMalformedHandler(w, "Could not process the request as the parameters are malformed: The requested timeframe is invalid.")
 		return
@@ -33,7 +33,7 @@ func GetStockHistory(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("Getting history of stock %v in timeframe %v", params.ID, params.Timeframe)
 
-	history, err := database.GetStockPriceHistory(params.ID, params.Timeframe)
+	history, err := database.GetStockPriceHistory(params.ID, database.GenerateTimeframe(params.Timeframe))
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)

@@ -107,33 +107,23 @@ func GetCurrentStockInformation() ([]CurrentStockData, error) {
 }
 
 // GetStockPriceHistory gets the price history of a given stock in the given timeframe
-func GetStockPriceHistory(id int64, timeframe int64) ([]StockPriceTime, error) {
+func GetStockPriceHistory(id int64, timeframe Timeframe) ([]StockPriceTime, error) {
 	log.Debugf("Getting history of stock %v in timeframe %v", id, timeframe)
-	var tf Timeframe
-	switch timeframe {
-	case 1:
-		tf = Timeframe{count: 30, bucketWidth: "1 minute"} // 30 minutes
-	case 2:
-		tf = Timeframe{count: 30, bucketWidth: "2 minutes"} // 1 hour
-	case 3:
-		tf = Timeframe{count: 30, bucketWidth: "12 minutes"} // 6 hours
-	case 4:
-		tf = Timeframe{count: 30, bucketWidth: "48 minutes"} // 24 hours
-	}
+
 	db := getDB()
 
 	rows, err := db.Query(`SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS price
 		FROM stockprice
 		WHERE stockid = $2
 		GROUP BY bucket
-		ORDER BY bucket DESC LIMIT $3;`, tf.bucketWidth, id, tf.count)
+		ORDER BY bucket DESC LIMIT $3;`, timeframe.bucketWidth, id, timeframe.count)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	defer rows.Close()
 
-	data := make([]StockPriceTime, 0, tf.count)
+	data := make([]StockPriceTime, 0, timeframe.count)
 
 	for rows.Next() {
 		var ts time.Time
