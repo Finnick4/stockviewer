@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API Documentation</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <h1>Documentation for the API</h1>
+    <div class="section">
+        <h2>/api/stocks</h2>
+        <div class="requests">
+            <div class="request post">
+                <h3>POST /</h3>
+                <table class="parameters">
+                    <tr><th>Parameter</th><th>Note</th></tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>Name of the stock that is to be created</td>
+                    </tr>
+                    <tr>
+                        <td>initPrice</td>
+                        <td>Initial Price the stock should have (in ct)</td>
+                    </tr>
+                </table>
+                <table class="returnvalues">
+                    <tr><th>Return Value</th><th>Note</th></tr>
+                    <tr>
+                        <td>ID</td>
+                        <td>ID of the newly created stock</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="request get">
+                <h3>GET /</h3>
+                <table class="parameters">
+                    <tr><th>Parameter</th><th>Note</th></tr>
+                </table>
+                <table class="returnvalues">
+                    <tr><th>Return Value</th><th>Note</th></tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Array of objects with each {"Id", "Name", "Price"} of all stocks</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="request get">
+                <h3>GET /Price</h3>
+                <table class="parameters">
+                    <tr><th>Parameter</th><th>Note</th></tr>
+                    <tr>
+                        <td>Id</td>
+                        <td>Id of the stock that is to be queried</td>
+                    </tr>
+                </table>
+                <table class="returnvalues">
+                    <tr><th>Return Value</th><th>Note</th></tr>
+                    <tr>
+                        <td>Price</td>
+                        <td>Price in ct of the stock</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="request get">
+                <h3>GET /History</h3>
+                <table class="parameters">
+                    <tr><th>Parameter</th><th>Note</th></tr>
+                    <tr>
+                        <td>id</td>
+                        <td>ID of the stock that is to be queried</td>
+                    </tr>
+                    <tr>
+                        <td>timeframe</td>
+                        <td>scope of the wanted timeframe (e.g. 1, 2, ...)</td>
+                    </tr>
+                </table>
+                <table class="returnvalues">
+                    <tr><th>Return Value</th><th>Note</th></tr>
+                    <tr>
+                        <td>Price</td>
+                        <td>Price in ct of the stock</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

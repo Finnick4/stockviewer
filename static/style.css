@@ -1,0 +1,52 @@
+body {
+    background-color: #212529;
+    font-family: "Ubuntu Mono";
+    color: white;
+}
+.section {
+
+}
+.requests {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+.request {
+    background-color: #2b3239;
+    border-radius: 3%;
+    margin: 5px;
+    padding: 1%;
+    max-width: 25%;
+    transition: background-color 0.2s, color 0.2s;
+}
+@media only screen and (max-width: 800px) {
+    .request {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+.post:hover {
+    background-color: #ffe47e;
+    color: black;
+}
+.get:hover {
+    background-color: #4d9169;
+}
+.put:hover {
+    background-color: #6ca0e1;
+}
+.patch:hover {
+    background-color: #c0a8e1;
+}
+.delete:hover {
+    background-color: #f79a8e;
+}
+.head:hover {
+    background-color: #65cf91;
+}
+.options:hover {
+    background-color: #da57a0;
+}
+td {
+    word-break: break-all;
+}
