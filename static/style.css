@@ -1,52 +1,91 @@
-body {
-    background-color: #212529;
-    font-family: "Ubuntu Mono";
-    color: white;
-}
-.section {
 
+:root {
+    --bg-dark: hsl(0, 0%, 0%);
+    --bg: hsl(0, 0%, 5%);
+    --bg-light: hsl(0, 0%, 10%);
+    --highlight: hsl(0, 0%, 15%);
+    --text: hsl(0, 0%, 95%);
+    --text-muted: hsl(0, 0%, 70%);
+
+    --positiv: hsl(110, 80%, 40%);
+    --positiv-muted: hsl(110, 80%, 30%);
+    --negative: hsl(0, 80%, 50%);
+    --negative-muted: hsl(0, 80%, 40%);
+    font-family: Ubuntu, sans-serif;
 }
-.requests {
+
+body.light {
+    --bg-dark: hsl(0, 0%, 90%);
+    --bg: hsl(0, 0%, 95%);
+    --bg-light: hsl(0, 0%, 100%);
+    --text: hsl(0, 0%, 5%);
+    --text-muted: hsl(0, 0%, 30%);
+}
+
+body {
+    background-color: var(--bg-dark);
+}
+
+.header {
+    color:var(--text);
+    position: sticky;
+}
+.stocklist {
+    background-color: var(--bg);
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 1ch;
+    border-radius: 2ch;
+    padding-bottom: 2ch;
 }
-.request {
-    background-color: #2b3239;
-    border-radius: 3%;
-    margin: 5px;
-    padding: 1%;
-    max-width: 25%;
-    transition: background-color 0.2s, color 0.2s;
+.stocklist h2 {
+    color: var(--text);
+    text-align: center;
 }
-@media only screen and (max-width: 800px) {
-    .request {
-        max-width: 100%;
-        width: 100%;
-    }
+.stockoverview {
+    background-color: var(--bg-light);
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    border-radius: 1ch;
+    transition: background-color 0.1s, color 0.1s;
+    margin: 0 2ch;
+    align-items: center;
 }
-.post:hover {
-    background-color: #ffe47e;
-    color: black;
+.stockoverview:hover {
+    background-color: var(--highlight);
+    color: var(--text);
 }
-.get:hover {
-    background-color: #4d9169;
+.stockname {
+    word-break: break-word;
+    width: 40%;
+    margin: 1ch;
 }
-.put:hover {
-    background-color: #6ca0e1;
+.change {
+    display: inline-block;
+    background-color: var(--bg-light);
+    font-family: "Ubuntu Mono",monospace;
+    padding: 1ch;
+    border-radius: 1ch;
+    margin: 1ch;
+    width: 8ch;
+    text-align: center;
+    transition: background-color 0.1s;
+    color: var(--text);
 }
-.patch:hover {
-    background-color: #c0a8e1;
+.change.positive {
+    background-color: var(--positiv-muted);
 }
-.delete:hover {
-    background-color: #f79a8e;
+
+.change.positive:hover {
+    background-color: var(--positiv);
 }
-.head:hover {
-    background-color: #65cf91;
+
+.change.negative {
+    background-color: var(--negative-muted);
 }
-.options:hover {
-    background-color: #da57a0;
-}
-td {
-    word-break: break-all;
+
+.change.negative:hover {
+    background-color: var(--negative);
 }
