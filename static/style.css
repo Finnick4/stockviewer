@@ -38,6 +38,10 @@ body {
     border-radius: 2ch;
     padding-bottom: 2ch;
 }
+.stocklist p {
+    color: var(--text-muted);
+    align-self: center;
+}
 .stocklist h2 {
     color: var(--text);
     text-align: center;
