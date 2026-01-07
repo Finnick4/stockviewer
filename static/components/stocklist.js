@@ -4,10 +4,15 @@ class stocklistAll extends HTMLElement {
             fetch(`${window.location.origin}/api/stocks`).then(resp => resp.json()).then(obj => {
                 let html = ""
                 obj["Data"].forEach(e => {
+                    let shortPrice = (e["Price"]/100).toLocaleString('en-US', {
+                        maximumFractionDigits: 2,
+                        notation: 'compact',
+                        compactDisplay: 'short'
+                    });
                     html += `<div class="stockoverview">
                             <div class="stockname">${e["Name"]}</div>
                             <div>
-                                <div class="change positive">200.63m</div>
+                                <div class="change positive">${shortPrice}</div>
                                 <div class="change positive">+10</div>
                                 <div class="change positive">+1%</div>
                             </div>
