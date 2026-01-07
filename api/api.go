@@ -41,6 +41,11 @@ type StockGetHistoryResponse struct {
 	History []database.StockPriceTime
 }
 
+type StockGetDeltasResponse struct {
+	Code   int
+	Deltas []database.PriceDelta
+}
+
 /* Others */
 
 type Error struct {

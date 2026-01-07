@@ -22,3 +22,11 @@ type Timeframe struct {
 	count       int64
 	bucketWidth string
 }
+
+type PriceDelta struct {
+	ID           int64
+	Price1       int64
+	Price2       int64
+	DeltaAmount  int64
+	DeltaPercent float64
+}

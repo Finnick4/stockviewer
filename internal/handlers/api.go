@@ -19,5 +19,6 @@ func Handler(r *chi.Mux) {
 		router.Get("/price", GetStockPrice)
 		router.Get("/", GetStocks)
 		router.Get("/history", GetStockHistory)
+		router.Get("/deltas", GetStocksDelta)
 	})
 }

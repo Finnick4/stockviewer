@@ -166,6 +166,51 @@ func GetActiveStockIds() ([]int64, error) {
 	return data, nil
 }
 
+func GetStocksPriceDelta() ([]PriceDelta, error) {
+	log.Debug("Getting all stocks deltas")
+
+	db := getDB()
+
+	rows, err := db.Query(`SELECT id, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket('1 minute', timestamp) AS bucket, avg(price) AS avrg
+		FROM stockprice sp
+		WHERE stocks.id = stockid
+		GROUP BY bucket
+		ORDER BY bucket DESC LIMIT 2) d ON true
+		ORDER BY id;`)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var data []PriceDelta
+	var i = 1
+	var currentData PriceDelta
+
+	for rows.Next() {
+		var price float64
+		err = rows.Scan(&currentData.ID, &price)
+
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+
+		if i%2 == 0 {
+			currentData.Price1 = int64(price)
+
+			currentData.DeltaAmount = currentData.Price2 - currentData.Price1
+			currentData.DeltaPercent = (float64(currentData.Price2) / float64(currentData.Price1)) - 1.0
+			data = append(data, currentData)
+			i = 1
+		} else {
+			currentData.Price2 = int64(price)
+			i++
+		}
+	}
+	return data, nil
+}
+
 // SetStockPrices creates a new price entry at the current time for all provided stocks with the given price. Furthermore, this entry is also set to be the current price.
 func SetStockPrices(stocks []StockPrice) {
 	log.Debug("Setting new stock prices")
