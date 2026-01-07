@@ -78,18 +78,18 @@ body {
     transition: background-color 0.1s;
     color: var(--text);
 }
-.change.positive {
+.positive > .change {
     background-color: var(--positiv-muted);
 }
 
-.change.positive:hover {
+.positive > .change:hover {
     background-color: var(--positiv);
 }
 
-.change.negative {
+.negative > .change {
     background-color: var(--negative-muted);
 }
 
-.change.negative:hover {
+.negative > .change:hover {
     background-color: var(--negative);
 }

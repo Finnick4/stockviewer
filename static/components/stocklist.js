@@ -11,10 +11,10 @@ class stocklistAll extends HTMLElement {
                     });
                     html += `<div class="stockoverview">
                             <div class="stockname">${e["Name"]}</div>
-                            <div>
-                                <div class="change positive">${shortPrice}</div>
-                                <div class="change positive">+10</div>
-                                <div class="change positive">+1%</div>
+                            <div class="positive">
+                                <div class="change">${shortPrice}</div>
+                                <div class="change">+10</div>
+                                <div class="change">+1%</div>
                             </div>
                         </div>`
                 })
