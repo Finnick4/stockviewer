@@ -171,7 +171,7 @@ func GetStocksPriceDelta() ([]PriceDelta, error) {
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket('1 minute', timestamp) AS bucket, avg(price) AS avrg
+	rows, err := db.Query(`SELECT id, name, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket('1 minute', timestamp) AS bucket, avg(price) AS avrg
 		FROM stockprice sp
 		WHERE stocks.id = stockid
 		GROUP BY bucket
@@ -189,7 +189,7 @@ func GetStocksPriceDelta() ([]PriceDelta, error) {
 
 	for rows.Next() {
 		var price float64
-		err = rows.Scan(&currentData.ID, &price)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &price)
 
 		if err != nil {
 			log.Error(err)

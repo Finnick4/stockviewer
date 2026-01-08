@@ -3,9 +3,11 @@ package database
 import "time"
 
 type CurrentStockData struct {
-	Id    int64
-	Name  string
-	Price int64
+	Id           int64
+	Name         string
+	Price        int64
+	DeltaAmount  int64
+	DeltaPercent float64
 }
 
 type StockPrice struct {
@@ -25,6 +27,7 @@ type Timeframe struct {
 
 type PriceDelta struct {
 	ID           int64
+	Name         string
 	Price1       int64
 	Price2       int64
 	DeltaAmount  int64
