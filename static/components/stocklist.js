@@ -1,20 +1,20 @@
 class stocklistAll extends HTMLElement {
     connectedCallback() {
         try {
-            fetch(`${window.location.origin}/api/stocks`).then(resp => resp.json()).then(obj => {
+            fetch(`${window.location.origin}/api/stocks/deltas`).then(resp => resp.json()).then(obj => {
                 let html = ""
-                obj["Data"].forEach(e => {
-                    let shortPrice = (e["Price"]/100).toLocaleString('en-US', {
+                obj["Deltas"].forEach(e => {
+                    let shortPrice = (e["Price2"]/100).toLocaleString('en-US', {
                         maximumFractionDigits: 2,
                         notation: 'compact',
                         compactDisplay: 'short'
                     });
                     html += `<div class="stockoverview">
                             <div class="stockname">${e["Name"]}</div>
-                            <div class="positive">
+                            <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
                                 <div class="change">${shortPrice}</div>
-                                <div class="change">+10</div>
-                                <div class="change">+1%</div>
+                                <div class="change">${e["DeltaAmount"]}</div>
+                                <div class="change">${(e["Price2"]/e["Price1"] - 1.0).toFixed(2)}%</div>
                             </div>
                         </div>`
                 })
