@@ -56,6 +56,7 @@ body {
     transition: background-color 0.1s, color 0.1s;
     margin: 0 2ch;
     align-items: center;
+    text-decoration: none;
 }
 .stockoverview:hover {
     background-color: var(--highlight);
