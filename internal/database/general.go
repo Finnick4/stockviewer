@@ -93,5 +93,26 @@ func InitialiseDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
+	"id"	VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
+	"name"	VARCHAR(32) NOT NULL UNIQUE,
+	"created"	TIMESTAMPTZ NOT NULL,
+	"password" TEXT NOT NULL,
+	"status" INTEGER DEFAULT 1,
+	"token" TEXT UNIQUE,
+	"tokenExpireDate" TIMESTAMPTZ);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_username ON users("name");`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_token ON users("token");`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
