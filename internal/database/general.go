@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"os"
 
@@ -93,6 +94,7 @@ func InitialiseDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
 	"id"	VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
 	"name"	VARCHAR(32) NOT NULL UNIQUE,
@@ -115,4 +117,25 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
+	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
+	"userid"	VARCHAR(36) NOT NULL UNIQUE,
+	"claimType" VARCHAR(64) NOT NULL,
+	"claimValue" INTEGER NOT NULL,
+	CONSTRAINT "fk_userid" FOREIGN KEY("userid") REFERENCES users("id") ON DELETE CASCADE);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resp := db.QueryRow(`SELECT name FROM users LIMIT 1;`)
+	var price string
+	err = resp.Scan(&price)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			log.Debug("No Users found in users table")
+			createAdminUser()
+		} else {
+			log.Fatal(err)
+		}
+	}
 }
