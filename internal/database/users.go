@@ -1,6 +1,8 @@
 package database
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -15,7 +17,7 @@ func createAdminUser() {
 	id := uuid.New().String()
 	name := "admin"
 	created := time.Now()
-	hashedPW, err := hashPassword("admin")
+	hashedPW, err := hash("admin")
 	status := 2
 
 	if err != nil {
@@ -31,12 +33,48 @@ func createAdminUser() {
 	}
 }
 
-func hashPassword(pw string) (string, error) {
-	hashedPW, err := bcrypt.GenerateFromPassword([]byte(pw), 14)
+func hash(toHash string) (string, error) {
+	hashed, err := bcrypt.GenerateFromPassword([]byte(toHash), 14)
 	if err != nil {
 		log.Error("Failed to hash the provided password!")
 		log.Error(err)
 		return "", err
 	}
-	return string(hashedPW), nil
+	return string(hashed), nil
+}
+
+func genToken() (string, error) {
+	bytes := make([]byte, 64)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
+
+}
+
+func GenerateNewToken(id string) (string, error) {
+	token, err := genToken()
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+
+	tokenHash, err := hash(token)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+
+	expiry := time.Now().Add(time.Hour * 24 * 30)
+
+	_, err = db.Exec(`UPDATE users SET token = $1, "tokenExpireDate" = $2 WHERE id = $3`, tokenHash, expiry, id)
+
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+
+	return token, nil
 }
