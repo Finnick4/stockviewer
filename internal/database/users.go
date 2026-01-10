@@ -43,17 +43,18 @@ func hash(toHash string) (string, error) {
 	return string(hashed), nil
 }
 
+// genToken returns a string containing a 64 character long token
 func genToken() (string, error) {
-	bytes := make([]byte, 64)
+	bytes := make([]byte, 32)
 	_, err := rand.Read(bytes)
 	if err != nil {
 		log.Error(err)
 		return "", err
 	}
 	return hex.EncodeToString(bytes), nil
-
 }
 
+// GenerateNewToken creates a new token and stores it in the database (hashed) for the given ID.
 func GenerateNewToken(id string) (string, error) {
 	token, err := genToken()
 	if err != nil {
