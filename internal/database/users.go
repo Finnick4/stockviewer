@@ -2,7 +2,9 @@ package database
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"encoding/hex"
+	"errors"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -78,4 +80,34 @@ func GenerateNewToken(id string) (string, error) {
 	}
 
 	return token, nil
+}
+
+// SetUserPermission sets or updates the permission of a user.
+func SetUserPermission(id string, permission string, value int32) error {
+	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission)
+	var price int64
+	err := resp.Scan(&price)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// a) Update existing permission
+			_, error2 := db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, value, permission, id)
+
+			if error2 != nil {
+				log.Error(error2)
+				return error2
+			}
+			return nil
+		} else {
+			log.Fatal(err)
+		}
+	}
+
+	// b) create new permission entry
+	_, err = db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission, value)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
 }
