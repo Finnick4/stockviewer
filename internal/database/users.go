@@ -19,7 +19,7 @@ func createAdminUser() {
 	id := uuid.New().String()
 	name := "admin"
 	created := time.Now()
-	hashedPW, err := hash("admin")
+	hashedPW, err := hashPW("admin")
 	status := 2
 
 	if err != nil {
@@ -35,7 +35,7 @@ func createAdminUser() {
 	}
 }
 
-func hash(toHash string) (string, error) {
+func hashPW(toHash string) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(toHash), 14)
 	if err != nil {
 		log.Error("Failed to hash the provided password!")
@@ -56,7 +56,7 @@ func genToken() (string, error) {
 	return hex.EncodeToString(bytes), nil
 }
 
-// GenerateNewToken creates a new token and stores it in the database (hashed) for the given ID.
+// GenerateNewToken creates a new token and stores it in the database (hashed) for the given ID. The returned token is not hashed.
 func GenerateNewToken(id string) (string, error) {
 	token, err := genToken()
 	if err != nil {
@@ -64,7 +64,7 @@ func GenerateNewToken(id string) (string, error) {
 		return "", err
 	}
 
-	tokenHash, err := hash(token)
+	tokenHash, err := hashPW(token)
 	if err != nil {
 		log.Error(err)
 		return "", err
@@ -89,8 +89,8 @@ func SetUserPermission(id string, permission string, value int32) error {
 	err := resp.Scan(&price)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			// a) Update existing permission
-			_, error2 := db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, value, permission, id)
+			// b) create new permission entry
+			_, error2 := db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission, value)
 
 			if error2 != nil {
 				log.Error(error2)
@@ -102,8 +102,8 @@ func SetUserPermission(id string, permission string, value int32) error {
 		}
 	}
 
-	// b) create new permission entry
-	_, err = db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission, value)
+	// a) Update existing permission
+	_, err = db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, value, permission, id)
 
 	if err != nil {
 		log.Error(err)

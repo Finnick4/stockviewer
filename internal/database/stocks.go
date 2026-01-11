@@ -58,7 +58,7 @@ func GetStockPrices() ([]StockPrice, error) {
 	db := getDB()
 
 	log.Debug("Getting all current stock prices")
-	rows, err := db.Query(`SELECT "stocks".id, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate";`)
+	rows, err := db.Query(`SELECT "stocks".id, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate" WHERE stocks.status = 1;`)
 
 	if err != nil {
 		log.Error(err)
