@@ -111,3 +111,16 @@ func SetUserPermission(id string, permission string, value int32) error {
 	}
 	return nil
 }
+
+// IsCorrectPassword returns whether the given username has the given password.
+func IsCorrectPassword(username string, pw string) bool {
+	resp := db.QueryRow(`SELECT password FROM users WHERE name = $1;`, username)
+	var hashedPW string
+	err := resp.Scan(&hashedPW)
+	if err != nil {
+		log.Error(err)
+		return false
+	}
+
+	return bcrypt.CompareHashAndPassword([]byte(hashedPW), []byte(pw)) == nil
+}
