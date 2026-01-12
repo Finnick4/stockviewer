@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"time"
 
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -27,18 +28,20 @@ func genToken() (string, error) {
 }
 
 // GenerateNewToken creates a new token and stores it in the database (hashed) for the given ID. The returned token is not hashed.
-func GenerateNewToken(id string) (string, error) {
+func GenerateNewToken(userid string) (string, error) {
 	token, err := genToken()
 	if err != nil {
 		log.Error(err)
 		return "", err
 	}
 
+	id := uuid.New().String()
+
 	tokenHash := hash512(token)
 
 	expiry := time.Now().Add(time.Hour * 24 * 30)
 
-	_, err = db.Exec(`UPDATE users SET token = $1, "tokenExpireDate" = $2 WHERE id = $3`, tokenHash, expiry, id)
+	_, err = db.Exec(`INSERT INTO sessions (id, token, "lastUsage", "expireDate", userid) VALUES ($1, $2, $3, $4, $5);`, id, tokenHash, time.Now(), expiry, userid)
 
 	if err != nil {
 		log.Error(err)

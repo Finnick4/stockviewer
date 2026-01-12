@@ -47,8 +47,8 @@ func hashPW(toHash string) (string, error) {
 // SetUserPermission sets or updates the permission of a user.
 func SetUserPermission(id string, permission string, value int32) error {
 	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission)
-	var price int64
-	err := resp.Scan(&price)
+	var permValue int64
+	err := resp.Scan(&permValue)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			// b) create new permission entry
@@ -59,9 +59,9 @@ func SetUserPermission(id string, permission string, value int32) error {
 				return error2
 			}
 			return nil
-		} else {
-			log.Fatal(err)
 		}
+
+		log.Fatal(err)
 	}
 
 	// a) Update existing permission
@@ -90,7 +90,7 @@ func IsCorrectPassword(username string, pw string) bool {
 // GetTokenPermission returns the permission value of user associated with the token.
 // If the queried permission is to be interpreted as a bool, use HasTokenPermission instead!
 func GetTokenPermission(token string, permission string) int32 {
-	resp := db.QueryRow(`SELECT "claimValue" FROM permissions WHERE "claimType" = $1 AND userid = (SELECT users.id FROM users WHERE users.token = $2);`, permission, hash512(token))
+	resp := db.QueryRow(`SELECT "claimValue" FROM permissions WHERE "claimType" = $1 AND userid = (SELECT userid FROM sessions WHERE sessions.token = $2);`, permission, hash512(token))
 	var val int32
 	err := resp.Scan(&val)
 	if err != nil {

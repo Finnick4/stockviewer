@@ -100,9 +100,7 @@ func InitialiseDB() {
 	"name"	VARCHAR(32) NOT NULL UNIQUE,
 	"created"	TIMESTAMPTZ NOT NULL,
 	"password" TEXT NOT NULL,
-	"status" INTEGER DEFAULT 1,
-	"token" TEXT UNIQUE,
-	"tokenExpireDate" TIMESTAMPTZ);`)
+	"status" INTEGER DEFAULT 1);`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -112,17 +110,34 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_token ON users("token");`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
+	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
+	"userid"	VARCHAR(36) NOT NULL,
+	"claimType" VARCHAR(64) NOT NULL,
+	"claimValue" INTEGER NOT NULL,
+	CONSTRAINT "fk_permissions_userid" FOREIGN KEY("userid") REFERENCES users("id") ON DELETE CASCADE);`)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
-	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
-	"userid"	VARCHAR(36) NOT NULL UNIQUE,
-	"claimType" VARCHAR(64) NOT NULL,
-	"claimValue" INTEGER NOT NULL,
-	CONSTRAINT "fk_userid" FOREIGN KEY("userid") REFERENCES users("id") ON DELETE CASCADE);`)
+	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_userid ON permissions("userid");`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "sessions" (
+    "id" UUID NOT NULL PRIMARY KEY UNIQUE,
+	"token"	TEXT NOT NULL UNIQUE,
+	"lastUsage" TIMESTAMPTZ NOT NULL,
+	"expireDate" TIMESTAMPTZ NOT NULL,
+	"userid" VARCHAR(36) NOT NULL,
+	"useragent" TEXT,
+	CONSTRAINT "fk_sessions_userid" FOREIGN KEY("userid") REFERENCES users("id") ON DELETE CASCADE);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_token ON sessions("token");`)
 	if err != nil {
 		log.Fatal(err)
 	}
