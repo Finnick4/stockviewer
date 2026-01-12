@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"math"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -84,4 +85,26 @@ func IsCorrectPassword(username string, pw string) bool {
 	}
 
 	return bcrypt.CompareHashAndPassword([]byte(hashedPW), []byte(pw)) == nil
+}
+
+// GetTokenPermission returns the permission value of user associated with the token.
+// If the queried permission is to be interpreted as a bool, use HasTokenPermission instead!
+func GetTokenPermission(token string, permission string) int32 {
+	resp := db.QueryRow(`SELECT "claimValue" FROM permissions WHERE "claimType" = $1 AND userid = (SELECT users.id FROM users WHERE users.token = $2);`, permission, hash512(token))
+	var val int32
+	err := resp.Scan(&val)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0
+		}
+		log.Error(err)
+		return math.MinInt32
+	}
+	return val
+}
+
+// HasTokenPermission returns whether the user associated with the token has the given boolean permission.
+// This function will technically still run if the permission isn't supposed to be interpreted as a boolean.
+func HasTokenPermission(token string, permission string) bool {
+	return GetTokenPermission(token, permission) == 1
 }
