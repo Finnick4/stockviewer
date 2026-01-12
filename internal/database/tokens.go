@@ -2,11 +2,18 @@ package database
 
 import (
 	"crypto/rand"
+	"crypto/sha512"
 	"encoding/hex"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 )
+
+// hash512 returns a sha512 of the given string and returns it as a hexadecimal string
+func hash512(toHash string) string {
+	hashed := sha512.Sum512([]byte(toHash))
+	return hex.EncodeToString(hashed[:])
+}
 
 // genToken returns a string containing a 64 character long token
 func genToken() (string, error) {
@@ -27,11 +34,7 @@ func GenerateNewToken(id string) (string, error) {
 		return "", err
 	}
 
-	tokenHash, err := hashPW(token)
-	if err != nil {
-		log.Error(err)
-		return "", err
-	}
+	tokenHash := hash512(token)
 
 	expiry := time.Now().Add(time.Hour * 24 * 30)
 
