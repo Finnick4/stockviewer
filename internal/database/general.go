@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sync"
 
 	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
@@ -67,10 +68,12 @@ func connectToDB() {
 	log.Debug(v)
 }
 
+var wg sync.WaitGroup
+
 func InitialiseDB() {
 	log.Info("Initialising the database")
 	db := getDB()
-	log.Debug("Actually starting to initialise the database")
+
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS "stocks" (
 	"id"	SERIAL PRIMARY KEY NOT NULL UNIQUE,
 	"name"	VARCHAR(32) NOT NULL,
@@ -105,10 +108,8 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_username ON users("name");`)
-	if err != nil {
-		log.Fatal(err)
-	}
+	wg.Add(1)
+	go createIndex("users", "name")
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
 	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
@@ -120,10 +121,8 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_userid ON permissions("userid");`)
-	if err != nil {
-		log.Fatal(err)
-	}
+	wg.Add(1)
+	go createIndex("permissions", "userid")
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "sessions" (
     "id" UUID NOT NULL PRIMARY KEY UNIQUE,
@@ -137,10 +136,10 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE INDEX IF NOT EXISTS idx_token ON sessions("token");`)
-	if err != nil {
-		log.Fatal(err)
-	}
+	wg.Add(1)
+	go createIndex("sessions", "token")
+
+	wg.Wait()
 
 	resp := db.QueryRow(`SELECT name FROM users LIMIT 1;`)
 	var price string
@@ -153,4 +152,13 @@ func InitialiseDB() {
 			log.Fatal(err)
 		}
 	}
+}
+
+func createIndex(table string, row string) {
+	statement := fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_%v_%v ON %v(%v);", table, row, table, row)
+	_, err := db.Exec(statement)
+	if err != nil {
+		log.Fatal(err)
+	}
+	wg.Done()
 }
