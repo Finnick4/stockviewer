@@ -182,10 +182,11 @@ func GetStocksPriceDelta() ([]PriceDelta, error) {
 		return nil, err
 	}
 	defer rows.Close()
-
+	// new - old - new - old
 	var data []PriceDelta
 	var i = 1
 	var currentData PriceDelta
+	var currentID int64
 
 	for rows.Next() {
 		var price float64
@@ -196,7 +197,22 @@ func GetStocksPriceDelta() ([]PriceDelta, error) {
 			return nil, err
 		}
 
-		if i%2 == 0 {
+		if i == 2 {
+			if currentID != currentData.ID {
+				newID := currentData.ID
+
+				currentData.Price1 = 0
+
+				currentData.DeltaAmount = currentData.Price2 - currentData.Price1
+				currentData.DeltaPercent = (float64(currentData.Price2) / float64(currentData.Price1)) - 1.0
+				currentData.ID = currentID
+				data = append(data, currentData)
+
+				currentData.ID = newID
+				currentData.Price2 = int64(price)
+				i = 1
+				continue
+			}
 			currentData.Price1 = int64(price)
 
 			currentData.DeltaAmount = currentData.Price2 - currentData.Price1
@@ -204,6 +220,7 @@ func GetStocksPriceDelta() ([]PriceDelta, error) {
 			data = append(data, currentData)
 			i = 1
 		} else {
+			currentID = currentData.ID
 			currentData.Price2 = int64(price)
 			i++
 		}
