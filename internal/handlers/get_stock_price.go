@@ -16,7 +16,7 @@ import (
 
 func GetStockPrice(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
-	var params = api.StockGetPriceParams{}
+	var params = api.StockGetParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 

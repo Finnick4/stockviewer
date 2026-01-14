@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"stockviewer/internal/handlers/stocks"
 
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
@@ -17,8 +18,7 @@ func Handler(r *chi.Mux) {
 
 		router.Post("/", CreateStock)
 		router.Get("/price", GetStockPrice)
-		router.Get("/", GetStocks)
+		router.Get("/", stocks.GetStocks)
 		router.Get("/history", GetStockHistory)
-		router.Get("/deltas", GetStocksDelta)
 	})
 }

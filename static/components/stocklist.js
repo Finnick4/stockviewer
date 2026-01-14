@@ -1,9 +1,9 @@
 class stocklistAll extends HTMLElement {
     connectedCallback() {
         try {
-            fetch(`${window.location.origin}/api/stocks/deltas`).then(resp => resp.json()).then(obj => {
+            fetch(`${window.location.origin}/api/stocks/?Timeframe=1`).then(resp => resp.json()).then(obj => {
                 let html = ""
-                obj["Deltas"].forEach(e => {
+                obj["Data"].forEach(e => {
                     let shortPrice = (e["Price2"]/100).toLocaleString('en-US', {
                         maximumFractionDigits: 2,
                         notation: 'compact',

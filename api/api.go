@@ -12,8 +12,9 @@ type StockCreateParams struct {
 	Name      string
 	InitPrice float64
 }
-type StockGetPriceParams struct {
-	ID int64
+type StockGetParams struct {
+	ID        int64
+	Timeframe int64
 }
 type StockGetHistoryParams struct {
 	ID        int64
@@ -42,8 +43,8 @@ type StockGetHistoryResponse struct {
 }
 
 type StockGetDeltasResponse struct {
-	Code   int
-	Deltas []database.PriceDelta
+	Code int
+	Data []database.PriceDelta
 }
 
 /* Others */
