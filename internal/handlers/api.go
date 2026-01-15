@@ -16,7 +16,7 @@ func Handler(r *chi.Mux) {
 
 	r.Route("/api/stocks", func(router chi.Router) {
 
-		router.Post("/", CreateStock)
+		router.Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)
 	})
 }
