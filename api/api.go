@@ -34,17 +34,12 @@ type StockGetPriceResponse struct {
 
 type StockGetResponse struct {
 	Code int
-	Data []database.CurrentStockData
+	Data any
 }
 
 type StockGetHistoryResponse struct {
 	Code    int
 	History []database.StockPriceTime
-}
-
-type StockGetDeltasResponse struct {
-	Code int
-	Data []database.PriceDelta
 }
 
 /* Others */
