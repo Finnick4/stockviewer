@@ -26,10 +26,62 @@ body {
     background-color: var(--bg-dark);
 }
 
-.header {
-    color:var(--text);
+header-bar {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(6, auto);
+    text-decoration: none;
     position: sticky;
+    top: 0;
+    background-color: var(--bg-dark);
 }
+
+header-bar h1 {
+    color:var(--text);
+    grid-column: 1;
+}
+
+header-bar nav {
+    grid-column: 2;
+    display: flex;
+    justify-content: space-evenly;
+    align-self: center;
+}
+
+header-bar nav a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+header-bar search-bar {
+    grid-column: 3/4;
+    align-self: center;
+}
+search-bar input{
+    width: 100%;
+    background-color: var(--bg);
+    border: none;
+    border-radius: 2ch;
+    color: var(--text);
+    padding: 2ch;
+}
+header-bar user-manager {
+
+    grid-column: 6;
+
+}
+user-manager {
+    color: var(--text);
+    align-self: center;
+    text-align: right;
+}
+user-manager div {
+    display: inline-block;
+    border-radius: 2ch;
+    padding: 2ch;
+    background-color: var(--bg);
+}
+
 .stocklist {
     background-color: var(--bg);
     display: flex;
