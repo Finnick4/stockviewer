@@ -27,7 +27,6 @@ class stocklistAll extends HTMLElement {
                 document.querySelectorAll(".stockoverview").forEach(elem => {
                     elem.addEventListener("click", e => {
                         const currentID = e.currentTarget.getAttribute("data-stock-id")
-                        console.log(currentID)
                         window.history.pushState(null, null, `${window.location.origin}/stocks/${currentID}`)
                         e.preventDefault()
                     })})
