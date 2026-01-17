@@ -8,15 +8,19 @@ class headerBarElement extends HTMLElement {
                     <a href="${window.location.origin}/groups">Groups</a>
                 </nav>
                 <search-bar></search-bar>
-                <user-manager></user-manager>
+                <site-manager></site-manager>
                 `
     }
 }
 
-class userManagerElement extends HTMLElement {
+class siteManagerElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<div class="usermanager"><div class="name">USER</div> <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false"></div>`
+        this.innerHTML = `<button onclick="userManagerMenuToggle(this)" class="usermanager"><div class="name">USER</div> <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false"></button>`
     }
+}
+
+function userManagerMenuToggle(elem) {
+    console.log("This is a demo of the button!")
 }
 
 class searchBarElement extends HTMLElement {
@@ -27,7 +31,7 @@ class searchBarElement extends HTMLElement {
 
 
 customElements.define('header-bar', headerBarElement);
-customElements.define('user-manager', userManagerElement);
+customElements.define('site-manager', siteManagerElement);
 customElements.define('search-bar', searchBarElement);
 
 

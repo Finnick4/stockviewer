@@ -26,6 +26,10 @@ body {
     background-color: var(--bg-dark);
 }
 
+button {
+    font-family: Ubuntu, sans-serif;
+}
+
 header-bar {
     display: grid;
     grid-template-rows: auto;
@@ -66,32 +70,44 @@ search-bar input{
     padding: 2ch;
     outline: none;
 }
-header-bar user-manager {
+header-bar site-manager {
 
     grid-column: 6;
 
 }
-user-manager {
+site-manager {
     color: var(--text);
     align-self: center;
     display: flex;
     justify-content: right;
 }
-user-manager .usermanager {
-
+site-manager .usermanager {
+    border: none;
     padding: 1ch;
     display: flex;
+    font-size: 16px;
     border-radius: 2ch;
     align-content: center;
     background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.1s;
 }
-user-manager .name {
+site-manager .name {
     padding: 1ch;
     align-self: center;
     text-align: center;
 }
-user-manager img {
+site-manager img {
     width: 4ch;
+}
+
+site-manager .usermanager:hover {
+    background-color: var(--highlight);
+}
+
+site-manager .usermanager:active {
+    background-color: var(--bg-light);
+    transition: background-color .2s;
 }
 
 .icon {
