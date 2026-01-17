@@ -14,10 +14,11 @@
     font-family: Ubuntu, sans-serif;
 }
 
-body.light {
-    --bg-dark: hsl(0, 0%, 90%);
-    --bg: hsl(0, 0%, 95%);
-    --bg-light: hsl(0, 0%, 100%);
+body[data-theme="light"] {
+    --bg-dark: hsl(0, 0%, 85%);
+    --bg: hsl(0, 0%, 90%);
+    --bg-light: hsl(0, 0%, 95%);
+    --highlight: hsl(0, 0%, 100%);
     --text: hsl(0, 0%, 5%);
     --text-muted: hsl(0, 0%, 30%);
 }
@@ -28,6 +29,30 @@ body {
 
 button {
     font-family: Ubuntu, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.1s;
+    border: none;
+}
+
+button:hover {
+    background-color: var(--highlight);
+}
+
+button:active {
+    background-color: var(--bg-light);
+    transition: background-color .2s;
+}
+
+.icon {
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    width: 2rem;
+    height: 2rem;
 }
 
 header-bar {
@@ -66,57 +91,46 @@ search-bar input{
     background-color: var(--bg);
     border: none;
     border-radius: 2ch;
+    font-size: 16px;
     color: var(--text);
-    padding: 2ch;
+    padding: 1rem;
     outline: none;
 }
-header-bar site-manager {
+header-bar user-manager {
 
     grid-column: 6;
 
 }
-site-manager {
+user-manager {
     color: var(--text);
     align-self: center;
     display: flex;
     justify-content: right;
+    gap: .5rem;
 }
-site-manager .usermanager {
-    border: none;
-    padding: 1ch;
+user-manager .usermanager {
     display: flex;
     font-size: 16px;
     border-radius: 2ch;
     align-content: center;
-    background-color: var(--bg);
-    color: var(--text);
-    transition: background-color 0.1s;
 }
-site-manager .name {
-    padding: 1ch;
+
+user-manager .name {
+    padding: .5rem;
     align-self: center;
     text-align: center;
 }
-site-manager img {
-    width: 4ch;
+.usermanager .icon {
+    align-self: center;
 }
 
-site-manager .usermanager:hover {
-    background-color: var(--highlight);
-}
-
-site-manager .usermanager:active {
-    background-color: var(--bg-light);
-    transition: background-color .2s;
-}
-
-.icon {
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+theme-switcher button {
+    font-size: 16px;
+    background-color: var(--bg);
+    border-radius: 2ch;
+    padding: .5rem;
+    align-self: center;
+    text-align: center;
 }
 
 .stocklist {

@@ -8,14 +8,35 @@ class headerBarElement extends HTMLElement {
                     <a href="${window.location.origin}/groups">Groups</a>
                 </nav>
                 <search-bar></search-bar>
-                <site-manager></site-manager>
+                <user-manager></user-manager>
                 `
     }
 }
 
-class siteManagerElement extends HTMLElement {
+class themeSwitcher extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<button onclick="userManagerMenuToggle(this)" class="usermanager"><div class="name">USER</div> <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false"></button>`
+        this.innerHTML = `<button onclick="themeSwitcherSwitch(this)"><img class="icon" src="/icons/lightmode.svg" alt="switch dark-/lightmode" draggable="false"></button>`
+    }
+}
+
+function themeSwitcherSwitch(elem) {
+    if (document.querySelector("body").getAttribute("data-theme") === "light") {
+        elem.innerHTML = `<img class="icon" src="/icons/lightmode.svg" alt="switch to lightmode" draggable="false">`
+        document.querySelector("body").setAttribute("data-theme", "dark")
+    } else {
+        elem.innerHTML = `<img class="icon" src="/icons/darkmode.svg" alt="switch to darkmode" draggable="false">`
+        document.querySelector("body").setAttribute("data-theme", "light")
+    }
+}
+
+class userManagerElement extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
+        <theme-switcher></theme-switcher>
+        <button onclick="userManagerMenuToggle(this)" class="usermanager">
+            <div class="name">USER</div>
+            <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false">
+        </button>`
     }
 }
 
@@ -31,7 +52,8 @@ class searchBarElement extends HTMLElement {
 
 
 customElements.define('header-bar', headerBarElement);
-customElements.define('site-manager', siteManagerElement);
+customElements.define('theme-switcher', themeSwitcher);
+customElements.define('user-manager', userManagerElement);
 customElements.define('search-bar', searchBarElement);
 
 
