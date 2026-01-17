@@ -1,3 +1,5 @@
+/* classes */
+
 class headerBarElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -8,15 +10,45 @@ class headerBarElement extends HTMLElement {
                     <a href="${window.location.origin}/groups">Groups</a>
                 </nav>
                 <search-bar></search-bar>
-                <user-manager></user-manager>
+                <site-manager></site-manager>
                 `
     }
 }
 
-class themeSwitcher extends HTMLElement {
+class siteManagementElement extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
+            <theme-switcher></theme-switcher>
+            <user-manager></user-manager>
+        `
+    }
+}
+
+class themeSwitcherElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<button onclick="themeSwitcherSwitch(this)"><img class="icon" src="/icons/lightmode.svg" alt="switch dark-/lightmode" draggable="false"></button>`
     }
+}
+
+class userManagerElement extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
+        <button onclick="userManagerMenuToggle(this)" class="usermanager">
+            <div class="name">USER</div>
+            <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false">
+        </button>`
+    }
+}
+
+class searchBarElement extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `<input type="text" placeholder="Search..">`
+    }
+}
+
+/* functions */
+function userManagerMenuToggle(elem) {
+    console.log("This is a demo of the button!")
 }
 
 function themeSwitcherSwitch(elem) {
@@ -29,31 +61,12 @@ function themeSwitcherSwitch(elem) {
     }
 }
 
-class userManagerElement extends HTMLElement {
-    connectedCallback() {
-        this.innerHTML = `
-        <theme-switcher></theme-switcher>
-        <button onclick="userManagerMenuToggle(this)" class="usermanager">
-            <div class="name">USER</div>
-            <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false">
-        </button>`
-    }
-}
 
-function userManagerMenuToggle(elem) {
-    console.log("This is a demo of the button!")
-}
-
-class searchBarElement extends HTMLElement {
-    connectedCallback() {
-        this.innerHTML = `<input type="text" placeholder="Search..">`
-    }
-}
-
-
+/* adding to elements */
 customElements.define('header-bar', headerBarElement);
-customElements.define('theme-switcher', themeSwitcher);
+customElements.define('theme-switcher', themeSwitcherElement);
 customElements.define('user-manager', userManagerElement);
+customElements.define('site-manager', siteManagementElement);
 customElements.define('search-bar', searchBarElement);
 
 

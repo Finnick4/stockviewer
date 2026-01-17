@@ -11,6 +11,7 @@
     --positiv-muted: hsl(110, 80%, 30%);
     --negative: hsl(0, 80%, 50%);
     --negative-muted: hsl(0, 80%, 40%);
+    --border-radius: 2ch;
     font-family: Ubuntu, sans-serif;
 }
 
@@ -90,44 +91,48 @@ search-bar input{
     width: 100%;
     background-color: var(--bg);
     border: none;
-    border-radius: 2ch;
+    border-radius: var(--border-radius);
     font-size: 16px;
     color: var(--text);
     padding: 1rem;
     outline: none;
 }
-header-bar user-manager {
-
+header-bar site-manager {
     grid-column: 6;
-
 }
-user-manager {
+site-manager {
     color: var(--text);
     align-self: center;
     display: flex;
     justify-content: right;
+    align-content: center;
     gap: .5rem;
 }
-user-manager .usermanager {
-    display: flex;
+site-manager button {
+    padding: .5rem;
     font-size: 16px;
-    border-radius: 2ch;
+    border-radius: var(--border-radius);
+}
+user-manager {
+    align-self: center;
+}
+
+user-manager button {
+    display: flex;
     align-content: center;
+    gap: 1ch
 }
 
 user-manager .name {
-    padding: .5rem;
     align-self: center;
     text-align: center;
 }
-.usermanager .icon {
+user-manager .icon {
     align-self: center;
 }
 
 theme-switcher button {
-    font-size: 16px;
     background-color: var(--bg);
-    border-radius: 2ch;
     padding: .5rem;
     align-self: center;
     text-align: center;
@@ -138,7 +143,7 @@ theme-switcher button {
     display: flex;
     flex-direction: column;
     gap: 1ch;
-    border-radius: 2ch;
+    border-radius: var(--border-radius);
     padding-bottom: 2ch;
 }
 .stocklist p {
@@ -157,7 +162,7 @@ theme-switcher button {
     max-width: 100%;
     border-radius: 1ch;
     transition: background-color 0.1s, color 0.1s;
-    margin: 0 2ch;
+    margin: 0 var(--border-radius);
     align-items: center;
     text-decoration: none;
 }
