@@ -15,7 +15,7 @@ class headerBarElement extends HTMLElement {
 
 class userManagerElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<div>USER</div>`
+        this.innerHTML = `<div class="usermanager"><div class="name">USER</div> <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false"></div>`
     }
 }
 

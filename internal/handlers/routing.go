@@ -17,8 +17,9 @@ func Handler(r *chi.Mux) {
 	r.Get("/*", HandleIndexHTML)
 	r.Get("/style.css", HandleStyleCSS)
 
-	js := http.FileServer(http.Dir("./static/"))
-	r.Handle("/components/*", js)
+	fs := http.FileServer(http.Dir("./static/"))
+	r.Handle("/components/*", fs)
+	r.Handle("/icons/*", fs)
 
 	r.Route("/api/stocks", func(router chi.Router) {
 

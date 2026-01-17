@@ -74,13 +74,33 @@ header-bar user-manager {
 user-manager {
     color: var(--text);
     align-self: center;
-    text-align: right;
+    display: flex;
+    justify-content: right;
 }
-user-manager div {
-    display: inline-block;
+user-manager .usermanager {
+
+    padding: 1ch;
+    display: flex;
     border-radius: 2ch;
-    padding: 2ch;
+    align-content: center;
     background-color: var(--bg);
+}
+user-manager .name {
+    padding: 1ch;
+    align-self: center;
+    text-align: center;
+}
+user-manager img {
+    width: 4ch;
+}
+
+.icon {
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .stocklist {
