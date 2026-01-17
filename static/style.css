@@ -64,6 +64,7 @@ search-bar input{
     border-radius: 2ch;
     color: var(--text);
     padding: 2ch;
+    outline: none;
 }
 header-bar user-manager {
 
