@@ -69,6 +69,7 @@ header-bar {
 header-bar h1 {
     color:var(--text);
     grid-column: 1;
+    padding-left: 1rem;
 }
 
 header-bar nav {
