@@ -12,6 +12,7 @@
     --negative: hsl(0, 80%, 50%);
     --negative-muted: hsl(0, 80%, 40%);
     --border-radius: 2ch;
+    --bg-transition: background-color .1s;
     font-family: Ubuntu, sans-serif;
 }
 
@@ -30,9 +31,9 @@ body {
 
 button {
     font-family: Ubuntu, sans-serif;
-    background-color: var(--bg);
+    background-color: var(--bg-light);
     color: var(--text);
-    transition: background-color 0.1s;
+    transition: var(--bg-transition);
     border: none;
 }
 
@@ -88,18 +89,34 @@ header-bar search-bar {
     grid-column: 3/4;
     align-self: center;
 }
+
+search-bar {
+    background-color: var(--bg-light);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    transition: var(--bg-transition);
+}
+
+search-bar:focus-within {
+    background-color: var(--highlight);
+}
+
+search-bar input:focus {
+    background-color: var(--highlight);
+}
+
 search-bar input{
     width: 100%;
-    background-color: var(--bg);
+    background-color: var(--bg-light);
     border: none;
-    border-radius: var(--border-radius);
     font-size: 16px;
     color: var(--text);
-    padding: 1rem;
     outline: none;
+    transition: var(--bg-transition);
 }
 header-bar site-manager {
     grid-column: 6;
+    padding-right: 1rem;
 }
 site-manager {
     color: var(--text);
@@ -133,7 +150,7 @@ user-manager .icon {
 }
 
 theme-switcher button {
-    background-color: var(--bg);
+    background-color: var(--bg-light);
     padding: .5rem;
     align-self: center;
     text-align: center;
@@ -162,7 +179,7 @@ theme-switcher button {
     justify-content: space-between;
     max-width: 100%;
     border-radius: 1ch;
-    transition: background-color 0.1s, color 0.1s;
+    transition: var(--bg-transition), color 0.1s;
     margin: 0 var(--border-radius);
     align-items: center;
     text-decoration: none;
@@ -185,7 +202,7 @@ theme-switcher button {
     margin: 1ch;
     width: 8ch;
     text-align: center;
-    transition: background-color 0.1s;
+    transition: var(--bg-transition);
     color: var(--text);
 }
 .positive > .change {
