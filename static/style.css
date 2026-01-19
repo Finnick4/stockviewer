@@ -23,6 +23,11 @@ body[data-theme="light"] {
     --highlight: hsl(0, 0%, 100%);
     --text: hsl(0, 0%, 5%);
     --text-muted: hsl(0, 0%, 30%);
+
+    --positiv: hsl(110, 80%, 55%);
+    --positiv-muted: hsl(110, 80%, 45%);
+    --negative: hsl(0, 80%, 60%);
+    --negative-muted: hsl(0, 80%, 50%);
 }
 
 body {
