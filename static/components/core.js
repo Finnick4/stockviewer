@@ -46,9 +46,44 @@ class searchBarElement extends HTMLElement {
     }
 }
 
+class modalElement extends HTMLElement {
+    connectedCallback() {
+        this.setAttribute("data-hidden", "true")
+        let html = this.getAttribute("data-content")
+        console.log(this.id)
+        this.innerHTML = `<div class="content">
+                <span class="closeBtn" onclick="closeModal('${this.id}')">&times;</span>
+                <div>${html}</div>
+            </div>`
+        document.getElementById(this.id).addEventListener("click", x => {
+            if (x.target === document.getElementById(this.id)) {
+                closeModal(this.id)
+            }
+        })
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === "data-content") {
+            this.innerHTML = `<div class="content">
+                <span class="closeBtn" onclick="closeModal('${this.id}')">&times;</span>
+                <div>${newValue}</div>
+            </div>`
+        }
+    }
+}
+
+function openModal(id) {
+    let elem = document.getElementById(id)
+    elem.setAttribute("data-hidden", "false")
+}
+function closeModal(id) {
+    let elem = document.getElementById(id)
+    elem.setAttribute("data-hidden", "true")
+}
+
 /* functions */
 function userManagerMenuToggle(elem) {
     console.log("This is a demo of the button!")
+    openModal("login")
 }
 
 function themeSwitcherSwitch(elem) {
@@ -68,6 +103,4 @@ customElements.define('theme-switcher', themeSwitcherElement);
 customElements.define('user-manager', userManagerElement);
 customElements.define('site-manager', siteManagementElement);
 customElements.define('search-bar', searchBarElement);
-
-
-
+customElements.define('modal-elem', modalElement);

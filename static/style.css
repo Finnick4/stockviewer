@@ -11,8 +11,11 @@
     --positiv-muted: hsl(110, 80%, 30%);
     --negative: hsl(0, 80%, 50%);
     --negative-muted: hsl(0, 80%, 40%);
+    --icon-color: #888888;
+    --icon-color-highlight: var(--text);
     --border-radius: 2ch;
     --bg-transition: background-color .1s;
+    --popup-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
     font-family: Ubuntu, sans-serif;
 }
 
@@ -28,10 +31,56 @@ body[data-theme="light"] {
     --positiv-muted: hsl(110, 80%, 45%);
     --negative: hsl(0, 80%, 60%);
     --negative-muted: hsl(0, 80%, 50%);
+    --icon-color-highlight: var(--text);
 }
 
 body {
     background-color: var(--bg-dark);
+}
+
+modal-elem {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+}
+modal-elem[data-hidden="false"] {
+    display: block;
+}
+modal-elem .content {
+    background-color: var(--bg);
+    margin: 10% auto;
+    padding: 2rem;
+    width: 70%;
+    color: var(--text-muted);
+    border-radius: var(--border-radius);
+    box-shadow: var(--popup-shadow);
+}
+
+modal-elem h2 {
+    color: var(--text);
+}
+
+modal-elem .closeBtn {
+    color: var(--icon-color);
+    float: right;
+    font-size: 30px;
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    transition: color .1s;
+}
+modal-elem .closeBtn:hover {
+    color: var(--icon-color-highlight);
+    cursor: pointer;
 }
 
 button {
