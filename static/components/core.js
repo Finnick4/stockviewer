@@ -46,44 +46,35 @@ class searchBarElement extends HTMLElement {
     }
 }
 
-class modalElement extends HTMLElement {
-    connectedCallback() {
-        this.setAttribute("data-hidden", "true")
-        let html = this.getAttribute("data-content")
-        console.log(this.id)
-        this.innerHTML = `<div class="content">
-                <span class="closeBtn" onclick="closeModal('${this.id}')">&times;</span>
-                <div>${html}</div>
-            </div>`
-        document.getElementById(this.id).addEventListener("click", x => {
-            if (x.target === document.getElementById(this.id)) {
-                closeModal(this.id)
-            }
-        })
-    }
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "data-content") {
-            this.innerHTML = `<div class="content">
-                <span class="closeBtn" onclick="closeModal('${this.id}')">&times;</span>
-                <div>${newValue}</div>
-            </div>`
+let modalCount = 0
+
+function createModal(html) {
+    let modal = document.createElement("div")
+    modal.className = "modal"
+    modal.id = "modal-" + modalCount
+    modal.innerHTML = `<div class="content">
+        <span class="closeBtn" onClick="closeModal('${modalCount}')">&times;</span>
+        <div>${html}</div>
+    </div>`
+    modal.addEventListener("click", x => {
+        if (x.target === modal) {
+            closeModal(modal.id)
         }
-    }
+    })
+    document.body.insertBefore(modal,document.body.childNodes[0]);
+    document.getElementById("modal-" + modalCount)
+    modalCount++
 }
 
-function openModal(id) {
-    let elem = document.getElementById(id)
-    elem.setAttribute("data-hidden", "false")
-}
+
 function closeModal(id) {
-    let elem = document.getElementById(id)
-    elem.setAttribute("data-hidden", "true")
+    document.body.removeChild(document.getElementById(id))
 }
 
 /* functions */
 function userManagerMenuToggle(elem) {
     console.log("This is a demo of the button!")
-    openModal("login")
+    createModal(`<h2>DEMO!!!</h2><p>This is a sample modal</p>`)
 }
 
 function themeSwitcherSwitch(elem) {
@@ -103,4 +94,3 @@ customElements.define('theme-switcher', themeSwitcherElement);
 customElements.define('user-manager', userManagerElement);
 customElements.define('site-manager', siteManagementElement);
 customElements.define('search-bar', searchBarElement);
-customElements.define('modal-elem', modalElement);
