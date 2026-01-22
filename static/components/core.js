@@ -4,12 +4,13 @@ class headerBarElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
                 <h1>Stock Viewer</h1>
-                <nav>
+                <nav class="move">
                     <a href="${window.location.origin}/stocks">Stocks</a>
                     <a href="${window.location.origin}/articles">Articles</a>
                     <a href="${window.location.origin}/groups">Groups</a>
                 </nav>
                 <search-bar></search-bar>
+                <nav class="create"><create-data></create-data></nav>
                 <site-manager></site-manager>
                 `
     }
@@ -50,6 +51,21 @@ class searchBarElement extends HTMLElement {
         this.innerHTML = `<input type="text" placeholder="Search..">`
     }
 }
+
+class createDataElement extends HTMLElement {
+    connectedCallback() {
+        this.dropdownid = createDropdown(`<button>Create Stock</button>
+                                                <button>Create Stock Group</button>
+                                                <button>Create Article</button>
+                                                <button>Create User</button>
+                                            `)
+        this.innerHTML = `<button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};"><img class="icon" src="/icons/plussign.svg" alt="create new" draggable="false"></button>`
+    }
+    disconnectedCallback() {
+        deleteDropdown(this.dropdownid)
+    }
+}
+
 
 let modalCount = 0
 
@@ -117,3 +133,4 @@ customElements.define('theme-switcher', themeSwitcherElement);
 customElements.define('user-manager', userManagerElement);
 customElements.define('site-manager', siteManagementElement);
 customElements.define('search-bar', searchBarElement);
+customElements.define('create-data', createDataElement);
