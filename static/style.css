@@ -40,12 +40,23 @@ body {
 }
 
 .dropdown {
-    background-color: var(--bg);
+    background-color: var(--bg-light);
+    box-shadow: var(--popup-shadow);
     color: var(--text-muted);
     border-radius: var(--border-radius);
     border: 0;
     padding: 1rem;
-    margin: .5rem;
+    margin-block-start: .5rem;
+    inset: auto;
+    /*noinspection CssInvalidFunction*/
+    top: anchor(bottom);
+    /*noinspection CssInvalidFunction*/
+    left: anchor(right);
+    position-try-fallbacks: --fallback-right;
+}
+
+/*noinspection CssInvalidAtRule*/
+@position-try --fallback-right {
     inset: auto;
     /*noinspection CssInvalidFunction*/
     top: anchor(bottom);
