@@ -62,7 +62,6 @@ function createModal(html) {
         }
     })
     document.body.insertBefore(modal,document.body.childNodes[0]);
-    document.getElementById("modal-" + modalCount)
     modalCount++
 }
 
