@@ -36,6 +36,21 @@ body[data-theme="light"] {
 
 body {
     background-color: var(--bg-dark);
+    color: var(--text-muted);
+}
+
+.dropdown {
+    background-color: var(--bg);
+    color: var(--text-muted);
+    border-radius: var(--border-radius);
+    border: 0;
+    padding: 1rem;
+    margin: .5rem;
+    inset: auto;
+    /*noinspection CssInvalidFunction*/
+    top: anchor(bottom);
+    /*noinspection CssInvalidFunction*/
+    right: anchor(right);
 }
 
 .modal {

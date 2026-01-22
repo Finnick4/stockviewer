@@ -32,11 +32,16 @@ class themeSwitcherElement extends HTMLElement {
 
 class userManagerElement extends HTMLElement {
     connectedCallback() {
+        this.dropdownid = createDropdown(`This is a test!!!`)
         this.innerHTML = `
-        <button onclick="userManagerMenuToggle(this)" class="usermanager">
+        <button popovertarget="${this.dropdownid}" onclick="userManagerMenuToggle(this)" class="usermanager" style="anchor-name: --anchor-${this.dropdownid};">
             <div class="name">USER</div>
             <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false">
         </button>`
+
+    }
+    disconnectedCallback() {
+        deleteDropdown(this.dropdownid)
     }
 }
 
@@ -70,10 +75,29 @@ function closeModal(id) {
     document.body.removeChild(document.getElementById(id))
 }
 
+let dropdownCount = 0
+
+function createDropdown(html) {
+    let dropdown = document.createElement("div")
+    dropdown.className = "dropdown"
+    dropdown.id = "dropdown-" + dropdownCount
+    dropdown.innerHTML = html
+    dropdown.setAttribute("popover", "popover")
+    dropdown.setAttribute("style", `position-anchor: --anchor-${dropdown.id};`)
+
+    document.body.insertBefore(dropdown, document.body.childNodes[0]);
+    dropdownCount++
+    return dropdown.id
+}
+
+function deleteDropdown(id) {
+    document.body.removeChild(document.getElementById(id))
+}
+
 /* functions */
 function userManagerMenuToggle(elem) {
     console.log("This is a demo of the button!")
-    createModal(`<h2>DEMO!!!</h2><p>This is a sample modal</p>`)
+    //createModal(`<h2>DEMO!!!</h2><p>This is a sample modal</p>`)
 }
 
 function themeSwitcherSwitch(elem) {
