@@ -16,6 +16,7 @@
     --border-radius: 2ch;
     --bg-transition: background-color .1s;
     --popup-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
+    --button-hover-shadow: var(--popup-shadow);
     font-family: Ubuntu, sans-serif;
 }
 
@@ -114,7 +115,7 @@ button {
     font-family: Ubuntu, sans-serif;
     background-color: var(--bg-light);
     color: var(--text);
-    transition: var(--bg-transition);
+    transition: var(--bg-transition), box-shadow .1s;
     border: none;
     padding: .5rem;
     font-size: 16px;
@@ -123,6 +124,9 @@ button {
 
 button:hover {
     background-color: var(--highlight);
+    box-shadow: var(--button-hover-shadow);
+    top: auto;
+    z-index: 1;
 }
 
 button:active {

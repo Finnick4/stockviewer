@@ -48,13 +48,13 @@ class userManagerElement extends HTMLElement {
 
 class searchBarElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<input type="text" placeholder="Search..">`
+        this.innerHTML = `<input type="text" placeholder="Search...">`
     }
 }
 
 class createDataElement extends HTMLElement {
     connectedCallback() {
-        this.dropdownid = createDropdown(`<button>Create Stock</button>
+        this.dropdownid = createDropdown(`<button onclick="showModalCreateStock()">Create Stock</button>
                                                 <button>Create Stock Group</button>
                                                 <button>Create Article</button>
                                                 <button>Create User</button>
@@ -74,7 +74,7 @@ function createModal(html) {
     modal.className = "modal"
     modal.id = "modal-" + modalCount
     modal.innerHTML = `<div class="content">
-        <span class="closeBtn" onClick="closeModal('${modalCount}')">&times;</span>
+        <span class="closeBtn" onClick="closeModal('${modal.id}')">&times;</span>
         <div>${html}</div>
     </div>`
     modal.addEventListener("click", x => {
@@ -84,6 +84,7 @@ function createModal(html) {
     })
     document.body.insertBefore(modal,document.body.childNodes[0]);
     modalCount++
+    return modal.id
 }
 
 
@@ -115,6 +116,25 @@ function userManagerMenuToggle(elem) {
     console.log("This is a demo of the button!")
     //createModal(`<h2>DEMO!!!</h2><p>This is a sample modal</p>`)
 }
+
+
+function showModalCreateStock() {
+    let html = `<h2>Create a new stock</h2>
+                        <div class="form">
+                            <h3>Name</h3>
+                            <input type="text" placeholder="Stock name...">
+                        </div>
+                        <div class="form">
+                            <h3>Initial price</h3>
+                            <input type="number">
+                        </div>
+                        <p class="info"></p>
+                        <button>Submit</button>
+                        `
+    let id = createModal(html)
+}
+
+
 
 function themeSwitcherSwitch(elem) {
     if (document.querySelector("body").getAttribute("data-theme") === "light") {
