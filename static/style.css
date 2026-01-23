@@ -180,7 +180,7 @@ header-bar search-bar {
 
 search-bar {
     background-color: var(--bg-light);
-    padding: 1rem;
+    padding: .5rem;
     border-radius: var(--border-radius);
     transition: var(--bg-transition);
 }
@@ -201,6 +201,7 @@ search-bar input{
     color: var(--text);
     outline: none;
     transition: var(--bg-transition);
+    height: 2rem
 }
 header-bar site-manager {
     grid-column: 6;
