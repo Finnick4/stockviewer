@@ -98,7 +98,7 @@ function createDropdown(html) {
     dropdown.className = "dropdown"
     dropdown.id = "dropdown-" + dropdownCount
     dropdown.innerHTML = html
-    dropdown.setAttribute("popover", "popover")
+    dropdown.setAttribute("popover", "auto")
     dropdown.setAttribute("style", `position-anchor: --anchor-${dropdown.id};`)
 
     document.body.insertBefore(dropdown, document.body.childNodes[0]);
