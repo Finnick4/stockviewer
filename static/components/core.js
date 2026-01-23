@@ -54,7 +54,7 @@ class searchBarElement extends HTMLElement {
 
 class createDataElement extends HTMLElement {
     connectedCallback() {
-        this.dropdownid = createDropdown(`<button onclick="showModalCreateStock()">Create Stock</button>
+        this.dropdownid = createDropdown(`<button onclick="showModalCreateStock(this)">Create Stock</button>
                                                 <button>Create Stock Group</button>
                                                 <button>Create Article</button>
                                                 <button>Create User</button>
@@ -73,9 +73,9 @@ function createModal(html) {
     let modal = document.createElement("div")
     modal.className = "modal"
     modal.id = "modal-" + modalCount
-    modal.innerHTML = `<div class="content">
+    modal.innerHTML = `<div class="outer">
         <span class="closeBtn" onClick="closeModal('${modal.id}')">&times;</span>
-        <div>${html}</div>
+        <div class="content">${html}</div>
     </div>`
     modal.addEventListener("click", x => {
         if (x.target === modal) {
@@ -118,21 +118,64 @@ function userManagerMenuToggle(elem) {
 }
 
 
-function showModalCreateStock() {
+function showModalCreateStock(elem) {
+    if (elem != null && elem.parentElement.getAttribute("popover") != null) {
+        elem.parentElement.togglePopover(false)
+    }
+
     let html = `<h2>Create a new stock</h2>
-                        <div class="form">
+                        <div class="pair">
                             <h3>Name</h3>
-                            <input type="text" placeholder="Stock name...">
+                            <input class="name" type="text" placeholder="Stock name...">
                         </div>
-                        <div class="form">
-                            <h3>Initial price</h3>
-                            <input type="number">
+                        <div class="pair">
+                            <h3>Initial price (ct)</h3>
+                            <input class="price" type="number">
                         </div>
-                        <p class="info"></p>
-                        <button>Submit</button>
+                        <div class="pair">
+                            <div class="info"></div>
+                            <button>Submit</button>
+                        </div>
                         `
     let id = createModal(html)
+    document.querySelectorAll(`#${id} .pair input`).forEach(elem => {
+        elem.addEventListener("input", () => validateModalCreateStock(id))
+    })
+    validateModalCreateStock(id)
 }
+
+function validateModalCreateStock(id) {
+    let infotxt = document.querySelector(`#${id} .info`)
+
+    const err = msg => {
+        infotxt.innerHTML = msg
+        infotxt.classList.add("negative")
+        infotxt.classList.remove("positive")
+    }
+
+    let name = document.querySelector(`#${id} .name`).value
+    if (name.length > 32) {
+        err("The name is too long! (2 - 32 characters)")
+        return false
+    }
+    if (name.length <= 2) {
+        err("The name is too short! (2 - 32 characters)")
+        return false
+    }
+
+
+    let price = document.querySelector(`#${id} .price`).value
+    if (price < 10000000) {
+        err("The initial price has to be at least 100k!")
+        return false
+    }
+
+    infotxt.innerHTML = "Values are okay"
+    infotxt.classList.add("positive")
+    infotxt.classList.remove("negative")
+    return true
+}
+
 
 
 
