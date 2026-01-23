@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
 
 var indexBuffer []byte
 var cssBuffer []byte
+var jsBuffer []byte
 
 func HandleIndexHTML(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
@@ -26,17 +29,55 @@ func HandleStyleCSS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+func HandleScriptJS(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/javascript")
+	_, err := w.Write(jsBuffer)
+	if err != nil {
+		log.Errorf("Error while trying to serve the script.js: %v", err)
+		return
+	}
+}
 
 func initBuffers() {
-	log.Debug("Initialising the index and css buffer...")
-	index, err := os.ReadFile("./static/index.html")
-	if err != nil {
-		log.Error(err)
-	}
-	css, err := os.ReadFile("./static/style.css")
-	if err != nil {
-		log.Error(err)
-	}
-	indexBuffer = index
-	cssBuffer = css
+	log.Debug("Initialising buffers...")
+	go func() {
+		log.Debug("Initialising index buffer")
+		index, err := os.ReadFile("./website/index.html")
+		if err != nil {
+			index = []byte("<h1>Internal Error!</h1>")
+			log.Error(err)
+		}
+		indexBuffer = index
+	}()
+	go func() {
+		log.Debug("Initialising CSS buffer")
+		css, err := os.ReadFile("./website/style.css")
+		if err != nil {
+			log.Error(err)
+		}
+
+		cssBuffer = css
+	}()
+	go func() {
+		log.Debug("Initialising JavaScript buffer")
+		dir, err := os.ReadDir("./website/script/")
+		if err != nil {
+			log.Error(err)
+			return
+		}
+
+		var compjs []byte
+
+		for i := range dir {
+			name := dir[i].Name()
+			if strings.HasSuffix(name, ".js") {
+				js, err := os.ReadFile(fmt.Sprintf("./website/script/%v", name))
+				if err != nil || js == nil {
+					log.Error(err)
+				}
+				compjs = append(compjs, js...)
+			}
+		}
+		jsBuffer = compjs
+	}()
 }
