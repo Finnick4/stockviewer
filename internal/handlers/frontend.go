@@ -12,6 +12,7 @@ import (
 var indexBuffer []byte
 var cssBuffer []byte
 var jsBuffer []byte
+var jsCompileBuffer []byte
 
 func HandleIndexHTML(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
@@ -60,24 +61,32 @@ func initBuffers() {
 	}()
 	go func() {
 		log.Debug("Initialising JavaScript buffer")
-		dir, err := os.ReadDir("./website/script/")
-		if err != nil {
-			log.Error(err)
-			return
-		}
 
-		var compjs []byte
+		compileJSDir("./website/script/")
 
-		for i := range dir {
-			name := dir[i].Name()
-			if strings.HasSuffix(name, ".js") {
-				js, err := os.ReadFile(fmt.Sprintf("./website/script/%v", name))
-				if err != nil || js == nil {
-					log.Error(err)
-				}
-				compjs = append(compjs, js...)
-			}
-		}
-		jsBuffer = compjs
+		jsBuffer = jsCompileBuffer
 	}()
+}
+
+func compileJSDir(path string) {
+	dir, err := os.ReadDir(path)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	for i := range dir {
+		name := dir[i].Name()
+		if dir[i].IsDir() {
+			compileJSDir(fmt.Sprintf("%v%v/", path, name))
+			continue
+		}
+
+		if strings.HasSuffix(name, ".js") {
+			js, err := os.ReadFile(fmt.Sprintf("%v%v", path, name))
+			if err != nil || js == nil {
+				log.Error(err)
+			}
+			jsCompileBuffer = append(jsCompileBuffer, js...)
+		}
+	}
 }
