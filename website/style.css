@@ -79,6 +79,7 @@ body {
     width: 100%;
     overflow: auto;
     backdrop-filter: blur(3px);
+    background-color: rgba(0,0,0,.4);
 }
 .modal .outer {
     background-color: var(--bg);

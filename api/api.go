@@ -10,7 +10,7 @@ import (
 
 type StockCreateParams struct {
 	Name      string
-	InitPrice float64
+	InitPrice int64
 }
 type StockGetParams struct {
 	ID        int64
