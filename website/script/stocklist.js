@@ -9,7 +9,7 @@ class stocklistAll extends HTMLElement {
                         notation: 'compact',
                         compactDisplay: 'short'
                     });
-                    html += `<a class="stockoverview" data-stock-id="${e["ID"]}" href="${window.location.origin}/stocks/${e["ID"]}">
+                    html += `<a class="stockoverview" is="a-button" data-stock-id="${e["ID"]}" href="${window.location.origin}/stocks/${e["ID"]}">
                             <div class="stockname">${e["Name"]}</div>
                             <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
                                 <div class="change">${shortPrice}</div>
@@ -24,12 +24,6 @@ class stocklistAll extends HTMLElement {
                         ${html}
                     </div>
                 `
-                document.querySelectorAll(".stockoverview").forEach(elem => {
-                    elem.addEventListener("click", e => {
-                        const currentID = e.currentTarget.getAttribute("data-stock-id")
-                        window.history.pushState(null, null, `${window.location.origin}/stocks/${currentID}`)
-                        e.preventDefault()
-                    })})
             })
         } catch (e) {
             console.log(e)
