@@ -343,3 +343,20 @@ theme-switcher button {
 .negative > .change:hover {
     background-color: var(--negative);
 }
+
+
+path {
+    fill:none;
+    stroke:var(--positiv-muted);
+    stroke-width:3;
+}
+
+path:hover {
+    stroke:var(--positiv);
+}
+
+stock-chart div.inner {
+    background-color: var(--bg);
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+}
