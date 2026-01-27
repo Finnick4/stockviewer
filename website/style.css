@@ -345,13 +345,13 @@ theme-switcher button {
 }
 
 
-path {
+stock-chart svg path {
     fill:none;
     stroke:var(--positiv-muted);
-    stroke-width:3;
+    stroke-width:1;
 }
 
-path:hover {
+stock-chart svg path:hover {
     stroke:var(--positiv);
 }
 
@@ -359,4 +359,10 @@ stock-chart div.inner {
     background-color: var(--bg);
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
+}
+
+stock-chart svg line.axis {
+    stroke: var(--icon-color);
+    stroke-width: 1;
+    stroke-linecap: square;
 }
