@@ -1,18 +1,58 @@
 class stockChart extends HTMLElement {
     connectedCallback() {
         this.stockid = this.getAttribute("data-stock-id")
+        this.timeframe = 1
         this.innerHTML = `
                         <div class="inner">
                             <h2>${this.stockid}</h2>
                             <nav class="timeframe-selector"></nav>
                             <svg class="chart" viewbox="0 0 100 50">
-                                <path d="M10 25 L20 10 L30 30 L40 40 L50 20" ></path>
+                                <path d="M10 25 L90 25" ></path>
                                 <line class="axis" x1="10" x2="10" y1="5" y2="45"></line>
                                 <line class="axis" x1="10" x2="90" y1="45" y2="45"></line>
                             </svg>
                         </div>
                         `
+        fetch(`${window.location.origin}/api/stocks/?Timeframe=${this.timeframe}&Id=${this.stockid}`).then(resp => resp.json()).then(obj => {
+            this.redrawGraph(obj["Data"].map(elem => elem["Price"]))
+        })
+
+    }
+    redrawGraph(prices) {
+        const width = 80
+        const height = 40
+        const xPadding = 10
+        const yPadding = 5
+        const min = getMinimum(prices)
+        const max = getMaximum(prices)
+        const vunit = (max - min) / height
+        const hunit = width / prices.length
+        const getHeight = x => (x - min) / vunit
+        let path = ""
+
+        prices.forEach((elem, i) => {
+            path += `L${(i * hunit) + xPadding} ${(height - getHeight(elem)) + yPadding} `
+        })
+
+        if (path !== "") {
+            path = path.replace('L', 'M')
+        }
+
+        document.querySelector(`stock-chart[data-stock-id="${this.stockid}"] svg path`).setAttribute("d", path)
     }
 }
 
 customElements.define('stock-chart', stockChart);
+
+
+function getMinimum(arr) {
+    let m = Infinity
+    arr.forEach(x => m = x < m ? x : m)
+    return m
+}
+
+function getMaximum(arr) {
+    let m = -Infinity
+    arr.forEach(x => m = x > m ? x : m)
+    return m
+}
