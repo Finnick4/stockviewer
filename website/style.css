@@ -347,12 +347,23 @@ theme-switcher button {
 
 stock-chart svg path {
     fill:none;
-    stroke:var(--positiv-muted);
     stroke-width:1;
 }
 
-stock-chart svg path:hover {
+stock-chart svg path.positive {
+    stroke:var(--positiv-muted);
+}
+
+stock-chart svg path.positive:hover {
     stroke:var(--positiv);
+}
+
+stock-chart svg path.negative {
+    stroke:var(--negative-muted);
+}
+
+stock-chart svg path.negative:hover {
+    stroke:var(--negative);
 }
 
 stock-chart div.inner {
