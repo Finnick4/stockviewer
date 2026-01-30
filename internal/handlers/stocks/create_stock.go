@@ -43,9 +43,9 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var response = api.CreateStockResponse{
+	var response = api.SuccessResponse{
 		Code: http.StatusOK,
-		ID:   lastID,
+		Data: lastID,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

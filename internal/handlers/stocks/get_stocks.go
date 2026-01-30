@@ -67,7 +67,7 @@ func sendAllStockDeltas(w http.ResponseWriter, timeframeScope int64) error {
 		return err
 	}
 
-	var response = api.StockGetResponse{
+	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: deltas,
 	}
@@ -84,7 +84,7 @@ func sendAllStocks(w http.ResponseWriter) error {
 		return err
 	}
 
-	var response = api.StockGetResponse{
+	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: data,
 	}
@@ -99,7 +99,7 @@ func sendStockHistory(w http.ResponseWriter, id int64, timeframeScope int64) err
 		return err
 	}
 
-	var response = api.StockGetResponse{
+	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: history,
 	}
@@ -115,7 +115,7 @@ func sendStockInfo(w http.ResponseWriter, id int64) error {
 		return err
 	}
 
-	var response = api.StockGetResponse{
+	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: price,
 	}

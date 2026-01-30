@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"stockviewer/internal/database"
 )
 
 /* Parameters */
@@ -21,25 +20,16 @@ type StockGetHistoryParams struct {
 	Timeframe int64
 }
 
-/* Responses */
-
-type CreateStockResponse struct {
-	Code int
-	ID   int64
-}
-type StockGetPriceResponse struct {
-	Code  int
-	Price int64
+type SessionLoginParams struct {
+	Username string
+	Password string
 }
 
-type StockGetResponse struct {
+/* Response */
+
+type SuccessResponse struct {
 	Code int
 	Data any
-}
-
-type StockGetHistoryResponse struct {
-	Code    int
-	History []database.StockPriceTime
 }
 
 /* Others */
