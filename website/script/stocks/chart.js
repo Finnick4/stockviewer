@@ -2,6 +2,10 @@ class stockChart extends HTMLElement {
     connectedCallback() {
         this.stockid = this.getAttribute("data-stock-id")
         this.timeframe = 1
+        this.width = 80
+        this.height = 40
+        this.xPadding = 10
+        this.yPadding = 5
         this.innerHTML = `
                         <div class="inner">
                             <h2>${this.stockid}</h2>
@@ -19,21 +23,22 @@ class stockChart extends HTMLElement {
 
     }
     redrawGraph(prices) {
-        const width = 80
-        const height = 40
-        const xPadding = 10
-        const yPadding = 5
+
         const min = getMinimum(prices)
         const max = getMaximum(prices)
-        const vunit = (max - min) / height
-        const hunit = width / prices.length
+        const vunit = (max - min) / this.height     // Vertical Unit
+        const hunit = this.width / prices.length    // Horizontal Unit
         const getHeight = x => (x - min) / vunit
         let path = ""
+        let circlesHTML = ""
 
         prices.forEach((elem, i) => {
-            path += `L${(i * hunit) + xPadding} ${(height - getHeight(elem)) + yPadding} `
+            const x = (i * hunit) + this.xPadding
+            const y = (this.height - getHeight(elem)) + this.yPadding
+            path += `L${x} ${y} `
+            circlesHTML += `<circle r="2" cx="${x}" cy="${y}" fill="red" opacity="0"><title>${(elem / 100).toLocaleString()}€</title></circle>`
         })
-
+        document.querySelector(`stock-chart[data-stock-id="${this.stockid}"] svg`).innerHTML += circlesHTML
         if (path !== "") {
             path = path.replace('L', 'M')
         }
