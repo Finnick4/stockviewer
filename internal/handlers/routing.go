@@ -18,16 +18,14 @@ func Handler(r *chi.Mux) {
 	r.Get("/*", HandleIndexHTML)
 	r.Get("/style.css", HandleStyleCSS)
 	r.Get("/script.js", HandleScriptJS)
+	r.Post("/api/users/login", sessions.LoginSession)
 
 	fs := http.FileServer(http.Dir("./website/"))
 	r.Handle("/icons/*", fs)
 
-	r.Route("/api/stocks", func(router chi.Router) {
+	r.With(AuthMiddleware).Route("/api/stocks", func(router chi.Router) {
 
 		router.Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)
-	})
-	r.Route("/api/users", func(router chi.Router) {
-		router.Post("/login", sessions.LoginSession)
 	})
 }

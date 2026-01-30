@@ -3,7 +3,9 @@ package database
 import (
 	"crypto/rand"
 	"crypto/sha512"
+	"database/sql"
 	"encoding/hex"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,4 +51,19 @@ func GenerateNewToken(userid string) (string, error) {
 	}
 
 	return token, nil
+}
+
+// GetTokenStatus returns the status set in the users table for a token.
+func GetTokenStatus(token string) int32 {
+	resp := db.QueryRow(`SELECT status FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1);`, hash512(token))
+	var val int32
+	err := resp.Scan(&val)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0
+		}
+		log.Error(err)
+		return 0
+	}
+	return val
 }
