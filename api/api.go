@@ -64,4 +64,10 @@ var (
 	InternalErrorHandler = func(w http.ResponseWriter) {
 		writeError(w, "An Unexpected Error Occured.", http.StatusInternalServerError)
 	}
+	RequestUnauthorisedHandler = func(w http.ResponseWriter) {
+		writeError(w, "The request is unauthorised. Please use a token or generate one with the correct name and password!", http.StatusUnauthorized)
+	}
+	InsufficientPermissionHandler = func(w http.ResponseWriter) {
+		writeError(w, "No sufficient permission for this action is currently present with the associated token!", http.StatusForbidden)
+	}
 )

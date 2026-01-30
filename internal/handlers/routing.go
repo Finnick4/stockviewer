@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"stockviewer/internal/handlers/sessions"
 	"stockviewer/internal/handlers/stocks"
 
 	"github.com/go-chi/chi"
@@ -25,5 +26,8 @@ func Handler(r *chi.Mux) {
 
 		router.Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)
+	})
+	r.Route("/api/users", func(router chi.Router) {
+		router.Post("/login", sessions.LoginSession)
 	})
 }

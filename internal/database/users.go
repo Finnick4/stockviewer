@@ -103,6 +103,21 @@ func GetTokenPermission(token string, permission string) int32 {
 	return val
 }
 
+// GetIDFromName returns the ID of the username. If there is no ID found or any other error this function returns an empty string
+func GetIDFromName(name string) string {
+	resp := db.QueryRow(`SELECT id FROM users WHERE name = $1;`, name)
+	var val string
+	err := resp.Scan(&val)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return ""
+		}
+		log.Error(err)
+		return ""
+	}
+	return val
+}
+
 // HasTokenPermission returns whether the user associated with the token has the given boolean permission.
 // This function will technically still run if the permission isn't supposed to be interpreted as a boolean.
 func HasTokenPermission(token string, permission string) bool {
