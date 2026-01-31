@@ -17,33 +17,30 @@ class stockChart extends HTMLElement {
                             </svg>
                         </div>
                         `
-        fetch(`${window.location.origin}/api/stocks/?Timeframe=${this.timeframe}&Id=${this.stockid}`).then(resp => resp.json()).then(obj => {
-            this.redrawGraph(obj["Data"].map(elem => elem["Price"]).reverse())
-        })
-
+        subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
     }
-    redrawGraph(prices) {
-
+    redrawGraph(data, that) {
+        const prices = data.map(elem => elem["Price"]).reverse()
         const min = getMinimum(prices)
         const max = getMaximum(prices)
-        const vunit = (max - min) / this.height     // Vertical Unit
-        const hunit = this.width / prices.length    // Horizontal Unit
+        const vunit = (max - min) / that.height     // Vertical Unit
+        const hunit = that.width / prices.length    // Horizontal Unit
         const getHeight = x => (x - min) / vunit
         let path = ""
         let circlesHTML = ""
 
         prices.forEach((elem, i) => {
-            const x = (i * hunit) + this.xPadding
-            const y = (this.height - getHeight(elem)) + this.yPadding
+            const x = (i * hunit) + that.xPadding
+            const y = (that.height - getHeight(elem)) + that.yPadding
             path += `L${x} ${y} `
             circlesHTML += `<circle r="2" cx="${x}" cy="${y}" fill="red" opacity="0"><title>${(elem / 100).toLocaleString()}€</title></circle>`
         })
-        document.querySelector(`stock-chart[data-stock-id="${this.stockid}"] svg`).innerHTML += circlesHTML
+        document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg`).innerHTML += circlesHTML
         if (path !== "") {
             path = path.replace('L', 'M')
         }
 
-        const pathElem = document.querySelector(`stock-chart[data-stock-id="${this.stockid}"] svg path`)
+        const pathElem = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg path`)
         pathElem.setAttribute("d", path)
         pathElem.classList.remove("positive")
         pathElem.classList.remove("negative")
