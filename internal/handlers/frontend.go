@@ -86,6 +86,7 @@ func compileJSDir(path string) {
 			if err != nil || js == nil {
 				log.Error(err)
 			}
+			js = append(js, []byte("\n")...)
 			jsCompileBuffer = append(jsCompileBuffer, js...)
 		}
 	}
