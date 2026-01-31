@@ -315,7 +315,14 @@ theme-switcher button {
     word-break: break-word;
     width: 40%;
     margin: 1ch;
+    text-decoration: none;
+    color: var(--text-muted);
 }
+
+.stockoverview:hover .stockname {
+    color: var(--text);
+}
+
 .change {
     display: inline-block;
     background-color: var(--bg-light);
