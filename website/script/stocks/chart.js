@@ -17,8 +17,12 @@ class stockChart extends HTMLElement {
                             </svg>
                         </div>
                         `
-        subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
     }
+    disconnectedCallback() {
+        this.closeSubscription()
+    }
+
     redrawGraph(data, that) {
         const prices = data.map(elem => elem["Price"]).reverse()
         const min = getMinimum(prices)

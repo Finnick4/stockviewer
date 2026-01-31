@@ -5,7 +5,11 @@ class stocklistAll extends HTMLElement {
                 <h2>All stocks</h2>
                 <p>Loading stock data...</p>
             </div>`
-        subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.updateData, this))
+    }
+
+    disconnectedCallback() {
+        this.closeSubscription()
     }
 
     updateData(data, that) {
