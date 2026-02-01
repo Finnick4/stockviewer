@@ -1,6 +1,7 @@
 package stocks
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"stockviewer/api"
@@ -38,7 +39,13 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					return err
 				}
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", history)
+
+				resp, err := json.Marshal(history)
+				if err != nil {
+					return err
+				}
+
+				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
 				if err != nil {
 					return err
 				}
@@ -52,7 +59,13 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					return err
 				}
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", price)
+
+				resp, err := json.Marshal(price)
+				if err != nil {
+					return err
+				}
+
+				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
 				if err != nil {
 					return err
 				}
@@ -67,7 +80,13 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					return err
 				}
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", deltas)
+
+				resp, err := json.Marshal(deltas)
+				if err != nil {
+					return err
+				}
+
+				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
 				if err != nil {
 					return err
 				}
@@ -80,7 +99,13 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					return err
 				}
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", data)
+
+				resp, err := json.Marshal(data)
+				if err != nil {
+					return err
+				}
+
+				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
 				if err != nil {
 					return err
 				}
