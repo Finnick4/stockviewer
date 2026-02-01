@@ -61,4 +61,5 @@ func Step() {
 	database.SetStockPrices(newStocks)
 
 	log.Debugf("Successfully stepped all stocks in t=%v", time.Since(t))
+	notifyOfStockStep()
 }

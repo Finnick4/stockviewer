@@ -4,8 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"stockviewer/internal/database"
+	"stockviewer/internal/stocks"
 	"time"
 
 	"stockviewer/api"
@@ -33,8 +35,13 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 
 	if params.ID > 0 {
 		if database.IsValidTimeframeScope(params.Timeframe) {
-			err = sendStockHistory(w, params.ID, params.Timeframe)
-			log.Debugf("Time took to get stock %v with history in timeframe %v is %v", params.ID, params.Timeframe, time.Since(t))
+			startStockHistorySSE(w, r, params.ID, params.Timeframe)
+			return
+
+			/*
+				err = sendStockHistory(w, params.ID, params.Timeframe)
+				log.Debugf("Time took to get stock %v with history in timeframe %v is %v", params.ID, params.Timeframe, time.Since(t))
+			*/
 		} else {
 			err = sendStockInfo(w, params.ID)
 			log.Debugf("Time took to get stock %v is %v", params.ID, time.Since(t))
@@ -106,6 +113,53 @@ func sendStockHistory(w http.ResponseWriter, id int64, timeframeScope int64) err
 
 	w.Header().Set("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(response)
+}
+
+func startStockHistorySSE(w http.ResponseWriter, r *http.Request, id int64, timeframeScope int64) {
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	clientGone := r.Context().Done()
+	rc := http.NewResponseController(w)
+
+	send := func() error {
+		history, err := database.GetStockPriceHistory(id, database.GenerateTimeframe(timeframeScope))
+		if err != nil {
+			return err
+		}
+		_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", history)
+		if err != nil {
+			return err
+		}
+		err = rc.Flush()
+		return err
+	}
+	err := send()
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	stockStepPing, stockStepPingRemove := stocks.GetNewStepNotification()
+
+	for {
+		select {
+		case <-clientGone:
+			log.Debug("Client has disconnected from SSE")
+			stockStepPingRemove()
+			return
+		case <-stockStepPing:
+			err = send()
+			if err != nil {
+				log.Error(err)
+				stockStepPingRemove()
+				return
+			}
+		}
+	}
+
 }
 
 func sendStockInfo(w http.ResponseWriter, id int64) error {
