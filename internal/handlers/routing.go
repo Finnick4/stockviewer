@@ -23,7 +23,7 @@ func Handler(r *chi.Mux) {
 	fs := http.FileServer(http.Dir("./website/"))
 	r.Handle("/icons/*", fs)
 
-	r.With(AuthMiddleware).Route("/api/stocks", func(router chi.Router) {
+	r. /*With(AuthMiddleware).*/ Route("/api/stocks", func(router chi.Router) {
 
 		router.Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)

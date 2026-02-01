@@ -1,5 +1,6 @@
 
 let currentSubscriptions = {}
+let subscriptionListeners = {}
 let currentSubscriptionCount = 0
 
 function subscribeToAPI(path, func) {
@@ -12,21 +13,38 @@ function subscribeToAPI(path, func) {
             id: id,
             fn: func
         }]
+
+        subscriptionListeners[path] = {
+            es: undefined,
+            cache: []
+        }
+
+        subscriptionListeners[path].es = new EventSource(window.location.origin + path);
+
+        subscriptionListeners[path].es.addEventListener("stockupdate", event => {
+            subscriptionListeners[path].cache = JSON.parse(event.data)
+            pingDataSubscribed(path)
+        })
+
+
     } else {
         currentSubscriptions[path].add({
             id: id,
             fn: func
         })
+        pingDataSubscribed(path)
     }
-    pingDataSubscribed(path)
 
     return () => {
         currentSubscriptions[path] = currentSubscriptions[path].filter(sub => (sub["id"] !== id))
         if (currentSubscriptions[path].length === 0) {
             delete currentSubscriptions[path]
+            subscriptionListeners[path].es.close()
+            delete subscriptionListeners[path]
         }
     }
 }
+
 
 function addThisToFunctionCall(func, that) {
     return data => func(data, that)
@@ -34,16 +52,8 @@ function addThisToFunctionCall(func, that) {
 
 async function pingDataSubscribed(path) {
     if (Object.keys(currentSubscriptions).indexOf(path) !== - 1) {
-        fetch(window.location.origin + path, {
-            headers: {
-            "Authorization": "Bearer d1ce2870b8b03f09276b402ad2744681f2a62777952eb6e265f929793045a379",
-        },
-        }).then(resp => resp.json()).then(r => {
-            if (r["Code"] < 400) {
-                currentSubscriptions[path].forEach(entry => {
-                    entry["fn"](r["Data"])
-                })
-            }
+        currentSubscriptions[path].forEach(entry => {
+            entry["fn"](subscriptionListeners[path].cache)
         })
     }
 }
