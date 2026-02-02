@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"stockviewer/internal/handlers/middleware"
 	"stockviewer/internal/handlers/sessions"
 	"stockviewer/internal/handlers/stocks"
 
@@ -11,6 +12,7 @@ import (
 
 func Handler(r *chi.Mux) {
 	r.Use(chimiddle.StripSlashes)
+	r.Use(middleware.ExtractToken)
 
 	go func() {
 		initBuffers()
@@ -23,7 +25,7 @@ func Handler(r *chi.Mux) {
 	fs := http.FileServer(http.Dir("./website/"))
 	r.Handle("/icons/*", fs)
 
-	r. /*With(AuthMiddleware).*/ Route("/api/stocks", func(router chi.Router) {
+	r.With(middleware.ValidateToken).Route("/api/stocks", func(router chi.Router) {
 
 		router.Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)

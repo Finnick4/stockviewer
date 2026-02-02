@@ -36,34 +36,46 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if database.IsCorrectPassword(params.Username, params.Password) {
-		id := database.GetIDFromName(params.Username)
-		if id == "" {
-			api.InternalErrorHandler(w)
-			return
-		}
-
-		token, err := database.GenerateNewToken(id)
-		if err != nil {
-			log.Error(err)
-			api.InternalErrorHandler(w)
-			return
-		}
-
-		var response = api.SuccessResponse{
-			Code: http.StatusOK,
-			Data: token,
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		err = json.NewEncoder(w).Encode(response)
-		if err != nil {
-			log.Error(err)
-			api.InternalErrorHandler(w)
-			return
-		}
-	} else {
+	if !database.IsCorrectPassword(params.Username, params.Password) {
 		api.RequestUnauthorisedHandler(w)
+		return
+	}
+
+	id := database.GetIDFromName(params.Username)
+	if id == "" {
+		api.InternalErrorHandler(w)
+		return
+	}
+
+	token, err := database.GenerateNewToken(id)
+	if err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
+
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    token,
+		Path:     "/",
+		MaxAge:   2592000,
+		Secure:   false, // TODO This is currently only a development environment. Down the road, a toggle to switch to a production environment has to be implemented to i.e. set secure = true.
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+
+	var response = api.SuccessResponse{
+		Code: http.StatusOK,
+		Data: "success",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
 		return
 	}
 }
