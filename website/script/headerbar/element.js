@@ -2,11 +2,11 @@
 class headerBarElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
-                <h1>Stock Viewer</h1>
+                <a is="a-button" href="/"><h1>Stock Viewer</h1></a>
                 <nav class="move">
-                    <a is="a-button" href="${window.location.origin}/stocks">Stocks</a>
-                    <a is="a-button" href="${window.location.origin}/articles">Articles</a>
-                    <a is="a-button" href="${window.location.origin}/groups">Groups</a>
+                    <a is="a-button" href="/stocks">Stocks</a>
+                    <a is="a-button" href="/articles">Articles</a>
+                    <a is="a-button" href="/groups">Groups</a>
                 </nav>
                 <search-bar></search-bar>
                 <nav class="create"><create-data></create-data></nav>

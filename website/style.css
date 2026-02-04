@@ -203,7 +203,7 @@ header-bar nav.create {
     justify-content: flex-start;
 }
 
-header-bar nav a {
+header-bar a {
     color: var(--text);
     text-decoration: none;
 }

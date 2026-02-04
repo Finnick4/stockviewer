@@ -21,7 +21,7 @@ class stocklistAll extends HTMLElement {
                 compactDisplay: 'short'
             });
             html += `<div class="stockoverview"  data-stock-id="${e["ID"]}">
-                            <a is="a-button" class="stockname" href="${window.location.origin}/stocks/${e["ID"]}">${e["Name"]}</a>
+                            <a is="a-button" class="stockname" href="/stocks/${e["ID"]}">${e["Name"]}</a>
                             <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
                                 <div class="change">${shortPrice}</div>
                                 <div class="change">${e["DeltaAmount"] / 100}€</div>

@@ -1,16 +1,24 @@
 
 function checkLoggedIn() {
     if (!document.cookie.includes("isLoggedIn=true")) {
-        const prevURL = window.location.href === `${window.location.origin}/login` || window.location.href === `${window.location.origin}/login/` ? "" : window.location.href;
         console.log("not logged in!!!")
-        buildPageLogin(prevURL ? getNextPage(prevURL) : buildRootPage)
-    } else {
-        buildRootPage()
+        buildPageLogin()
     }
 }
 
-function getNextPage(path) {
-    return buildRootPage
+function getCurrentPathWithoutSlash() {
+    const p = window.location.pathname
+    if (p.length > 1 && p.charAt(p.length - 1) === '/') {
+        return p.slice(0, p.length - 1)
+    }
+    return p
 }
 
+
+window.addEventListener("popstate", e => {
+    e.preventDefault();
+    router()
+})
+
+router()
 checkLoggedIn()

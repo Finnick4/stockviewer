@@ -6,6 +6,8 @@ class aLinkButtonElement extends HTMLAnchorElement {
     connectedCallback() {
         this.addEventListener("click", e => {
             window.history.pushState(null, null, `${this.href}`)
+            console.log(window.location.pathname)
+            router(window.location.pathname)
             e.preventDefault()
         })
     }

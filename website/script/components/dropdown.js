@@ -15,5 +15,12 @@ function createDropdown(html) {
 }
 
 function deleteDropdown(id) {
-    document.body.removeChild(document.getElementById(id))
+    try {
+        document.body.removeChild(document.getElementById(id))    
+    } catch (e) {
+        if (e.name !== "TypeError") {
+            console.log(e)
+        }
+    }
+    
 }
