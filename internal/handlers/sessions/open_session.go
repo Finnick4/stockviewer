@@ -54,7 +54,7 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie := http.Cookie{
+	cookieToken := http.Cookie{
 		Name:     "token",
 		Value:    token,
 		Path:     "/",
@@ -64,7 +64,19 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 	}
 
-	http.SetCookie(w, &cookie)
+	http.SetCookie(w, &cookieToken)
+
+	cookieIsLoggedIn := http.Cookie{
+		Name:     "isLoggedIn",
+		Value:    "true",
+		Path:     "/",
+		MaxAge:   2592000,
+		Secure:   false,
+		HttpOnly: false,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookieIsLoggedIn)
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,

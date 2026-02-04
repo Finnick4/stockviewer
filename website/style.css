@@ -40,6 +40,10 @@ body {
     color: var(--text-muted);
 }
 
+h1 {
+    color:var(--text);
+}
+
 .dropdown {
     background-color: var(--bg-light);
     box-shadow: var(--popup-shadow);
@@ -184,7 +188,6 @@ header-bar {
 }
 
 header-bar h1 {
-    color:var(--text);
     grid-column: 1;
     padding-left: 1rem;
 }
@@ -384,3 +387,37 @@ stock-chart svg line.axis {
     stroke-width: 1;
     stroke-linecap: square;
 }
+
+.login-field {
+    background: var(--bg);
+    padding: 2rem;
+    margin:auto;
+    border-radius: var(--border-radius);
+    width: 60%;
+}
+
+.login-field input {
+    width: 32ch;
+}
+
+.login-field .pair {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.login-field .pair:focus-within {
+    color: var(--text);
+}
+
+.login-field button {
+    padding: 1rem;
+}
+
+.login-field .pair .info {
+    color: var(--negative-muted);
+}
+.login-field .pair:focus-within .info {
+    color: var(--negative);
+}
+

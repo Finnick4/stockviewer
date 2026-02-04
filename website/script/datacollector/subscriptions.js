@@ -57,9 +57,3 @@ async function pingDataSubscribed(path) {
         })
     }
 }
-
-function login() {
-    fetch(window.location.origin + "/api/users/login?username=admin&password=admin", {
-        method: "POST"
-    })
-}
