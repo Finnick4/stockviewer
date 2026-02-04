@@ -14,6 +14,20 @@ function getCurrentPathWithoutSlash() {
     return p
 }
 
+function setMainBodyHTML(main) {
+    const elemMain = document.querySelector("div .main");
+
+    if (elemMain !== null && document.querySelector("header-bar") !== null) {
+        elemMain.innerHTML = main;
+    } else {
+        document.body.innerHTML = `
+        <header-bar></header-bar>
+        <div class="main">
+        ${main}   
+        </div>`
+    }
+}
+
 
 window.addEventListener("popstate", e => {
     e.preventDefault();
