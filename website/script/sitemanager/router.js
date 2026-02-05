@@ -1,20 +1,39 @@
 
 
 function router(path = getCurrentPathWithoutSlash()) {
-    if (path === "") {
-        path = "/"
+    if (path === "" || typeof(path) !== "string") {
+        path = "/";
     }
-    switch (path) {
-        case "/":
+    if (path.charAt(0) !== "/") {
+        path = "/" + path;
+    }
+    const segmentedPath = path.slice(1).split("/")
+
+    switch (segmentedPath[0]) {
+        case "":
             buildRootPage();
             break;
-        case "/login":
+        case "login":
             buildPageLogin();
             break;
-        case "/stocks":
-            buildStocksOverviewPage();
+        case "stocks":
+            routerStocks(segmentedPath);
             break;
-
+        default:
+            build404Page();
     }
 }
 
+function routerStocks(segmented) {
+    if (segmented[0] !== "stocks") {
+        return;
+    }
+
+    if (isNaN(segmented[1])) {
+        window.history.pushState(null, null, `${window.location.origin}/stocks`);
+        buildStocksOverviewPage();
+        return;
+    }
+
+    buildIndividualStockPage(segmented[1])
+}
