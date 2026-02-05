@@ -24,11 +24,16 @@ function subscribeToAPI(path, func) {
         subscriptionListeners[path].es.addEventListener("stockupdate", event => {
             subscriptionListeners[path].cache = JSON.parse(event.data)
             pingDataSubscribed(path)
+            if (currentSubscriptions[path].length === 0) {
+                delete currentSubscriptions[path]
+                subscriptionListeners[path].es.close()
+                delete subscriptionListeners[path]
+            }
         })
 
 
     } else {
-        currentSubscriptions[path].add({
+        currentSubscriptions[path].push({
             id: id,
             fn: func
         })
@@ -37,11 +42,6 @@ function subscribeToAPI(path, func) {
 
     return () => {
         currentSubscriptions[path] = currentSubscriptions[path].filter(sub => (sub["id"] !== id))
-        if (currentSubscriptions[path].length === 0) {
-            delete currentSubscriptions[path]
-            subscriptionListeners[path].es.close()
-            delete subscriptionListeners[path]
-        }
     }
 }
 
