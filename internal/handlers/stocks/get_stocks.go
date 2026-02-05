@@ -2,6 +2,7 @@ package stocks
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"stockviewer/api"
@@ -38,6 +39,11 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 				history, err := database.GetStockPriceHistory(params.ID, database.GenerateTimeframe(params.Timeframe))
 				if err != nil {
 					return err
+				}
+
+				if len(history) == 0 {
+					api.RequestNothingFoundHandler(w, "Did not find a stock with the given ID.")
+					return errors.New("no such stock found")
 				}
 
 				resp, err := json.Marshal(history)

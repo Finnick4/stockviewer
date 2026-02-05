@@ -27,7 +27,7 @@ class stockChart extends HTMLElement {
         const prices = data.map(elem => elem["Price"]).reverse()
         const min = getMinimum(prices)
         const max = getMaximum(prices)
-        const vunit = (max - min) / that.height     // Vertical Unit
+        const vunit = max - min !== 0 ? (max - min) / that.height : 1     // Vertical Unit
         const hunit = that.width / prices.length    // Horizontal Unit
         const getHeight = x => (x - min) / vunit
         let path = ""
