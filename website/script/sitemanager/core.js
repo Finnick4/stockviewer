@@ -2,6 +2,7 @@
 function checkLoggedIn() {
     if (!document.cookie.includes("isLoggedIn=true")) {
         console.log("not logged in!!!")
+        window.history.pushState(null, null, `${window.location.origin}/login`)
         buildPageLogin()
     }
 }

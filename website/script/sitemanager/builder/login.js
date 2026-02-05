@@ -1,7 +1,5 @@
 function buildPageLogin() {
-    const prevPath = getCurrentPathWithoutSlash() !== "/login" ? getCurrentPathWithoutSlash() : "/";
-
-    document.body.innerHTML = `<h1>Stock viewer</h1>
+    document.body.innerHTML = `<h1>Stock Viewer</h1>
         <div class="login-field">
             <h2>Please log in</h2>
             
@@ -43,7 +41,8 @@ function buildPageLogin() {
             switch (r.status) {
                 case 200:
                     inftxt.innerHTML = "Success.";
-                    window.location.href = window.location.origin
+                    window.history.pushState(null, null, `${window.location.origin}`);
+                    router();
                     break;
                 case 401:
                     inftxt.innerHTML = "Invalid credentials.";
