@@ -17,12 +17,14 @@ class stocklistAll extends HTMLElement {
         data.forEach(e => {
             const shortPrice = getShortPrice(e["Price2"]/100)
             html += `<li class="stockoverview"  data-stock-id="${e["ID"]}">
-                            <a is="a-button" class="stockname" href="/stocks/${e["ID"]}">${e["Name"]}</a>
-                            <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
-                                <div class="change">${shortPrice}</div>
-                                <div class="change">${e["DeltaAmount"] / 100}€</div>
-                                <div class="change">${(e["Price2"]/e["Price1"] - 1.0).toFixed(2)}%</div>
-                            </div>
+                            <a is="a-button" href="/stocks/${e["ID"]}">
+                                <div class="stockname">${e["Name"]}</div>
+                                <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
+                                    <div class="change">${shortPrice}</div>
+                                    <div class="change">${e["DeltaAmount"] / 100}€</div>
+                                    <div class="change">${(e["Price2"]/e["Price1"] - 1.0).toFixed(2)}%</div>
+                                </div>
+                            </a>
                         </li>`
         })
 
