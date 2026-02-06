@@ -61,7 +61,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 			send = func() error {
-				price, err := database.GetStockPrice(params.ID)
+				price, err := database.GetStockInfo(params.ID)
 				if err != nil {
 					return err
 				}

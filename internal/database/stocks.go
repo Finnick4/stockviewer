@@ -38,19 +38,20 @@ func CreateStock(name string, initPrice int64) (int64, error) {
 	return lastID, nil
 }
 
-// GetStockPrice returns the current price of a stock of the given ID
-func GetStockPrice(id int64) (int64, error) {
+// GetStockInfo returns the current name and price of a stock of the given ID
+func GetStockInfo(id int64) (CurrentStockData, error) {
 	db := getDB()
 
-	resp := db.QueryRow(`SELECT price FROM stockprice WHERE stockid=$1 AND timestamp=(SELECT "latestUpdate" FROM stocks WHERE id=$1);`, id)
-	var price int64
-	err := resp.Scan(&price)
+	resp := db.QueryRow(`SELECT stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid WHERE stocks.id=$1;`, id)
+	var data CurrentStockData
+	err := resp.Scan(&data.Name, &data.Price)
+	data.Id = id
 
 	if err != nil {
 		log.Error(err)
-		return 0, err
+		return CurrentStockData{}, err
 	}
-	return price, nil
+	return data, nil
 }
 
 // GetStockPrices returns all stock IDs and their respective current price
