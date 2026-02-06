@@ -303,7 +303,7 @@ ul.inner h2 {
     color: var(--text);
     text-align: center;
 }
-.stockoverview {
+.stockOverview {
     background-color: var(--bg-light);
     color: var(--text-muted);
     max-width: 100%;
@@ -314,17 +314,17 @@ ul.inner h2 {
 
 }
 
-.stockoverview a {
+.stockOverview a {
     display: flex;
     justify-content: space-between;
     text-decoration: none;
 }
 
-.stockoverview:hover {
+.stockOverview:hover {
     background-color: var(--highlight);
     color: var(--text);
 }
-.stockname {
+.stockName {
     word-break: break-word;
     width: 40%;
     margin: 1ch;
@@ -333,7 +333,7 @@ ul.inner h2 {
     color: var(--text-muted);
 }
 
-.stockoverview:hover .stockname {
+.stockOverview:hover .stockName {
     color: var(--text);
 }
 

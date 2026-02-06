@@ -4,8 +4,8 @@ class relatedStocks extends HTMLElement {
         let template = ""
 
         for (let i = 0; i < 5; i++) {
-            template += `<li class="stockoverview">
-                                <a is="a-button" class="stockname" href="/stocks">Loading...</a>
+            template += `<li class="stockOverview">
+                                <a is="a-button" class="stockName" href="/stocks">Loading...</a>
                                 <div>
                                     <div class="change">???</div>
                                     <div class="change">+???€</div>
@@ -35,9 +35,9 @@ class relatedStocks extends HTMLElement {
         let elements = ""
 
         const addNoneElement = () => {
-            elements += `<li class="stockoverview">
+            elements += `<li class="stockOverview">
                         <a is="a-button" href="/stocks">
-                            <div class="stockname">None...</div>                       
+                            <div class="stockName">None...</div>                       
                             <div>
                                 <div class="change">---</div>
                                 <div class="change">+-€</div>
@@ -47,13 +47,13 @@ class relatedStocks extends HTMLElement {
                     </li>`
         }
         const addComparingElement = (elem) => {
-            elements += `<li class="stockoverview">
+            elements += `<li class="stockOverview">
                         <a is="a-button" href="/stocks/${elem["Id"]}">
-                            <div class="stockname">${elem["Name"]}</div>
+                            <div class="stockName">${elem["Name"]}</div>
                             <div>
                                 <div class="change">${getShortPrice(elem["Price"]/100)}</div>
                                 <div class="change">${getShortPrice(((elem["Price"] - thisStock["Price"])/100))}</div>
-                                <div class="change">${(elem["Price"]/thisStock["Price"] - 1.0).toFixed(2)}%</div>
+                                <div class="change">${getShortPrice(((elem["Price"]/thisStock["Price"]) * 100))}%</div>
                             </div>
                         </a>
                     </li>`

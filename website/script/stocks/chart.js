@@ -8,7 +8,7 @@ class stockChart extends HTMLElement {
         this.yPadding = 5
         this.innerHTML = `
                         <div class="inner">
-                            <h2>${this.stockid}</h2>
+                            <h2>Stock History</h2>
                             <nav class="timeframe-selector"></nav>
                             <svg class="chart" viewbox="0 0 100 50">
                                 <path d="M10 25 L90 25" ></path>
