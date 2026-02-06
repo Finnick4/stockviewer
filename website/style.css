@@ -282,34 +282,44 @@ theme-switcher button {
     text-align: center;
 }
 
-.stocklist {
+.inner {
     background-color: var(--bg);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+ul.inner {
     display: flex;
     flex-direction: column;
     gap: 1ch;
-    border-radius: var(--border-radius);
-    padding-bottom: 2ch;
+    list-style-type:none
 }
-.stocklist p {
+
+ul.inner p {
     color: var(--text-muted);
     align-self: center;
 }
-.stocklist h2 {
+ul.inner h2 {
     color: var(--text);
     text-align: center;
 }
 .stockoverview {
     background-color: var(--bg-light);
     color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
     max-width: 100%;
-    border-radius: 1ch;
+    border-radius: var(--border-radius);
     transition: var(--bg-transition), color 0.1s;
     margin: 0 var(--border-radius);
     align-items: center;
+
+}
+
+.stockoverview a {
+    display: flex;
+    justify-content: space-between;
     text-decoration: none;
 }
+
 .stockoverview:hover {
     background-color: var(--highlight);
     color: var(--text);
@@ -319,6 +329,7 @@ theme-switcher button {
     width: 40%;
     margin: 1ch;
     text-decoration: none;
+    align-self: center;
     color: var(--text-muted);
 }
 
@@ -374,12 +385,6 @@ stock-chart svg path.negative {
 
 stock-chart svg path.negative:hover {
     stroke:var(--negative);
-}
-
-stock-chart div.inner {
-    background-color: var(--bg);
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
 }
 
 stock-chart svg line.axis {
