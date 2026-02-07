@@ -1,4 +1,4 @@
-package sessions
+package users
 
 import (
 	"encoding/json"
@@ -9,24 +9,22 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetPermissions(w http.ResponseWriter, r *http.Request) {
+func GetUserInformation(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 
-	perms, err := database.GetAllTokenPermissions(token)
+	name := database.GetUserNameFromToken(token)
 
-	if err != nil {
-		log.Error(err)
+	if name == "" {
 		api.InternalErrorHandler(w)
-		return
 	}
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
-		Data: perms,
+		Data: name,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(response)
+	err := json.NewEncoder(w).Encode(response)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)

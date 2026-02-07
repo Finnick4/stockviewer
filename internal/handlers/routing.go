@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 	"stockviewer/internal/handlers/middleware"
-	"stockviewer/internal/handlers/sessions"
 	"stockviewer/internal/handlers/stocks"
+	"stockviewer/internal/handlers/users"
 
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
@@ -20,7 +20,7 @@ func Handler(r *chi.Mux) {
 	r.Get("/*", HandleIndexHTML)
 	r.Get("/style.css", HandleStyleCSS)
 	r.Get("/script.js", HandleScriptJS)
-	r.Post("/api/users/login", sessions.LoginSession)
+	r.Post("/api/users/login", users.LoginSession)
 
 	fs := http.FileServer(http.Dir("./website/"))
 	r.Handle("/icons/*", fs)
@@ -31,6 +31,7 @@ func Handler(r *chi.Mux) {
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/users", func(router chi.Router) {
-		router.Get("/permissions", sessions.GetPermissions)
+		router.Get("/permissions", users.GetPermissions)
+		router.Get("/overview", users.GetUserInformation)
 	})
 }
