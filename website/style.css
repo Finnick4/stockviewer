@@ -341,14 +341,15 @@ ul.inner h2 {
     display: inline-block;
     background-color: var(--bg-light);
     font-family: "Ubuntu Mono",monospace;
-    padding: 1ch;
-    border-radius: 1ch;
+    padding: .75rem;
+    border-radius: var(--border-radius);
     margin: 1ch;
     width: 8ch;
     text-align: center;
     transition: var(--bg-transition);
     color: var(--text);
 }
+
 .positive > .change {
     background-color: var(--positiv-muted);
 }
@@ -426,3 +427,23 @@ stock-chart svg line.axis {
     color: var(--negative);
 }
 
+stock-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.price {
+    display: inline-block;
+    background-color: var(--bg-light);
+    font-family: "Ubuntu Mono",monospace;
+    padding: .75rem;
+    border-radius: var(--border-radius);
+    margin: 1ch;
+    width: fit-content;
+    text-align: center;
+    transition: var(--bg-transition);
+    color: var(--text);
+    align-self: center;
+}
