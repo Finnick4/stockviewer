@@ -30,6 +30,32 @@ func HasTokenPermission(token string, permission string) bool {
 	return GetTokenPermission(token, permission) == 1
 }
 
+func GetAllTokenPermissions(token string) ([]Permission, error) {
+	db := getDB()
+
+	log.Debug("Get all permissions for a token")
+	rows, err := db.Query(`SELECT permissions."claimType", permissions."claimValue" FROM permissions WHERE userid=(SELECT userid FROM sessions WHERE sessions.token = $1);`, hash512(token))
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var perms []Permission
+
+	for rows.Next() {
+		var perm Permission
+		err = rows.Scan(&perm.Permission, &perm.Value)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		perms = append(perms, perm)
+	}
+	return perms, nil
+}
+
 // SetUserPermission sets or updates the permission of a user.
 func SetUserPermission(id string, permission string, value int32) error {
 	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission)

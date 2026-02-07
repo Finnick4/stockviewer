@@ -31,3 +31,8 @@ type PriceDelta struct {
 	DeltaAmount  int64
 	DeltaPercent float64
 }
+
+type Permission struct {
+	Permission string
+	Value      int32
+}
