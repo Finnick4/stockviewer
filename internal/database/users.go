@@ -103,8 +103,38 @@ func GetTokenPermission(token string, permission string) int32 {
 	return val
 }
 
-// GetIDFromName returns the ID of the username. If there is no ID found or any other error this function returns an empty string
-func GetIDFromName(name string) string {
+// GetUserIDFromToken returns the ID of the user that bears the given token.
+func GetUserIDFromToken(token string) string {
+	resp := db.QueryRow(`SELECT userid FROM sessions WHERE token = $1;`, hash512(token))
+	var val string
+	err := resp.Scan(&val)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return ""
+		}
+		log.Error(err)
+		return ""
+	}
+	return val
+}
+
+// GetUserNameFromToken returns the name of the user that bears the given token.
+func GetUserNameFromToken(token string) string {
+	resp := db.QueryRow(`SELECT name FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
+	var val string
+	err := resp.Scan(&val)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return ""
+		}
+		log.Error(err)
+		return ""
+	}
+	return val
+}
+
+// GetUserIDFromName returns the ID of the username. If there is no ID found or any other error this function returns an empty string
+func GetUserIDFromName(name string) string {
 	resp := db.QueryRow(`SELECT id FROM users WHERE name = $1;`, name)
 	var val string
 	err := resp.Scan(&val)

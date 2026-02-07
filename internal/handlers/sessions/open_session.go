@@ -41,7 +41,7 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := database.GetIDFromName(params.Username)
+	id := database.GetUserIDFromName(params.Username)
 	if id == "" {
 		api.InternalErrorHandler(w)
 		return
