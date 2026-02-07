@@ -26,8 +26,11 @@ func Handler(r *chi.Mux) {
 	r.Handle("/icons/*", fs)
 
 	r.With(middleware.ValidateToken).Route("/api/stocks", func(router chi.Router) {
-
 		router.Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)
+	})
+
+	r.With(middleware.ValidateToken).Route("/api/users", func(router chi.Router) {
+		router.Get("/permissions", sessions.GetPermissions)
 	})
 }
