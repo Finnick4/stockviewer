@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"math"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -44,36 +43,6 @@ func hashPW(toHash string) (string, error) {
 	return string(hashed), nil
 }
 
-// SetUserPermission sets or updates the permission of a user.
-func SetUserPermission(id string, permission string, value int32) error {
-	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission)
-	var permValue int64
-	err := resp.Scan(&permValue)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			// b) create new permission entry
-			_, error2 := db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission, value)
-
-			if error2 != nil {
-				log.Error(error2)
-				return error2
-			}
-			return nil
-		}
-
-		log.Fatal(err)
-	}
-
-	// a) Update existing permission
-	_, err = db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, value, permission, id)
-
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	return nil
-}
-
 // IsCorrectPassword returns whether the given username has the given password.
 func IsCorrectPassword(username string, pw string) bool {
 	resp := db.QueryRow(`SELECT password FROM users WHERE name = $1;`, username)
@@ -85,22 +54,6 @@ func IsCorrectPassword(username string, pw string) bool {
 	}
 
 	return bcrypt.CompareHashAndPassword([]byte(hashedPW), []byte(pw)) == nil
-}
-
-// GetTokenPermission returns the permission value of user associated with the token.
-// If the queried permission is to be interpreted as a bool, use HasTokenPermission instead!
-func GetTokenPermission(token string, permission string) int32 {
-	resp := db.QueryRow(`SELECT "claimValue" FROM permissions WHERE "claimType" = $1 AND userid = (SELECT userid FROM sessions WHERE sessions.token = $2);`, permission, hash512(token))
-	var val int32
-	err := resp.Scan(&val)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return 0
-		}
-		log.Error(err)
-		return math.MinInt32
-	}
-	return val
 }
 
 // GetUserIDFromToken returns the ID of the user that bears the given token.
@@ -146,10 +99,4 @@ func GetUserIDFromName(name string) string {
 		return ""
 	}
 	return val
-}
-
-// HasTokenPermission returns whether the user associated with the token has the given boolean permission.
-// This function will technically still run if the permission isn't supposed to be interpreted as a boolean.
-func HasTokenPermission(token string, permission string) bool {
-	return GetTokenPermission(token, permission) == 1
 }
