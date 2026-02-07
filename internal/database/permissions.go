@@ -57,14 +57,14 @@ func GetAllTokenPermissions(token string) ([]Permission, error) {
 }
 
 // SetUserPermission sets or updates the permission of a user.
-func SetUserPermission(id string, permission string, value int32) error {
-	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission)
-	var permValue int64
+func SetUserPermission(id string, permission Permission) error {
+	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission.Permission)
+	var permValue int32
 	err := resp.Scan(&permValue)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			// b) create new permission entry
-			_, error2 := db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission, value)
+			_, error2 := db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission.Permission, permission.Value)
 
 			if error2 != nil {
 				log.Error(error2)
@@ -77,7 +77,7 @@ func SetUserPermission(id string, permission string, value int32) error {
 	}
 
 	// a) Update existing permission
-	_, err = db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, value, permission, id)
+	_, err = db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, permission.Value, permission.Permission, id)
 
 	if err != nil {
 		log.Error(err)

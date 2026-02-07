@@ -152,6 +152,7 @@ func InitialiseDB() {
 			log.Fatal(err)
 		}
 	}
+	go resetAdminPermissions()
 }
 
 func createIndex(table string, row string) {
