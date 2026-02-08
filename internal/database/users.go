@@ -78,6 +78,23 @@ func IsCorrectPassword(username string, pw string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPW), []byte(pw)) == nil
 }
 
+// EditPasswordFromUserID sets the given password for the user with the given ID
+func EditPasswordFromUserID(id string, password string) error {
+	hashedPW, err := hashPW(password)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	db := getDB()
+	_, err = db.Exec(`UPDATE users SET password=$1 WHERE id=$2`, hashedPW, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
 // GetUserIDFromToken returns the ID of the user that bears the given token.
 func GetUserIDFromToken(token string) string {
 	resp := db.QueryRow(`SELECT userid FROM sessions WHERE token = $1;`, hash512(token))

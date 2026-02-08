@@ -247,7 +247,6 @@ search-bar input{
 }
 header-bar nav.site-manager {
     grid-column: 6;
-    padding-right: 1rem;
 }
 nav.site-manager {
     color: var(--text);
