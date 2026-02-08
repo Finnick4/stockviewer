@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"stockviewer/api"
 	"stockviewer/internal/database"
-	"strings"
+	"stockviewer/internal/utilities"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -23,21 +23,21 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.Username == "" || params.OldPassword == "" {
-		log.Debugf("Could not process password change as at least one of the parameters is empty.")
-		api.RequestMalformedHandler(w, "Could not process password change as at least one of the parameters is empty.")
+	if utilities.IsPlausibleUsername(params.Username) {
+		log.Debugf("Could not process changing the password as the username is not plausible.")
+		api.RequestMalformedHandler(w, "Could not process changing the password as the username is not plausible.")
 		return
 	}
 
-	if params.NewPassword == "" {
-		log.Debugf("Could not process password change as the new password would be empty.")
-		api.RequestMalformedHandler(w, "Could not process password change as the new password may not be empty.")
+	if utilities.IsPlausiblePassword(params.OldPassword) {
+		log.Debugf("Could not process changing the password as the old provided password is not plausible.")
+		api.RequestMalformedHandler(w, "Could not process changing the old password as the provided password is not plausible.")
 		return
 	}
 
-	if strings.Count(params.Username, "") >= 33 || strings.Count(params.OldPassword, "") >= 73 || strings.Count(params.NewPassword, "") >= 73 {
-		log.Debugf("Could not process password change as at least one of the parameters is too long.")
-		api.RequestMalformedHandler(w, "Could not process password change as at least one of the parameters is too long.")
+	if utilities.IsPlausiblePassword(params.NewPassword) {
+		log.Debugf("Could not process changing the password as the new password is invalid.")
+		api.RequestMalformedHandler(w, "Could not process changing the password as the new password is invalid.")
 		return
 	}
 

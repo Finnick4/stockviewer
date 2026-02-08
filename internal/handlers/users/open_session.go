@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"stockviewer/api"
 	"stockviewer/internal/database"
-	"strings"
+	"stockviewer/internal/utilities"
 
 	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
@@ -24,15 +24,15 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.Username == "" || params.Password == "" {
-		log.Debugf("Could not process login as at least one of the parameters is empty.")
-		api.RequestMalformedHandler(w, "Could not process login as at least one of the parameters is empty.")
+	if utilities.IsPlausibleUsername(params.Username) {
+		log.Debugf("Could not process login as at the username is not plausible.")
+		api.RequestMalformedHandler(w, "Could not process login as at the username is not plausible.")
 		return
 	}
 
-	if strings.Count(params.Username, "") >= 33 || strings.Count(params.Password, "") >= 73 {
-		log.Debugf("Could not process login as at least one of the parameters is too long.")
-		api.RequestMalformedHandler(w, "Could not process login as at least one of the parameters is too long.")
+	if utilities.IsPlausiblePassword(params.Password) {
+		log.Debugf("Could not process login as at the provided password is not plausible.")
+		api.RequestMalformedHandler(w, "Could not process login as at the provided password is not plausible.")
 		return
 	}
 
