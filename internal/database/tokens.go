@@ -68,17 +68,12 @@ func GetTokenStatus(token string) int32 {
 	return val
 }
 
-// GetUserIDStatus returns the status set in the users table for a token.
-func GetUserIDStatus(userid string) int32 {
-	resp := db.QueryRow(`SELECT status FROM users WHERE id = $1;`, userid)
-	var val int32
-	err := resp.Scan(&val)
+func RevokeAllTokensFromUserID(userid string) {
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM sessions WHERE userid = $1`, userid)
+
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return 0
-		}
 		log.Error(err)
-		return 0
 	}
-	return val
 }

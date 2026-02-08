@@ -86,8 +86,10 @@ func EditPasswordFromUserID(id string, password string) error {
 		return err
 	}
 	db := getDB()
-	_, err = db.Exec(`UPDATE users SET password=$1 WHERE id=$2`, hashedPW, id)
-
+	_, err = db.Exec(`UPDATE users SET password=$1, status=(CASE
+    							WHEN status=2 THEN 1
+    							ELSE status END) 
+							WHERE id=$2;`, hashedPW, id)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -136,6 +138,21 @@ func GetUserIDFromName(name string) string {
 		}
 		log.Error(err)
 		return ""
+	}
+	return val
+}
+
+// GetUserIDStatus returns the status set in the users table for a token.
+func GetUserIDStatus(userid string) int32 {
+	resp := db.QueryRow(`SELECT status FROM users WHERE id = $1;`, userid)
+	var val int32
+	err := resp.Scan(&val)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0
+		}
+		log.Error(err)
+		return 0
 	}
 	return val
 }

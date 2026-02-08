@@ -12,7 +12,7 @@ import (
 )
 
 func LoginSession(w http.ResponseWriter, r *http.Request) {
-	var params = api.SessionLoginParams{}
+	var params = api.UserLoginParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
@@ -44,6 +44,19 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 	id := database.GetUserIDFromName(params.Username)
 	if id == "" {
 		api.InternalErrorHandler(w)
+		return
+	}
+
+	status := database.GetUserIDStatus(id)
+
+	switch status {
+	case 1:
+		break
+	case 2:
+		api.PasswordChangeRequiredHandler(w)
+		return
+	default:
+		api.RequestUnauthorisedHandler(w)
 		return
 	}
 

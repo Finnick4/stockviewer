@@ -20,9 +20,15 @@ type StockGetHistoryParams struct {
 	Timeframe int64
 }
 
-type SessionLoginParams struct {
+type UserLoginParams struct {
 	Username string
 	Password string
+}
+
+type UserChangePasswordParams struct {
+	Username    string
+	OldPassword string
+	NewPassword string
 }
 
 /* Response */
@@ -69,5 +75,8 @@ var (
 	}
 	InsufficientPermissionHandler = func(w http.ResponseWriter) {
 		writeError(w, "No sufficient permission for this action is currently present with the associated token!", http.StatusForbidden)
+	}
+	PasswordChangeRequiredHandler = func(w http.ResponseWriter) {
+		writeError(w, "Please change your password immediately. Till this happens, this account is frozen. For this, send a PATCH request to /api/users/login with the username, old password and new password.", http.StatusForbidden)
 	}
 )

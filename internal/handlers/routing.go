@@ -21,6 +21,7 @@ func Handler(r *chi.Mux) {
 	r.Get("/style.css", HandleStyleCSS)
 	r.Get("/script.js", HandleScriptJS)
 	r.Post("/api/users/login", users.LoginSession)
+	r.Patch("/api/users/login", users.ChangePassword)
 
 	fs := http.FileServer(http.Dir("./website/"))
 	r.Handle("/icons/*", fs)
