@@ -24,13 +24,13 @@ func LoginSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if utilities.IsPlausibleUsername(params.Username) {
+	if !utilities.IsPlausibleUsername(params.Username) {
 		log.Debugf("Could not process login as at the username is not plausible.")
 		api.RequestMalformedHandler(w, "Could not process login as at the username is not plausible.")
 		return
 	}
 
-	if utilities.IsPlausiblePassword(params.Password) {
+	if !utilities.IsPlausiblePassword(params.Password) {
 		log.Debugf("Could not process login as at the provided password is not plausible.")
 		api.RequestMalformedHandler(w, "Could not process login as at the provided password is not plausible.")
 		return

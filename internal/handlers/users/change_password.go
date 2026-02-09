@@ -23,19 +23,19 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if utilities.IsPlausibleUsername(params.Username) {
+	if !utilities.IsPlausibleUsername(params.Username) {
 		log.Debugf("Could not process changing the password as the username is not plausible.")
 		api.RequestMalformedHandler(w, "Could not process changing the password as the username is not plausible.")
 		return
 	}
 
-	if utilities.IsPlausiblePassword(params.OldPassword) {
+	if !utilities.IsPlausiblePassword(params.OldPassword) {
 		log.Debugf("Could not process changing the password as the old provided password is not plausible.")
 		api.RequestMalformedHandler(w, "Could not process changing the old password as the provided password is not plausible.")
 		return
 	}
 
-	if utilities.IsPlausiblePassword(params.NewPassword) {
+	if !utilities.IsPlausiblePassword(params.NewPassword) {
 		log.Debugf("Could not process changing the password as the new password is invalid.")
 		api.RequestMalformedHandler(w, "Could not process changing the password as the new password is invalid.")
 		return

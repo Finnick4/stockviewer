@@ -17,7 +17,7 @@ func createAdminUser() {
 	id := uuid.New().String()
 	name := "admin"
 	created := time.Now()
-	hashedPW, err := hashPW("admin")
+	hashedPW, err := hashPW("admin123!")
 	status := 2
 
 	if err != nil {
