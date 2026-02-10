@@ -27,6 +27,20 @@ let userInformation = (function (){
                 console.log(name)
                 fn(name)
             }
+        },
+        hasPermission(permission) {
+            if (permissions[permission] === undefined) {
+                return false;
+            }
+
+            return permissions[permission] === 1;
+        },
+        getPermission(permission) {
+            if (permissions[permission] === undefined) {
+                return 0;
+            }
+
+            return Number(permissions[permission]);
         }
     }
 })()
