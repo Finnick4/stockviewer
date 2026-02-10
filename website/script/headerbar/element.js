@@ -9,12 +9,15 @@ class headerBarElement extends HTMLElement {
                     <a is="a-button" href="/groups">Groups</a>
                 </nav>
                 <search-bar></search-bar>
-                <nav class="create"><create-data></create-data></nav>
+                <nav class="create"></nav>
                 <nav class="site-manager">
                     <theme-switcher></theme-switcher>
                     <user-manager></user-manager>
                 </nav>
                 `
+        userInformation.hasAnyCreatePermissions(() => {
+            this.querySelector(".create").innerHTML = "<create-data></create-data>"
+        })
     }
 }
 

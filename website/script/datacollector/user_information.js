@@ -29,18 +29,51 @@ let userInformation = (function (){
             }
         },
         hasPermission(permission) {
-            if (permissions[permission] === undefined) {
-                return false;
-            }
 
-            return permissions[permission] === 1;
         },
-        getPermission(permission) {
-            if (permissions[permission] === undefined) {
-                return 0;
+        writePermission(permission, fn) {
+            if (permissions === {}) {
+                checkLoggedIn();
+                fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
+                    if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
+                        userInformation.permissions = {}
+                        fn(0);
+                        return
+                    }
+                    jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
+                    this.writePermission(permission, fn)
+                })
+            } else {
+                if (permissions[permission] === undefined) {
+                    fn(0);
+                }
+
+                fn(Number(permissions[permission]));
+            }
+        },
+        hasAnyCreatePermissions(fn) {
+            if (permissions === {}) {
+                checkLoggedIn();
+                fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
+                    if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
+                        userInformation.permissions = {}
+                        fn(false);
+                        return
+                    }
+                    jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
+                    this.hasAnyCreatePermissions(fn)
+                })
+            } else {
+                const checkPerm = p => {
+                    if (permissions[p] === undefined) {
+                        return false
+                    }
+                    return permissions[p] === 1
+                }
+
+                fn(checkPerm("canCreateStocks"))
             }
 
-            return Number(permissions[permission]);
         }
     }
 })()
