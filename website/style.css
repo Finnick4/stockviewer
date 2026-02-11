@@ -165,6 +165,25 @@ button:active {
     transition: background-color .2s;
 }
 
+.dropdown a.btn {
+    font-family: Ubuntu, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text);
+    transition: var(--bg-transition), box-shadow .1s;
+    border: none;
+    padding: .5rem;
+    font-size: 16px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+}
+
+.dropdown a.btn:hover {
+    background-color: var(--highlight);
+    box-shadow: var(--button-hover-shadow);
+    top: auto;
+    z-index: 1;
+}
+
 .icon {
     /*noinspection CssUnknownProperty*/
     user-drag: none;

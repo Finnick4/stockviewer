@@ -7,6 +7,13 @@ function checkLoggedIn() {
     }
 }
 
+function logout() {
+    document.cookie = "isLoggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    checkLoggedIn()
+}
+
+
 function getCurrentPathWithoutSlash() {
     const p = window.location.pathname
     if (p.length > 1 && p.charAt(p.length - 1) === '/') {

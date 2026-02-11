@@ -28,9 +28,6 @@ let userInformation = (function (){
                 fn(name)
             }
         },
-        hasPermission(permission) {
-
-        },
         writePermission(permission, fn) {
             if (permissions === {}) {
                 checkLoggedIn();
