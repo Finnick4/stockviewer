@@ -36,7 +36,9 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	lastID, err := database.CreateStock(params.Name, params.InitPrice)
+	userid := database.GetUserIDFromToken(r.Context().Value("token").(string))
+
+	lastID, err := database.CreateStock(params.Name, params.InitPrice, userid)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -9,12 +10,18 @@ import (
 )
 
 // CreateStock creates a new stock with the given name and initial price and returns the ID of the new stock. The newly created stock is active.
-func CreateStock(name string, initPrice int64) (int64, error) {
+func CreateStock(name string, initPrice int64, creatorID string) (int64, error) {
 	currentTimeStamp := time.Now()
 
 	db := getDB()
 
-	resp := db.QueryRow(`INSERT INTO stocks (name, "latestUpdate") VALUES ($1, $2) RETURNING id;`, name, currentTimeStamp)
+	var resp *sql.Row
+
+	if creatorID == "" {
+		resp = db.QueryRow(`INSERT INTO stocks (name, "latestUpdate") VALUES ($1, $2) RETURNING id;`, name, currentTimeStamp)
+	} else {
+		resp = db.QueryRow(`INSERT INTO stocks (name, "latestUpdate", "creatorId") VALUES ($1, $2, $3) RETURNING id;`, name, currentTimeStamp, creatorID)
+	}
 
 	if resp.Err() != nil {
 		log.Error(resp.Err())

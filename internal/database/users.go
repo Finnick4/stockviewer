@@ -33,28 +33,6 @@ func createAdminUser() {
 	}
 }
 
-func resetAdminPermissions() {
-	id := GetUserIDFromName("admin")
-
-	permissions := []Permission{
-		Permission{Permission: "canCreateStocks", Value: 1},
-		Permission{Permission: "canModifyStockNames", Value: 1},
-		Permission{Permission: "canArchiveStocks", Value: 1},
-		Permission{Permission: "isStockArchivist", Value: 1},
-		Permission{Permission: "canDisableStocks", Value: 1},
-	}
-
-	var err error
-
-	for _, perm := range permissions {
-		err = SetUserPermission(id, perm)
-		if err != nil {
-			log.Error(err)
-			return
-		}
-	}
-}
-
 func hashPW(toHash string) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(toHash), 14)
 	if err != nil {
@@ -155,4 +133,8 @@ func GetUserIDStatus(userid string) int32 {
 		return 0
 	}
 	return val
+}
+
+func CreateUser(name string, password string) {
+
 }

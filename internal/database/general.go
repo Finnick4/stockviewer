@@ -78,8 +78,9 @@ func InitialiseDB() {
 	"id"	SERIAL PRIMARY KEY NOT NULL UNIQUE,
 	"name"	VARCHAR(32) NOT NULL,
 	"latestUpdate"	TIMESTAMPTZ NOT NULL,
-	"status" INTEGER DEFAULT 1
-);`)
+	"status" INTEGER DEFAULT 1,
+	"creatorId" VARCHAR(36),
+	CONSTRAINT "fk_stocks_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -103,7 +104,9 @@ func InitialiseDB() {
 	"name"	VARCHAR(32) NOT NULL UNIQUE,
 	"created"	TIMESTAMPTZ NOT NULL,
 	"password" TEXT NOT NULL,
-	"status" INTEGER DEFAULT 1);`)
+	"status" INTEGER DEFAULT 1,
+	"creatorId" VARCHAR(36),
+	CONSTRAINT "fk_stocks_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
 	if err != nil {
 		log.Fatal(err)
 	}

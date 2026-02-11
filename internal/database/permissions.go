@@ -8,6 +8,29 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func resetAdminPermissions() {
+	id := GetUserIDFromName("admin")
+
+	permissions := []Permission{
+		Permission{Permission: "canCreateStocks", Value: 1},
+		Permission{Permission: "canModifyStockNames", Value: 1},
+		Permission{Permission: "canArchiveStocks", Value: 1},
+		Permission{Permission: "isStockArchivist", Value: 1},
+		Permission{Permission: "canDisableStocks", Value: 1},
+		Permission{Permission: "canCreateAccounts", Value: 1},
+	}
+
+	var err error
+
+	for _, perm := range permissions {
+		err = SetUserPermission(id, perm)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+}
+
 // GetTokenPermission returns the permission value of user associated with the token.
 // If the queried permission is to be interpreted as a bool, use HasTokenPermission instead!
 func GetTokenPermission(token string, permission string) int32 {
