@@ -47,6 +47,10 @@ function buildPageLogin() {
                 case 401:
                     inftxt.innerHTML = "Invalid credentials.";
                     break;
+                case 403:
+                    inftxt.innerHTML = "You have to change your password.";
+                    showChangePasswordModal();
+                    break;
                 default:
                     inftxt.innerHTML = "An error occurred!";
                     break;

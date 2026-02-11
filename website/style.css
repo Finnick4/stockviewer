@@ -102,9 +102,14 @@ h1 {
 .modal .pair {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1rem;
 }
 .modal .pair:focus-within {
     color: var(--text);
+}
+
+.modal button {
+    padding: 1rem;
 }
 
 .modal .info.positive {
