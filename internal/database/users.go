@@ -13,24 +13,7 @@ import (
 
 func createAdminUser() {
 	log.Info("Creating admin user...")
-
-	id := uuid.New().String()
-	name := "admin"
-	created := time.Now()
-	hashedPW, err := hashPW("admin123!")
-	status := 2
-
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	_, err = db.Exec("INSERT INTO users (id, name, created, password, status) VALUES ($1, $2, $3, $4, $5)", id, name, created, hashedPW, status)
-
-	if err != nil {
-		log.Error(err)
-		return
-	}
+	CreateUser("admin", "admin123!", "")
 }
 
 func hashPW(toHash string) (string, error) {
@@ -135,6 +118,28 @@ func GetUserIDStatus(userid string) int32 {
 	return val
 }
 
-func CreateUser(name string, password string) {
+func CreateUser(name string, password string, creatorID string) {
+	log.Info("Creating new user...")
 
+	db := getDB()
+	id := uuid.New().String()
+	created := time.Now()
+	hashedPW, err := hashPW(password)
+	status := 2
+
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	if creatorID == "" {
+		_, err = db.Exec(`INSERT INTO users (id, name, created, password, status, "creatorId") VALUES ($1, $2, $3, $4, $5, $6)`, id, name, created, hashedPW, status, creatorID)
+	} else {
+		_, err = db.Exec(`INSERT INTO users (id, name, created, password, status) VALUES ($1, $2, $3, $4, $5)`, id, name, created, hashedPW, status)
+
+	}
+
+	if err != nil {
+		log.Error(err)
+		return
+	}
 }
