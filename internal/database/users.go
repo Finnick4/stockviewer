@@ -13,7 +13,11 @@ import (
 
 func createAdminUser() {
 	log.Info("Creating admin user...")
-	CreateUser("admin", "admin123!", "")
+	err := CreateUser("admin", "admin123!", "")
+	if err != nil {
+		log.Debug(err)
+		return
+	}
 }
 
 func hashPW(toHash string) (string, error) {
@@ -118,7 +122,7 @@ func GetUserIDStatus(userid string) int32 {
 	return val
 }
 
-func CreateUser(name string, password string, creatorID string) {
+func CreateUser(name string, password string, creatorID string) error {
 	log.Info("Creating new user...")
 
 	db := getDB()
@@ -129,7 +133,7 @@ func CreateUser(name string, password string, creatorID string) {
 
 	if err != nil {
 		log.Error(err)
-		return
+		return err
 	}
 	if creatorID == "" {
 		_, err = db.Exec(`INSERT INTO users (id, name, created, password, status, "creatorId") VALUES ($1, $2, $3, $4, $5, $6)`, id, name, created, hashedPW, status, creatorID)
@@ -140,6 +144,7 @@ func CreateUser(name string, password string, creatorID string) {
 
 	if err != nil {
 		log.Error(err)
-		return
+		return err
 	}
+	return nil
 }

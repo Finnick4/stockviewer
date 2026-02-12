@@ -31,6 +31,11 @@ type UserChangePasswordParams struct {
 	NewPassword string
 }
 
+type UserCreateParams struct {
+	Username string
+	Password string
+}
+
 /* Response */
 
 type SuccessResponse struct {

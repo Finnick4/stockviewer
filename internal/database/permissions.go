@@ -17,7 +17,13 @@ func resetAdminPermissions() {
 		Permission{Permission: "canArchiveStocks", Value: 1},
 		Permission{Permission: "isStockArchivist", Value: 1},
 		Permission{Permission: "canDisableStocks", Value: 1},
-		Permission{Permission: "canCreateAccounts", Value: 1},
+
+		Permission{Permission: "canCreateUsers", Value: 1},
+		Permission{Permission: "canModifyUserPermission", Value: 1},
+		Permission{Permission: "canModifyUserName", Value: 1},
+		Permission{Permission: "canModifyUserPassword", Value: 1},
+		Permission{Permission: "canDisableUser", Value: 1},
+		Permission{Permission: "canDeleteUser", Value: 1},
 	}
 
 	var err error
