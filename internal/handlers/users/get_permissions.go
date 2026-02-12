@@ -10,6 +10,8 @@ import (
 )
 
 func GetPermissions(w http.ResponseWriter, r *http.Request) {
+	log.Debug("Getting all permissions")
+
 	token := r.Context().Value("token").(string)
 
 	perms, err := database.GetAllTokenPermissions(token)

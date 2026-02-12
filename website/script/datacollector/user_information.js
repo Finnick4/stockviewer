@@ -5,6 +5,16 @@ let userInformation = (function (){
     let name = "";
     let permissions = {};
 
+    checkLoggedIn()
+    fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
+        if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
+            userInformation.permissions = {}
+            return
+        }
+        jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
+    })
+    fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {this.name = jsonResponse["Data"]})
+    
     return {
         writeName(fn) {
             if (name === "") {
@@ -25,9 +35,11 @@ let userInformation = (function (){
                 fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
                     if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
                         userInformation.permissions = {}
+                        console.log("Error with getting permissions: " + jsonResponse["Code"])
                         fn(0);
                         return
                     }
+                    console.log("Fetched Permissions!")
                     jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
                     this.writePermission(permission, fn)
                 })
@@ -45,9 +57,11 @@ let userInformation = (function (){
                 fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
                     if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
                         userInformation.permissions = {}
+                        console.log("Error with getting permissions: " + jsonResponse["Code"])
                         fn(false);
                         return
                     }
+                    console.log("Fetched Permissions!")
                     jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
                     this.hasAnyCreatePermissions(fn)
                 })
@@ -64,8 +78,14 @@ let userInformation = (function (){
 
         },
         signalLogout() {
+            console.log("Logging out")
             name = ""
-            permissions = {}
+            for (const perm in permissions) {
+                delete permissions[perm]
+            }
+        },
+        printperms() {
+            console.log(permissions)
         }
     }
 })()

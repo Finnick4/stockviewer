@@ -27,7 +27,7 @@ function showModalCreateStock(elem) {
 
     userInformation.writePermission("canCreateStocks", perm => {
         if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = "<h2>Create a new  stock</h2><p>It doesn't seem like you are able to create stocks currently!</p>"
+            modal.querySelector(".content").innerHTML = "<h2>Create a new stock</h2><p>It doesn't seem like you are able to create stocks currently!</p>"
         }
     })
 
