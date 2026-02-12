@@ -5,19 +5,10 @@ let userInformation = (function (){
     let name = "";
     let permissions = {};
 
-    checkLoggedIn()
-    fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
-        if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
-            userInformation.permissions = {}
-            return
-        }
-        jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
-    })
-    fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {this.name = jsonResponse["Data"]})
-
     return {
         writeName(fn) {
             if (name === "") {
+                checkLoggedIn();
                 fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {
                     name = jsonResponse["Data"]
                     console.log(name)
@@ -71,6 +62,10 @@ let userInformation = (function (){
                 fn(checkPerm("canCreateStocks"))
             }
 
+        },
+        signalLogout() {
+            name = ""
+            permissions = {}
         }
     }
 })()
