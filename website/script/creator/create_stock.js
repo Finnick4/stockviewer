@@ -17,63 +17,69 @@ function showModalCreateStock(elem) {
                             <button class="submit">Submit</button>
                         </div>
                         `
-    let id = createModal(html)
-    document.querySelectorAll(`#${id} .pair input`).forEach(elem => {
-        elem.addEventListener("input", () => validateModalCreateStock(id))
+
+    const id = createModal(html)
+
+    const modal = document.getElementById(id);
+    const infotxt = modal.querySelector(".info")
+    const name = modal.querySelector(`.name`)
+    const price = modal.querySelector(`.price`)
+
+    userInformation.writePermission("canCreateStocks", perm => {
+        if (perm !== 1) {
+            modal.querySelector(".content").innerHTML = "<h2>Create a new  stock</h2><p>It doesn't seem like you are able to create stocks currently!</p>"
+        }
     })
-    document.querySelector(`#${id} .submit`).addEventListener("click", () => sendModalCreateStock(id))
-    validateModalCreateStock(id)
-}
 
-function modalCreateStockSetErrorInfo(id, msg) {
-    let infotxt = document.querySelector(`#${id} .info`)
-    infotxt.innerHTML = msg
-    infotxt.classList.add("negative")
-    infotxt.classList.remove("positive")
-}
-
-function validateModalCreateStock(id) {
-    let infotxt = document.querySelector(`#${id} .info`)
-
-    let name = document.querySelector(`#${id} .name`).value
-    if (name.length > 32) {
-        modalCreateStockSetErrorInfo(id, "The name is too long! (2 - 32 characters)")
-        return false
-    }
-    if (name.length <= 2) {
-        modalCreateStockSetErrorInfo(id, "The name is too short! (2 - 32 characters)")
-        return false
+    const seterr = err => {
+        infotxt.innerHTML = err
+        infotxt.classList.add("negative")
+        infotxt.classList.remove("positive")
     }
 
+    const validate = () => {
 
-    let price = document.querySelector(`#${id} .price`).value
-    if (price < 10000000) {
-        modalCreateStockSetErrorInfo(id, "The initial price has to be at least 100k!")
-        return false
+        if (name.value.length > 32) {
+            seterr("The name is too long! (2 - 32 characters)")
+            return false
+        }
+        if (name.value.length <= 2) {
+            seterr("The name is too short! (2 - 32 characters)")
+            return false
+        }
+
+        if (price.value < 10000000) {
+            seterr("The initial price has to be at least 100k!")
+            return false
+        }
+
+        infotxt.innerHTML = "Values are okay"
+        infotxt.classList.add("positive")
+        infotxt.classList.remove("negative")
+        return true
     }
 
-    infotxt.innerHTML = "Values are okay"
-    infotxt.classList.add("positive")
-    infotxt.classList.remove("negative")
-    return true
-}
+    modal.querySelectorAll(`.pair input`).forEach(elem => {
+        elem.addEventListener("input", () => validate())
+    })
 
-
-
-function sendModalCreateStock(id) {
-    if (validateModalCreateStock(id)) {
-        fetch(`${window.location.origin}/api/stocks/?name=${document.querySelector(`#${id} .name`).value}&initPrice=${document.querySelector(`#${id} .price`).value}`, {
-            method: "POST"
-        }).then(r => {
-            if (r.ok) {
-                closeModal(id)
-            } else {
-                if (r.status >= 400 || r.status < 500) {
-                    modalCreateStockSetErrorInfo(id, "There is an issue with the request.")
+    modal.querySelector(".submit").addEventListener("click", () => {
+        if (validate()) {
+            fetch(`${window.location.origin}/api/stocks/?name=${document.querySelector(`#${id} .name`).value}&initPrice=${document.querySelector(`#${id} .price`).value}`, {
+                method: "POST"
+            }).then(r => {
+                if (r.ok) {
+                    closeModal(id)
                 } else {
-                    modalCreateStockSetErrorInfo(id, "There is a server-side issue causing this request to not be processed!")
+                    if (r.status >= 400 || r.status < 500) {
+                        seterr("There is an issue with the request.")
+                    } else {
+                        seterr("There is a server-side issue causing this request to not be processed!")
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
+    })
+    validate()
 }
+

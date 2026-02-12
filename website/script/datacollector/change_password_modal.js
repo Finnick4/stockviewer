@@ -29,14 +29,14 @@ function showChangePasswordModal(elem) {
                           <button class="submit">Sumbit</button>
                       </div>
                       `
-    let id = createModal(html)
+    const id = createModal(html)
     const modal = document.getElementById(id)
 
     const infotxt = modal.querySelector(`.info`)
-    const name = document.querySelector(`.name`)
-    const oldPW = document.querySelector(`.oldpw`)
-    const newPW1 = document.querySelector(`.newpw1`)
-    const newPW2 = document.querySelector(`.newpw2`)
+    const name = modal.querySelector(`.name`)
+    const oldPW = modal.querySelector(`.oldpw`)
+    const newPW1 = modal.querySelector(`.newpw1`)
+    const newPW2 = modal.querySelector(`.newpw2`)
 
     const seterr = err => {
         infotxt.innerHTML = err
@@ -97,9 +97,9 @@ function showChangePasswordModal(elem) {
                     closeModal(id)
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        modalCreateStockSetErrorInfo(id, "There is an issue with the request.")
+                        seterr("There is an issue with the request.")
                     } else {
-                        modalCreateStockSetErrorInfo(id, "There is a server-side issue causing this request to not be processed!")
+                        seterr("There is a server-side issue causing this request to not be processed!")
                     }
                 }
             });
