@@ -12,7 +12,7 @@ import (
 func GetUserInformation(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 
-	name := database.GetUserNameFromToken(token)
+	name := database.GetUserTagFromToken(token)
 
 	if name == "" {
 		api.InternalErrorHandler(w)

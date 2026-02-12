@@ -32,9 +32,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !utilities.IsPlausibleUsername(params.Username) {
-		log.Debugf("Could not process creating an account as the username is not plausible.")
-		api.RequestMalformedHandler(w, "Could not process creating an account as the username is not plausible.")
+	if !utilities.IsPlausibleUserTag(params.Tag) {
+		log.Debugf("Could not process creating an account as the tag is not plausible.")
+		api.RequestMalformedHandler(w, "Could not process creating an account as the tag is not plausible.")
 		return
 	}
 
@@ -46,7 +46,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	creatorid := database.GetUserIDFromToken(token)
 
-	err = database.CreateUser(params.Username, params.Password, creatorid)
+	err = database.CreateUser(params.Tag, params.Password, creatorid)
 
 	if err != nil {
 		api.InternalErrorHandler(w)

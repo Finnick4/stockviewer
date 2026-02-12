@@ -23,9 +23,9 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !utilities.IsPlausibleUsername(params.Username) {
-		log.Debugf("Could not process changing the password as the username is not plausible.")
-		api.RequestMalformedHandler(w, "Could not process changing the password as the username is not plausible.")
+	if !utilities.IsPlausibleUserTag(params.Tag) {
+		log.Debugf("Could not process changing the password as the tag is not plausible.")
+		api.RequestMalformedHandler(w, "Could not process changing the password as the tag is not plausible.")
 		return
 	}
 
@@ -41,12 +41,12 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !database.IsCorrectPassword(params.Username, params.OldPassword) {
+	if !database.IsCorrectPassword(params.Tag, params.OldPassword) {
 		api.RequestUnauthorisedHandler(w)
 		return
 	}
 
-	id := database.GetUserIDFromName(params.Username)
+	id := database.GetUserIDFromTag(params.Tag)
 	if id == "" {
 		api.InternalErrorHandler(w)
 		return

@@ -31,8 +31,8 @@ func hashPW(toHash string) (string, error) {
 }
 
 // IsCorrectPassword returns whether the given username has the given password.
-func IsCorrectPassword(username string, pw string) bool {
-	resp := db.QueryRow(`SELECT password FROM users WHERE name = $1;`, username)
+func IsCorrectPassword(tag string, pw string) bool {
+	resp := db.QueryRow(`SELECT password FROM users WHERE tag = $1;`, tag)
 	var hashedPW string
 	err := resp.Scan(&hashedPW)
 	if err != nil {
@@ -77,9 +77,9 @@ func GetUserIDFromToken(token string) string {
 	return val
 }
 
-// GetUserNameFromToken returns the name of the user that bears the given token.
-func GetUserNameFromToken(token string) string {
-	resp := db.QueryRow(`SELECT name FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
+// GetUserTagFromToken returns the name of the user that bears the given token.
+func GetUserTagFromToken(token string) string {
+	resp := db.QueryRow(`SELECT tag FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
 	var val string
 	err := resp.Scan(&val)
 	if err != nil {
@@ -92,9 +92,9 @@ func GetUserNameFromToken(token string) string {
 	return val
 }
 
-// GetUserIDFromName returns the ID of the username. If there is no ID found or any other error this function returns an empty string
-func GetUserIDFromName(name string) string {
-	resp := db.QueryRow(`SELECT id FROM users WHERE name = $1;`, name)
+// GetUserIDFromTag returns the ID of the username. If there is no ID found or any other error this function returns an empty string
+func GetUserIDFromTag(tag string) string {
+	resp := db.QueryRow(`SELECT id FROM users WHERE tag = $1;`, tag)
 	var val string
 	err := resp.Scan(&val)
 	if err != nil {
@@ -122,7 +122,7 @@ func GetUserIDStatus(userid string) int32 {
 	return val
 }
 
-func CreateUser(name string, password string, creatorID string) error {
+func CreateUser(tag string, password string, creatorID string) error {
 	log.Info("Creating new user...")
 
 	db := getDB()
@@ -135,10 +135,10 @@ func CreateUser(name string, password string, creatorID string) error {
 		log.Error(err)
 		return err
 	}
-	if creatorID == "" {
-		_, err = db.Exec(`INSERT INTO users (id, name, created, password, status, "creatorId") VALUES ($1, $2, $3, $4, $5, $6)`, id, name, created, hashedPW, status, creatorID)
+	if creatorID != "" {
+		_, err = db.Exec(`INSERT INTO users (id, tag, created, password, status, "creatorId", "displayName") VALUES ($1, $2, $3, $4, $5, $6, $2)`, id, tag, created, hashedPW, status, creatorID)
 	} else {
-		_, err = db.Exec(`INSERT INTO users (id, name, created, password, status) VALUES ($1, $2, $3, $4, $5)`, id, name, created, hashedPW, status)
+		_, err = db.Exec(`INSERT INTO users (id, tag, created, password, status, "displayName") VALUES ($1, $2, $3, $4, $5, $2)`, id, tag, created, hashedPW, status)
 
 	}
 

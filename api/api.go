@@ -21,18 +21,18 @@ type StockGetHistoryParams struct {
 }
 
 type UserLoginParams struct {
-	Username string
+	Tag      string
 	Password string
 }
 
 type UserChangePasswordParams struct {
-	Username    string
+	Tag         string
 	OldPassword string
 	NewPassword string
 }
 
 type UserCreateParams struct {
-	Username string
+	Tag      string
 	Password string
 }
 

@@ -4,7 +4,7 @@ function buildPageLogin() {
             <h2>Please log in</h2>
             
             <div class="pair">
-                <p>Username</p>
+                <p>User tag</p>
                 <input type="text">            
             </div>
             
@@ -23,11 +23,11 @@ function buildPageLogin() {
     document.querySelector("button.primary").addEventListener("click", event => {
         const inftxt = document.querySelector(".info");
         inftxt.innerHTML = "Checking credentials.";
-        const name = document.querySelector('input[type="text"]').value;
+        const tag = document.querySelector('input[type="text"]').value;
         const pw = document.querySelector('input[type="password"]').value;
 
-        if (name.length === 0 || name.length > 32) {
-            inftxt.innerHTML = "Please enter a valid name";
+        if (tag.length === 0 || tag.length > 32) {
+            inftxt.innerHTML = "Please enter a valid tag";
             return;
         }
         if (pw.length === 0 || pw.length > 72) {
@@ -35,7 +35,7 @@ function buildPageLogin() {
             return;
         }
 
-        fetch(window.location.origin + `/api/users/login?username=${name}&password=${pw}`, {
+        fetch(window.location.origin + `/api/users/login?tag=${tag}&password=${pw}`, {
             method: "POST"
         }).then(r => {
             switch (r.status) {

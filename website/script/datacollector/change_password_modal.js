@@ -5,8 +5,8 @@ function showChangePasswordModal(elem) {
 
     let html = `<h2>Change password</h2>
                       <div class="pair">
-                          <p>Username</p>
-                          <input type="text" class="name">            
+                          <p>User tag</p>
+                          <input type="text" class="tag">            
                       </div>
                         
                       <div class="pair">
@@ -33,7 +33,7 @@ function showChangePasswordModal(elem) {
     const modal = document.getElementById(id)
 
     const infotxt = modal.querySelector(`.info`)
-    const name = modal.querySelector(`.name`)
+    const tag = modal.querySelector(`.tag`)
     const oldPW = modal.querySelector(`.oldpw`)
     const newPW1 = modal.querySelector(`.newpw1`)
     const newPW2 = modal.querySelector(`.newpw2`)
@@ -49,11 +49,11 @@ function showChangePasswordModal(elem) {
     }
 
     const validate = () => {
-        if (name.value.length > 32) {
+        if (tag.value.length > 32) {
             seterr("The name is too long! (2 - 32 characters)")
             return false
         }
-        if (name.value.length <= 2) {
+        if (tag.value.length <= 2) {
             seterr("The name is too short! (2 - 32 characters)")
             return false
         }
@@ -88,7 +88,7 @@ function showChangePasswordModal(elem) {
             fetch(`${window.location.origin}/api/users/login`, {
                 method: "PATCH",
                 body: JSON.stringify({
-                    username: name.value,
+                    tag: tag.value,
                     oldpassword: oldPW.value,
                     newpassword: newPW1.value
                 })

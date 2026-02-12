@@ -9,7 +9,7 @@ import (
 )
 
 func resetAdminPermissions() {
-	id := GetUserIDFromName("admin")
+	id := GetUserIDFromTag("admin")
 
 	permissions := []Permission{
 		Permission{Permission: "canCreateStocks", Value: 1},

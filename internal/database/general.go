@@ -101,7 +101,8 @@ func InitialiseDB() {
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
 	"id"	VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
-	"name"	VARCHAR(32) NOT NULL UNIQUE,
+	"tag"	VARCHAR(32) NOT NULL UNIQUE,
+	"displayName"	VARCHAR(32) NOT NULL,
 	"created"	TIMESTAMPTZ NOT NULL,
 	"password" TEXT NOT NULL,
 	"status" INTEGER DEFAULT 1,
@@ -112,7 +113,7 @@ func InitialiseDB() {
 	}
 
 	wg.Add(1)
-	go createIndex("users", "name")
+	go createIndex("users", "tag")
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
 	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
@@ -144,7 +145,7 @@ func InitialiseDB() {
 
 	wg.Wait()
 
-	resp := db.QueryRow(`SELECT name FROM users LIMIT 1;`)
+	resp := db.QueryRow(`SELECT tag FROM users LIMIT 1;`)
 	var price string
 	err = resp.Scan(&price)
 	if err != nil {
