@@ -12,10 +12,11 @@ import (
 func GetUserInformation(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 
-	name := database.GetUserTagFromToken(token)
+	name, err := database.GetUserNameAndTagFromToken(token)
 
-	if name == "" {
+	if err != nil {
 		api.InternalErrorHandler(w)
+		return
 	}
 
 	var response = api.SuccessResponse{
@@ -24,7 +25,7 @@ func GetUserInformation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(response)
+	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)

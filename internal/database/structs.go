@@ -36,3 +36,9 @@ type Permission struct {
 	Permission string
 	Value      int32
 }
+
+type UserIdentification struct {
+	Tag  string
+	Name string
+	Id   string
+}

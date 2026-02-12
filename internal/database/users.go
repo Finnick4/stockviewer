@@ -77,7 +77,7 @@ func GetUserIDFromToken(token string) string {
 	return val
 }
 
-// GetUserTagFromToken returns the name of the user that bears the given token.
+// GetUserTagFromToken returns the tag of the user that bears the given token.
 func GetUserTagFromToken(token string) string {
 	resp := db.QueryRow(`SELECT tag FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
 	var val string
@@ -92,7 +92,33 @@ func GetUserTagFromToken(token string) string {
 	return val
 }
 
-// GetUserIDFromTag returns the ID of the username. If there is no ID found or any other error this function returns an empty string
+// GetUserNameAndTagFromToken returns the name and tag of the user that bears the given token.
+func GetUserNameAndTagFromToken(token string) (UserIdentification, error) {
+	var info UserIdentification
+
+	rows, err := db.Query(`SELECT tag, "displayName", id FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return info, nil
+		}
+		log.Error(err)
+		return info, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&info.Tag, &info.Name, &info.Id)
+		if err != nil {
+			log.Error(err)
+			return info, err
+		}
+	}
+
+	return info, nil
+}
+
+// GetUserIDFromTag returns the ID of the user tag. If there is no ID found or any other error this function returns an empty string
 func GetUserIDFromTag(tag string) string {
 	resp := db.QueryRow(`SELECT id FROM users WHERE tag = $1;`, tag)
 	var val string

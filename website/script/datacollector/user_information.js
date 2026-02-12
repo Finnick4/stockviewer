@@ -3,6 +3,8 @@
  */
 let userInformation = (function (){
     let name = "";
+    let tag = "";
+    let userid = "";
     let permissions = {};
 
     checkLoggedIn()
@@ -13,14 +15,20 @@ let userInformation = (function (){
         }
         jsonResponse["Data"].forEach(perm => permissions[perm["Permission"]] = perm["Value"])
     })
-    fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {this.name = jsonResponse["Data"]})
-    
+    fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {
+        name = jsonResponse["Data"]["Name"]
+        tag = jsonResponse["Data"]["Tag"]
+        userid = jsonResponse["Data"]["Id"]
+    })
+
     return {
         writeName(fn) {
             if (name === "") {
                 checkLoggedIn();
                 fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {
-                    name = jsonResponse["Data"]
+                    name = jsonResponse["Data"]["Name"]
+                    tag = jsonResponse["Data"]["Tag"]
+                    userid = jsonResponse["Data"]["Id"]
                     console.log(name)
                     fn(name)
                 })
