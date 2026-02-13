@@ -35,8 +35,12 @@ function buildPageLogin() {
             return;
         }
 
-        fetch(window.location.origin + `/api/users/login?tag=${tag}&password=${pw}`, {
-            method: "POST"
+        fetch(window.location.origin + `/api/users/login`, {
+            method: "POST",
+            body: JSON.stringify({
+                tag: tag,
+                password: pw
+            })
         }).then(r => {
             switch (r.status) {
                 case 200:

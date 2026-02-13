@@ -8,8 +8,8 @@ class stockHeader extends HTMLElement {
                         </div>
                         <h1>Loading name...</h1>
                         <nav>
-                            <button class="star" onclick="createModal('<h1>This is not yet implemented!</h1>')"><img class="icon" src="/icons/star_empty.svg" alt="give star" draggable="false"></button>
-                            <button class="edit" onclick="createModal('<h1>This is not yet implemented!</h1>')"><img class="icon" src="/icons/edit.svg" alt="edit" draggable="false"></button>
+                            <button is="star-stock-button" data-stockid="${this.stockid}"></button>
+                            <button is="edit-stock-button" data-stockid="${this.stockid}"></button>
                         </nav>
                         `
         this.closeSubscription = subscribeToAPI(`/api/stocks/?Id=${this.stockid}`, addThisToFunctionCall(this.updateData, this))

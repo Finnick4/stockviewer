@@ -7,20 +7,17 @@ import (
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
-	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
 func LoginSession(w http.ResponseWriter, r *http.Request) {
 	var params = api.UserLoginParams{}
-	var decoder *schema.Decoder = schema.NewDecoder()
-	var err error
+	defer r.Body.Close()
 
-	// get parameters
-	err = decoder.Decode(&params, r.URL.Query())
+	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
-		log.Error(err)
 		api.InternalErrorHandler(w)
+		log.Debug(err)
 		return
 	}
 
