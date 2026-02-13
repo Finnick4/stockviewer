@@ -15,8 +15,10 @@ class headerBarElement extends HTMLElement {
                     <user-manager></user-manager>
                 </nav>
                 `
-        userInformation.hasAnyCreatePermissions(() => {
-            this.querySelector(".create").innerHTML = "<create-data></create-data>"
+        userInformation.hasAnyCreatePermissions(b => {
+            if (b) {
+                this.querySelector(".create").innerHTML = "<create-data></create-data>"
+            }
         })
     }
 }

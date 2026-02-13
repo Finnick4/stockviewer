@@ -38,7 +38,7 @@ let userInformation = (function (){
             }
         },
         writePermission(permission, fn) {
-            if (permissions === {}) {
+            if (Object.keys(permissions).length === 0) {
                 checkLoggedIn();
                 fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
                     if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
@@ -60,7 +60,7 @@ let userInformation = (function (){
             }
         },
         hasAnyCreatePermissions(fn) {
-            if (permissions === {}) {
+            if (Object.keys(permissions).length === 0) {
                 checkLoggedIn();
                 fetch(window.location.origin + "/api/users/permissions").then(resp => resp.json()).then(jsonResponse => {
                     if (jsonResponse["Data"] === null || jsonResponse["Code"] !== 200) {
@@ -91,9 +91,6 @@ let userInformation = (function (){
             for (const perm in permissions) {
                 delete permissions[perm]
             }
-        },
-        printperms() {
-            console.log(permissions)
         }
     }
 })()

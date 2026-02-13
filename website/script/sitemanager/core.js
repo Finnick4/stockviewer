@@ -25,16 +25,16 @@ function getCurrentPathWithoutSlash() {
 }
 
 function setMainBodyHTML(main) {
-    const elemMain = document.querySelector("div .main");
+    const elemMain = document.querySelector("main");
 
     if (elemMain !== null && document.querySelector("header-bar") !== null) {
         elemMain.innerHTML = main;
     } else {
         document.body.innerHTML = `
         <header-bar></header-bar>
-        <div class="main">
+        <main>
         ${main}   
-        </div>`
+        </main>`
     }
 }
 

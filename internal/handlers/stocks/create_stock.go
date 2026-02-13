@@ -17,11 +17,20 @@ import (
 
 func CreateStock(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
+
+	log.Debugf("Stock creation is in progress")
+
+	token := r.Context().Value("token").(string)
+
+	if !database.HasTokenPermission(token, "canCreateStocks") {
+		api.InsufficientPermissionHandler(w)
+		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
+		return
+	}
+
 	var params = api.StockCreateParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
-
-	log.Debugf("Stock creation is in progress")
 
 	// get parameters
 	err = decoder.Decode(&params, r.URL.Query())
