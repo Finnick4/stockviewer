@@ -334,7 +334,6 @@ ul.inner h2 {
     transition: var(--bg-transition), color 0.1s;
     margin: 0 var(--border-radius);
     align-items: center;
-
 }
 
 .stockOverview a {
@@ -358,6 +357,43 @@ ul.inner h2 {
 
 .stockOverview:hover .stockName {
     color: var(--text);
+}
+
+.articlePreview {
+    background-color: var(--bg-light);
+    color: var(--text-muted);
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    transition: var(--bg-transition), color 0.1s;
+    margin: 0 var(--border-radius);
+    align-items: center;
+}
+
+.articlePreview a {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.articlePreview:hover {
+    background-color: var(--highlight);
+    color: var(--text);
+}
+.title {
+    word-break: break-word;
+    width: 40%;
+    margin: 1ch;
+    text-decoration: none;
+    align-self: center;
+    color: var(--text-muted);
+}
+
+.articlePreview:hover .titel {
+    color: var(--text);
+}
+
+.articlePreview .change {
+    width: 12ch;
 }
 
 .change {

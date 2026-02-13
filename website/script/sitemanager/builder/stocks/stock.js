@@ -1,5 +1,5 @@
 function buildIndividualStockPage(id) {
-    if (isNaN(id)) {
+    if (isNaN(id) || id <= 0) {
         window.history.pushState(null, null, `${window.location.origin}/stocks`);
         router("/stocks");
     }

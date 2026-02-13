@@ -7,6 +7,7 @@ import (
 	"stockviewer/api"
 	"stockviewer/internal/database"
 
+	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -15,11 +16,14 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 
 	var params = api.ArticleGetParams{}
 
+	var decoder *schema.Decoder = schema.NewDecoder()
+	var err error
+
 	// get parameters
-	err := json.NewDecoder(r.Body).Decode(&params)
+	err = decoder.Decode(&params, r.URL.Query())
 	if err != nil {
+		log.Error(err)
 		api.InternalErrorHandler(w)
-		log.Debug(err)
 		return
 	}
 

@@ -19,6 +19,9 @@ function router(path = getCurrentPathWithoutSlash()) {
         case "stocks":
             routerStocks(segmentedPath);
             break;
+        case "articles":
+            routerArticles(segmentedPath);
+            break;
         default:
             build404Page();
     }
@@ -36,4 +39,18 @@ function routerStocks(segmented) {
     }
 
     buildIndividualStockPage(segmented[1])
+}
+
+function routerArticles(segmented) {
+    if (segmented[0] !== "articles") {
+        return;
+    }
+
+    if (isNaN(segmented[1])) {
+        window.history.pushState(null, null, `${window.location.origin}/articles`);
+        buildArticlesOverviewPage();
+        return;
+    }
+
+    buildIndividualArticlePage(segmented[1])
 }
