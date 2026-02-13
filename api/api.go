@@ -41,6 +41,11 @@ type ArticleCreateParams struct {
 	Content string
 }
 
+type ArticleGetParams struct {
+	Offset int32
+	Id     int32
+}
+
 /* Response */
 
 type SuccessResponse struct {

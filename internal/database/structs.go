@@ -42,3 +42,14 @@ type UserIdentification struct {
 	Name string
 	Id   string
 }
+
+type ArticleOverview struct {
+	Id    int32
+	Title string
+}
+
+type Article struct {
+	Id      int32
+	Title   string
+	Content string
+}
