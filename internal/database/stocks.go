@@ -10,7 +10,7 @@ import (
 )
 
 // CreateStock creates a new stock with the given name and initial price and returns the ID of the new stock. The newly created stock is active.
-func CreateStock(name string, initPrice int64, creatorID string) (int64, error) {
+func CreateStock(name string, initPrice int64, creatorID string) (int32, error) {
 	currentTimeStamp := time.Now()
 
 	db := getDB()
@@ -27,7 +27,7 @@ func CreateStock(name string, initPrice int64, creatorID string) (int64, error) 
 		log.Error(resp.Err())
 		return 0, resp.Err()
 	}
-	var lastID int64
+	var lastID int32
 	err := resp.Scan(&lastID)
 
 	if err != nil {

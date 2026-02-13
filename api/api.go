@@ -36,6 +36,11 @@ type UserCreateParams struct {
 	Password string
 }
 
+type ArticleCreateParams struct {
+	Title   string
+	Content string
+}
+
 /* Response */
 
 type SuccessResponse struct {

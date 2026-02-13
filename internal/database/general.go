@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 
 	_ "github.com/lib/pq"
@@ -143,6 +144,21 @@ func InitialiseDB() {
 	wg.Add(1)
 	go createIndex("sessions", "token")
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "articles" (
+	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
+	"creatorId"	VARCHAR(36),
+	"title" VARCHAR(96) NOT NULL,
+	"content" TEXT,
+	"createdAt" TIMESTAMPTZ NOT NULL,
+	CONSTRAINT "fk_articles_creatorid" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	wg.Add(2)
+	go createIndex("articles", "creatorId")
+	go createIndex("articles", "title")
+
 	wg.Wait()
 
 	resp := db.QueryRow(`SELECT tag FROM users LIMIT 1;`)
@@ -160,9 +176,10 @@ func InitialiseDB() {
 }
 
 func createIndex(table string, row string) {
-	statement := fmt.Sprintf("CREATE INDEX IF NOT EXISTS idx_%v_%v ON %v(%v);", table, row, table, row)
+	statement := fmt.Sprintf(`CREATE INDEX IF NOT EXISTS idx_%v_%v ON %v("%v");`, strings.ToLower(table), strings.ToLower(row), table, row)
 	_, err := db.Exec(statement)
 	if err != nil {
+		log.Error(statement)
 		log.Fatal(err)
 	}
 	wg.Done()

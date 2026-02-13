@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"stockviewer/internal/handlers/articles"
 	"stockviewer/internal/handlers/middleware"
 	"stockviewer/internal/handlers/stocks"
 	"stockviewer/internal/handlers/users"
@@ -35,5 +36,9 @@ func Handler(r *chi.Mux) {
 		router.Get("/permissions", users.GetPermissions)
 		router.Get("/overview", users.GetUserInformation)
 		router.Post("/", users.CreateUser)
+	})
+
+	r.With(middleware.ValidateToken).Route("/api/articles", func(router chi.Router) {
+		router.Post("/", articles.CreateArticle)
 	})
 }
