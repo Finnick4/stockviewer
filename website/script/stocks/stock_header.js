@@ -3,14 +3,16 @@ class stockHeader extends HTMLElement {
         this.stockid = Number(this.getAttribute("data-stock-id"))
 
         this.innerHTML = `
-                        <div>
-                            <div class="change price">???€</div>
+                        <div class="titlebar">
+                            <div>
+                                <div class="change price">???€</div>
+                            </div>
+                            <h1>Loading name...</h1>
+                            <nav>
+                                <button is="star-stock-button" data-stockid="${this.stockid}"></button>
+                                <button is="edit-stock-button" data-stockid="${this.stockid}"></button>
+                            </nav>
                         </div>
-                        <h1>Loading name...</h1>
-                        <nav>
-                            <button is="star-stock-button" data-stockid="${this.stockid}"></button>
-                            <button is="edit-stock-button" data-stockid="${this.stockid}"></button>
-                        </nav>
                         `
         this.closeSubscription = subscribeToAPI(`/api/stocks/?Id=${this.stockid}`, addThisToFunctionCall(this.updateData, this))
     }

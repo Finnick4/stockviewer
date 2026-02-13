@@ -486,11 +486,18 @@ stock-chart svg line.axis {
     color: var(--negative);
 }
 
-stock-header {
-    display: flex;
+.titlebar {
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
+}
+
+.titlebar h1 {
+    text-align: center;
+}
+
+.titlebar nav {
+    justify-self: right;
 }
 
 .price {
@@ -505,4 +512,14 @@ stock-header {
     transition: var(--bg-transition);
     color: var(--text);
     align-self: center;
+}
+
+.article {
+    background-color: var(--bg);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    max-width: 70ch;
+    line-height: 1.5em;
+    font-size: 20px;
+    margin: auto;
 }
