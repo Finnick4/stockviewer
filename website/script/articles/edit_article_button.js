@@ -48,6 +48,8 @@ class editArticleButtonElement extends HTMLButtonElement {
             const title = modal.querySelector(`.title`)
             const body = modal.querySelector(`.body`)
 
+            body.style.height = "1px"
+            body.style.height = body.scrollHeight + "px"
 
             userInformation.writePermission("canCreateArticles", perm => {
                 if (perm !== 1) {
