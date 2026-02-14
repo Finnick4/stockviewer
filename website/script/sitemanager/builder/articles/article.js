@@ -9,8 +9,8 @@ function buildIndividualArticlePage(id) {
                             <div></div>
                             <h1>Loading name...</h1>
                             <nav>
-                                <button is="star-article-button" data-stockid="${id}"></button>
-                                <button is="edit-article-button" data-stockid="${id}"></button>
+                                <button is="star-article-button" data-articleid="${id}"></button>
+                                <button is="edit-article-button" data-articleid="${id}"></button>
                             </nav>
                         </div>
                         <div class="article">
