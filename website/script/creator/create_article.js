@@ -61,6 +61,13 @@ function showModalCreateArticle(elem) {
         elem.addEventListener("input", () => validate())
     })
 
+    modal.querySelectorAll(`textarea.body`).forEach(elem => {
+        elem.addEventListener("input", () => {
+            elem.style.height = "1px"
+            elem.style.height = elem.scrollHeight + "px"
+        })
+    })
+
     modal.querySelector(`.submit`).addEventListener("click", () => {
         if (validate()) {
             fetch(`${window.location.origin}/api/articles`, {
