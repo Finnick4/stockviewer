@@ -22,19 +22,19 @@ let userInformation = (function (){
     })
 
     return {
-        writeName(fn) {
+        writeDisplayName(fn) {
             if (name === "") {
                 checkLoggedIn();
                 fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {
-                    name = jsonResponse["Data"]["Name"]
-                    tag = jsonResponse["Data"]["Tag"]
-                    userid = jsonResponse["Data"]["Id"]
-                    console.log(name)
-                    fn(name)
+                    name = sanitiseText(jsonResponse["Data"]["Name"])
+                    tag = sanitiseText(jsonResponse["Data"]["Tag"])
+                    userid = sanitiseText(jsonResponse["Data"]["Id"])
+                    console.log(sanitiseText(name))
+                    fn(sanitiseText(name))
                 })
             } else {
-                console.log(name)
-                fn(name)
+                console.log(sanitiseText(name))
+                fn(sanitiseText(name))
             }
         },
         writePermission(permission, fn) {

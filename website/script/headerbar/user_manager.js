@@ -11,8 +11,8 @@ class userManagerElement extends HTMLElement {
             <div class="name">loading...</div>
             <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false">
         </button>`
-        userInformation.writeName(name => {
-            this.querySelector("div.name").innerHTML = name
+        userInformation.writeDisplayName(name => {
+            this.querySelector("div.name").innerHTML = sanitiseText(name)
         })
     }
     disconnectedCallback() {

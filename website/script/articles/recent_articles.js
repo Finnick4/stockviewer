@@ -10,7 +10,7 @@ class recentArticlesElement extends HTMLElement {
             resp["Data"].forEach(e => {
                 html += `<li class="articlePreview" data-article-id="${e["Id"]}">
                             <a is="a-button" href="/articles/${e["Id"]}">
-                                <div class="title">${e["Title"]}</div>
+                                <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div>
                                     <div class="change">0 affected</div>
                                 </div>
@@ -35,7 +35,7 @@ class recentArticlesElement extends HTMLElement {
                         elem.classList.add("articlePreview")
                         elem.dataset.articleId = e["Id"]
                         elem.innerHTML = `<a is="a-button" href="/articles/${e["Id"]}">
-                                              <div class="title">${e["Title"]}</div>
+                                              <div class="title">${sanitiseText(e["Title"])}</div>
                                               <div>
                                                 <div class="change">0 affected</div>
                                               </div>

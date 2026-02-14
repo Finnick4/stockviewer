@@ -21,7 +21,7 @@ class stockHeader extends HTMLElement {
     }
 
     updateData(data, that) {
-        that.querySelector("h1").innerHTML = data["Name"]
+        that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         that.querySelector("div.price").innerHTML = data["Price"]/100 + "€"
     }
 }

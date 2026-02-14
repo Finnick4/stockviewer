@@ -49,7 +49,7 @@ class relatedStocks extends HTMLElement {
         const addComparingElement = (elem) => {
             elements += `<li class="stockOverview">
                         <a is="a-button" href="/stocks/${elem["Id"]}">
-                            <div class="stockName">${elem["Name"]}</div>
+                            <div class="stockName">${sanitiseText(elem["Name"])}</div>
                             <div>
                                 <div class="change">${getShortPrice(elem["Price"]/100)}</div>
                                 <div class="change">${getShortPrice(((elem["Price"] - thisStock["Price"])/100))}</div>
