@@ -11,20 +11,21 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CreateArticle(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Article creation is in progress")
+func EditArticle(w http.ResponseWriter, r *http.Request) {
+	log.Debug("Trying to edit an article")
 
 	token := r.Context().Value("token").(string)
 
-	if !database.HasTokenPermission(token, "canCreateArticles") {
+	if !database.HasTokenPermission(token, "canEditArticles") {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return
 	}
 
-	var params = api.ArticleCreateParams{}
+	var params = database.Article{}
 
-	// get parameters
+	defer r.Body.Close()
+
 	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		api.InternalErrorHandler(w)
@@ -34,13 +35,18 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 
 	titlelen := utilities.CharCount(params.Title)
 	if titlelen > 96 || titlelen < 10 {
-		log.Debugf("Could not create article as there was an issue with the title! Length is %v", titlelen)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Could not create article as there was an issue with the title! Length is %v", titlelen))
+		log.Debugf("Could not edit article as there was an issue with the title! Length is %v", titlelen)
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit article as there was an issue with the title! Length is %v", titlelen))
 		return
 	}
 
-	id, err := database.CreateArticle(params.Title, params.Content, database.GetUserIDFromToken(token))
+	if params.Id < 1 {
+		log.Debugf("Could not edit article as the id %v is invalid!", params.Id)
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit article as the id %v is invalid!", params.Id))
+		return
+	}
 
+	err = database.EditArticle(params.Id, params.Title, params.Content)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
@@ -49,7 +55,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
-		Data: id,
+		Data: "success",
 	}
 
 	w.Header().Set("Content-Type", "application/json")

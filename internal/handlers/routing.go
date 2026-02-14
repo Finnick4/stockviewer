@@ -41,5 +41,6 @@ func Handler(r *chi.Mux) {
 	r.With(middleware.ValidateToken).Route("/api/articles", func(router chi.Router) {
 		router.Post("/", articles.CreateArticle)
 		router.Get("/", articles.GetArticles)
+		router.Patch("/", articles.EditArticle)
 	})
 }

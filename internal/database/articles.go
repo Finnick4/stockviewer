@@ -27,7 +27,6 @@ func CreateArticle(title string, content string, creatorID string) (int32, error
 		} else {
 			resp = db.QueryRow(`INSERT INTO articles (title, "createdAt") VALUES ($1, $2) RETURNING id`, title, created)
 		}
-
 	}
 
 	err := resp.Err()
@@ -45,6 +44,25 @@ func CreateArticle(title string, content string, creatorID string) (int32, error
 		return 0, err
 	}
 	return lastID, nil
+}
+
+func EditArticle(id int32, title string, content string) error {
+	log.Infof("Editing article %v...", id)
+
+	db := getDB()
+	var err error
+
+	if content != "" {
+		_, err = db.Exec(`UPDATE articles SET title=$1, content=$2 WHERE id=$3;`, title, content, id)
+	} else {
+		_, err = db.Exec(`UPDATE articles SET title=$1, content=NULL WHERE id=$2;`, title, id)
+	}
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
 }
 
 // GetArticles returns the 10 most recent articles. If an offset is provided, it takes the 10 articles n*10 below.

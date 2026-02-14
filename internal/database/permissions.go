@@ -26,6 +26,7 @@ func resetAdminPermissions() {
 		Permission{Permission: "canDeleteUser", Value: 1},
 
 		Permission{Permission: "canCreateArticles", Value: 1},
+		Permission{Permission: "canEditArticles", Value: 1},
 	}
 
 	var err error
