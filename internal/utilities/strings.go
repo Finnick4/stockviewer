@@ -1,7 +1,9 @@
 package utilities
 
-import "strings"
+import (
+	"unicode/utf8"
+)
 
 func CharCount(txt string) int {
-	return strings.Count(txt, "")
+	return utf8.RuneCountInString(txt)
 }

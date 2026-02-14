@@ -81,7 +81,7 @@ let userInformation = (function (){
                     return permissions[p] === 1
                 }
 
-                fn(checkPerm("canCreateStocks"))
+                fn(checkPerm("canCreateStocks") || checkPerm("canCreateArticles") || checkPerm("canCreateUsers"))
             }
 
         },

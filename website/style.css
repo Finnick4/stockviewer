@@ -97,6 +97,34 @@ h1 {
 
 .modal .content input {
     width: 32ch;
+    height: 2rem;
+}
+
+.modal .content input.title {
+    width: calc(100% - 1rem);
+    margin: 0;
+}
+
+.modal .content textarea.body {
+    resize: none;
+    font-family: "Ubuntu Sans";
+    padding: .5rem;
+    background-color: var(--bg-light);
+    border: none;
+    color: var(--text-muted);
+    border-radius: var(--border-radius);
+    width: calc(100% - 1rem);
+}
+.modal .content textarea.body:focus {
+    outline: none;
+}
+
+.modal .content div.textField:focus-within p {
+    color: var(--text);
+}
+
+.modal .content div.textField {
+    margin-bottom: 1rem;
 }
 
 .modal .pair {
@@ -141,10 +169,6 @@ h1 {
 .modal .closeBtn:hover {
     color: var(--icon-color-highlight);
     cursor: pointer;
-}
-
-.modal input {
-    height: 2rem;
 }
 
 button {
