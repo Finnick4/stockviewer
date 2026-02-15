@@ -1,4 +1,11 @@
 function sanitiseText(txt) {
+    if (typeof(txt) === "undefined") {
+        return ""
+    }
+    if (typeof(txt) === "number") {
+        return txt
+    }
+
     return txt.replaceAll("<", "&lt;")
 }
 
