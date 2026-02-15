@@ -31,6 +31,7 @@ func genToken() (string, error) {
 
 // GenerateNewToken creates a new token and stores it in the database (hashed) for the given ID. The returned token is not hashed.
 func GenerateNewToken(userid string) (string, error) {
+	db := getDB()
 	token, err := genToken()
 	if err != nil {
 		log.Error(err)
@@ -55,6 +56,7 @@ func GenerateNewToken(userid string) (string, error) {
 
 // GetTokenStatus returns the status set in the users table for a token.
 func GetTokenStatus(token string) int32 {
+	db := getDB()
 	resp := db.QueryRow(`SELECT status FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1);`, hash512(token))
 	var val int32
 	err := resp.Scan(&val)

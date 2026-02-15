@@ -12,7 +12,7 @@ type StockCreateParams struct {
 	InitPrice int64
 }
 type StockGetParams struct {
-	ID        int64
+	ID        int32
 	Timeframe int64
 }
 type StockGetHistoryParams struct {

@@ -46,7 +46,7 @@ func CreateStock(name string, initPrice int64, creatorID string) (int32, error) 
 }
 
 // GetStockInfo returns the current name and price of a stock of the given ID
-func GetStockInfo(id int64) (CurrentStockData, error) {
+func GetStockInfo(id int32) (CurrentStockData, error) {
 	db := getDB()
 
 	resp := db.QueryRow(`SELECT stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid WHERE stocks.id=$1;`, id)
@@ -115,7 +115,7 @@ func GetCurrentStockInformation() ([]CurrentStockData, error) {
 }
 
 // GetStockPriceHistory gets the price history of a given stock in the given timeframe
-func GetStockPriceHistory(id int64, timeframe Timeframe) ([]StockPriceTime, error) {
+func GetStockPriceHistory(id int32, timeframe Timeframe) ([]StockPriceTime, error) {
 	log.Debugf("Getting history of stock %v in timeframe %v", id, timeframe)
 
 	db := getDB()
@@ -148,7 +148,7 @@ func GetStockPriceHistory(id int64, timeframe Timeframe) ([]StockPriceTime, erro
 }
 
 // GetActiveStockIds returns all IDs of active stocks
-func GetActiveStockIds() ([]int64, error) {
+func GetActiveStockIds() ([]int32, error) {
 	log.Debug("Getting all stock IDs")
 
 	db := getDB()
@@ -160,10 +160,10 @@ func GetActiveStockIds() ([]int64, error) {
 	}
 	defer rows.Close()
 
-	var data []int64
+	var data []int32
 
 	for rows.Next() {
-		var currentData int64
+		var currentData int32
 		err = rows.Scan(&currentData)
 		if err != nil {
 			log.Error(err)
@@ -236,6 +236,61 @@ func GetStocksPriceDelta() ([]PriceDelta, error) {
 	return data, nil
 }
 
+func SetStockName(id int32, name string) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stocks SET name=$1 WHERE id=$2`, name, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func SetStockPrice(id int32, price int64) error {
+	db := getDB()
+
+	currentTimeStamp := time.Now()
+
+	_, err := db.Exec(`INSERT INTO stockprice (stockid, price, timestamp) VALUES ($1, $2, $3);`, id, price, currentTimeStamp)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1 WHERE id=$2`, currentTimeStamp, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func UpdateCompleteStock(stock CurrentStockData) error {
+	db := getDB()
+
+	currentTimeStamp := time.Now()
+
+	_, err := db.Exec(`INSERT INTO stockprice (stockid, price, timestamp) VALUES ($1, $2, $3);`, stock.Id, stock.Price, currentTimeStamp)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1, name=$2 WHERE id=$3`, currentTimeStamp, stock.Name, stock.Id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
 // SetStockPrices creates a new price entry at the current time for all provided stocks with the given price. Furthermore, this entry is also set to be the current price.
 func SetStockPrices(stocks []StockPrice) {
 	log.Debug("Setting new stock prices")
@@ -244,7 +299,7 @@ func SetStockPrices(stocks []StockPrice) {
 
 	placeholders := make([]string, 0, len(stocks))
 	vals := make([]interface{}, 0, len(stocks))
-	ids := make([]int64, 0, len(stocks))
+	ids := make([]int32, 0, len(stocks))
 	count := 1
 	for _, elem := range stocks {
 		placeholders = append(placeholders, fmt.Sprintf("($%v, $%v, $%v)", count, count+1, count+2))

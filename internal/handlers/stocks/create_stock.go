@@ -3,7 +3,7 @@ package stocks
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
+	"stockviewer/internal/utilities"
 	"time"
 
 	"stockviewer/api"
@@ -39,7 +39,9 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		api.InternalErrorHandler(w)
 		return
 	}
-	if params.Name == "" || strings.Count(params.Name, "") >= 33 || params.InitPrice <= 1000000 {
+
+	namelen := utilities.CharCount(params.Name)
+	if params.Name == "" || namelen > 32 || params.InitPrice <= 1000000 {
 		log.Debugf("Could not accept the request as at least one parameter is invalid (Either the name is missing or too long or the initial price is nonexistent or <= 10000000): name='%v', initprice=%v", params.Name, params.InitPrice)
 		api.RequestMalformedHandler(w, "Could not process the request as the parameters are malformed: Either the name is missing or too long or the initial price is nonexistent or <= 10000000")
 		return

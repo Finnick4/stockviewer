@@ -12,18 +12,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var db *sql.DB
+var databaseConnection *sql.DB
 
 func getDB() *sql.DB {
-	if db == nil {
+	if databaseConnection == nil {
 		log.Debug("Connecting to DB")
 		connectToDB()
 	}
-	return db
+	return databaseConnection
 }
 
 func CloseDB() {
-	err := db.Close()
+	err := databaseConnection.Close()
 	if err != nil {
 		return
 	}
@@ -55,11 +55,11 @@ func connectToDB() {
 		dbName = "stockviewer"
 	}
 	var err error
-	db, err = sql.Open("postgres", fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName))
+	databaseConnection, err = sql.Open("postgres", fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName))
 	if err != nil {
 		log.Fatal(err)
 	}
-	row := db.QueryRow("SELECT version()")
+	row := databaseConnection.QueryRow("SELECT version()")
 
 	var v string
 	err = row.Scan(&v)
@@ -176,6 +176,7 @@ func InitialiseDB() {
 }
 
 func createIndex(table string, row string) {
+	db := getDB()
 	statement := fmt.Sprintf(`CREATE INDEX IF NOT EXISTS idx_%v_%v ON %v("%v");`, strings.ToLower(table), strings.ToLower(row), table, row)
 	_, err := db.Exec(statement)
 	if err != nil {

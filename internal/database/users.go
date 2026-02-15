@@ -32,6 +32,7 @@ func hashPW(toHash string) (string, error) {
 
 // IsCorrectPassword returns whether the given username has the given password.
 func IsCorrectPassword(tag string, pw string) bool {
+	db := getDB()
 	resp := db.QueryRow(`SELECT password FROM users WHERE tag = $1;`, tag)
 	var hashedPW string
 	err := resp.Scan(&hashedPW)
@@ -64,6 +65,7 @@ func EditPasswordFromUserID(id string, password string) error {
 
 // GetUserIDFromToken returns the ID of the user that bears the given token.
 func GetUserIDFromToken(token string) string {
+	db := getDB()
 	resp := db.QueryRow(`SELECT userid FROM sessions WHERE token = $1;`, hash512(token))
 	var val string
 	err := resp.Scan(&val)
@@ -79,6 +81,7 @@ func GetUserIDFromToken(token string) string {
 
 // GetUserTagFromToken returns the tag of the user that bears the given token.
 func GetUserTagFromToken(token string) string {
+	db := getDB()
 	resp := db.QueryRow(`SELECT tag FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
 	var val string
 	err := resp.Scan(&val)
@@ -95,7 +98,7 @@ func GetUserTagFromToken(token string) string {
 // GetUserNameAndTagFromToken returns the name and tag of the user that bears the given token.
 func GetUserNameAndTagFromToken(token string) (UserIdentification, error) {
 	var info UserIdentification
-
+	db := getDB()
 	rows, err := db.Query(`SELECT tag, "displayName", id FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -120,6 +123,7 @@ func GetUserNameAndTagFromToken(token string) (UserIdentification, error) {
 
 // GetUserIDFromTag returns the ID of the user tag. If there is no ID found or any other error this function returns an empty string
 func GetUserIDFromTag(tag string) string {
+	db := getDB()
 	resp := db.QueryRow(`SELECT id FROM users WHERE tag = $1;`, tag)
 	var val string
 	err := resp.Scan(&val)
@@ -135,6 +139,7 @@ func GetUserIDFromTag(tag string) string {
 
 // GetUserIDStatus returns the status set in the users table for a token.
 func GetUserIDStatus(userid string) int32 {
+	db := getDB()
 	resp := db.QueryRow(`SELECT status FROM users WHERE id = $1;`, userid)
 	var val int32
 	err := resp.Scan(&val)

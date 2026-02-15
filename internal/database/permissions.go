@@ -13,15 +13,16 @@ func resetAdminPermissions() {
 
 	permissions := []Permission{
 		Permission{Permission: "canCreateStocks", Value: 1},
-		Permission{Permission: "canModifyStockNames", Value: 1},
+		Permission{Permission: "canEditStockNames", Value: 1},
+		Permission{Permission: "canEditStockPrices", Value: 1},
 		Permission{Permission: "canArchiveStocks", Value: 1},
 		Permission{Permission: "isStockArchivist", Value: 1},
 		Permission{Permission: "canDisableStocks", Value: 1},
 
 		Permission{Permission: "canCreateUsers", Value: 1},
-		Permission{Permission: "canModifyUserPermission", Value: 1},
-		Permission{Permission: "canModifyUserName", Value: 1},
-		Permission{Permission: "canModifyUserPassword", Value: 1},
+		Permission{Permission: "canEditUserPermission", Value: 1},
+		Permission{Permission: "canEditUserName", Value: 1},
+		Permission{Permission: "canEditUserPassword", Value: 1},
 		Permission{Permission: "canDisableUser", Value: 1},
 		Permission{Permission: "canDeleteUser", Value: 1},
 
@@ -43,6 +44,7 @@ func resetAdminPermissions() {
 // GetTokenPermission returns the permission value of user associated with the token.
 // If the queried permission is to be interpreted as a bool, use HasTokenPermission instead!
 func GetTokenPermission(token string, permission string) int32 {
+	db := getDB()
 	resp := db.QueryRow(`SELECT "claimValue" FROM permissions WHERE "claimType" = $1 AND userid = (SELECT userid FROM sessions WHERE sessions.token = $2);`, permission, hash512(token))
 	var val int32
 	err := resp.Scan(&val)
@@ -90,6 +92,7 @@ func GetAllTokenPermissions(token string) ([]Permission, error) {
 
 // SetUserPermission sets or updates the permission of a user.
 func SetUserPermission(id string, permission Permission) error {
+	db := getDB()
 	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission.Permission)
 	var permValue int32
 	err := resp.Scan(&permValue)

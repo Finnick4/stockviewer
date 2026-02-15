@@ -3,13 +3,13 @@ package database
 import "time"
 
 type CurrentStockData struct {
-	Id    int64
+	Id    int32
 	Name  string
 	Price int64
 }
 
 type StockPrice struct {
-	Id    int64
+	Id    int32
 	Price int64
 }
 
