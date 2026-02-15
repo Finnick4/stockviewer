@@ -5,7 +5,7 @@ class stocklistAll extends HTMLElement {
                 <h2>All stocks</h2>
                 <p>Loading stock data...</p>
             </div>`
-        this.closeSubscription = subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.updateData, this))
     }
 
     disconnectedCallback() {

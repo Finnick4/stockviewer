@@ -17,7 +17,7 @@ class stockChart extends HTMLElement {
                             </svg>
                         </div>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stocks/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
     }
     disconnectedCallback() {
         this.closeSubscription()

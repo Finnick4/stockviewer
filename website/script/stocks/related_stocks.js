@@ -20,7 +20,7 @@ class relatedStocks extends HTMLElement {
                             ${template}                    
                         </ul>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stocks/`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/sse/`, addThisToFunctionCall(this.updateData, this))
     }
     disconnectedCallback() {
         this.closeSubscription()

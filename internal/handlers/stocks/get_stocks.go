@@ -2,12 +2,9 @@ package stocks
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
 	"stockviewer/api"
 	"stockviewer/internal/database"
-	"stockviewer/internal/handlers/sse"
 
 	_ "github.com/glebarez/go-sqlite"
 	"github.com/gorilla/schema"
@@ -29,97 +26,103 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rc := http.NewResponseController(w)
-
-	var send func() error
+	var send func()
 
 	if params.ID > 0 {
 		if database.IsValidTimeframeScope(params.Timeframe) {
-			send = func() error {
+			send = func() {
 				history, err := database.GetStockPriceHistory(params.ID, database.GenerateTimeframe(params.Timeframe))
 				if err != nil {
-					return err
+					log.Error(err)
+					return
 				}
 
 				if len(history) == 0 {
+					log.Error(err)
 					api.RequestNothingFoundHandler(w, "Did not find a stock with the given ID.")
-					return errors.New("no such stock found")
+					return
 				}
 
-				resp, err := json.Marshal(history)
-				if err != nil {
-					return err
+				var response = api.SuccessResponse{
+					Code: http.StatusOK,
+					Data: history,
 				}
 
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+				w.Header().Set("Content-Type", "application/json")
+				err = json.NewEncoder(w).Encode(response)
 				if err != nil {
-					return err
+					log.Error(err)
+					api.InternalErrorHandler(w)
+					return
 				}
-				err = rc.Flush()
-				return err
 			}
 
 		} else {
-			send = func() error {
+			send = func() {
 				price, err := database.GetStockInfo(params.ID)
 				if err != nil {
-					return err
+					log.Error(err)
+					return
 				}
 
-				resp, err := json.Marshal(price)
-				if err != nil {
-					return err
+				var response = api.SuccessResponse{
+					Code: http.StatusOK,
+					Data: price,
 				}
 
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+				w.Header().Set("Content-Type", "application/json")
+				err = json.NewEncoder(w).Encode(response)
 				if err != nil {
-					return err
+					log.Error(err)
+					api.InternalErrorHandler(w)
+					return
 				}
-				err = rc.Flush()
-				return err
 			}
 		}
 	} else {
 		if database.IsValidTimeframeScope(params.Timeframe) {
-			send = func() error {
+			send = func() {
 				deltas, err := database.GetStocksPriceDelta()
 				if err != nil {
-					return err
+					log.Error(err)
+					return
 				}
 
-				resp, err := json.Marshal(deltas)
-				if err != nil {
-					return err
+				var response = api.SuccessResponse{
+					Code: http.StatusOK,
+					Data: deltas,
 				}
 
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+				w.Header().Set("Content-Type", "application/json")
+				err = json.NewEncoder(w).Encode(response)
 				if err != nil {
-					return err
+					log.Error(err)
+					api.InternalErrorHandler(w)
+					return
 				}
-				err = rc.Flush()
-				return err
 			}
 		} else {
-			send = func() error {
+			send = func() {
 				data, err := database.GetCurrentStockInformation()
 				if err != nil {
-					return err
+					log.Error(err)
+					return
 				}
 
-				resp, err := json.Marshal(data)
-				if err != nil {
-					return err
+				var response = api.SuccessResponse{
+					Code: http.StatusOK,
+					Data: data,
 				}
 
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+				w.Header().Set("Content-Type", "application/json")
+				err = json.NewEncoder(w).Encode(response)
 				if err != nil {
-					return err
+					log.Error(err)
+					api.InternalErrorHandler(w)
+					return
 				}
-				err = rc.Flush()
-				return err
 			}
 		}
 	}
-
-	sse.SendSSEOnStockStep(w, r, send)
+	send()
 }

@@ -14,7 +14,7 @@ class stockHeader extends HTMLElement {
                             </nav>
                         </div>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stocks/?Id=${this.stockid}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Id=${this.stockid}`, addThisToFunctionCall(this.updateData, this))
     }
     disconnectedCallback() {
         this.closeSubscription()
