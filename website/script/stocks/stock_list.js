@@ -21,7 +21,7 @@ class stocklistAll extends HTMLElement {
                                 <div class="stockName">${sanitiseText(e["Name"])}</div>
                                 <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
                                     <div class="change">${shortPrice}</div>
-                                    <div class="change">${e["DeltaAmount"] / 100}€</div>
+                                    <div class="change">${(e["DeltaAmount"] >= 0 ? "+" : "") + e["DeltaAmount"] / 100}€</div>
                                     <div class="change">${getShortPrice((e["Price2"]/e["Price1"] - 1.0))}%</div>
                                 </div>
                             </a>

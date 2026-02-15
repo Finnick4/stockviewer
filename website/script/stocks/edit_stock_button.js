@@ -7,10 +7,6 @@ class editStockButtonElement extends HTMLButtonElement {
     connectedCallback() {
         this.stockid = this.getAttribute("data-stockid")
 
-        this.modalhtml = `
-            <h1>This is not yet implemented!</h1>
-            <p>In the future you will be able to edit stock ${this.stockid} here!</p>
-        `
         this.classList.add("edit")
         this.onclick = () => createModal(this.modalhtml)
 
@@ -21,13 +17,13 @@ class editStockButtonElement extends HTMLButtonElement {
                 this.stockName = sanitiseText(resp["Data"]["Name"])
                 this.stockPrice = sanitiseText(resp["Data"]["Price"])
 
-                let html = `<h2>Create a new stock</h2>
+                let html = `<h2>Edit ${this.stockName}</h2>
                         <div class="pair">
                             <h3>Name</h3>
                             <input class="name" type="text" placeholder="Stock name..." value="${sanitiseText(this.stockName)}">
                         </div>
                         <div class="pair">
-                            <h3>Initial price (ct)</h3>
+                            <h3>Price (ct)</h3>
                             <input class="price" type="number" value="${sanitiseText(this.stockPrice)}">
                         </div>
                         <div class="pair">
