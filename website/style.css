@@ -100,6 +100,11 @@ h1 {
     height: 2rem;
 }
 
+.modal .content input.price {
+    text-align: left;
+    margin: 0;
+}
+
 .modal .content input.title {
     width: calc(100% - 1rem);
     margin: 0;

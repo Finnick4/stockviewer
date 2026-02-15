@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"stockviewer/internal/notifiers"
 	"strings"
 	"time"
 
@@ -41,6 +42,7 @@ func CreateStock(name string, initPrice int64, creatorID string) (int32, error) 
 		return 0, err
 	}
 
+	go notifiers.NotifyStockChange()
 	log.Debugf("Successfully created stock '%v' (Id=%v) at t=%v with an initial value of %v\n", name, lastID, currentTimeStamp, initPrice)
 	return lastID, nil
 }
@@ -245,7 +247,7 @@ func SetStockName(id int32, name string) error {
 		log.Error(err)
 		return err
 	}
-
+	go notifiers.NotifyStockChange()
 	return nil
 }
 
@@ -266,7 +268,7 @@ func SetStockPrice(id int32, price int64) error {
 		log.Error(err)
 		return err
 	}
-
+	go notifiers.NotifyStockChange()
 	return nil
 }
 
@@ -287,7 +289,7 @@ func UpdateCompleteStock(stock CurrentStockData) error {
 		log.Error(err)
 		return err
 	}
-
+	go notifiers.NotifyStockChange()
 	return nil
 }
 
@@ -326,4 +328,5 @@ func SetStockPrices(stocks []StockPrice) {
 		log.Error(err)
 		return
 	}
+	go notifiers.NotifyStockChange()
 }

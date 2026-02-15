@@ -9,6 +9,19 @@ function subscribeToAPI(path, func) {
     }
     let id = currentSubscriptionCount++
     if (Object.keys(currentSubscriptions).indexOf(path) === - 1) {
+
+        if (Object.keys(currentSubscriptions).length === 6) {
+            console.log("checking what to close!")
+            Object.keys(currentSubscriptions).forEach(path => {
+                if (currentSubscriptions[path].length === 0) {
+                    console.log("closing " + path)
+                    delete currentSubscriptions[path]
+                    subscriptionListeners[path].es.close()
+                    delete subscriptionListeners[path]
+                }
+            })
+        }
+
         currentSubscriptions[path] = [{
             id: id,
             fn: func

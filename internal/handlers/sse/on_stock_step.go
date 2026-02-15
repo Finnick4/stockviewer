@@ -2,7 +2,7 @@ package sse
 
 import (
 	"net/http"
-	"stockviewer/internal/stocks"
+	"stockviewer/internal/notifiers"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -20,7 +20,7 @@ func SendSSEOnStockStep(w http.ResponseWriter, r *http.Request, send func() erro
 		return
 	}
 
-	stockStepPing, stockStepPingRemove := stocks.GetNewStepNotification()
+	stockStepPing, stockStepPingRemove := notifiers.GetStockChangeNotification()
 
 	for {
 		select {
