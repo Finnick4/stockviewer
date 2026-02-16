@@ -38,6 +38,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/permissions", users.GetPermissions)
 		router.Get("/overview", users.GetUserInformation)
 		router.Post("/", users.CreateUser)
+		router.Delete("/login", users.CloseSession)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/articles", func(router chi.Router) {

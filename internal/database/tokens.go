@@ -70,6 +70,15 @@ func GetTokenStatus(token string) int32 {
 	return val
 }
 
+func RemoveToken(token string) {
+	log.Debug("Removing token")
+	db := getDB()
+	_, err := db.Exec(`DELETE FROM sessions WHERE token = $1`, hash512(token))
+	if err != nil {
+		log.Error(err)
+	}
+}
+
 func RevokeAllTokensFromUserID(userid string) {
 	db := getDB()
 
