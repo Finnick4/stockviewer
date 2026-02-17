@@ -29,8 +29,9 @@ function getCurrentPathWithoutSlash() {
 
 function setMainBodyHTML(main) {
     const elemMain = document.querySelector("main");
+    const side = document.querySelector("div.sidebar");
 
-    if (elemMain !== null && document.querySelector("header-bar") !== null) {
+    if (elemMain !== null && side === null && document.querySelector("header-bar") !== null) {
         elemMain.innerHTML = main;
     } else {
         document.body.innerHTML = `
