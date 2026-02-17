@@ -41,6 +41,28 @@ function setMainBodyHTML(main) {
     }
 }
 
+function setMainBodyHTMLAndSidebar(main, sidebar) {
+    const elemMain = document.querySelector("main");
+    const side = document.querySelector("div.sidebar");
+
+    if (elemMain !== null && side !== null && document.querySelector("header-bar") !== null) {
+        elemMain.innerHTML = main;
+        side.innerHTML = sidebar;
+    } else {
+        document.body.innerHTML = `
+        <header-bar></header-bar>
+        <div class="rootsplit">
+            <div class="sidebar">
+                ${sidebar}
+            </div>
+            <main>
+                ${main}   
+            </main>
+        </div>`
+    }
+}
+
+
 
 window.addEventListener("popstate", e => {
     e.preventDefault();

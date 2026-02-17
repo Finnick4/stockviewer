@@ -22,6 +22,9 @@ function router(path = getCurrentPathWithoutSlash()) {
         case "articles":
             routerArticles(segmentedPath);
             break;
+        case "admin":
+            routerAdminPanel(segmentedPath);
+            break;
         default:
             build404Page();
     }
@@ -53,4 +56,27 @@ function routerArticles(segmented) {
     }
 
     buildIndividualArticlePage(segmented[1])
+}
+
+function routerAdminPanel(segmented) {
+    if (segmented[0] !== "admin") {
+        return;
+    }
+
+    if (typeof(segmented[1]) === "undefined" || segmented[1] === "") {
+        window.history.pushState(null, null, `${window.location.origin}/admin`);
+        buildAdminRootPage();
+        return;
+    }
+
+    switch (segmented[1]) {
+        case "users":
+            buildAdminUsersPage();
+            break;
+        case "stocks":
+            buildAdminStocksPage();
+            break;
+        default:
+            build404Page();
+    }
 }

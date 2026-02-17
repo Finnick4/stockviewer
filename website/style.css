@@ -44,6 +44,44 @@ h1 {
     color:var(--text);
 }
 
+div.rootsplit {
+    display: grid;
+    grid-template-columns: 10rem auto;
+    gap: 1rem;
+}
+
+div.sidebar {
+    display: grid;
+    flex-direction: column;
+    background-color: var(--bg);
+    border-radius: var(--border-radius);
+    gap: .1rem;
+    padding: 1rem;
+}
+
+div.sidebar a {
+    color: var(--text);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    align-self: center;
+    text-align: center;
+}
+
+div.sidebar a.btn {
+    background-color: var(--bg);
+}
+
+div.sidebar a:hover {
+    background-color: var(--highlight);
+}
+
+div.sidebar a.btn.selected {
+    background-color: var(--bg-light);
+}
+div.sidebar a.btn.selected:hover {
+    background-color: var(--highlight);
+}
+
 .dropdown {
     background-color: var(--bg-light);
     box-shadow: var(--popup-shadow);
@@ -199,7 +237,7 @@ button:active {
     transition: background-color .2s;
 }
 
-.dropdown a.btn {
+a.btn {
     font-family: Ubuntu, sans-serif;
     background-color: var(--bg-light);
     color: var(--text);
@@ -211,7 +249,7 @@ button:active {
     text-decoration: none;
 }
 
-.dropdown a.btn:hover {
+a.btn:hover {
     background-color: var(--highlight);
     box-shadow: var(--button-hover-shadow);
     top: auto;
