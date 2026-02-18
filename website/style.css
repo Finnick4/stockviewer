@@ -1,9 +1,11 @@
 
 :root {
-    --bg-dark: hsl(0, 0%, 0%);
-    --bg: hsl(0, 0%, 5%);
-    --bg-light: hsl(0, 0%, 10%);
-    --highlight: hsl(0, 0%, 15%);
+    --bg-very-dark: hsl(0, 0%, 0%);
+    --bg-dark: hsl(0, 0%, 5%);
+    --bg: hsl(0, 0%, 10%);
+    --bg-light: hsl(0, 0%, 15%);
+    --bg-very-light: hsl(0, 0%, 20%);
+    --highlight: hsl(0, 0%, 25%);
     --text: hsl(0, 0%, 95%);
     --text-muted: hsl(0, 0%, 70%);
 
@@ -21,12 +23,14 @@
 }
 
 body[data-theme="light"] {
-    --bg-dark: hsl(0, 0%, 85%);
-    --bg: hsl(0, 0%, 90%);
-    --bg-light: hsl(0, 0%, 95%);
+    --bg-very-dark: hsl(0, 0%, 75%);
+    --bg-dark: hsl(0, 0%, 80%);
+    --bg: hsl(0, 0%, 85%);
+    --bg-light: hsl(0, 0%, 90%);
+    --bg-very-light: hsl(0, 0%, 95%);
     --highlight: hsl(0, 0%, 100%);
     --text: hsl(0, 0%, 5%);
-    --text-muted: hsl(0, 0%, 30%);
+    --text-muted: hsl(0, 0%, 20%);
 
     --positiv: hsl(110, 80%, 55%);
     --positiv-muted: hsl(110, 80%, 45%);
@@ -36,7 +40,7 @@ body[data-theme="light"] {
 }
 
 body {
-    background-color: var(--bg-dark);
+    background-color: var(--bg-very-dark);
     color: var(--text-muted);
     height: 100vh;
 }
@@ -54,7 +58,7 @@ div.rootsplit {
 }
 
 div.sidebar {
-    background-color: var(--bg);
+    background-color: var(--bg-dark);
     border-radius: var(--border-radius);
     padding: 1rem;
     height: calc(100vh - 9rem);
@@ -78,7 +82,7 @@ div.sidebar a {
 }
 
 div.sidebar a.btn {
-    background-color: var(--bg);
+    background-color: var(--bg-dark);
 }
 
 div.sidebar a:hover {
@@ -93,7 +97,7 @@ div.sidebar a.btn.selected:hover {
 }
 
 .dropdown {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     box-shadow: var(--popup-shadow);
     color: var(--text-muted);
     border-radius: var(--border-radius);
@@ -134,7 +138,7 @@ div.sidebar a.btn.selected:hover {
     background-color: rgba(0,0,0,.4);
 }
 .modal .outer {
-    background-color: var(--bg);
+    background-color: var(--bg-dark);
     margin: 10% auto;
     padding: 2rem;
     width: 70%;
@@ -162,7 +166,7 @@ div.sidebar a.btn.selected:hover {
     resize: none;
     font-family: "Ubuntu Sans";
     padding: .5rem;
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     border: none;
     color: var(--text-muted);
     border-radius: var(--border-radius);
@@ -226,7 +230,7 @@ div.sidebar a.btn.selected:hover {
 
 button {
     font-family: Ubuntu, sans-serif;
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     color: var(--text);
     transition: var(--bg-transition), box-shadow .1s;
     border: none;
@@ -243,13 +247,13 @@ button:hover {
 }
 
 button:active {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     transition: background-color .2s;
 }
 
 a.btn {
     font-family: Ubuntu, sans-serif;
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     color: var(--text);
     transition: var(--bg-transition), box-shadow .1s;
     border: none;
@@ -286,7 +290,7 @@ header-bar {
     text-decoration: none;
     position: sticky;
     top: 0;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-very-dark);
 }
 
 header-bar h1 {
@@ -316,14 +320,18 @@ header-bar search-bar {
 }
 
 search-bar {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     padding: .5rem;
     border-radius: var(--border-radius);
     transition: var(--bg-transition);
 }
 
 search-bar:focus-within {
-    background-color: var(--highlight);
+    background-color: var(--bg-light);
+}
+
+search-bar input:focus {
+    background-color: var(--bg-light);
 }
 
 input:focus {
@@ -331,7 +339,7 @@ input:focus {
 }
 
 input {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     border: none;
     font-size: 16px;
     color: var(--text);
@@ -377,14 +385,14 @@ user-manager .icon {
 }
 
 theme-switcher button {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     padding: .5rem;
     align-self: center;
     text-align: center;
 }
 
 .inner {
-    background-color: var(--bg);
+    background-color: var(--bg-dark);
     border-radius: var(--border-radius);
     padding: 1rem;
 }
@@ -405,7 +413,7 @@ ul.inner h2 {
     text-align: center;
 }
 .stockOverview {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     color: var(--text-muted);
     max-width: 100%;
     border-radius: var(--border-radius);
@@ -421,9 +429,14 @@ ul.inner h2 {
 }
 
 .stockOverview:hover {
-    background-color: var(--highlight);
+    background-color: var(--bg-light);
     color: var(--text);
 }
+
+.stockOverview:hover .change {
+    background-color: var(--bg-very-light);
+}
+
 .stockName {
     word-break: break-word;
     width: 40%;
@@ -438,7 +451,7 @@ ul.inner h2 {
 }
 
 .articlePreview {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     color: var(--text-muted);
     max-width: 100%;
     border-radius: var(--border-radius);
@@ -454,7 +467,7 @@ ul.inner h2 {
 }
 
 .articlePreview:hover {
-    background-color: var(--highlight);
+    background-color: var(--bg-light);
     color: var(--text);
 }
 .title {
@@ -473,6 +486,10 @@ ul.inner h2 {
 .articlePreview .change {
     width: 12ch;
 }
+.articlePreview:hover .change {
+    background-color: var(--bg-very-light);
+}
+
 
 .change {
     display: inline-block;
@@ -491,7 +508,7 @@ ul.inner h2 {
     background-color: var(--positiv-muted);
 }
 
-.positive > .change:hover {
+.stockOverview:hover .positive > .change {
     background-color: var(--positiv);
 }
 
@@ -499,7 +516,7 @@ ul.inner h2 {
     background-color: var(--negative-muted);
 }
 
-.negative > .change:hover {
+.stockOverview:hover .negative > .change {
     background-color: var(--negative);
 }
 
@@ -532,7 +549,7 @@ stock-chart svg line.axis {
 }
 
 .login-field {
-    background: var(--bg);
+    background: var(--bg-dark);
     padding: 2rem;
     margin:auto;
     border-radius: var(--border-radius);
@@ -580,7 +597,7 @@ stock-chart svg line.axis {
 
 .price {
     display: inline-block;
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;
     border-radius: var(--border-radius);
@@ -593,7 +610,7 @@ stock-chart svg line.axis {
 }
 
 .article {
-    background-color: var(--bg);
+    background-color: var(--bg-dark);
     border-radius: var(--border-radius);
     padding: 1rem;
     max-width: 70ch;
