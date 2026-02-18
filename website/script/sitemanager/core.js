@@ -27,28 +27,33 @@ function getCurrentPathWithoutSlash() {
     return p
 }
 
-function setMainBodyHTML(main) {
+function setMainBodyHTML(main, mainClasses) {
+    if (typeof(mainClasses) === "undefined") {
+        mainClasses = ""
+    }
     const elemMain = document.querySelector("main");
     const side = document.querySelector("div.sidebar");
 
     if (elemMain !== null && side === null && document.querySelector("header-bar") !== null) {
         elemMain.innerHTML = main;
+        elemMain.className = mainClasses
     } else {
         document.body.innerHTML = `
         <header-bar></header-bar>
-        <main>
+        <main class="${mainClasses}">
         ${main}   
         </main>`
     }
 }
 
-function setMainBodyHTMLAndSidebar(main, sidebar) {
+function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
     const elemMain = document.querySelector("main");
     const side = document.querySelector("div.sidebar");
 
     if (elemMain !== null && side !== null && document.querySelector("header-bar") !== null) {
         elemMain.innerHTML = main;
         side.innerHTML = sidebar;
+        elemMain.className = mainClasses
     } else {
         document.body.innerHTML = `
         <header-bar></header-bar>
@@ -56,7 +61,7 @@ function setMainBodyHTMLAndSidebar(main, sidebar) {
             <div class="sidebar">
                 ${sidebar}
             </div>
-            <main>
+            <main class="${mainClasses}">
                 ${main}   
             </main>
         </div>`

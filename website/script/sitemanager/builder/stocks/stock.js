@@ -9,5 +9,5 @@ function buildIndividualStockPage(id) {
                         <stock-chart data-stock-id="${id}"></stock-chart>
                         <related-stocks data-stock-id="${id}"></related-stocks>
                         `;
-    setMainBodyHTML(main);
+    setMainBodyHTML(main, "stockOverviewPage");
 }

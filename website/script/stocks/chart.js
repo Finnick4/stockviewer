@@ -10,7 +10,7 @@ class stockChart extends HTMLElement {
                         <div class="inner">
                             <h2>Stock History</h2>
                             <nav class="timeframe-selector"></nav>
-                            <svg class="chart" viewbox="0 0 100 50">
+                            <svg class="chart" viewbox="5 0 90 47">
                                 <path d="M10 25 L90 25" ></path>
                                 <line class="axis" x1="10" x2="10" y1="5" y2="46"></line>
                                 <line class="axis" x1="10" x2="90" y1="46" y2="46"></line>

@@ -58,7 +58,6 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 				err = rc.Flush()
 				return err
 			}
-
 		} else {
 			send = func() error {
 				price, err := database.GetStockInfo(params.ID)

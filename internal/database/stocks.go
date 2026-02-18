@@ -94,7 +94,7 @@ func GetStockPrices() ([]StockPrice, error) {
 func GetCurrentStockInformation() ([]CurrentStockData, error) {
 	db := getDB()
 
-	rows, err := db.Query(`SELECT stocks.id, stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate";`)
+	rows, err := db.Query(`SELECT stocks.id, stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate" ORDER BY stocks.id;`)
 
 	if err != nil {
 		log.Error(err)
