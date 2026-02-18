@@ -8,8 +8,8 @@ class recentArticlesElement extends HTMLElement {
         fetch(`/api/articles?offset=${offset++}`).then(r => r.json()).then(resp => {
             let html = ""
             resp["Data"].forEach(e => {
-                html += `<li class="articlePreview" data-article-id="${e["Id"]}">
-                            <a is="a-button" href="/articles/${e["Id"]}">
+                html += `<li class="articlePreview" data-article-id="${e["ID"]}">
+                            <a is="a-button" href="/articles/${e["ID"]}">
                                 <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div>
                                     <div class="change">0 affected</div>
@@ -33,8 +33,8 @@ class recentArticlesElement extends HTMLElement {
                     resp["Data"].forEach(e => {
                         const elem = document.createElement("li")
                         elem.classList.add("articlePreview")
-                        elem.dataset.articleId = e["Id"]
-                        elem.innerHTML = `<a is="a-button" href="/articles/${e["Id"]}">
+                        elem.dataset.articleId = e["ID"]
+                        elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
                                               <div class="title">${sanitiseText(e["Title"])}</div>
                                               <div>
                                                 <div class="change">0 affected</div>

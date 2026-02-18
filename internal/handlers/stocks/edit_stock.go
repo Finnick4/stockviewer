@@ -36,9 +36,9 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.Id <= 0 {
-		log.Debugf("Could not edit stock %v as the id is invalid", params.Id)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit stock %v as the id is invalid", params.Id))
+	if params.ID <= 0 {
+		log.Debugf("Could not edit stock %v as the id is invalid", params.ID)
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit stock %v as the id is invalid", params.ID))
 		return
 	}
 
@@ -87,7 +87,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if aimName && !aimPrice {
-		err = database.SetStockName(params.Id, params.Name)
+		err = database.SetStockName(params.ID, params.Name)
 		if err != nil {
 			api.InternalErrorHandler(w)
 			log.Error(err)
@@ -97,7 +97,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if aimPrice && !aimName {
-		err = database.SetStockPrice(params.Id, params.Price)
+		err = database.SetStockPrice(params.ID, params.Price)
 		if err != nil {
 			api.InternalErrorHandler(w)
 			log.Error(err)

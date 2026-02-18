@@ -43,7 +43,7 @@ func CreateStock(name string, initPrice int64, creatorID string) (int32, error) 
 	}
 
 	go notifiers.NotifyStockChange()
-	log.Debugf("Successfully created stock '%v' (Id=%v) at t=%v with an initial value of %v\n", name, lastID, currentTimeStamp, initPrice)
+	log.Debugf("Successfully created stock '%v' (ID=%v) at t=%v with an initial value of %v\n", name, lastID, currentTimeStamp, initPrice)
 	return lastID, nil
 }
 
@@ -54,7 +54,7 @@ func GetStockInfo(id int32) (CurrentStockData, error) {
 	resp := db.QueryRow(`SELECT stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid WHERE stocks.id=$1;`, id)
 	var data CurrentStockData
 	err := resp.Scan(&data.Name, &data.Price)
-	data.Id = id
+	data.ID = id
 
 	if err != nil {
 		log.Error(err)
@@ -80,7 +80,7 @@ func GetStockPrices() ([]StockPrice, error) {
 
 	for rows.Next() {
 		var currentData StockPrice
-		err = rows.Scan(&currentData.Id, &currentData.Price)
+		err = rows.Scan(&currentData.ID, &currentData.Price)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -106,7 +106,7 @@ func GetCurrentStockInformation() ([]CurrentStockData, error) {
 
 	for rows.Next() {
 		var currentData CurrentStockData
-		err = rows.Scan(&currentData.Id, &currentData.Name, &currentData.Price)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -277,13 +277,13 @@ func UpdateCompleteStock(stock CurrentStockData) error {
 
 	currentTimeStamp := time.Now()
 
-	_, err := db.Exec(`INSERT INTO stockprice (stockid, price, timestamp) VALUES ($1, $2, $3);`, stock.Id, stock.Price, currentTimeStamp)
+	_, err := db.Exec(`INSERT INTO stockprice (stockid, price, timestamp) VALUES ($1, $2, $3);`, stock.ID, stock.Price, currentTimeStamp)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1, name=$2 WHERE id=$3`, currentTimeStamp, stock.Name, stock.Id)
+	_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1, name=$2 WHERE id=$3`, currentTimeStamp, stock.Name, stock.ID)
 
 	if err != nil {
 		log.Error(err)
@@ -306,8 +306,8 @@ func SetStockPrices(stocks []StockPrice) {
 	for _, elem := range stocks {
 		placeholders = append(placeholders, fmt.Sprintf("($%v, $%v, $%v)", count, count+1, count+2))
 		count += 3
-		vals = append(vals, elem.Id, elem.Price, currentTimeStamp)
-		ids = append(ids, elem.Id)
+		vals = append(vals, elem.ID, elem.Price, currentTimeStamp)
+		ids = append(ids, elem.ID)
 	}
 
 	db := getDB()

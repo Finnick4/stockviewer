@@ -5,13 +5,15 @@ class relatedStocks extends HTMLElement {
 
         for (let i = 0; i < 5; i++) {
             template += `<li class="stockOverview">
-                                <a is="a-button" class="stockName" href="/stocks">Loading...</a>
+                            <a class="containing" is="a-button" href="/stocks">
+                                <div class="stockName">Loading...</div>
                                 <div>
                                     <div class="change">???</div>
                                     <div class="change">+???€</div>
                                     <div class="change">???%</div>
                                 </div>
-                            </li>`
+                            </a>
+                        </li>`
         }
 
         this.innerHTML = `
@@ -28,7 +30,7 @@ class relatedStocks extends HTMLElement {
 
     updateData(data, that) {
         const sorted = data.sort((a, b) => a["Price"] - b["Price"])
-        const thisStock = sorted.filter(e => e["Id"] === that.stockid)[0]
+        const thisStock = sorted.filter(e => e["ID"] === that.stockid)[0]
         const thisStockIndex = sorted.indexOf(thisStock)
 
 
@@ -36,7 +38,7 @@ class relatedStocks extends HTMLElement {
 
         const addNoneElement = () => {
             elements += `<li class="stockOverview">
-                        <a is="a-button" href="/stocks">
+                        <a class="containing" is="a-button" href="/stocks">
                             <div class="stockName">None...</div>                       
                             <div>
                                 <div class="change">---</div>
@@ -48,7 +50,7 @@ class relatedStocks extends HTMLElement {
         }
         const addComparingElement = (elem) => {
             elements += `<li class="stockOverview">
-                        <a is="a-button" href="/stocks/${elem["Id"]}">
+                        <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
                             <div class="stockName">${sanitiseText(elem["Name"])}</div>
                             <div>
                                 <div class="change">${getShortPrice(elem["Price"]/100)}</div>

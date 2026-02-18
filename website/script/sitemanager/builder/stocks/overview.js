@@ -1,5 +1,5 @@
 function buildStocksOverviewPage() {
-    const main = `<stocklist-all></stocklist-all>`;
+    const main = `<stock-list-delta></stock-list-delta>`;
 
     setMainBodyHTML(main);
 }

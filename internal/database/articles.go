@@ -88,7 +88,7 @@ func GetArticles(offset int32) ([]ArticleOverview, error) {
 
 	for rows.Next() {
 		var article ArticleOverview
-		err = rows.Scan(&article.Id, &article.Title)
+		err = rows.Scan(&article.ID, &article.Title)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -102,7 +102,7 @@ func GetArticle(id int32) (Article, error) {
 	log.Debugf("Getting article with id %v", id)
 	db := getDB()
 
-	article := Article{Id: id}
+	article := Article{ID: id}
 
 	row := db.QueryRow(`SELECT title, COALESCE(content, '') FROM articles WHERE id = $1;`, id)
 

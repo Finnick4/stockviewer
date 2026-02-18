@@ -1,4 +1,4 @@
-class stocklistAll extends HTMLElement {
+class stocklistDelta extends HTMLElement {
     connectedCallback() {
         this.timeframe = 1
         this.innerHTML = `<div class="inner">
@@ -17,7 +17,7 @@ class stocklistAll extends HTMLElement {
         data.forEach(e => {
             const shortPrice = getShortPrice(e["Price2"]/100)
             html += `<li class="stockOverview"  data-stock-id="${e["ID"]}">
-                            <a is="a-button" href="/stocks/${e["ID"]}">
+                            <a class="containing" is="a-button" href="/stocks/${e["ID"]}">
                                 <div class="stockName">${sanitiseText(e["Name"])}</div>
                                 <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
                                     <div class="change">${shortPrice}</div>
@@ -38,4 +38,4 @@ class stocklistAll extends HTMLElement {
 
 
 
-customElements.define('stocklist-all', stocklistAll);
+customElements.define('stock-list-delta', stocklistDelta);

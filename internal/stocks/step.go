@@ -42,13 +42,13 @@ func Step() {
 	t2 := time.Now()
 	for _, val := range stocks {
 
-		if !slices.Contains(ids, val.Id) {
+		if !slices.Contains(ids, val.ID) {
 			continue
 		}
-		stock.Id = 0
+		stock.ID = 0
 		stock.Price = 0
 
-		stock.Id = val.Id
+		stock.ID = val.ID
 
 		var factor float64 = float64((rand.Int63()%2050)-1000) / 1000.0
 		stock.Price = int64(((float64(val.Price) / 100) + math.Pow(math.Log10(float64(val.Price))+1, 2)*factor) * 100)

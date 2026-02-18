@@ -1,11 +1,11 @@
 
 :root {
     --bg-very-dark: hsl(0, 0%, 0%);
-    --bg-dark: hsl(0, 0%, 5%);
-    --bg: hsl(0, 0%, 10%);
-    --bg-light: hsl(0, 0%, 15%);
-    --bg-very-light: hsl(0, 0%, 20%);
-    --highlight: hsl(0, 0%, 25%);
+    --bg-dark: hsl(0, 0%, 10%);
+    --bg: hsl(0, 0%, 15%);
+    --bg-light: hsl(0, 0%, 20%);
+    --bg-very-light: hsl(0, 0%, 25%);
+    --highlight: hsl(0, 0%, 30%);
     --text: hsl(0, 0%, 95%);
     --text-muted: hsl(0, 0%, 70%);
 
@@ -51,7 +51,7 @@ h1 {
 
 div.rootsplit {
     display: grid;
-    grid-template-columns: 10rem auto;
+    grid-template-columns: 15rem auto;
     grid-template-rows: auto;
     gap: 1rem;
     height: calc(100vh - 8rem);
@@ -97,7 +97,7 @@ div.sidebar a.btn.selected:hover {
 }
 
 .dropdown {
-    background-color: var(--bg);
+    background-color: var(--bg-light);
     box-shadow: var(--popup-shadow);
     color: var(--text-muted);
     border-radius: var(--border-radius);
@@ -114,6 +114,14 @@ div.sidebar a.btn.selected:hover {
 
 .dropdown:popover-open {
     display: grid;
+}
+
+.dropdown button {
+    background-color: var(--bg-light);
+}
+
+.dropdown a.btn {
+    background-color: var(--bg-light);
 }
 
 /*noinspection CssInvalidAtRule*/
@@ -261,6 +269,7 @@ a.btn {
     font-size: 16px;
     border-radius: var(--border-radius);
     text-decoration: none;
+    text-align: center;
 }
 
 a.btn:hover {
@@ -328,6 +337,7 @@ search-bar {
 
 search-bar:focus-within {
     background-color: var(--bg-light);
+    box-shadow: var(--popup-shadow);
 }
 
 search-bar input:focus {
@@ -401,7 +411,8 @@ ul.inner {
     display: flex;
     flex-direction: column;
     gap: 1ch;
-    list-style-type:none
+    list-style-type:none;
+    margin-top: 0;
 }
 
 ul.inner p {
@@ -418,11 +429,11 @@ ul.inner h2 {
     max-width: 100%;
     border-radius: var(--border-radius);
     transition: var(--bg-transition), color 0.1s;
-    margin: 0 var(--border-radius);
+    margin: 0;
     align-items: center;
 }
 
-.stockOverview a {
+.stockOverview .containing {
     display: flex;
     justify-content: space-between;
     text-decoration: none;

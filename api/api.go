@@ -43,7 +43,7 @@ type ArticleCreateParams struct {
 
 type ArticleGetParams struct {
 	Offset int32
-	Id     int32
+	ID     int32
 }
 
 /* Response */

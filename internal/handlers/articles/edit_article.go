@@ -40,13 +40,13 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.Id < 1 {
-		log.Debugf("Could not edit article as the id %v is invalid!", params.Id)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit article as the id %v is invalid!", params.Id))
+	if params.ID < 1 {
+		log.Debugf("Could not edit article as the id %v is invalid!", params.ID)
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit article as the id %v is invalid!", params.ID))
 		return
 	}
 
-	err = database.EditArticle(params.Id, params.Title, params.Content)
+	err = database.EditArticle(params.ID, params.Title, params.Content)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)

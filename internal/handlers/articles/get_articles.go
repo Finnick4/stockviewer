@@ -32,14 +32,14 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get articles with offset %v", params.Offset))
 		return
 	}
-	if params.Id < 0 {
-		log.Debugf("Cannot get article with id %v", params.Id)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get article with id %v", params.Id))
+	if params.ID < 0 {
+		log.Debugf("Cannot get article with id %v", params.ID)
+		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get article with id %v", params.ID))
 		return
 	}
 
-	if params.Id > 0 {
-		data, err := database.GetArticle(params.Id)
+	if params.ID > 0 {
+		data, err := database.GetArticle(params.ID)
 		if err != nil {
 			api.InternalErrorHandler(w)
 			log.Debug(err)

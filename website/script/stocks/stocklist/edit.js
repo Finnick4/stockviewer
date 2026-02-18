@@ -1,0 +1,39 @@
+class stocklistEdit extends HTMLElement {
+    connectedCallback() {
+        this.timeframe = 1
+        this.innerHTML = `<div class="inner">
+                <h2>All stocks</h2>
+                <p>Loading stock data...</p>
+            </div>`
+        this.closeSubscription = subscribeToAPI(`/api/stocks/sse/`, addThisToFunctionCall(this.updateData, this))
+    }
+
+    disconnectedCallback() {
+        this.closeSubscription()
+    }
+
+    updateData(data, that) {
+        let html = ""
+        data.forEach(e => {
+            const shortPrice = getShortPrice(e["Price"]/100)
+            html += `<li class="stockOverview" data-stock-id="${e["ID"]}">
+                            <div class="containing" onclick="showEditStockModal(${e["ID"]})">
+                                <div class="stockName">${sanitiseText(e["Name"])}</div>
+                                <div>
+                                    <div class="change">${shortPrice}</div>
+                                </div>
+                            </div>
+                        </li>`
+        })
+
+        that.innerHTML = `<ul class="inner">
+                        <h2>All stocks</h2>
+                        ${html}
+                    </ul>
+                `
+    }
+}
+
+
+
+customElements.define('stock-list-edit', stocklistEdit);

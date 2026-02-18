@@ -111,7 +111,7 @@ func GetUserNameAndTagFromToken(token string) (UserIdentification, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&info.Tag, &info.Name, &info.Id)
+		err = rows.Scan(&info.Tag, &info.Name, &info.ID)
 		if err != nil {
 			log.Error(err)
 			return info, err
