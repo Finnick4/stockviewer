@@ -4,15 +4,15 @@ package database
 func GenerateTimeframe(scope int64) Timeframe {
 	switch scope {
 	case 1:
-		return Timeframe{count: 30, bucketWidth: "1 minute"} // 30 minutes
+		return Timeframe{count: 30, bucketWidth: "1 minute", totalWidth: "30 minutes"} // 30 minutes
 	case 2:
-		return Timeframe{count: 30, bucketWidth: "2 minutes"} // 1 hour
+		return Timeframe{count: 30, bucketWidth: "2 minutes", totalWidth: "60 minutes"} // 1 hour
 	case 3:
-		return Timeframe{count: 30, bucketWidth: "12 minutes"} // 6 hours
+		return Timeframe{count: 30, bucketWidth: "12 minutes", totalWidth: "6 hours"} // 6 hours
 	case 4:
-		return Timeframe{count: 30, bucketWidth: "48 minutes"} // 24 hours
+		return Timeframe{count: 30, bucketWidth: "48 minutes", totalWidth: "24 hours"} // 24 hours
 	default:
-		return Timeframe{count: 0, bucketWidth: "0 minutes"}
+		return Timeframe{count: 0, bucketWidth: "0 minutes", totalWidth: "0 minutes"}
 	}
 }
 

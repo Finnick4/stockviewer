@@ -21,6 +21,7 @@ type StockPriceTime struct {
 type Timeframe struct {
 	count       int64
 	bucketWidth string
+	totalWidth  string
 }
 
 type PriceDelta struct {

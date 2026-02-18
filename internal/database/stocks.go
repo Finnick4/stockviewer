@@ -176,17 +176,17 @@ func GetActiveStockIds() ([]int32, error) {
 	return data, nil
 }
 
-func GetStocksPriceDelta() ([]PriceDelta, error) {
-	log.Debug("Getting all stocks deltas")
+func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
+	log.Debugf("Getting all stocks deltas in timeframe %v", tf)
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, name, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket('1 minute', timestamp) AS bucket, avg(price) AS avrg
+	rows, err := db.Query(`SELECT id, name, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS avrg
 		FROM stockprice sp
 		WHERE stocks.id = stockid
 		GROUP BY bucket
 		ORDER BY bucket DESC LIMIT 2) d ON true
-		ORDER BY id;`)
+		ORDER BY id;`, tf.totalWidth)
 	if err != nil {
 		log.Error(err)
 		return nil, err

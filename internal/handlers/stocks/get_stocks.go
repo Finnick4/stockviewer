@@ -82,7 +82,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	} else {
 		if database.IsValidTimeframeScope(params.Timeframe) {
 			send = func() {
-				deltas, err := database.GetStocksPriceDelta()
+				deltas, err := database.GetStocksPriceDelta(database.GenerateTimeframe(params.Timeframe))
 				if err != nil {
 					log.Error(err)
 					return
