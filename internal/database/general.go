@@ -75,7 +75,23 @@ func InitialiseDB() {
 	log.Info("Initialising the database")
 	db := getDB()
 
-	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS "stocks" (
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
+	"id"	VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
+	"tag"	VARCHAR(32) NOT NULL UNIQUE,
+	"displayName"	VARCHAR(32) NOT NULL,
+	"created"	TIMESTAMPTZ NOT NULL,
+	"password" TEXT NOT NULL,
+	"status" INTEGER DEFAULT 1,
+	"creatorId" VARCHAR(36),
+	CONSTRAINT "fk_users_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	wg.Add(1)
+	go createIndex("users", "tag")
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stocks" (
 	"id"	SERIAL PRIMARY KEY NOT NULL UNIQUE,
 	"name"	VARCHAR(32) NOT NULL,
 	"latestUpdate"	TIMESTAMPTZ NOT NULL,
@@ -99,22 +115,6 @@ func InitialiseDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
-	"id"	VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
-	"tag"	VARCHAR(32) NOT NULL UNIQUE,
-	"displayName"	VARCHAR(32) NOT NULL,
-	"created"	TIMESTAMPTZ NOT NULL,
-	"password" TEXT NOT NULL,
-	"status" INTEGER DEFAULT 1,
-	"creatorId" VARCHAR(36),
-	CONSTRAINT "fk_stocks_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	wg.Add(1)
-	go createIndex("users", "tag")
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
 	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
@@ -158,6 +158,26 @@ func InitialiseDB() {
 	wg.Add(2)
 	go createIndex("articles", "creatorId")
 	go createIndex("articles", "title")
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockgroups" (
+	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
+	"name"	VARCHAR(32) NOT NULL,
+	"description" TEXT,
+	"creatorId" VARCHAR(36),
+	CONSTRAINT "fk_stockgroups_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockgroupmembers" (
+	"groupId"	INTEGER NOT NULL,
+	"stockId"	INTEGER NOT NULL,
+	"creatorId" VARCHAR(36),
+	PRIMARY KEY ("groupId", "stockId"),
+	CONSTRAINT "fk_stockgroupmembers_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	wg.Wait()
 

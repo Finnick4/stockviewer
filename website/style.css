@@ -1,6 +1,6 @@
 
 :root {
-    --bg-very-dark: hsl(0, 0%, 0%);
+    --bg-very-dark: hsl(0, 0%, 3%);
     --bg-dark: hsl(0, 0%, 10%);
     --bg: hsl(0, 0%, 15%);
     --bg-light: hsl(0, 0%, 20%);
@@ -55,6 +55,7 @@ div.rootsplit {
     grid-template-rows: auto;
     gap: 1rem;
     height: calc(100vh - 8rem);
+    margin-left: .5rem;
 }
 
 div.sidebar {
@@ -71,6 +72,7 @@ nav.linklist {
 
 main {
     overflow: auto;
+    margin: 0 .5rem;
 }
 
 main.stockOverviewPage {

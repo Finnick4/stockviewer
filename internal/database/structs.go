@@ -54,3 +54,8 @@ type Article struct {
 	Title   string
 	Content string
 }
+
+type StockGroup struct {
+	ID   int32
+	Name string
+}
