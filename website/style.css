@@ -493,7 +493,7 @@ ul.inner p {
     max-width: 100%;
     border-radius: var(--border-radius);
     transition: var(--bg-transition), color 0.1s;
-    margin: 0 var(--border-radius);
+    margin: 0;
     align-items: center;
 }
 
