@@ -445,7 +445,7 @@ ul.inner p {
     color: var(--text-muted);
     align-self: center;
 }
-ul.inner h2 {
+.inner h2 {
     color: var(--text);
     text-align: center;
 }
@@ -559,11 +559,12 @@ ul.inner h2 {
 
 nav.timeframeSelector {
     display: flex;
-    gap: .25rem;
+    gap: .35rem;
 }
 
 button.tf {
-    width: 5ch;
+    width: 7ch;
+    padding: .5rem;
 }
 
 stock-chart svg path {
@@ -589,7 +590,7 @@ stock-chart svg path.negative:hover {
 
 stock-chart svg line.axis {
     stroke: var(--icon-color);
-    stroke-width: 1;
+    stroke-width: .75;
     stroke-linecap: square;
 }
 
@@ -638,6 +639,10 @@ stock-chart svg line.axis {
 
 .titlebar nav {
     justify-self: right;
+}
+
+.titlebar nav.timeframeSelector {
+    justify-self: left;
 }
 
 .price {

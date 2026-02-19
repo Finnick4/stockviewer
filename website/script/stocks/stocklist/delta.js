@@ -13,7 +13,6 @@ class stocklistDelta extends HTMLElement {
     }
 
     changeTimeframe(tf, that) {
-        console.log(tf)
         that.timeframe = tf
         that.closeSubscription()
         that.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${that.timeframe}`, addThisToFunctionCall(that.updateData, that))
@@ -36,13 +35,16 @@ class stocklistDelta extends HTMLElement {
         })
 
         that.innerHTML = `<ul class="inner">
-                        <div class="titlebar"><div></div><h2>All stocks</h2>
-                        <nav class="timeframeSelector">
-                            <button class="tf" data-tf="1">30m</button>
-                            <button class="tf" data-tf="2">60m</button>
-                            <button class="tf" data-tf="3">6h</button>
-                            <button class="tf" data-tf="4">24h</button>                                                     
-                        </nav></div>
+                        <div class="titlebar">
+                            <nav class="timeframeSelector">
+                                <button class="tf" data-tf="1">30m</button>
+                                <button class="tf" data-tf="2">60m</button>
+                                <button class="tf" data-tf="3">6h</button>
+                                <button class="tf" data-tf="4">24h</button>                                                     
+                            </nav>
+                            <h2>All stocks</h2>
+                            <div></div>
+                        </div>
                         ${html}
                     </ul>
                 `

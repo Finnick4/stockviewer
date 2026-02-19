@@ -8,8 +8,16 @@ class stockChart extends HTMLElement {
         this.yPadding = 5
         this.innerHTML = `
                         <div class="inner">
+                            <div class="titlebar">
+                            <nav class="timeframeSelector">
+                                <button class="tf selected" data-tf="1">30m</button>
+                                <button class="tf" data-tf="2">60m</button>
+                                <button class="tf" data-tf="3">6h</button>
+                                <button class="tf" data-tf="4">24h</button>                                                     
+                            </nav>
                             <h2>Stock History</h2>
-                            <nav class="timeframe-selector"></nav>
+                            <div></div>
+                            </div>
                             <svg class="chart" viewbox="5 0 90 47">
                                 <path d="M10 25 L90 25" ></path>
                                 <line class="axis" x1="10" x2="10" y1="5" y2="46"></line>
@@ -18,9 +26,25 @@ class stockChart extends HTMLElement {
                         </div>
                         `
         this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
+        this.querySelectorAll("button.tf").forEach(b => {
+            b.addEventListener("click", () => {
+                this.changeTimeframe(b.dataset.tf, this)
+                const sel = this.querySelector("button.tf.selected")
+                if (sel !== null) {
+                    sel.classList.remove("selected")
+                }
+                b.className = "tf selected"
+            })
+        })
     }
     disconnectedCallback() {
         this.closeSubscription()
+    }
+
+    changeTimeframe(tf, that) {
+        that.timeframe = tf
+        that.closeSubscription()
+        that.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${that.timeframe}&Id=${that.stockid}`, addThisToFunctionCall(that.redrawGraph, that))
     }
 
     redrawGraph(data, that) {

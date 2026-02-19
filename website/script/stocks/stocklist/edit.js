@@ -27,7 +27,11 @@ class stocklistEdit extends HTMLElement {
         })
 
         that.innerHTML = `<ul class="inner">
-                        <h2>All stocks</h2>
+                        <div class="titlebar">
+                            <div></div>
+                            <h2>All stocks</h2>
+                            <div></div>
+                        </div>
                         ${html}
                     </ul>
                 `
