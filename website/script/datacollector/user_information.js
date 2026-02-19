@@ -18,7 +18,7 @@ let userInformation = (function (){
     fetch(window.location.origin + "/api/users/overview").then(resp => resp.json()).then(jsonResponse => {
         name = jsonResponse["Data"]["Name"]
         tag = jsonResponse["Data"]["Tag"]
-        userid = jsonResponse["Data"]["Id"]
+        userid = jsonResponse["Data"]["ID"]
     })
 
     return {

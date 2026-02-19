@@ -269,9 +269,19 @@ button:hover {
     top: auto;
     z-index: 1;
 }
+button.selected:hover {
+    background-color: var(--highlight);
+    box-shadow: var(--button-hover-shadow);
+    top: auto;
+    z-index: 1;
+}
+
+button.selected {
+    background-color: var(--bg-light);
+}
 
 button:active {
-    background-color: var(--bg);
+    background-color: var(--bg-light);
     transition: background-color .2s;
 }
 
@@ -547,6 +557,14 @@ ul.inner h2 {
     background-color: var(--negative);
 }
 
+nav.timeframeSelector {
+    display: flex;
+    gap: .25rem;
+}
+
+button.tf {
+    width: 5ch;
+}
 
 stock-chart svg path {
     fill:none;
@@ -610,7 +628,7 @@ stock-chart svg line.axis {
 
 .titlebar {
     display: grid;
-    grid-template-columns: 25% 50% 25%;
+    grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
 }
 
