@@ -2,9 +2,8 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"stockviewer/internal/notifiers"
-	"strings"
+	"strconv"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -296,37 +295,49 @@ func UpdateCompleteStock(stock CurrentStockData) error {
 // SetStockPrices creates a new price entry at the current time for all provided stocks with the given price. Furthermore, this entry is also set to be the current price.
 func SetStockPrices(stocks []StockPrice) {
 	log.Debug("Setting new stock prices")
-
 	currentTimeStamp := time.Now()
 
-	placeholders := make([]string, 0, len(stocks))
-	vals := make([]interface{}, 0, len(stocks))
-	ids := make([]int32, 0, len(stocks))
-	count := 1
-	for _, elem := range stocks {
-		placeholders = append(placeholders, fmt.Sprintf("($%v, $%v, $%v)", count, count+1, count+2))
-		count += 3
-		vals = append(vals, elem.ID, elem.Price, currentTimeStamp)
-		ids = append(ids, elem.ID)
-	}
+	query := `INSERT INTO stockprice (stockid, price, timestamp) VALUES `
+	values := []interface{}{}
+	for i, s := range stocks {
+		values = append(values, s.ID, s.Price, currentTimeStamp)
 
+		vals := 3
+		n := i * vals
+		query += `(`
+
+		for j := 0; j < vals; j++ {
+			query += `$` + strconv.Itoa(n+j+1) + `, `
+		}
+		query = query[:len(query)-2] + `),`
+	}
+	query = query[:len(query)-1]
 	db := getDB()
-
-	insertStatement := fmt.Sprintf(`INSERT INTO stockprice (stockid, price, timestamp) VALUES %v;`, strings.Join(placeholders, ","))
-	_, err := db.Exec(insertStatement, vals...)
+	log.Debug(query)
+	log.Debug(values)
+	_, err := db.Exec(query, values...)
 
 	if err != nil {
 		log.Error(err)
 		return
 	}
 
-	qIds := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(ids)), ","), "[]")
-	insertStatement = fmt.Sprintf(`UPDATE stocks SET "latestUpdate" = $1 WHERE id IN (%v);`, qIds)
+	query = `UPDATE stocks SET "latestUpdate" = $1 WHERE id IN (`
+	values = []interface{}{}
+	values = append(values, currentTimeStamp)
+	for i, s := range stocks {
+		values = append(values, s.ID)
 
-	_, err = db.Exec(insertStatement, currentTimeStamp)
+		query += `$` + strconv.Itoa(i+2) + `, `
+	}
+
+	query = query[:len(query)-2] + `);`
+	log.Debug(query)
+	log.Debug(values)
+	_, err = db.Exec(query, values...)
+
 	if err != nil {
 		log.Error(err)
 		return
 	}
-	go notifiers.NotifyStockChange()
 }
