@@ -313,8 +313,6 @@ func SetStockPrices(stocks []StockPrice) {
 	}
 	query = query[:len(query)-1]
 	db := getDB()
-	log.Debug(query)
-	log.Debug(values)
 	_, err := db.Exec(query, values...)
 
 	if err != nil {
@@ -332,8 +330,6 @@ func SetStockPrices(stocks []StockPrice) {
 	}
 
 	query = query[:len(query)-2] + `);`
-	log.Debug(query)
-	log.Debug(values)
 	_, err = db.Exec(query, values...)
 
 	if err != nil {
