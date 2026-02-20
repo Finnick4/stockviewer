@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"stockviewer/internal/handlers/articles"
 	"stockviewer/internal/handlers/middleware"
+	"stockviewer/internal/handlers/stockgroups"
 	"stockviewer/internal/handlers/stocks"
 	"stockviewer/internal/handlers/users"
 
@@ -32,6 +33,10 @@ func Handler(r *chi.Mux) {
 		router.Get("/", stocks.GetStocks)
 		router.Get("/sse", stocks.GetStocksSSE)
 		router.Patch("/", stocks.EditStock)
+	})
+
+	r.With(middleware.ValidateToken).Route("/api/stockgroups", func(router chi.Router) {
+		router.Post("/", stockgroups.CreateStockGroup)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/users", func(router chi.Router) {

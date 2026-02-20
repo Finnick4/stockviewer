@@ -28,6 +28,11 @@ func resetAdminPermissions() {
 
 		Permission{Permission: "canCreateArticles", Value: 1},
 		Permission{Permission: "canEditArticles", Value: 1},
+
+		Permission{Permission: "canCreateStockGroups", Value: 1},
+		Permission{Permission: "canEditStockGroupNames", Value: 1},
+		Permission{Permission: "canEditStockGroupMembers", Value: 1},
+		Permission{Permission: "canDeleteStockGroups", Value: 1},
 	}
 
 	var err error

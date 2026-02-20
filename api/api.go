@@ -46,6 +46,11 @@ type ArticleGetParams struct {
 	ID     int32
 }
 
+type StockGroupCreateParams struct {
+	Name    string
+	Members []int32
+}
+
 /* Response */
 
 type SuccessResponse struct {
