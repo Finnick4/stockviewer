@@ -9,16 +9,16 @@
     --text: hsl(0, 0%, 95%);
     --text-muted: hsl(0, 0%, 70%);
 
-    --positiv: hsl(110, 80%, 40%);
-    --positiv-muted: hsl(110, 80%, 30%);
-    --negative: hsl(0, 80%, 50%);
-    --negative-muted: hsl(0, 80%, 40%);
+    --positiv: hsl(110, 80%, 50%);
+    --positiv-muted: hsl(110, 80%, 80%);
+    --negative: hsl(0, 80%, 60%);
+    --negative-muted: hsl(0, 80%, 70%);
     --icon-color: #888888;
     --icon-color-highlight: var(--text);
     --border-radius: 2ch;
     --bg-transition: background-color .1s;
     --popup-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
-    --button-hover-shadow: var(--popup-shadow);
+    --button-hover-shadow: 0 4px 4px 0 rgba(0,0,0,.2);
     font-family: Ubuntu, sans-serif;
 }
 
@@ -277,7 +277,15 @@ button.selected:hover {
 }
 
 button.selected {
+    color: var(--text);
     background-color: var(--bg-light);
+}
+button.tf.selected {
+    color: var(--text);
+}
+
+button.tf:hover {
+    color: var(--text);
 }
 
 button:active {
@@ -468,9 +476,11 @@ ul.inner p {
 .stockOverview:hover {
     background-color: var(--bg-light);
     color: var(--text);
+    box-shadow: var(--button-hover-shadow);
 }
 
 .stockOverview:hover .change {
+    color: var(--text);
     background-color: var(--bg-very-light);
 }
 
@@ -506,6 +516,7 @@ ul.inner p {
 .articlePreview:hover {
     background-color: var(--bg-light);
     color: var(--text);
+    box-shadow: var(--button-hover-shadow);
 }
 .title {
     word-break: break-word;
@@ -524,6 +535,7 @@ ul.inner p {
     width: 12ch;
 }
 .articlePreview:hover .change {
+    color: var(--text);
     background-color: var(--bg-very-light);
 }
 
@@ -538,23 +550,23 @@ ul.inner p {
     width: 8ch;
     text-align: center;
     transition: var(--bg-transition);
-    color: var(--text);
+    color: var(--text-muted);
 }
 
 .positive > .change {
-    background-color: var(--positiv-muted);
+    color: var(--positiv-muted);
 }
 
 .stockOverview:hover .positive > .change {
-    background-color: var(--positiv);
+    color: var(--positiv);
 }
 
 .negative > .change {
-    background-color: var(--negative-muted);
+    color: var(--negative-muted);
 }
 
 .stockOverview:hover .negative > .change {
-    background-color: var(--negative);
+    color: var(--negative);
 }
 
 nav.timeframeSelector {
@@ -563,6 +575,7 @@ nav.timeframeSelector {
 }
 
 button.tf {
+    color: var(--text-muted);
     width: 7ch;
     padding: .5rem;
 }
@@ -573,18 +586,10 @@ stock-chart svg path {
 }
 
 stock-chart svg path.positive {
-    stroke:var(--positiv-muted);
-}
-
-stock-chart svg path.positive:hover {
     stroke:var(--positiv);
 }
 
 stock-chart svg path.negative {
-    stroke:var(--negative-muted);
-}
-
-stock-chart svg path.negative:hover {
     stroke:var(--negative);
 }
 
