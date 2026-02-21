@@ -37,6 +37,39 @@ func GetAllStockGroups() ([]StockGroup, error) {
 	return data, nil
 }
 
+func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
+	log.Debug("Getting stock group %v", groupID)
+	db := getDB()
+
+	rows, err := db.Query(`	SELECT stockgroups.name, stocks.name, stocks.id, stockprice.price FROM stockgroups
+										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+									WHERE stockgroups.id = $1 ORDER BY stocks.id;`, groupID)
+
+	if err != nil {
+		log.Error(err)
+		return DetailedStockGroup{}, err
+	}
+
+	defer rows.Close()
+
+	var data []CurrentStockData
+	var name string
+
+	for rows.Next() {
+		var currentData CurrentStockData
+		err = rows.Scan(&name, &currentData.Name, &currentData.ID, &currentData.Price)
+		if err != nil {
+			log.Error(err)
+			return DetailedStockGroup{}, err
+		}
+		data = append(data, currentData)
+	}
+
+	return DetailedStockGroup{ID: groupID, Name: name, Members: data}, nil
+}
+
 func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 	db := getDB()
 

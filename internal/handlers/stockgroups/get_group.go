@@ -41,6 +41,29 @@ func GetStockGroup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if params.ID > 0 {
+		data, err := database.GetDetailedStockGroup(params.ID)
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Debug(err)
+			return
+		}
+
+		var response = api.SuccessResponse{
+			Code: http.StatusOK,
+			Data: data,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err = json.NewEncoder(w).Encode(response)
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Debug(err)
+			return
+		}
+		return
+	}
+
 	if params.ID == 0 && len(params.Members) != 0 {
 		log.Debug("Getting anonymous stock group")
 		data, err := database.GetAnonymousStockGroup(params.Members)
