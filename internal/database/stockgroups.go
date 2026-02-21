@@ -16,7 +16,7 @@ func GetAllStockGroups() ([]StockGroup, error) {
 										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
 										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
 										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-									GROUP BY stockgroups.name, stockgroups.id;`)
+									GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -35,6 +35,44 @@ func GetAllStockGroups() ([]StockGroup, error) {
 		data = append(data, currentData)
 	}
 	return data, nil
+}
+
+func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
+	db := getDB()
+
+	query := `SELECT stocks.id, stocks.name, stockprice.price FROM stocks
+				JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+				WHERE id IN (`
+	values := []interface{}{}
+	for i, id := range stockIDs {
+		values = append(values, id)
+
+		query += `$` + strconv.Itoa(i+1) + `, `
+	}
+
+	query = query[:len(query)-2] + `) ORDER BY stocks.id;`
+	rows, err := db.Query(query, values...)
+
+	if err != nil {
+		log.Error(err)
+		return DetailedStockGroup{}, err
+	}
+
+	defer rows.Close()
+
+	var data []CurrentStockData
+
+	for rows.Next() {
+		var currentData CurrentStockData
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price)
+		if err != nil {
+			log.Error(err)
+			return DetailedStockGroup{}, err
+		}
+		data = append(data, currentData)
+	}
+
+	return DetailedStockGroup{Members: data}, nil
 }
 
 func CreateStockGroup(name string, creatorID string) (int32, error) {
