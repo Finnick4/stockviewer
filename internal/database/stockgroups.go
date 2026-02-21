@@ -12,7 +12,11 @@ func GetAllStockGroups() ([]StockGroup, error) {
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, name from stockgroups;`)
+	rows, err := db.Query(`	SELECT stockgroups.name, stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers" FROM stockgroups
+										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+									GROUP BY stockgroups.name, stockgroups.id;`)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -23,7 +27,7 @@ func GetAllStockGroups() ([]StockGroup, error) {
 
 	for rows.Next() {
 		var currentData StockGroup
-		err = rows.Scan(&currentData.ID, &currentData.Name)
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.TotalValue, &currentData.MemberCount)
 		if err != nil {
 			log.Error(err)
 			return nil, err

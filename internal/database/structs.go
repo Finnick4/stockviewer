@@ -56,6 +56,14 @@ type Article struct {
 }
 
 type StockGroup struct {
-	ID   int32
-	Name string
+	ID          int32
+	Name        string
+	MemberCount int32
+	TotalValue  int64
+}
+
+type DetailedStockGroup struct {
+	ID      int32
+	Name    string
+	Members []CurrentStockData
 }
