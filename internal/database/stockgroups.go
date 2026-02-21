@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
@@ -12,27 +13,54 @@ func GetAllStockGroups() ([]StockGroup, error) {
 
 	db := getDB()
 
-	rows, err := db.Query(`	SELECT stockgroups.name, stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers" FROM stockgroups
-										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
-										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-									GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`)
+	rowsName, err := db.Query(`	SELECT stockgroups.name, stockgroups.id FROM stockgroups ORDER BY stockgroups.id;`)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	defer rows.Close()
+
+	defer rowsName.Close()
+
+	rowsMembers, err := db.Query(`	SELECT stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers" FROM stockgroups
+										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+									GROUP BY stockgroups.id ORDER BY stockgroups.id;`)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rowsMembers.Close()
 
 	var data []StockGroup
 
-	for rows.Next() {
+	for rowsName.Next() {
 		var currentData StockGroup
-		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.TotalValue, &currentData.MemberCount)
+		err = rowsName.Scan(&currentData.Name, &currentData.ID)
 		if err != nil {
 			log.Error(err)
 			return nil, err
 		}
 		data = append(data, currentData)
+	}
+
+	for rowsMembers.Next() {
+		var id int32
+		var count int32
+		var totalValue int64
+
+		err = rowsMembers.Scan(&id, &totalValue, &count)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		for i, stockGroup := range data {
+			if id == stockGroup.ID {
+				data[i].MemberCount = count
+				data[i].TotalValue = totalValue
+			}
+		}
 	}
 	return data, nil
 }
@@ -41,7 +69,24 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 	log.Debug("Getting stock group %v", groupID)
 	db := getDB()
 
-	rows, err := db.Query(`	SELECT stockgroups.name, stocks.name, stocks.id, stockprice.price FROM stockgroups
+	row := db.QueryRow(`SELECT stockgroups.name FROM stockgroups WHERE stockgroups.id = $1`, groupID)
+
+	var name string
+	if row.Err() != nil {
+		log.Error(row.Err())
+		return DetailedStockGroup{}, row.Err()
+	}
+	err := row.Scan(&name)
+
+	if err != nil {
+		if errors.Is(sql.ErrNoRows, err) {
+			return DetailedStockGroup{}, nil
+		}
+		log.Error(err)
+		return DetailedStockGroup{}, err
+	}
+
+	rows, err := db.Query(`	SELECT stocks.name, stocks.id, stockprice.price FROM stockgroups
 										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
 										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
 										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
@@ -55,11 +100,10 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 	defer rows.Close()
 
 	var data []CurrentStockData
-	var name string
 
 	for rows.Next() {
 		var currentData CurrentStockData
-		err = rows.Scan(&name, &currentData.Name, &currentData.ID, &currentData.Price)
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price)
 		if err != nil {
 			log.Error(err)
 			return DetailedStockGroup{}, err
