@@ -336,4 +336,5 @@ func SetStockPrices(stocks []StockPrice) {
 		log.Error(err)
 		return
 	}
+	go notifiers.NotifyStockChange()
 }

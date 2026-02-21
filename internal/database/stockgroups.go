@@ -66,7 +66,7 @@ func GetAllStockGroups() ([]StockGroup, error) {
 }
 
 func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
-	log.Debug("Getting stock group %v", groupID)
+	log.Debugf("Getting stock group %v", groupID)
 	db := getDB()
 
 	row := db.QueryRow(`SELECT stockgroups.name FROM stockgroups WHERE stockgroups.id = $1`, groupID)
