@@ -20,17 +20,18 @@ func resetAdminPermissions() {
 		Permission{Permission: "canDisableStocks", Value: 1},
 
 		Permission{Permission: "canCreateUsers", Value: 1},
-		Permission{Permission: "canEditUserPermission", Value: 1},
+		Permission{Permission: "canEditUserPermissions", Value: 1},
 		Permission{Permission: "canEditUserName", Value: 1},
 		Permission{Permission: "canEditUserPassword", Value: 1},
-		Permission{Permission: "canDisableUser", Value: 1},
-		Permission{Permission: "canDeleteUser", Value: 1},
+		Permission{Permission: "canDisableUsers", Value: 1},
+		Permission{Permission: "canDeleteUsers", Value: 1},
 
 		Permission{Permission: "canCreateArticles", Value: 1},
 		Permission{Permission: "canEditArticles", Value: 1},
 
 		Permission{Permission: "canCreateStockGroups", Value: 1},
 		Permission{Permission: "canEditStockGroupNames", Value: 1},
+		Permission{Permission: "canEditStockGroupDescriptions", Value: 1},
 		Permission{Permission: "canEditStockGroupMembers", Value: 1},
 		Permission{Permission: "canDeleteStockGroups", Value: 1},
 	}

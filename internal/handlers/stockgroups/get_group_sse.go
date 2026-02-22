@@ -34,12 +34,10 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, member := range params.Members {
-		if member < 0 {
-			log.Debugf("Stock ID %v is invalid. As such cannot get anonymous stock group.", member)
-			api.RequestMalformedHandler(w, fmt.Sprintf("Stock ID %v is invalid. As such cannot get anonymous stock group.", member))
-			return
-		}
+	if !database.AreActiveStockIDs(params.Members) {
+		log.Debug("One of the stocks to be queried is invalid.")
+		api.RequestMalformedHandler(w, "One of the stocks to be queried is invalid.")
+		return
 	}
 
 	rc := http.NewResponseController(w)

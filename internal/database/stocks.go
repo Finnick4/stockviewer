@@ -338,3 +338,48 @@ func SetStockPrices(stocks []StockPrice) {
 	}
 	go notifiers.NotifyStockChange()
 }
+
+// AreActiveStockIDs returns whether all provided IDs are active.
+//
+// If the slice is empty, returns true.
+// If an error occurs, returns false.
+func AreActiveStockIDs(ids []int32) bool {
+	if len(ids) == 0 {
+		return true
+	}
+
+	query := `SELECT SUM(CASE
+        	WHEN stocks.status = 1 THEN 0
+        	WHEN stocks.status = 0 THEN 1
+        	WHEN stocks.status > 1 THEN 1
+       	END) 
+	   	FROM stocks WHERE id IN (`
+	values := []interface{}{}
+	for i, id := range ids {
+		if id <= 0 {
+			return false
+		}
+
+		values = append(values, id)
+
+		query += `$` + strconv.Itoa(i+1) + `, `
+
+	}
+	query = query[:len(query)-2] + `);`
+
+	db := getDB()
+	resp := db.QueryRow(query, values)
+
+	if resp.Err() != nil {
+		log.Error(resp.Err())
+		return false
+	}
+	var res int32
+	err := resp.Scan(&res)
+	if err != nil {
+		log.Error(err)
+		return false
+	}
+
+	return res == 0
+}

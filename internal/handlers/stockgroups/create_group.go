@@ -39,6 +39,12 @@ func CreateStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !database.AreActiveStockIDs(params.Members) {
+		log.Debug("One of the stocks to be added to the group is invalid.")
+		api.RequestMalformedHandler(w, "One of the stocks to be added to the group is invalid.")
+		return
+	}
+
 	userID := database.GetUserIDFromToken(token)
 
 	groupID, err := database.CreateStockGroup(params.Name, userID)
