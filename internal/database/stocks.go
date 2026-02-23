@@ -368,7 +368,7 @@ func AreActiveStockIDs(ids []int32) bool {
 	query = query[:len(query)-2] + `);`
 
 	db := getDB()
-	resp := db.QueryRow(query, values)
+	resp := db.QueryRow(query, values...)
 
 	if resp.Err() != nil {
 		log.Error(resp.Err())

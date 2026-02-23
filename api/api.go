@@ -56,6 +56,14 @@ type StockGroupGetParams struct {
 	Members []int32
 }
 
+type StockGroupEditParams struct {
+	ID             int32
+	Name           string
+	Description    string
+	AddedMembers   []int32
+	RemovedMembers []int32
+}
+
 /* Response */
 
 type SuccessResponse struct {
