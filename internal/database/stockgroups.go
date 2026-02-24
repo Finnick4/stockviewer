@@ -184,9 +184,9 @@ func AddStockToGroup(groupID int32, stockID int32, adderID string) error {
 	var resp *sql.Row
 
 	if adderID == "" {
-		resp = db.QueryRow(`INSERT INTO stockgroupmembers ("groupId", "stockId")  VALUES ($1, $2);`, groupID, stockID)
+		resp = db.QueryRow(`INSERT INTO stockgroupmembers ("groupId", "stockId") VALUES ($1, $2) ON CONFLICT DO NOTHING;`, groupID, stockID)
 	} else {
-		resp = db.QueryRow(`INSERT INTO stockgroupmembers ("groupId", "stockId", "creatorId")  VALUES ($1, $2, $3);`, groupID, stockID, adderID)
+		resp = db.QueryRow(`INSERT INTO stockgroupmembers ("groupId", "stockId", "creatorId")  VALUES ($1, $2, $3) ON CONFLICT DO NOTHING;`, groupID, stockID, adderID)
 	}
 
 	if resp.Err() != nil {
@@ -224,7 +224,7 @@ func bulkAddStocksToGroupWithoutAdder(groupID int32, stockIDs []int32) error {
 		}
 		query = query[:len(query)-2] + `),`
 	}
-	query = query[:len(query)-1]
+	query = query[:len(query)-1] + "ON CONFLICT DO NOTHING;"
 	db := getDB()
 	_, err := db.Exec(query, values...)
 
@@ -250,7 +250,7 @@ func bulkAddStocksToGroupWithAdder(groupID int32, stockIDs []int32, adderID stri
 		}
 		query = query[:len(query)-2] + `),`
 	}
-	query = query[:len(query)-1]
+	query = query[:len(query)-1] + "ON CONFLICT DO NOTHING;"
 	db := getDB()
 	_, err := db.Exec(query, values...)
 
