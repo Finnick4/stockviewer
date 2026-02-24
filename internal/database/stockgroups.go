@@ -260,3 +260,15 @@ func bulkAddStocksToGroupWithAdder(groupID int32, stockIDs []int32, adderID stri
 	}
 	return nil
 }
+
+func SetStockGroupName(id int32, name string) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stockgroups SET name=$1 WHERE id=$2`, name, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}

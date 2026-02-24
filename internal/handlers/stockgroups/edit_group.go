@@ -88,7 +88,12 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 	userID := database.GetUserIDFromToken(token)
 
 	if aimName {
-		log.Warn("Editing stock group names is not yet implemented!")
+		err = database.SetStockGroupName(params.ID, params.Name)
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
 	}
 	if aimDescription {
 		log.Warn("Editing stock group descriptions is not yet implemented!")
