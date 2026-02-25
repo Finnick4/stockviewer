@@ -177,6 +177,40 @@ func CreateStockGroup(name string, creatorID string) (int32, error) {
 	return lastID, nil
 }
 
+func RemoveStockFromGroup(groupID int32, stockID int32) error {
+	log.Debugf("Removing stock %v from group", stockID)
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM stockgroupmembers WHERE "groupId" = $1 AND "stockId" = $2;`, groupID, stockID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func RemoveStocksFromGroup(groupID int32, stockIDs []int32) error {
+	log.Debugf("Adding stocks %v to group", stockIDs)
+
+	query := `DELETE FROM stockgroupmembers WHERE "groupId" = $1 AND "stockId" IN (`
+	values := []interface{}{}
+	for i, s := range stockIDs {
+		values = append(values, groupID, s)
+
+		query += `$` + strconv.Itoa(i+2) + `, `
+	}
+	query = query[:len(query)-2] + ");"
+	db := getDB()
+	_, err := db.Exec(query, values...)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
 func AddStockToGroup(groupID int32, stockID int32, adderID string) error {
 	log.Debugf("Adding stock %v to group", stockID)
 	db := getDB()
@@ -224,7 +258,7 @@ func bulkAddStocksToGroupWithoutAdder(groupID int32, stockIDs []int32) error {
 		}
 		query = query[:len(query)-2] + `),`
 	}
-	query = query[:len(query)-1] + "ON CONFLICT DO NOTHING;"
+	query = query[:len(query)-1] + " ON CONFLICT DO NOTHING;"
 	db := getDB()
 	_, err := db.Exec(query, values...)
 
@@ -250,7 +284,7 @@ func bulkAddStocksToGroupWithAdder(groupID int32, stockIDs []int32, adderID stri
 		}
 		query = query[:len(query)-2] + `),`
 	}
-	query = query[:len(query)-1] + "ON CONFLICT DO NOTHING;"
+	query = query[:len(query)-1] + " ON CONFLICT DO NOTHING;"
 	db := getDB()
 	_, err := db.Exec(query, values...)
 

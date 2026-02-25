@@ -112,7 +112,17 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if aimRemoveMembers {
-		log.Warn("Removing stock group members is not yet implemented!")
+		if len(params.RemovedMembers) == 1 {
+			err = database.RemoveStockFromGroup(params.ID, params.RemovedMembers[0])
+		}
+		if len(params.RemovedMembers) > 1 {
+			err = database.RemoveStocksFromGroup(params.ID, params.RemovedMembers)
+		}
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
 	}
 
 	var response = api.SuccessResponse{
