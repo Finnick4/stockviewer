@@ -539,6 +539,9 @@ ul.inner p {
     background-color: var(--bg-very-light);
 }
 
+stockgroups-list .change {
+    width: 10ch;
+}
 
 .change {
     display: inline-block;

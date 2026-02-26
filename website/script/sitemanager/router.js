@@ -25,6 +25,9 @@ function router(path = getCurrentPathWithoutSlash()) {
         case "admin":
             routerAdminPanel(segmentedPath);
             break;
+        case "groups":
+            routerStockGroups(segmentedPath);
+            break;
         default:
             build404Page();
     }
@@ -42,6 +45,20 @@ function routerStocks(segmented) {
     }
 
     buildIndividualStockPage(segmented[1])
+}
+
+function routerStockGroups(segmented) {
+    if (segmented[0] !== "groups") {
+        return;
+    }
+
+    if (isNaN(segmented[1])) {
+        window.history.pushState(null, null, `${window.location.origin}/groups`);
+        buildStockGroupsOverviewPage();
+        return;
+    }
+
+    buildStockGroupsOverviewPage(segmented[1])
 }
 
 function routerArticles(segmented) {
