@@ -186,7 +186,7 @@ div.sidebar a.btn.selected:hover {
     margin: 0;
 }
 
-.modal .content textarea.body {
+.modal .content textarea {
     resize: none;
     font-family: "Ubuntu Sans";
     padding: .5rem;
@@ -196,7 +196,7 @@ div.sidebar a.btn.selected:hover {
     border-radius: var(--border-radius);
     width: calc(100% - 1rem);
 }
-.modal .content textarea.body:focus {
+.modal .content textarea:focus {
     outline: none;
 }
 
@@ -250,6 +250,10 @@ div.sidebar a.btn.selected:hover {
 .modal .closeBtn:hover {
     color: var(--icon-color-highlight);
     cursor: pointer;
+}
+
+.modal stock-selector .inner {
+    padding: 0;
 }
 
 button {
@@ -457,6 +461,11 @@ ul.inner p {
     color: var(--text);
     text-align: center;
 }
+.inner h3 {
+    color: var(--text);
+    text-align: center;
+}
+
 .stockOverview {
     background-color: var(--bg);
     color: var(--text-muted);

@@ -1,7 +1,7 @@
 class createDataElement extends HTMLElement {
     connectedCallback() {
         this.dropdownid = createDropdown(`<button onclick="showModalCreateStock(this)">Create Stock</button>
-                                                <button>Create Stock Group</button>
+                                                <button onclick="showModalCreateStockGroup(this)">Create Stock Group</button>
                                                 <button onclick="showModalCreateArticle(this)">Create Article</button>
                                                 <button onclick="showModalCreateUser(this)">Create User</button>
                                             `)
