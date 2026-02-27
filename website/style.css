@@ -140,6 +140,13 @@ div.sidebar a.btn.selected:hover {
     background-color: var(--bg-light);
 }
 
+.dropdown .searchResult {
+    max-width: 32ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 /*noinspection CssInvalidAtRule*/
 @position-try --fallback-right {
     inset: auto;
@@ -250,6 +257,9 @@ div.sidebar a.btn.selected:hover {
 .modal .closeBtn:hover {
     color: var(--icon-color-highlight);
     cursor: pointer;
+}
+.removeStockBtn {
+    margin-right: .5rem;
 }
 
 .modal stock-selector .inner {
