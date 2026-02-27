@@ -6,29 +6,36 @@ class stockSelectorElement extends HTMLElement {
                     <h3>Stock selection</h3>
                     <div></div>
                 </div>
-                <li>Loading stocks...</li>
+                <li class="placeholder">No stocks selected...</li>
             </ul>`
 
         this.dropdownid = createDropdown(`Please type to search...`)
 
-        this.search = this.querySelector("input.search")
-        this.dropdown = document.getElementById(this.dropdownid)
-        this.inner = this.querySelector("ul.inner")
+        const search = this.querySelector("input.search")
+        const dropdown = document.getElementById(this.dropdownid)
+        const inner = this.querySelector("ul.inner")
         this.savedStocks = new Set()
 
-        this.search.popovertarget = this.dropdownid
-        this.search.style.anchorName = `--anchor-${this.dropdownid}`
-        this.search.addEventListener("click", () => {
-            this.dropdown.togglePopover()
+        search.popovertarget = this.dropdownid
+        search.style.anchorName = `--anchor-${this.dropdownid}`
+        search.addEventListener("click", () => {
+            dropdown.togglePopover()
         })
 
-        this.dropdown.style.width = "calc(32ch -  1rem)"
+        dropdown.style.width = "calc(32ch -  1rem)"
 
         fetch("/api/stocks").then(r => r.json()).then(resp => {
             const data = resp["Data"]
             const idNameMap = new Map(data.map((stock) => [stock["ID"], stock["Name"]]));
             const removeStock = id => {
                 this.savedStocks.delete(id)
+                inner.removeChild(inner.querySelector(`li.stockOverview[data-stock-id="${id}"]`))
+                if (inner.querySelectorAll("li.stockOverview").length === 0) {
+                    const placeholder = document.createElement("li")
+                    placeholder.className = "placeholder"
+                    placeholder.innerHTML = "No stocks selected..."
+                    inner.append(placeholder)
+                }
             }
 
             const addStock = id => {
@@ -46,7 +53,11 @@ class stockSelectorElement extends HTMLElement {
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
                     </div>`
-                this.inner.append(elem)
+                inner.append(elem)
+                const placeholder = inner.querySelector(`li.placeholder`)
+                if (placeholder !== null) {
+                    inner.removeChild(placeholder)
+                }
 
                 const removeBtn = elem.querySelector(".removeStockBtn")
                 removeBtn.addEventListener("click", event => {
@@ -55,7 +66,7 @@ class stockSelectorElement extends HTMLElement {
                 this.savedStocks.add(id)
             }
 
-            this.search.addEventListener("input", e => {
+            search.addEventListener("input", e => {
                 let possible = []
                 for (const stock of data) {
                     if (possible.length >= 5) {
@@ -72,8 +83,8 @@ class stockSelectorElement extends HTMLElement {
                 if (possible.length === 0) {
                     html = "No stocks found"
                 }
-                this.dropdown.innerHTML = html
-                this.dropdown.querySelectorAll(".searchResult").forEach(elem => {
+                dropdown.innerHTML = html
+                dropdown.querySelectorAll(".searchResult").forEach(elem => {
                     elem.addEventListener("click", ev => {
                         addStock(ev.target.dataset.stockId)
                     })
