@@ -6,10 +6,16 @@ services:
     ports:
       - ${DB_PORT}:${DB_PORT}
     volumes:
-      - pg_volume:/var/lib/postgresql
+      - db:/home/postgres/pgdata/data/
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TIMESCALEDB_TELEMETRY: "off"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U tsadmin -d tsdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 volumes:
-  pg_volume:
+  db:
