@@ -89,6 +89,21 @@ main.stockOverviewPage stock-chart {
     grid-column: 1/3;
 }
 
+main.stockGroupOverviewPage {
+    display: grid;
+    grid-template: 4rem auto / 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+main.stockGroupOverviewPage h1.tmp {
+    grid-column: 1/6;
+}
+main.stockGroupOverviewPage stockgroups-member-pie-chart {
+    grid-column: 1/3;
+}
+main.stockGroupOverviewPage stockgroups-members-list {
+    grid-column: 3/6;
+}
+
 div.sidebar a {
     color: var(--text);
     text-decoration: none;
@@ -696,4 +711,10 @@ stock-chart svg line.axis {
     line-height: 1.5em;
     font-size: 20px;
     margin: auto;
+}
+
+div.piechart {
+   aspect-ratio: 1/1;
+    height: auto;
+    border-radius: 50%;
 }
