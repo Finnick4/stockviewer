@@ -14,7 +14,6 @@ function showModalCreateStockGroup(elem) {
                         </div>
                         <div class="stockSelector">
                             <p>Members</p>
-                            <stock-selector></stock-selector>
                         </div>
                       
                         <div class="pair">
@@ -29,6 +28,8 @@ function showModalCreateStockGroup(elem) {
     const infotxt = modal.querySelector(".info")
     const name = modal.querySelector(`.name`)
     const description = modal.querySelector(`.description`)
+    const stockSelector = new stockSelectorElement()
+    modal.querySelector(`div.stockSelector`).append(stockSelector)
 
 
     userInformation.writePermission("canCreateStockGroups", perm => {
@@ -72,11 +73,18 @@ function showModalCreateStockGroup(elem) {
 
     modal.querySelector(".submit").addEventListener("click", () => {
         if (validate()) {
+            const members = []
+            stockSelector.savedStocks.forEach(stockid => {
+                if (!isNaN(stockid)) {
+                    members.push(Number(stockid))
+                }
+            })
             fetch(`${window.location.origin}/api/stockgroups`, {
                 method: "POST",
                 body: JSON.stringify({
                     Name: name.value,
-                    Description: description.value
+                    Description: description.value,
+                    Members: members
                 })
 
             }).then(r => {
