@@ -12,6 +12,13 @@ class stockgroupsList extends HTMLElement {
     }
 
     updateData(data, that) {
+        if (data === null) {
+            that.innerHTML = `<div class="inner">
+                <nav><h2>All stock groups</h2></nav>
+                <p>There aren't any stock groups yet...</p>
+            </div>`
+            return
+        }
         let html = ""
         data.forEach(e => {
             html += `<li class="stockOverview"  data-stock-group-id="${e["ID"]}">

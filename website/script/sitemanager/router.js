@@ -58,7 +58,7 @@ function routerStockGroups(segmented) {
         return;
     }
 
-    buildStockGroupsOverviewPage(segmented[1])
+    buildIndividualStockGroupPage(segmented[1])
 }
 
 function routerArticles(segmented) {
