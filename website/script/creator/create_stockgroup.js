@@ -5,16 +5,14 @@ function showModalCreateStockGroup(elem) {
 
     let html = `<h2>Create a new stock group</h2>
                         <div class="pair">
-                            <h3>Name</h3>
+                            <p>Name</p>
                             <input class="name" type="text" placeholder="Group name...">
                         </div>
                         <div class="textField">
                             <p>Description</p>
                             <textarea class="description"></textarea>
                         </div>
-                        <div class="stockSelector">
-                            <p>Members</p>
-                        </div>
+                        <div class="stockSelector"></div>
                       
                         <div class="pair">
                             <div class="info"></div>

@@ -5,11 +5,11 @@ function showModalCreateStock(elem) {
 
     let html = `<h2>Create a new stock</h2>
                         <div class="pair">
-                            <h3>Name</h3>
+                            <p>Name</p>
                             <input class="name" type="text" placeholder="Stock name...">
                         </div>
                         <div class="pair">
-                            <h3>Initial price (ct)</h3>
+                            <p>Initial price (ct)</p>
                             <input class="price" type="number">
                         </div>
                         <div class="pair">

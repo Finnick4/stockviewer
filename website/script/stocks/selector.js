@@ -1,13 +1,13 @@
 class stockSelectorElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<ul class="inner">
-                <div class="titlebar">
-                    <div><input type="text" class="search" placeholder="Search stocks..."></div>
-                    <h3>Stock selection</h3>
-                    <div></div>
+        this.innerHTML = `
+                <div class="pair">
+                    <p>Stock selection</p>
+                    <input type="text" class="search" placeholder="Search stocks...">
                 </div>
-                <li class="placeholder">No stocks selected...</li>
-            </ul>`
+                <ul class="inner">
+                    <li class="placeholder">No stocks selected...</li>
+                </ul>`
 
         this.dropdownid = createDropdown(`Please type to search...`)
 

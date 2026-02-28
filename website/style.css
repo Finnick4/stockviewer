@@ -164,18 +164,20 @@ div.sidebar a.btn.selected:hover {
     top: 0;
     height: 100%;
     width: 100%;
-    overflow: auto;
+    overflow: hidden;
     backdrop-filter: blur(3px);
     background-color: rgba(0,0,0,.4);
 }
 .modal .outer {
     background-color: var(--bg-dark);
-    margin: 10% auto;
+    margin: 6rem auto;
     padding: 2rem;
     width: 70%;
+    max-height: calc(100% - 12rem);
     color: var(--text-muted);
     border-radius: var(--border-radius);
     box-shadow: var(--popup-shadow);
+    overflow: scroll;
 }
 
 .modal .content input {
@@ -220,7 +222,7 @@ div.sidebar a.btn.selected:hover {
     justify-content: space-between;
     margin-bottom: 1rem;
 }
-.modal .pair:focus-within {
+.modal .pair:focus-within p {
     color: var(--text);
 }
 
