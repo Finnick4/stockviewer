@@ -15,7 +15,7 @@ class stocklistEdit extends HTMLElement {
     updateData(data, that) {
         let html = ""
         data.forEach(e => {
-            const shortPrice = getShortPrice(e["Price"]/100)
+            const shortPrice = getShortNumber(e["Price"]/100)
             html += `<li class="stockOverview" data-stock-id="${e["ID"]}">
                             <div class="containing" onclick="showEditStockModal(${e["ID"]})">
                                 <div class="stockName">${sanitiseText(e["Name"])}</div>

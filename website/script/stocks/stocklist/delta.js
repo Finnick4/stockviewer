@@ -21,14 +21,14 @@ class stocklistDelta extends HTMLElement {
     updateData(data, that) {
         let html = ""
         data.forEach(e => {
-            const shortPrice = getShortPrice(e["Price2"]/100)
+            const shortPrice = getShortNumber(e["Price2"]/100)
             html += `<li class="stockOverview"  data-stock-id="${e["ID"]}">
                             <a class="containing" is="a-button" href="/stocks/${e["ID"]}">
                                 <div class="stockName">${sanitiseText(e["Name"])}</div>
                                 <div class="${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
                                     <div class="change">${shortPrice}</div>
-                                    <div class="change">${(e["DeltaAmount"] >= 0 ? "+" : "") + getShortPrice(e["DeltaAmount"] / 100)}€</div>
-                                    <div class="change">${getShortPrice((e["Price2"]/e["Price1"] - 1.0)*100)}%</div>
+                                    <div class="change">${(e["DeltaAmount"] >= 0 ? "+" : "") + getShortNumber(e["DeltaAmount"] / 100)}€</div>
+                                    <div class="change">${getShortNumber((e["Price2"]/e["Price1"] - 1.0)*100)}%</div>
                                 </div>
                             </a>
                         </li>`

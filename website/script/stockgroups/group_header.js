@@ -25,7 +25,7 @@ class stockGroupHeader extends HTMLElement {
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         let totalValue = 0
         data["Members"].forEach(stock => totalValue += stock["Price"])
-        that.querySelector("div.price").innerHTML = totalValue/100 + "€"
+        that.querySelector("div.price").innerHTML = getLocaleString(totalValue/100) + "€"
         that.querySelector("div.members").innerHTML = data["Members"].length + " stocks"
     }
 }

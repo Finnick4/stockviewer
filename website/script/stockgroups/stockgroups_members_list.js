@@ -36,7 +36,7 @@ class stockgroupsMembersList extends HTMLElement {
         stocksSorted.forEach(stock => {totalGroupValue += stock["Price"]})
 
         stocksSorted.forEach((stock, i) => {
-            const shortPrice = getShortPrice(stock["Price"]/100)
+            const shortPrice = getShortNumber(stock["Price"]/100)
             let colorIndicator = ""
 
             if (stockColorMap.has(stock["ID"])) {
@@ -52,7 +52,7 @@ class stockgroupsMembersList extends HTMLElement {
                                 <div>
                                     <div class="change">#${i + 1}</div>
                                     <div class="change">${shortPrice}</div>
-                                    <div class="change">${getShortPrice((stock["Price"]/totalGroupValue)*100)}%</div>
+                                    <div class="change">${getShortNumber((stock["Price"]/totalGroupValue)*100)}%</div>
                                 </div>
                             </a>
                         </li>`

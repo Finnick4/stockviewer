@@ -53,9 +53,9 @@ class relatedStocks extends HTMLElement {
                         <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
                             <div class="stockName">${sanitiseText(elem["Name"])}</div>
                             <div>
-                                <div class="change">${getShortPrice(elem["Price"]/100)}</div>
-                                <div class="change">${(elem["Price"] - thisStock["Price"] >= 0 ? "+" : "") + getShortPrice(((elem["Price"] - thisStock["Price"])/100))}</div>
-                                <div class="change">${getShortPrice(((elem["Price"]/thisStock["Price"]) * 100))}%</div>
+                                <div class="change">${getShortNumber(elem["Price"]/100)}</div>
+                                <div class="change">${(elem["Price"] - thisStock["Price"] >= 0 ? "+" : "") + getShortNumber(((elem["Price"] - thisStock["Price"])/100))}</div>
+                                <div class="change">${getShortNumber(((elem["Price"]/thisStock["Price"]) * 100))}%</div>
                             </div>
                         </a>
                     </li>`
