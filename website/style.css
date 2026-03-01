@@ -91,15 +91,15 @@ main.stockOverviewPage stock-chart {
 
 main.stockGroupOverviewPage {
     display: grid;
-    grid-template: 4rem calc(100vh - 20rem) / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: 4rem 40rem / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
-main.stockGroupOverviewPage h1.tmp {
+main.stockGroupOverviewPage h2.tmp {
     grid-column: 1/6;
 }
 main.stockGroupOverviewPage stockgroups-member-pie-chart {
     grid-column: 1/3;
-    width: 30rem;
+    width: 75%;
     margin: 0 auto
 }
 main.stockGroupOverviewPage stockgroups-members-list {
@@ -525,15 +525,28 @@ ul.inner p {
 
 .stockName {
     word-break: break-word;
-    width: 40%;
+    max-width: 32ch;
     margin: 1ch;
     text-decoration: none;
     align-self: center;
     color: var(--text-muted);
 }
 
+.stockOverview .identification {
+    align-self: center;
+    display: flex;
+}
+
 .stockOverview:hover .stockName {
     color: var(--text);
+}
+.identification .stockColorIndicator {
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    height: auto;
+    width: 1rem;
+    align-self: center;
+    margin-left: .5rem;
 }
 
 .articlePreview {
@@ -719,5 +732,6 @@ stock-chart svg line.axis {
 div.piechart {
     aspect-ratio: 1/1;
     height: auto;
+    width: 100%;
     border-radius: 50%;
 }

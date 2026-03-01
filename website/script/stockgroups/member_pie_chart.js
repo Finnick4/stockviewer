@@ -1,16 +1,14 @@
 class stockgroupsMemberPieChart extends HTMLElement {
     connectedCallback() {
         this.groupid = this.dataset.stockGroupId
+        this.stockColorMap = new Map
         this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
 
         this.pie = document.createElement("div")
-        this.legend = document.createElement("div")
 
         this.pie.className = "piechart"
-        this.legend.className = "piechartlegend"
 
         this.appendChild(this.pie)
-        this.appendChild(this.legend)
     }
 
     disconnectedCallback() {
@@ -18,45 +16,53 @@ class stockgroupsMemberPieChart extends HTMLElement {
     }
 
     updateData(data, that) {
-        if (that.pie === undefined || that.legend === undefined) {
+        if (that.pie === undefined) {
             that.innerHTML = ""
 
             that.pie = document.createElement("div")
-            that.legend = document.createElement("div")
-
             that.pie.className = "piechart"
-            that.legend.className = "piechartlegend"
-
             that.appendChild(that.pie)
-            that.appendChild(that.legend)
         }
+        const memberLists = document.querySelectorAll(`main stockgroups-members-list[data-stock-group-id="${that.groupid}"]`)
+        that.stockColorMap = new Map()
 
-        let html = ""
-        if (data["Members"] === null) {
+        if (data["Members"] === null || data["Members"] === undefined) {
             return
         }
         const stocksSorted = data["Members"].sort((a, b) => {
             return Number(b["Price"]) - Number(a["Price"])
         })
-        console.log(stocksSorted)
 
         let totalGroupValue = 0
         stocksSorted.forEach(stock => {totalGroupValue += stock["Price"]})
-        console.log(totalGroupValue)
+
+        const hues = [
+            25,
+            300,
+            210,
+            70,
+            260,
+            130,
+            350,
+            160
+        ]
+        const lightness = [
+            0.6,
+            0.7,
+            0.5
+        ]
+        const chromas = [
+            0.17,
+            0.08
+        ]
+        const numColors = stocksSorted.length % hues.length === 0 ? hues.length - 1 : hues.length
 
         const getColor = num => {
-            const colors = [
-                "oklch(0.6 0.2 30)",
-                "oklch(0.6 0.2 80)",
-                "oklch(0.6 0.2 160)",
-                "oklch(0.6 0.2 210)",
-                "oklch(0.6 0.2 260)",
-                "oklch(0.6 0.2 300)",
-                "oklch(0.6 0.2 350)",
-                "oklch(0.6 0.2 130)"
-            ]
-            const numColors = stocksSorted.length % 5 === 0 ? colors.length - 1 : colors.length
-            return colors[num % numColors]
+            const lightnessParam = Math.floor(num / numColors) % lightness.length
+            const hueParam = num % numColors
+            const chromaParam = Math.floor(num / (numColors * lightness.length)) % chromas.length
+            const color =  `oklch(${lightness[lightnessParam]} ${chromas[chromaParam]} ${hues[hueParam]})`
+            return color
         }
 
         let from = 0, to = 0, css = "";
@@ -67,6 +73,8 @@ class stockgroupsMemberPieChart extends HTMLElement {
             }
             css += `${getColor(i)} ${from}deg ${to}deg,`
             from = to
+
+            that.stockColorMap.set(stock["ID"], getColor(i))
         })
 
         that.pie.style.cssText = `background: conic-gradient(${css.substring(0, css.length - 1)})`

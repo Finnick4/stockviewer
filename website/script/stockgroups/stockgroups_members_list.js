@@ -14,28 +14,41 @@ class stockgroupsMembersList extends HTMLElement {
 
     updateData(data, that) {
         let html = ""
-        if (data["Members"] === null) {
+        if (data["Members"] === null || data["Members"] === undefined) {
             that.innerHTML = `<div class="inner">
                 <nav><h2>All members</h2></nav>
                 <p>This group doesn't have any members...</p>
             </div>`
             return
         }
+
+        const pieChart = document.querySelector(`main stockgroups-member-pie-chart[data-stock-group-id="${that.groupid}"]`)
+        let stockColorMap = new Map
+        if (pieChart !== null) {
+            stockColorMap = pieChart.stockColorMap
+        }
+
         const stocksSorted = data["Members"].sort((a, b) => {
             return Number(b["Price"]) - Number(a["Price"])
         })
-        console.log(stocksSorted)
         let totalGroupValue = 0
 
         stocksSorted.forEach(stock => {totalGroupValue += stock["Price"]})
 
-        console.log(totalGroupValue)
         stocksSorted.forEach((stock, i) => {
-            console.log((stock["Price"]/totalGroupValue)*100)
             const shortPrice = getShortPrice(stock["Price"]/100)
+            let colorIndicator = ""
+
+            if (stockColorMap.has(stock["ID"])) {
+                colorIndicator = `<div class="stockColorIndicator" style="background-color: ${stockColorMap.get(stock["ID"])}"></div>`
+            }
+
             html += `<li class="stockOverview"  data-stock-id="${stock["ID"]}">
                             <a class="containing" is="a-button" href="/stocks/${stock["ID"]}">
-                                <div class="stockName">${sanitiseText(stock["Name"])}</div>
+                                <div class="identification">
+                                    ${colorIndicator}
+                                    <div class="stockName">${sanitiseText(stock["Name"])}</div>
+                                </div>
                                 <div>
                                     <div class="change">#${i + 1}</div>
                                     <div class="change">${shortPrice}</div>
