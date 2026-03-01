@@ -1,15 +1,15 @@
 
-class starStockButtonElement extends HTMLButtonElement {
+class starStockGroupButtonElement extends HTMLButtonElement {
     constructor() {
         super();
     }
 
     connectedCallback() {
-        this.stockid = this.getAttribute("data-stockid")
+        this.groupid = Number(this.dataset.stockGroupId)
 
         this.modalhtml = `
             <h1>This is not yet implemented!</h1>
-            <p>In the future you will be able to star stock ${this.stockid} with this button!</p>
+            <p>In the future you will be able to star stock group ${this.stockid} with this button!</p>
         `
         this.classList.add("star")
         this.onclick = () => createModal(this.modalhtml)
@@ -18,4 +18,4 @@ class starStockButtonElement extends HTMLButtonElement {
     }
 }
 
-customElements.define('star-stock-button', starStockButtonElement, {extends: "button"});
+customElements.define('star-stock-group-button', starStockGroupButtonElement, {extends: "button"});

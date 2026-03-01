@@ -11,7 +11,7 @@ class starArticleButtonElement extends HTMLButtonElement {
             <h1>This is not yet implemented!</h1>
             <p>In the future you will be able to star article ${this.articleid} with this button!</p>
         `
-        this.classList.add("edit")
+        this.classList.add("star")
         this.onclick = () => createModal(this.modalhtml)
 
         this.innerHTML = `<img class="icon" src="/icons/star_empty.svg" alt="give star" draggable="false">`

@@ -94,7 +94,7 @@ main.stockGroupOverviewPage {
     grid-template: 4rem 40rem / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
-main.stockGroupOverviewPage h2.tmp {
+main.stockGroupOverviewPage stock-group-header {
     grid-column: 1/6;
 }
 main.stockGroupOverviewPage stockgroups-member-pie-chart {
@@ -601,7 +601,7 @@ stockgroups-list .change {
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;
     border-radius: var(--border-radius);
-    margin: 1ch;
+    margin: 1ch 1ch 1ch 0;
     width: 8ch;
     text-align: center;
     transition: var(--bg-transition);
@@ -711,7 +711,20 @@ stock-chart svg line.axis {
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;
     border-radius: var(--border-radius);
-    margin: 1ch;
+    margin: 1ch 0;
+    width: fit-content;
+    text-align: center;
+    transition: var(--bg-transition);
+    color: var(--text);
+    align-self: center;
+}
+.members {
+    display: inline-block;
+    background-color: var(--bg);
+    font-family: "Ubuntu Mono",monospace;
+    padding: .75rem;
+    border-radius: var(--border-radius);
+    margin: 1ch 0;
     width: fit-content;
     text-align: center;
     transition: var(--bg-transition);
