@@ -42,7 +42,7 @@ body[data-theme="light"] {
 body {
     background-color: var(--bg-very-dark);
     color: var(--text-muted);
-    height: 100vh;
+    height: calc(100vh - 5rem);
 }
 
 h1 {
@@ -91,7 +91,7 @@ main.stockOverviewPage stock-chart {
 
 main.stockGroupOverviewPage {
     display: grid;
-    grid-template: 4rem auto / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: 4rem calc(100vh - 20rem) / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 main.stockGroupOverviewPage h1.tmp {
@@ -99,9 +99,12 @@ main.stockGroupOverviewPage h1.tmp {
 }
 main.stockGroupOverviewPage stockgroups-member-pie-chart {
     grid-column: 1/3;
+    width: 30rem;
+    margin: 0 auto
 }
 main.stockGroupOverviewPage stockgroups-members-list {
     grid-column: 3/6;
+    overflow: scroll;
 }
 
 div.sidebar a {
@@ -714,7 +717,7 @@ stock-chart svg line.axis {
 }
 
 div.piechart {
-   aspect-ratio: 1/1;
+    aspect-ratio: 1/1;
     height: auto;
     border-radius: 50%;
 }

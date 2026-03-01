@@ -44,8 +44,17 @@ class stockgroupsMemberPieChart extends HTMLElement {
         stocksSorted.forEach(stock => {totalGroupValue += stock["Price"]})
         console.log(totalGroupValue)
 
-        const getRandomColor = num => {
-            const colors = ["red", "blue", "green", "yellow", "snow"]
+        const getColor = num => {
+            const colors = [
+                "oklch(0.6 0.2 30)",
+                "oklch(0.6 0.2 80)",
+                "oklch(0.6 0.2 160)",
+                "oklch(0.6 0.2 210)",
+                "oklch(0.6 0.2 260)",
+                "oklch(0.6 0.2 300)",
+                "oklch(0.6 0.2 350)",
+                "oklch(0.6 0.2 130)"
+            ]
             const numColors = stocksSorted.length % 5 === 0 ? colors.length - 1 : colors.length
             return colors[num % numColors]
         }
@@ -56,7 +65,7 @@ class stockgroupsMemberPieChart extends HTMLElement {
             if (to > 360) {
                 to = 360
             }
-            css += `${getRandomColor(i)} ${from}deg ${to}deg,`
+            css += `${getColor(i)} ${from}deg ${to}deg,`
             from = to
         })
 
