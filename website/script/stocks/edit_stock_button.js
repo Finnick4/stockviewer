@@ -26,11 +26,11 @@ function showEditStockModal(stockID) {
 
         let html = `<h2>Edit ${stockName}</h2>
                         <div class="pair">
-                            <h3>Name</h3>
+                            <p>Name</p>
                             <input class="name" type="text" placeholder="Stock name..." value="${sanitiseText(stockName)}">
                         </div>
                         <div class="pair">
-                            <h3>Price (ct)</h3>
+                            <p>Price (ct)</p>
                             <input class="price" type="number" value="${sanitiseText(stockPrice)}">
                         </div>
                         <div class="pair">
@@ -45,16 +45,22 @@ function showEditStockModal(stockID) {
         const name = modal.querySelector(`.name`)
         const price = modal.querySelector(`.price`)
 
+        let permName = false, permPrice = false
+
         userInformation.writePermission("canEditStockNames", perm => {
             console.log(perm)
             if (perm !== 1) {
                 name.readOnly = true
+            } else {
+                permName = true
             }
         })
         userInformation.writePermission("canEditStockPrices", perm => {
             console.log(perm)
             if (perm !== 1) {
                 price.readOnly = true
+            } else {
+                permPrice = true
             }
         })
 
@@ -96,8 +102,8 @@ function showEditStockModal(stockID) {
                     method: "PATCH",
                     body: JSON.stringify({
                         id: Number(stockID),
-                        name: name.value !== stockName ? name.value : "",
-                        price: Number(price.value) !== stockPrice ? Number(price.value) : 0
+                        name: permName && name.value !== stockName ? name.value : "",
+                        price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0
                     })
                 }).then(r => {
                     if (r.ok) {

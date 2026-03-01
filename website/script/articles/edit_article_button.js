@@ -51,7 +51,7 @@ class editArticleButtonElement extends HTMLButtonElement {
             body.style.height = "1px"
             body.style.height = body.scrollHeight + "px"
 
-            userInformation.writePermission("canCreateArticles", perm => {
+            userInformation.writePermission("canEditArticles", perm => {
                 if (perm !== 1) {
                     modal.querySelector(".content").innerHTML = "<h2>Edit an article</h2><p>It doesn't seem like you are able to edit articles currently!</p>"
                 }
