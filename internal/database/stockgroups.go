@@ -153,6 +153,44 @@ func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 	return DetailedStockGroup{Members: data}, nil
 }
 
+func GetAllGroupsWithMemberStockID(stockID int32) ([]StockGroup, error) {
+	log.Debugf("Getting all stock groups, %v is in", stockID)
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT stockgroups.id, stockgroups.name, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers" FROM stockgroups
+    JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+    JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+    JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+WHERE stockgroups.id IN (
+    SELECT stockgroups.id FROM stockgroups
+        JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+    WHERE stockgroupmembers."stockId" = $1
+                          )
+GROUP BY stockgroups.id ORDER BY stockgroups.id;`, stockID)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var data []StockGroup
+
+	for rows.Next() {
+		var currentData StockGroup
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.TotalValue, &currentData.MemberCount)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+
+	return data, nil
+}
+
 func CreateStockGroup(name string, creatorID string) (int32, error) {
 	db := getDB()
 

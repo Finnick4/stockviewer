@@ -63,6 +63,9 @@ type StockGroupEditParams struct {
 	AddedMembers   []int32
 	RemovedMembers []int32
 }
+type StockGroupMembershipParams struct {
+	ID int32
+}
 
 /* Response */
 
