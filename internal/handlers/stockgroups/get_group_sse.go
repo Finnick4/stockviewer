@@ -113,5 +113,5 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sse.SendSSEOnStockStep(w, r, send)
+	sse.SendSSEOnStockGroupChange(w, r, send)
 }

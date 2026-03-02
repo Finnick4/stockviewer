@@ -120,5 +120,5 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	sse.SendSSEOnStockStep(w, r, send)
+	sse.SendSSEOnStockChange(w, r, send)
 }

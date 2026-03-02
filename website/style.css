@@ -104,7 +104,7 @@ main.stockGroupOverviewPage stockgroups-member-pie-chart {
 }
 main.stockGroupOverviewPage stockgroups-members-list {
     grid-column: 3/6;
-    overflow: scroll;
+    overflow: auto;
 }
 
 div.sidebar a {
@@ -191,11 +191,11 @@ div.sidebar a.btn.selected:hover {
     margin: 6rem auto;
     padding: 2rem;
     width: 70%;
-    max-height: calc(100% - 12rem);
+    max-height: calc(100% - 16rem);
     color: var(--text-muted);
     border-radius: var(--border-radius);
     box-shadow: var(--popup-shadow);
-    overflow: scroll;
+    overflow: auto;
 }
 
 .modal .content input {

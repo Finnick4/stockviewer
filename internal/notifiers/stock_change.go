@@ -21,7 +21,7 @@ func GetStockChangeNotification() (<-chan bool, func()) {
 }
 
 func NotifyStockChange() {
-	log.Debugf("Stock step happened! To notify: %v", len(openStockChannels))
+	log.Debugf("Stock change happened! To notify: %v", len(openStockChannels))
 	for _, c := range openStockChannels {
 		go func() {
 			c <- true

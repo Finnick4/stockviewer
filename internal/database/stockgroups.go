@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"stockviewer/internal/notifiers"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
@@ -174,6 +175,7 @@ func CreateStockGroup(name string, creatorID string) (int32, error) {
 		log.Error(err)
 		return 0, err
 	}
+	notifiers.NotifyStockGroupChange()
 	return lastID, nil
 }
 
@@ -187,16 +189,18 @@ func RemoveStockFromGroup(groupID int32, stockID int32) error {
 		log.Error(err)
 		return err
 	}
+	notifiers.NotifyStockGroupChange()
 	return nil
 }
 
 func RemoveStocksFromGroup(groupID int32, stockIDs []int32) error {
-	log.Debugf("Adding stocks %v to group", stockIDs)
+	log.Debugf("Removing stocks %v to group", stockIDs)
 
 	query := `DELETE FROM stockgroupmembers WHERE "groupId" = $1 AND "stockId" IN (`
 	values := []interface{}{}
+	values = append(values, groupID)
 	for i, s := range stockIDs {
-		values = append(values, groupID, s)
+		values = append(values, s)
 
 		query += `$` + strconv.Itoa(i+2) + `, `
 	}
@@ -208,6 +212,7 @@ func RemoveStocksFromGroup(groupID int32, stockIDs []int32) error {
 		log.Error(err)
 		return err
 	}
+	notifiers.NotifyStockGroupChange()
 	return nil
 }
 
@@ -227,6 +232,7 @@ func AddStockToGroup(groupID int32, stockID int32, adderID string) error {
 		log.Error(resp.Err())
 		return resp.Err()
 	}
+	notifiers.NotifyStockGroupChange()
 	return nil
 }
 
@@ -240,6 +246,9 @@ func AddStocksToGroup(groupID int32, stockIDs []int32, adderID string) error {
 	} else {
 		err = bulkAddStocksToGroupWithAdder(groupID, stockIDs, adderID)
 	}
+	// As the called functions already notify a change,
+	// there is no notifiers.NotifyStockGroupChange()
+	// needed at this location!
 	return err
 }
 
@@ -266,6 +275,7 @@ func bulkAddStocksToGroupWithoutAdder(groupID int32, stockIDs []int32) error {
 		log.Error(err)
 		return err
 	}
+	notifiers.NotifyStockGroupChange()
 	return nil
 }
 
@@ -292,6 +302,7 @@ func bulkAddStocksToGroupWithAdder(groupID int32, stockIDs []int32, adderID stri
 		log.Error(err)
 		return err
 	}
+	notifiers.NotifyStockGroupChange()
 	return nil
 }
 
@@ -304,5 +315,6 @@ func SetStockGroupName(id int32, name string) error {
 		log.Error(err)
 		return err
 	}
+	notifiers.NotifyStockGroupChange()
 	return nil
 }

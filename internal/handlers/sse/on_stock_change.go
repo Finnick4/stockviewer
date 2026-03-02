@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SendSSEOnStockStep(w http.ResponseWriter, r *http.Request, send func() error) {
+func SendSSEOnStockChange(w http.ResponseWriter, r *http.Request, send func() error) {
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
@@ -20,19 +20,20 @@ func SendSSEOnStockStep(w http.ResponseWriter, r *http.Request, send func() erro
 		return
 	}
 
-	stockStepPing, stockStepPingRemove := notifiers.GetStockChangeNotification()
+	stockChangePing, stockChangePingRemove := notifiers.GetStockChangeNotification()
 
 	for {
 		select {
 		case <-clientGone:
 			log.Debug("Client has disconnected from SSE")
-			stockStepPingRemove()
+			stockChangePingRemove()
 			return
-		case <-stockStepPing:
+		case <-stockChangePing:
 			err = send()
 			if err != nil {
 				log.Error(err)
-				stockStepPingRemove()
+				log.Debug("Closing SSE")
+				stockChangePingRemove()
 				return
 			}
 		}
