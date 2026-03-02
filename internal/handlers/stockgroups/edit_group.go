@@ -96,7 +96,12 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if aimDescription {
-		log.Warn("Editing stock group descriptions is not yet implemented!")
+		err = database.SetStockGroupDescription(params.ID, params.Description)
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
 	}
 	if aimAddMembers {
 		if len(params.AddedMembers) == 1 {

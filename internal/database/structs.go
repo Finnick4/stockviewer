@@ -63,7 +63,8 @@ type StockGroup struct {
 }
 
 type DetailedStockGroup struct {
-	ID      int32
-	Name    string
-	Members []CurrentStockData
+	ID          int32
+	Name        string
+	Description string
+	Members     []CurrentStockData
 }

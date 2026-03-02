@@ -22,7 +22,7 @@ customElements.define('edit-stock-group-button', editStockGroupButtonElement, {e
 function showModalEditStockGroup(groupid) {
     fetch(`/api/stockgroups?id=${groupid}`).then(r => r.json()).then(resp => {
         const groupName = sanitiseText(resp["Data"]["Name"])
-        const groupDescription = ""
+        const groupDescription = sanitiseText(resp["Data"]["Description"])
         const groupMembers = resp["Data"]["Members"].map(stock => Number(stock["ID"]))
         console.log(groupMembers)
 
@@ -33,7 +33,7 @@ function showModalEditStockGroup(groupid) {
                         </div>
                         <div class="textField">
                             <p>Description</p>
-                            <textarea class="description"></textarea>
+                            <textarea class="description">${groupDescription}</textarea>
                         </div>
                         <div class="stockSelector"></div>
                       
@@ -52,6 +52,9 @@ function showModalEditStockGroup(groupid) {
         const stockSelector = new stockSelectorElement()
         stockSelector.setStocks(groupMembers)
         modal.querySelector(`div.stockSelector`).append(stockSelector)
+
+        description.style.height = "1px"
+        description.style.height = description.scrollHeight + "px"
 
         let permName = false, permDesc = false, permMembers = false
 

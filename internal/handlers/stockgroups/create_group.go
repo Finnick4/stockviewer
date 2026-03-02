@@ -47,7 +47,7 @@ func CreateStockGroup(w http.ResponseWriter, r *http.Request) {
 
 	userID := database.GetUserIDFromToken(token)
 
-	groupID, err := database.CreateStockGroup(params.Name, userID)
+	groupID, err := database.CreateStockGroup(params.Name, params.Description, userID)
 
 	if err != nil {
 		log.Error(err)

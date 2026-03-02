@@ -47,8 +47,9 @@ type ArticleGetParams struct {
 }
 
 type StockGroupCreateParams struct {
-	Name    string
-	Members []int32
+	Name        string
+	Description string
+	Members     []int32
 }
 
 type StockGroupGetParams struct {

@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"errors"
 	"stockviewer/internal/notifiers"
 	"strconv"
 
@@ -70,24 +69,32 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 	log.Debugf("Getting stock group %v", groupID)
 	db := getDB()
 
-	row := db.QueryRow(`SELECT stockgroups.name FROM stockgroups WHERE stockgroups.id = $1`, groupID)
-
-	var name string
-	if row.Err() != nil {
-		log.Error(row.Err())
-		return DetailedStockGroup{}, row.Err()
-	}
-	err := row.Scan(&name)
+	rows, err := db.Query(`SELECT stockgroups.name, COALESCE(stockgroups.description, '') FROM stockgroups WHERE stockgroups.id = $1`, groupID)
 
 	if err != nil {
-		if errors.Is(sql.ErrNoRows, err) {
-			return DetailedStockGroup{}, nil
-		}
 		log.Error(err)
 		return DetailedStockGroup{}, err
 	}
 
-	rows, err := db.Query(`	SELECT stocks.name, stocks.id, stockprice.price FROM stockgroups
+	defer rows.Close()
+
+	var name string
+	var descr string
+
+	for rows.Next() {
+		err = rows.Scan(&name, &descr)
+		if err != nil {
+			log.Error(err)
+			return DetailedStockGroup{}, err
+		}
+	}
+
+	err = rows.Close()
+	if err != nil {
+		return DetailedStockGroup{}, err
+	}
+
+	rows, err = db.Query(`	SELECT stocks.name, stocks.id, stockprice.price FROM stockgroups
 										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
 										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
 										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
@@ -97,8 +104,6 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 		log.Error(err)
 		return DetailedStockGroup{}, err
 	}
-
-	defer rows.Close()
 
 	var data []CurrentStockData
 
@@ -112,7 +117,7 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 		data = append(data, currentData)
 	}
 
-	return DetailedStockGroup{ID: groupID, Name: name, Members: data}, nil
+	return DetailedStockGroup{ID: groupID, Name: name, Description: descr, Members: data}, nil
 }
 
 func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
@@ -191,15 +196,23 @@ GROUP BY stockgroups.id ORDER BY stockgroups.id;`, stockID)
 	return data, nil
 }
 
-func CreateStockGroup(name string, creatorID string) (int32, error) {
+func CreateStockGroup(name string, description string, creatorID string) (int32, error) {
 	db := getDB()
 
 	var resp *sql.Row
 
 	if creatorID == "" {
-		resp = db.QueryRow(`INSERT INTO stockgroups (name) VALUES ($1) RETURNING id;`, name)
+		if description == "" {
+			resp = db.QueryRow(`INSERT INTO stockgroups (name) VALUES ($1) RETURNING id;`, name)
+		} else {
+			resp = db.QueryRow(`INSERT INTO stockgroups (name, description) VALUES ($1, $2) RETURNING id;`, name, description)
+		}
 	} else {
-		resp = db.QueryRow(`INSERT INTO stockgroups (name, "creatorId") VALUES ($1, $2) RETURNING id;`, name, creatorID)
+		if description == "" {
+			resp = db.QueryRow(`INSERT INTO stockgroups (name, "creatorId") VALUES ($1, $2) RETURNING id;`, name, creatorID)
+		} else {
+			resp = db.QueryRow(`INSERT INTO stockgroups (name, description, "creatorId") VALUES ($1, $2, $3) RETURNING id;`, name, description, creatorID)
+		}
 	}
 
 	if resp.Err() != nil {
@@ -348,6 +361,19 @@ func SetStockGroupName(id int32, name string) error {
 	db := getDB()
 
 	_, err := db.Exec(`UPDATE stockgroups SET name=$1 WHERE id=$2`, name, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	notifiers.NotifyStockGroupChange()
+	return nil
+}
+
+func SetStockGroupDescription(id int32, description string) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stockgroups SET description=$1 WHERE id=$2`, description, id)
 
 	if err != nil {
 		log.Error(err)
