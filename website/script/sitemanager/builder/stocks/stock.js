@@ -8,6 +8,7 @@ function buildIndividualStockPage(id) {
                         <stock-header data-stock-id="${id}"></stock-header>
                         <stock-chart data-stock-id="${id}"></stock-chart>
                         <related-stocks data-stock-id="${id}"></related-stocks>
+                        <stock-groups-list data-stock-id="${id}"></stock-groups-list>
                         `;
     setMainBodyHTML(main, "stockOverviewPage");
 }
