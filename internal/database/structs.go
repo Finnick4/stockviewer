@@ -50,9 +50,12 @@ type ArticleOverview struct {
 }
 
 type Article struct {
-	ID      int32
-	Title   string
-	Content string
+	ID                int32
+	Title             string
+	Content           string
+	AuthorID          string
+	AuthorDisplayName string
+	TimeCreated       time.Time
 }
 
 type StockGroup struct {

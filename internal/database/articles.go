@@ -104,7 +104,13 @@ func GetArticle(id int32) (Article, error) {
 
 	article := Article{ID: id}
 
-	row := db.QueryRow(`SELECT title, COALESCE(content, '') FROM articles WHERE id = $1;`, id)
+	row := db.QueryRow(`
+	SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
+	WHEN articles."creatorId" IS NOT NULL THEN users."displayName"
+	ELSE ''
+	END, articles."createdAt" FROM articles 
+		JOIN public.users users on articles."creatorId" = users.id                                                                                      
+	WHERE articles.id = $1;`, id)
 
 	err := row.Err()
 	if err != nil {
@@ -115,7 +121,7 @@ func GetArticle(id int32) (Article, error) {
 		return Article{}, err
 	}
 
-	err = row.Scan(&article.Title, &article.Content)
+	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated)
 	if err != nil {
 		log.Error(err)
 		return Article{}, err
