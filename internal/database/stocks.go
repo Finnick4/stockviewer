@@ -48,13 +48,22 @@ func CreateStock(name string, initPrice int64, creatorID string) (int32, error) 
 }
 
 // GetStockInfo returns the current name and price of a stock of the given ID
-func GetStockInfo(id int32) (CurrentStockData, error) {
+func GetStockInfo(id int32, userID string) (CurrentStockData, error) {
 	db := getDB()
 
-	resp := db.QueryRow(`SELECT stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid WHERE stocks.id=$1;`, id)
+	resp := db.QueryRow(`
+	SELECT stocks.name, stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+    WHEN starredstocks."userId" = $1 THEN 1
+    ELSE 0 END)
+FROM stocks
+         JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid
+         LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
+WHERE stocks.id=$2 GROUP BY stocks.name, stockprice.price;`, userID, id)
 	var data CurrentStockData
-	err := resp.Scan(&data.Name, &data.Price)
+	var isStarred int32
+	err := resp.Scan(&data.Name, &data.Price, &data.Stars, &isStarred)
 	data.ID = id
+	data.IsStarred = isStarred == 1
 
 	if err != nil {
 		log.Error(err)
@@ -91,10 +100,17 @@ func GetStockPrices() ([]StockPrice, error) {
 }
 
 // GetCurrentStockInformation queries all stocks for their ID, name and current price
-func GetCurrentStockInformation() ([]CurrentStockData, error) {
+func GetCurrentStockInformation(userID string) ([]CurrentStockData, error) {
 	db := getDB()
 
-	rows, err := db.Query(`SELECT stocks.id, stocks.name, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate" ORDER BY stocks.id;`)
+	rows, err := db.Query(`
+SELECT stocks.id, stocks.name, stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+    WHEN starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId" THEN 1
+    ELSE 0 END)
+FROM stocks
+    JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate"
+    LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
+GROUP BY stocks.id, stocks.name, stockprice.price ORDER BY stocks.id;`, userID)
 
 	if err != nil {
 		log.Error(err)
@@ -106,11 +122,13 @@ func GetCurrentStockInformation() ([]CurrentStockData, error) {
 
 	for rows.Next() {
 		var currentData CurrentStockData
-		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price)
+		var isStarred int32
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price, &currentData.Stars, &isStarred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
 		}
+		currentData.IsStarred = isStarred == 1
 		data = append(data, currentData)
 	}
 	return data, nil

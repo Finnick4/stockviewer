@@ -14,6 +14,10 @@ import (
 
 func GetStocks(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("Inquiring stocks")
+
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
 	var params = api.StockGetParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
@@ -59,7 +63,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 			send = func() {
-				price, err := database.GetStockInfo(params.ID)
+				price, err := database.GetStockInfo(params.ID, userID)
 				if err != nil {
 					log.Error(err)
 					return
@@ -103,7 +107,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			send = func() {
-				data, err := database.GetCurrentStockInformation()
+				data, err := database.GetCurrentStockInformation(userID)
 				if err != nil {
 					log.Error(err)
 					return

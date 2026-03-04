@@ -3,9 +3,11 @@ package database
 import "time"
 
 type CurrentStockData struct {
-	ID    int32
-	Name  string
-	Price int64
+	ID        int32
+	Name      string
+	Price     int64
+	Stars     int32
+	IsStarred bool
 }
 
 type StockPrice struct {
