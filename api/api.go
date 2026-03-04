@@ -68,6 +68,11 @@ type StockGroupMembershipParams struct {
 	ID int32
 }
 
+type StockStarParams struct {
+	ID     int32
+	Result bool
+}
+
 /* Response */
 
 type SuccessResponse struct {

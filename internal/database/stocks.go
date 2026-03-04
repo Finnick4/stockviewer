@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"stockviewer/internal/notifiers"
 	"strconv"
 	"time"
@@ -382,4 +383,52 @@ func AreActiveStockIDs(ids []int32) bool {
 	}
 
 	return res == 0
+}
+
+func StarStockID(stockID int32, userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`INSERT INTO starredstocks ("stockId", "userId") VALUES ($1, $2) ON CONFLICT DO NOTHING;`, stockID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func UnstarStockID(stockID int32, userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM starredstocks WHERE "stockId" = $1 AND "userId" = $2;`, stockID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func GetStockIDStarStatus(stockID int32, userID string) bool {
+	db := getDB()
+
+	row := db.QueryRow(`SELECT "stockId" FROM starredstocks WHERE "userId" = $1 AND "stockId" = $2;`, userID, stockID)
+
+	if row.Err() != nil {
+		log.Error(row.Err())
+		return false
+	}
+
+	var id int32
+
+	err := row.Scan(&id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false
+		}
+		log.Error(row.Err())
+		return false
+	}
+
+	return id == stockID
 }

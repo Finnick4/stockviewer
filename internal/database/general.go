@@ -179,6 +179,26 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "starredstocks" (
+	"stockId"	INTEGER NOT NULL,
+	"userId"	VARCHAR(36) NOT NULL,
+	PRIMARY KEY ("stockId", "userId"),
+	CONSTRAINT "fk_starredstocks_stock" FOREIGN KEY("stockId") REFERENCES stocks("id") ON DELETE CASCADE,
+    CONSTRAINT "fk_starredstocks_user" FOREIGN KEY("userId") REFERENCES users("id") ON DELETE CASCADE);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "starredstockgroups" (
+	"groupId"	INTEGER NOT NULL,
+	"userId"	VARCHAR(36) NOT NULL,
+	PRIMARY KEY ("groupId", "userId"),
+	CONSTRAINT "fk_starredstockgroups_group" FOREIGN KEY("groupId") REFERENCES stockgroups("id") ON DELETE CASCADE,
+	CONSTRAINT "fk_starredstockgroups_user" FOREIGN KEY("userId") REFERENCES users("id") ON DELETE CASCADE);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	wg.Wait()
 
 	resp := db.QueryRow(`SELECT tag FROM users LIMIT 1;`)

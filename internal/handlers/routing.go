@@ -35,6 +35,7 @@ func Handler(r *chi.Mux) {
 		router.Patch("/", stocks.EditStock)
 		router.Get("/groups", stocks.GetStockGroupMembership)
 		router.Get("/groups/sse", stocks.GetStockGroupMembershipSSE)
+		router.Put("/star", stocks.StarStock)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/stockgroups", func(router chi.Router) {
