@@ -17,13 +17,8 @@ class stockgroupsMemberPieChart extends HTMLElement {
 
     updateData(data, that) {
         if (that.pie === undefined) {
-            that.innerHTML = ""
-
-            that.pie = document.createElement("div")
-            that.pie.className = "piechart"
-            that.appendChild(that.pie)
+            that.pie = that.querySelector("div.piechart")
         }
-        const memberLists = document.querySelectorAll(`main stockgroups-members-list[data-stock-group-id="${that.groupid}"]`)
         that.stockColorMap = new Map()
 
         if (data["Members"] === null || data["Members"] === undefined) {

@@ -43,6 +43,6 @@ function buildIndividualArticlePage(id) {
 
         title.innerHTML = data["Title"]
         article.innerHTML = data["Content"] === "" ? `<i>This article doesn't have a body (yet).<br>
-            If you have the permission to do so, you can fix it by editing this article!</i>` : ("<p>" + sanitiseText(data["Content"]).replaceAll("\n", "</p><p>") + "</p>")
+            If you have the permission to do so, you can fix it by editing this article!</i>` : parseStyle(data["Content"])
     })
 }

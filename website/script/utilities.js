@@ -9,6 +9,10 @@ function sanitiseText(txt) {
     return txt.replaceAll("<", "&lt;")
 }
 
+function parseStyle(txt) {
+    return "<p>" + sanitiseText(txt).replaceAll("\n", "</p><p>") + "</p>"
+}
+
 function getShortNumber(num) {
     if (isNaN(num) || typeof(num) !== "number") {
         return "0"

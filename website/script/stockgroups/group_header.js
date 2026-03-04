@@ -15,18 +15,23 @@ class stockGroupHeader extends HTMLElement {
                             </nav>
                         </div>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?Id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
     }
     disconnectedCallback() {
         this.closeSubscription()
     }
 
     updateData(data, that) {
+        console.log(data)
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         let totalValue = 0
-        data["Members"].forEach(stock => totalValue += stock["Price"])
+        let memberCount = 0
+        if (data["Members"] !== undefined) {
+            data["Members"].forEach(stock => totalValue += stock["Price"])
+            memberCount = data["Members"].length
+        }
         that.querySelector("div.price").innerHTML = getLocaleString(totalValue/100) + "€"
-        that.querySelector("div.members").innerHTML = data["Members"].length + " stocks"
+        that.querySelector("div.members").innerHTML = memberCount + " stocks"
     }
 }
 
