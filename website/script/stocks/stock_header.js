@@ -9,8 +9,8 @@ class stockHeader extends HTMLElement {
                             </div>
                             <h1>Loading name...</h1>
                             <nav>
-                                <button is="star-stock-button" data-stockid="${this.stockid}"></button>
-                                <button is="edit-stock-button" data-stockid="${this.stockid}"></button>
+                                <button is="star-stock-button" data-stock-id="${this.stockid}"></button>
+                                <button is="edit-stock-button" data-stock-id="${this.stockid}"></button>
                             </nav>
                         </div>
                         `
@@ -21,8 +21,10 @@ class stockHeader extends HTMLElement {
     }
 
     updateData(data, that) {
+        console.log(data)
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         that.querySelector("div.price").innerHTML = getLocaleString(data["Price"]/100) + "€"
+        that.querySelector("nav button.star").updateStatus(data["IsStarred"])
     }
 }
 

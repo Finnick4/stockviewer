@@ -5,7 +5,7 @@ class editStockButtonElement extends HTMLButtonElement {
     }
 
     connectedCallback() {
-        this.stockid = this.getAttribute("data-stockid")
+        this.stockid = this.dataset.stockId
 
         this.classList.add("edit")
 
