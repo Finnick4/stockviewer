@@ -55,6 +55,13 @@ function subscribeToAPI(path, func) {
 
     return () => {
         currentSubscriptions[path] = currentSubscriptions[path].filter(sub => (sub["id"] !== id))
+
+        if (Object.keys(currentSubscriptions).length >= 6 && currentSubscriptions[path].length === 0) {
+            console.log("closing " + path)
+            delete currentSubscriptions[path]
+            subscriptionListeners[path].es.close()
+            delete subscriptionListeners[path]
+        }
     }
 }
 
