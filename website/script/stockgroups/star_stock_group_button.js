@@ -7,6 +7,8 @@ class starStockGroupButtonElement extends HTMLButtonElement {
     connectedCallback() {
         this.groupid = Number(this.dataset.stockGroupId)
 
+
+
         this.modalhtml = `
             <h1>This is not yet implemented!</h1>
             <p>In the future you will be able to star stock group ${this.stockid} with this button!</p>

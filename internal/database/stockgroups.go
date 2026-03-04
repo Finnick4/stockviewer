@@ -65,8 +65,13 @@ func GetAllStockGroups() ([]StockGroup, error) {
 	return data, nil
 }
 
-func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
+func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, error) {
 	log.Debugf("Getting stock group %v", groupID)
+
+	if groupID == -1 {
+		return GetStarredStocks(userID)
+	}
+
 	db := getDB()
 
 	rows, err := db.Query(`SELECT stockgroups.name, COALESCE(stockgroups.description, '') FROM stockgroups WHERE stockgroups.id = $1`, groupID)
@@ -94,11 +99,16 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 		return DetailedStockGroup{}, err
 	}
 
-	rows, err = db.Query(`	SELECT stocks.name, stocks.id, stockprice.price FROM stockgroups
-										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
-										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-									WHERE stockgroups.id = $1 ORDER BY stocks.id;`, groupID)
+	rows, err = db.Query(`	
+	SELECT stocks.name, stocks.id, stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+    WHEN starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId" THEN 1
+    ELSE 0 END)
+	FROM stockgroups
+		JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+		JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+		JOIN starredstocks ON stocks.id = starredstocks."stockId"
+	WHERE stockgroups.id = $2 GROUP BY stocks.name, stocks.id, stockprice.price ORDER BY stocks.id;`, userID, groupID)
 
 	if err != nil {
 		log.Error(err)
@@ -109,7 +119,7 @@ func GetDetailedStockGroup(groupID int32) (DetailedStockGroup, error) {
 
 	for rows.Next() {
 		var currentData CurrentStockData
-		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price)
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return DetailedStockGroup{}, err

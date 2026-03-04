@@ -1,5 +1,5 @@
 function buildIndividualStockGroupPage(id) {
-    if (isNaN(id) || id <= 0) {
+    if (isNaN(id) || Number(id) === 0 || Number(id) < -1) {
         window.history.pushState(null, null, `${window.location.origin}/groups`);
         router("/groups");
     }

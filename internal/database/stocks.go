@@ -256,6 +256,38 @@ func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
 	return data, nil
 }
 
+func GetStarredStocks(userID string) (DetailedStockGroup, error) {
+	db := getDB()
+
+	rows, err := db.Query(`	
+	SELECT stocks.name, stocks.id, stockprice.price, (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count FROM stocks
+		JOIN starredstocks ON stocks.id = starredstocks."stockId"
+		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stockprice.price ORDER BY stocks.id;`, userID)
+
+	defer rows.Close()
+
+	if err != nil {
+		log.Error(err)
+		return DetailedStockGroup{}, err
+	}
+
+	var data []CurrentStockData
+
+	for rows.Next() {
+		var currentData CurrentStockData
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price, &currentData.Stars)
+		if err != nil {
+			log.Error(err)
+			return DetailedStockGroup{}, err
+		}
+		currentData.IsStarred = true
+		data = append(data, currentData)
+	}
+
+	return DetailedStockGroup{ID: -1, Name: "Starred Stocks", Description: "All stocks that you have starred!", Members: data}, nil
+}
+
 func SetStockName(id int32, name string) error {
 	db := getDB()
 

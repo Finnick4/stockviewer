@@ -9,12 +9,15 @@ class stockGroupHeader extends HTMLElement {
                                 <div class="change members">??? stocks</div>
                             </div>
                             <h1>Loading name...</h1>
-                            <nav>
+                            <nav class="buttons">
                                 <button is="star-stock-group-button" data-stock-group-id="${this.groupid}"></button>
                                 <button is="edit-stock-group-button" data-stock-group-id="${this.groupid}"></button>
                             </nav>
                         </div>
                         `
+        if (this.groupid < 0) {
+            this.querySelector("nav.buttons").innerHTML = ""
+        }
         this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
     }
     disconnectedCallback() {

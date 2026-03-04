@@ -17,6 +17,9 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 
 	var params = api.StockGroupGetParams{}
 
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
@@ -28,7 +31,7 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.ID < 0 {
+	if params.ID < -1 {
 		log.Debugf("Cannot get stock group with id %v", params.ID)
 		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get stock group with id %v", params.ID))
 		return
@@ -44,9 +47,9 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 
 	var send func() error
 
-	if params.ID > 0 {
+	if params.ID > 0 || params.ID == -1 {
 		send = func() error {
-			data, err := database.GetDetailedStockGroup(params.ID)
+			data, err := database.GetDetailedStockGroup(userID, params.ID)
 			if err != nil {
 				log.Debug(err)
 				return err
