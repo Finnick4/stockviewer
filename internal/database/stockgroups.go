@@ -24,7 +24,7 @@ func GetAllStockGroups() ([]StockGroup, error) {
 	rowsMembers, err := db.Query(`	SELECT stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers" FROM stockgroups
 										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
 										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
-										JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+										LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
 									GROUP BY stockgroups.id ORDER BY stockgroups.id;`)
 	if err != nil {
 		log.Error(err)
@@ -107,7 +107,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 		JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
 		JOIN stocks ON stockgroupmembers."stockId" = stocks.id
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-		JOIN starredstocks ON stocks.id = starredstocks."stockId"
+		LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
 	WHERE stockgroups.id = $2 GROUP BY stocks.name, stocks.id, stockprice.price ORDER BY stocks.id;`, userID, groupID)
 
 	if err != nil {
