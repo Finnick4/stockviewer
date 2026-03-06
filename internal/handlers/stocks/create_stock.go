@@ -47,9 +47,16 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	shorthandlen := utilities.CharCount(params.Shorthand)
+	if params.Shorthand == "" || shorthandlen > 5 {
+		log.Debugf("Could not accept the request as shorthand %v is invalid (length %v)", params.Shorthand, shorthandlen)
+		api.RequestMalformedHandler(w, "Could not accept the request as shorthand is invalid")
+		return
+	}
+
 	userid := database.GetUserIDFromToken(r.Context().Value("token").(string))
 
-	lastID, err := database.CreateStock(params.Name, params.InitPrice, userid)
+	lastID, err := database.CreateStock(params.Name, params.Shorthand, params.InitPrice, userid)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)

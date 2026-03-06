@@ -94,9 +94,11 @@ func InitialiseDB() {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stocks" (
 	"id"	SERIAL PRIMARY KEY NOT NULL UNIQUE,
 	"name"	VARCHAR(32) NOT NULL,
+	"shorthand" VARCHAR(5) NOT NULL UNIQUE,
 	"latestUpdate"	TIMESTAMPTZ NOT NULL,
 	"status" INTEGER DEFAULT 1,
 	"creatorId" VARCHAR(36),
+	"color" INTEGER,
 	CONSTRAINT "fk_stocks_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
 	if err != nil {
 		log.Fatal(err)
@@ -174,6 +176,8 @@ func InitialiseDB() {
 	"stockId"	INTEGER NOT NULL,
 	"creatorId" VARCHAR(36),
 	PRIMARY KEY ("groupId", "stockId"),
+	CONSTRAINT "fk_stockgroupmembers_stocks" FOREIGN KEY("stockId") REFERENCES stocks("id") ON DELETE CASCADE,
+	CONSTRAINT "fk_stockgroupmembers_group" FOREIGN KEY("groupId") REFERENCES stockgroups("id") ON DELETE CASCADE,
 	CONSTRAINT "fk_stockgroupmembers_creator" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
 	if err != nil {
 		log.Fatal(err)

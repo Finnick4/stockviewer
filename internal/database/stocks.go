@@ -5,23 +5,25 @@ import (
 	"errors"
 	"stockviewer/internal/notifiers"
 	"strconv"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 )
 
 // CreateStock creates a new stock with the given name and initial price and returns the ID of the new stock. The newly created stock is active.
-func CreateStock(name string, initPrice int64, creatorID string) (int32, error) {
+func CreateStock(name string, shorthand string, initPrice int64, creatorID string) (int32, error) {
 	currentTimeStamp := time.Now()
+	shorthandlowered := strings.ToLower(shorthand)
 
 	db := getDB()
 
 	var resp *sql.Row
 
 	if creatorID == "" {
-		resp = db.QueryRow(`INSERT INTO stocks (name, "latestUpdate") VALUES ($1, $2) RETURNING id;`, name, currentTimeStamp)
+		resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate") VALUES ($1, $2, $3) RETURNING id;`, name, shorthandlowered, currentTimeStamp)
 	} else {
-		resp = db.QueryRow(`INSERT INTO stocks (name, "latestUpdate", "creatorId") VALUES ($1, $2, $3) RETURNING id;`, name, currentTimeStamp, creatorID)
+		resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate", "creatorId") VALUES ($1, $2, $3, $4) RETURNING id;`, name, shorthandlowered, currentTimeStamp, creatorID)
 	}
 
 	if resp.Err() != nil {
@@ -48,7 +50,7 @@ func CreateStock(name string, initPrice int64, creatorID string) (int32, error) 
 }
 
 // GetStockInfo returns the current name and price of a stock of the given ID
-func GetStockInfo(id int32, userID string) (CurrentStockData, error) {
+func GetStockInfo(id int32, userID string) (DetailedStock, error) {
 	db := getDB()
 
 	resp := db.QueryRow(`
@@ -59,7 +61,7 @@ FROM stocks
          JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid
          LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
 WHERE stocks.id=$2 GROUP BY stocks.name, stockprice.price;`, userID, id)
-	var data CurrentStockData
+	var data DetailedStock
 	var isStarred int32
 	err := resp.Scan(&data.Name, &data.Price, &data.Stars, &isStarred)
 	data.ID = id
@@ -67,7 +69,7 @@ WHERE stocks.id=$2 GROUP BY stocks.name, stockprice.price;`, userID, id)
 
 	if err != nil {
 		log.Error(err)
-		return CurrentStockData{}, err
+		return DetailedStock{}, err
 	}
 	return data, nil
 }
@@ -100,7 +102,7 @@ func GetStockPrices() ([]StockPrice, error) {
 }
 
 // GetCurrentStockInformation queries all stocks for their ID, name and current price
-func GetCurrentStockInformation(userID string) ([]CurrentStockData, error) {
+func GetCurrentStockInformation(userID string) ([]DetailedStock, error) {
 	db := getDB()
 
 	rows, err := db.Query(`
@@ -118,10 +120,10 @@ GROUP BY stocks.id, stocks.name, stockprice.price ORDER BY stocks.id;`, userID)
 	}
 	defer rows.Close()
 
-	var data []CurrentStockData
+	var data []DetailedStock
 
 	for rows.Next() {
-		var currentData CurrentStockData
+		var currentData DetailedStock
 		var isStarred int32
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price, &currentData.Stars, &isStarred)
 		if err != nil {
@@ -272,10 +274,10 @@ func GetStarredStocks(userID string) (DetailedStockGroup, error) {
 		return DetailedStockGroup{}, err
 	}
 
-	var data []CurrentStockData
+	var data []DetailedStock
 
 	for rows.Next() {
-		var currentData CurrentStockData
+		var currentData DetailedStock
 		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price, &currentData.Stars)
 		if err != nil {
 			log.Error(err)
@@ -322,7 +324,7 @@ func SetStockPrice(id int32, price int64) error {
 	return nil
 }
 
-func UpdateCompleteStock(stock CurrentStockData) error {
+func UpdateCompleteStock(stock DetailedStock) error {
 	db := getDB()
 
 	currentTimeStamp := time.Now()

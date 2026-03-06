@@ -98,11 +98,11 @@ func GetArticles(offset int32) ([]ArticleOverview, error) {
 	return articles, nil
 }
 
-func GetArticle(id int32) (Article, error) {
+func GetArticle(id int32) (DetailedArticle, error) {
 	log.Debugf("Getting article with id %v", id)
 	db := getDB()
 
-	article := Article{ID: id}
+	article := DetailedArticle{ID: id}
 
 	row := db.QueryRow(`
 	SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
@@ -118,13 +118,13 @@ func GetArticle(id int32) (Article, error) {
 			return article, nil
 		}
 		log.Error(err)
-		return Article{}, err
+		return DetailedArticle{}, err
 	}
 
 	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated)
 	if err != nil {
 		log.Error(err)
-		return Article{}, err
+		return DetailedArticle{}, err
 	}
 	return article, nil
 }

@@ -22,7 +22,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = database.Article{}
+	var params = database.DetailedArticle{}
 
 	defer r.Body.Close()
 

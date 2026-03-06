@@ -9,6 +9,7 @@ import (
 
 type StockCreateParams struct {
 	Name      string
+	Shorthand string
 	InitPrice int64
 }
 type StockGetParams struct {

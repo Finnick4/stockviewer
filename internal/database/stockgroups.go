@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetAllStockGroups() ([]StockGroup, error) {
+func GetAllStockGroups() ([]StockGroupOverview, error) {
 	log.Debug("Getting all stock groups")
 
 	db := getDB()
@@ -33,10 +33,10 @@ func GetAllStockGroups() ([]StockGroup, error) {
 
 	defer rowsMembers.Close()
 
-	var data []StockGroup
+	var data []StockGroupOverview
 
 	for rowsName.Next() {
-		var currentData StockGroup
+		var currentData StockGroupOverview
 		err = rowsName.Scan(&currentData.Name, &currentData.ID)
 		if err != nil {
 			log.Error(err)
@@ -115,10 +115,10 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 		return DetailedStockGroup{}, err
 	}
 
-	var data []CurrentStockData
+	var data []DetailedStock
 
 	for rows.Next() {
-		var currentData CurrentStockData
+		var currentData DetailedStock
 		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
@@ -153,10 +153,10 @@ func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 
 	defer rows.Close()
 
-	var data []CurrentStockData
+	var data []DetailedStock
 
 	for rows.Next() {
-		var currentData CurrentStockData
+		var currentData DetailedStock
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price)
 		if err != nil {
 			log.Error(err)
@@ -168,7 +168,7 @@ func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 	return DetailedStockGroup{Members: data}, nil
 }
 
-func GetAllGroupsWithMemberStockID(stockID int32) ([]StockGroup, error) {
+func GetAllGroupsWithMemberStockID(stockID int32) ([]StockGroupOverview, error) {
 	log.Debugf("Getting all stock groups, %v is in", stockID)
 	db := getDB()
 
@@ -191,10 +191,10 @@ GROUP BY stockgroups.id ORDER BY stockgroups.id;`, stockID)
 
 	defer rows.Close()
 
-	var data []StockGroup
+	var data []StockGroupOverview
 
 	for rows.Next() {
-		var currentData StockGroup
+		var currentData StockGroupOverview
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.TotalValue, &currentData.MemberCount)
 		if err != nil {
 			log.Error(err)

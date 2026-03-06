@@ -2,9 +2,10 @@ package database
 
 import "time"
 
-type CurrentStockData struct {
+type DetailedStock struct {
 	ID        int32
 	Name      string
+	Shorthand string
 	Price     int64
 	Stars     int32
 	IsStarred bool
@@ -51,7 +52,7 @@ type ArticleOverview struct {
 	Title string
 }
 
-type Article struct {
+type DetailedArticle struct {
 	ID                int32
 	Title             string
 	Content           string
@@ -60,7 +61,7 @@ type Article struct {
 	TimeCreated       time.Time
 }
 
-type StockGroup struct {
+type StockGroupOverview struct {
 	ID          int32
 	Name        string
 	MemberCount int32
@@ -71,5 +72,5 @@ type DetailedStockGroup struct {
 	ID          int32
 	Name        string
 	Description string
-	Members     []CurrentStockData
+	Members     []DetailedStock
 }

@@ -25,7 +25,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = database.CurrentStockData{}
+	var params = database.DetailedStock{}
 
 	defer r.Body.Close()
 

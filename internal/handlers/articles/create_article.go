@@ -12,7 +12,7 @@ import (
 )
 
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Article creation is in progress")
+	log.Debugf("DetailedArticle creation is in progress")
 
 	token := r.Context().Value("token").(string)
 
