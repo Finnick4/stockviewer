@@ -23,11 +23,16 @@ function showEditStockModal(stockID) {
     fetch(`/api/stocks?id=${stockID}`).then(r => r.json()).then(resp => {
         const stockName = sanitiseText(resp["Data"]["Name"])
         const stockPrice = sanitiseText(resp["Data"]["Price"])
+        const stockShorthand = ""
 
         let html = `<h2>Edit ${stockName}</h2>
                         <div class="pair">
                             <p>Name</p>
                             <input class="name" type="text" placeholder="Stock name..." value="${sanitiseText(stockName)}">
+                        </div>
+                        <div class="pair">
+                            <p>Shorthand</p>
+                            <input class="shorthand" type="text" placeholder="Shorthand..." value="${sanitiseText(stockShorthand)}">
                         </div>
                         <div class="pair">
                             <p>Price (ct)</p>
@@ -43,6 +48,7 @@ function showEditStockModal(stockID) {
 
         const infotxt = modal.querySelector(".info")
         const name = modal.querySelector(`.name`)
+        const shorthand = modal.querySelector(`.shorthand`)
         const price = modal.querySelector(`.price`)
 
         let permName = false, permPrice = false
@@ -76,8 +82,21 @@ function showEditStockModal(stockID) {
                 seterr("The name is too long! (2 - 32 characters)")
                 return false
             }
-            if (name.value.length <= 2) {
+            if (name.value.length < 2) {
                 seterr("The name is too short! (2 - 32 characters)")
+                return false
+            }
+
+            if (shorthand.value.length > 5) {
+                seterr("The shorthand is too long! (2 - 5 characters)")
+                return false
+            }
+            if (shorthand.value.length < 2) {
+                seterr("The shorthand is too short! (2 - 5 characters)")
+                return false
+            }
+            if (!isNaN(shorthand.value)) {
+                seterr("The shorthand may not be a number!")
                 return false
             }
 
@@ -103,7 +122,8 @@ function showEditStockModal(stockID) {
                     body: JSON.stringify({
                         id: Number(stockID),
                         name: permName && name.value !== stockName ? name.value : "",
-                        price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0
+                        price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
+                        shorthand: permName && shorthand.value !== stockShorthand ? stockShorthand : ""
                     })
                 }).then(r => {
                     if (r.ok) {

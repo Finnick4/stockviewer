@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/internal/utilities"
+	"strconv"
 	"time"
 
 	"stockviewer/api"
@@ -41,16 +42,22 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	namelen := utilities.CharCount(params.Name)
-	if params.Name == "" || namelen > 32 || params.InitPrice <= 1000000 {
+	if namelen < 2 || namelen > 32 || params.InitPrice <= 1000000 {
 		log.Debugf("Could not accept the request as at least one parameter is invalid (Either the name is missing or too long or the initial price is nonexistent or <= 10000000): name='%v', initprice=%v", params.Name, params.InitPrice)
 		api.RequestMalformedHandler(w, "Could not process the request as the parameters are malformed: Either the name is missing or too long or the initial price is nonexistent or <= 10000000")
 		return
 	}
 
 	shorthandlen := utilities.CharCount(params.Shorthand)
-	if params.Shorthand == "" || shorthandlen > 5 {
+	if shorthandlen < 2 || shorthandlen > 5 {
 		log.Debugf("Could not accept the request as shorthand %v is invalid (length %v)", params.Shorthand, shorthandlen)
 		api.RequestMalformedHandler(w, "Could not accept the request as shorthand is invalid")
+		return
+	}
+
+	if _, err := strconv.Atoi(params.Shorthand); err == nil {
+		log.Debugf("Could not accept the request as shorthand %v is a number", params.Shorthand)
+		api.RequestMalformedHandler(w, "Could not accept the request as shorthand is a number")
 		return
 	}
 

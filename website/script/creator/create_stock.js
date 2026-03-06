@@ -9,6 +9,10 @@ function showModalCreateStock(elem) {
                             <input class="name" type="text" placeholder="Stock name...">
                         </div>
                         <div class="pair">
+                            <p>Shorthand</p>
+                            <input class="shorthand" type="text" placeholder="Shorthand...">
+                        </div>
+                        <div class="pair">
                             <p>Initial price (ct)</p>
                             <input class="price" type="number">
                         </div>
@@ -23,6 +27,7 @@ function showModalCreateStock(elem) {
     const modal = document.getElementById(id);
     const infotxt = modal.querySelector(".info")
     const name = modal.querySelector(`.name`)
+    const shorthand = modal.querySelector(`.shorthand`)
     const price = modal.querySelector(`.price`)
 
     userInformation.writePermission("canCreateStocks", perm => {
@@ -43,8 +48,21 @@ function showModalCreateStock(elem) {
             seterr("The name is too long! (2 - 32 characters)")
             return false
         }
-        if (name.value.length <= 2) {
+        if (name.value.length < 2) {
             seterr("The name is too short! (2 - 32 characters)")
+            return false
+        }
+
+        if (shorthand.value.length > 5) {
+            seterr("The shorthand is too long! (2 - 5 characters)")
+            return false
+        }
+        if (shorthand.value.length < 2) {
+            seterr("The shorthand is too short! (2 - 5 characters)")
+            return false
+        }
+        if (!isNaN(shorthand.value)) {
+            seterr("The shorthand may not be a number!")
             return false
         }
 
@@ -65,7 +83,7 @@ function showModalCreateStock(elem) {
 
     modal.querySelector(".submit").addEventListener("click", () => {
         if (validate()) {
-            fetch(`${window.location.origin}/api/stocks/?name=${document.querySelector(`#${id} .name`).value}&initPrice=${document.querySelector(`#${id} .price`).value}`, {
+            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}`, {
                 method: "POST"
             }).then(r => {
                 if (r.ok) {
