@@ -555,6 +555,7 @@ ul.inner p {
     display: flex;
     justify-content: space-between;
     text-decoration: none;
+    flex-wrap: wrap;
 }
 
 .stockOverview:hover {
@@ -570,7 +571,8 @@ ul.inner p {
 
 .stockName {
     word-break: break-word;
-    max-width: 32ch;
+    max-width: 25ch;
+    min-width: 20ch;
     margin: 1ch;
     text-decoration: none;
     align-self: center;
