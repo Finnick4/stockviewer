@@ -14,8 +14,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Trying to create a user")
 
 	token := r.Context().Value("token").(string)
+	permissions := r.Context().Value("permissions").(map[string]int32)
 
-	if !database.HasTokenPermission(token, "canCreateUsers") {
+	if permissions["canCreateUsers"] != 1 {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return

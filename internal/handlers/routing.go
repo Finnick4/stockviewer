@@ -29,32 +29,32 @@ func Handler(r *chi.Mux) {
 	r.Handle("/icons/*", fs)
 
 	r.With(middleware.ValidateToken).Route("/api/stocks", func(router chi.Router) {
-		router.Post("/", stocks.CreateStock)
+		router.With(middleware.ExtractPermissions).Post("/", stocks.CreateStock)
 		router.Get("/", stocks.GetStocks)
 		router.Get("/sse", stocks.GetStocksSSE)
-		router.Patch("/", stocks.EditStock)
+		router.With(middleware.ExtractPermissions).Patch("/", stocks.EditStock)
 		router.Get("/groups", stocks.GetStockGroupMembership)
 		router.Get("/groups/sse", stocks.GetStockGroupMembershipSSE)
 		router.Put("/star", stocks.StarStock)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/stockgroups", func(router chi.Router) {
-		router.Post("/", stockgroups.CreateStockGroup)
+		router.With(middleware.ExtractPermissions).Post("/", stockgroups.CreateStockGroup)
 		router.Get("/", stockgroups.GetStockGroup)
 		router.Get("/sse", stockgroups.GetStockGroupSSE)
-		router.Patch("/", stockgroups.EditStock)
+		router.With(middleware.ExtractPermissions).Patch("/", stockgroups.EditStockGroup)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/users", func(router chi.Router) {
 		router.Get("/permissions", users.GetPermissions)
 		router.Get("/overview", users.GetUserInformation)
-		router.Post("/", users.CreateUser)
+		router.With(middleware.ExtractPermissions).Post("/", users.CreateUser)
 		router.Delete("/login", users.CloseSession)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/articles", func(router chi.Router) {
-		router.Post("/", articles.CreateArticle)
+		router.With(middleware.ExtractPermissions).Post("/", articles.CreateArticle)
 		router.Get("/", articles.GetArticles)
-		router.Patch("/", articles.EditArticle)
+		router.With(middleware.ExtractPermissions).Patch("/", articles.EditArticle)
 	})
 }

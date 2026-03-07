@@ -77,6 +77,15 @@ class colorSelectorElement extends HTMLElement {
                 <div class="colorDisplay" data-color="c5547c"></div>
                 <div class="colorDisplay" data-color="d6638b"></div>
             </div>
+            <div class="colorDisplayRow">
+                <div class="colorDisplay" data-color="3a3a3a"></div>
+                <div class="colorDisplay" data-color="484848"></div>
+                <div class="colorDisplay" data-color="555555"></div>
+                <div class="colorDisplay" data-color="636363"></div>
+                <div class="colorDisplay" data-color="717171"></div>
+                <div class="colorDisplay" data-color="808080"></div>
+                <div class="colorDisplay" data-color="8f8f8f"></div>
+            </div>
             <button class="remove">Remove Color</button>
         `)
 

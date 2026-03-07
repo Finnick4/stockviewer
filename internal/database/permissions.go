@@ -97,6 +97,32 @@ func GetAllTokenPermissions(token string) ([]Permission, error) {
 	return perms, nil
 }
 
+func GetAllTokenPermissionsMap(token string) (map[string]int32, error) {
+	db := getDB()
+
+	log.Debug("Get all permissions for a token")
+	rows, err := db.Query(`SELECT permissions."claimType", permissions."claimValue" FROM permissions WHERE userid=(SELECT userid FROM sessions WHERE sessions.token = $1);`, hash512(token))
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	permMap := make(map[string]int32)
+
+	for rows.Next() {
+		var perm Permission
+		err = rows.Scan(&perm.Permission, &perm.Value)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		permMap[perm.Permission] = perm.Value
+	}
+	return permMap, nil
+}
+
 // SetUserPermission sets or updates the permission of a user.
 func SetUserPermission(id string, permission Permission) error {
 	db := getDB()

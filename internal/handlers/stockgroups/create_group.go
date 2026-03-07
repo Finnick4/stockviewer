@@ -15,8 +15,9 @@ func CreateStockGroup(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("Stock creation is in progress")
 
 	token := r.Context().Value("token").(string)
+	permissions := r.Context().Value("permissions").(map[string]int32)
 
-	if !database.HasTokenPermission(token, "canCreateStockGroups") {
+	if permissions["canCreateStockGroups"] != 1 {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return

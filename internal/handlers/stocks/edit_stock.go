@@ -14,11 +14,11 @@ import (
 func EditStock(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Trying to edit a stock")
 
-	token := r.Context().Value("token").(string)
+	permissions := r.Context().Value("permissions").(map[string]int32)
 
-	editNamePerm := database.HasTokenPermission(token, "canEditStockNames")
-	editPricePerm := database.HasTokenPermission(token, "canEditStockPrices")
-	editColorPerm := database.HasTokenPermission(token, "canEditStockColors")
+	editNamePerm := permissions["canEditStockNames"] == 1
+	editPricePerm := permissions["canEditStockPrices"] == 1
+	editColorPerm := permissions["canEditStockColors"] == 1
 
 	if !editPricePerm && !editNamePerm && !editColorPerm {
 		api.InsufficientPermissionHandler(w)

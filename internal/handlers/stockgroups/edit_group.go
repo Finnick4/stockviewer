@@ -11,14 +11,15 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func EditStock(w http.ResponseWriter, r *http.Request) {
+func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Trying to edit a stock group")
 
 	token := r.Context().Value("token").(string)
+	permissions := r.Context().Value("permissions").(map[string]int32)
 
-	editNamePerm := database.HasTokenPermission(token, "canEditStockGroupNames")
-	editDescriptionPerm := database.HasTokenPermission(token, "canEditStockGroupDescriptions")
-	editMembersPerm := database.HasTokenPermission(token, "canEditStockGroupMembers")
+	editNamePerm := permissions["canEditStockGroupNames"] == 1
+	editDescriptionPerm := permissions["canEditStockGroupDescriptions"] == 1
+	editMembersPerm := permissions["canEditStockGroupMembers"] == 1
 
 	if !editNamePerm && !editDescriptionPerm && !editMembersPerm {
 		api.InsufficientPermissionHandler(w)

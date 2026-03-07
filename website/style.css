@@ -250,7 +250,7 @@ div.sidebar a.btn.selected:hover {
     background-color: var(--bg-dark);
     margin: 6rem auto;
     padding: 2rem;
-    width: 70%;
+    width: 40%;
     max-height: calc(100% - 16rem);
     color: var(--text-muted);
     border-radius: var(--border-radius);
