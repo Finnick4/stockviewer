@@ -42,7 +42,7 @@ class stockgroupsMembersList extends HTMLElement {
             html += `<li class="stockOverview"  data-stock-id="${stock["ID"]}">
                             <a class="containing" is="a-button" href="/stocks/${stock["ID"]}">
                                 <div class="identification">
-                                    <div class="change shorthand" style="background-color: ${stockColorMap.get(stock["ID"])}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
+                                    <div class="change shorthand colored" style="background-color: ${stockColorMap.get(stock["ID"])}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
                                     <div class="stockName">${sanitiseText(stock["Name"])}</div>
                                 </div>
                                 <div class="info">

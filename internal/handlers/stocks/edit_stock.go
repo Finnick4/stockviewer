@@ -122,8 +122,20 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if aimPrice && !aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			err = database.SetStockName(params.ID, params.Name)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if aimPrice && !aimShorthand && !aimColor {
@@ -143,8 +155,14 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if !aimPrice && aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if !aimPrice && aimShorthand && !aimColor {
@@ -158,8 +176,14 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if !aimPrice && !aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			err = database.SetStockName(params.ID, params.Name)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if !aimPrice && !aimShorthand && !aimColor {
@@ -174,8 +198,20 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		if aimPrice && aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			err = database.SetStockShorthand(params.ID, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if aimPrice && aimShorthand && !aimColor {
@@ -195,8 +231,14 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if aimPrice && !aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if aimPrice && !aimShorthand && !aimColor {
@@ -210,8 +252,20 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if !aimPrice && aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			err = database.SetStockShorthand(params.ID, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if !aimPrice && aimShorthand && !aimColor {
@@ -225,8 +279,8 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if !aimPrice && !aimShorthand && aimColor {
-			log.Debug("Tries to edit color. This is not yet implemented")
-			api.NotImplementedHandler(w)
+			database.SetStockColor(params.ID, params.Color)
+			success()
 			return
 		}
 		if !aimPrice && !aimShorthand && !aimColor {

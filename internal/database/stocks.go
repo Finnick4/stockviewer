@@ -423,6 +423,23 @@ func SetStockPrices(stocks []StockPrice) {
 	go notifiers.NotifyStockChange()
 }
 
+func SetStockColor(stockID int32, color int32) {
+	db := getDB()
+	var err error
+
+	if color < 0 {
+		_, err = db.Exec(`UPDATE stocks SET color=null WHERE id=$1`, stockID)
+	} else {
+		_, err = db.Exec(`UPDATE stocks SET color=$1 WHERE id=$2`, color, stockID)
+	}
+
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	go notifiers.NotifyStockChange()
+}
+
 // AreActiveStockIDs returns whether all provided IDs are active.
 //
 // If the slice is empty, returns true.

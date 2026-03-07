@@ -116,6 +116,9 @@ div.change.shorthand {
     background-color: var(--bg-light);
     align-self: center;
 }
+div.change.shorthand.colored {
+    color: var(--text);
+}
 div.titlebar div.info div.change.shorthand {
     color: var(--text);
     background-color: var(--bg);
