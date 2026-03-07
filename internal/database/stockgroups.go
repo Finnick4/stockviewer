@@ -100,7 +100,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 	}
 
 	rows, err = db.Query(`	
-	SELECT stocks.name, stocks.id, stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+	SELECT stocks.name, stocks.id, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
     WHEN starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId" THEN 1
     ELSE 0 END)
 	FROM stockgroups
@@ -108,7 +108,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 		JOIN stocks ON stockgroupmembers."stockId" = stocks.id
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
 		LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
-	WHERE stockgroups.id = $2 GROUP BY stocks.name, stocks.id, stockprice.price ORDER BY stocks.id;`, userID, groupID)
+	WHERE stockgroups.id = $2 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID, groupID)
 
 	if err != nil {
 		log.Error(err)
@@ -119,7 +119,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 
 	for rows.Next() {
 		var currentData DetailedStock
-		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price, &currentData.Stars, &currentData.IsStarred)
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return DetailedStockGroup{}, err
@@ -133,7 +133,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 	db := getDB()
 
-	query := `SELECT stocks.id, stocks.name, stockprice.price FROM stocks
+	query := `SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price FROM stocks
 				JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
 				WHERE id IN (`
 	values := []interface{}{}
@@ -157,7 +157,7 @@ func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 
 	for rows.Next() {
 		var currentData DetailedStock
-		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price)
 		if err != nil {
 			log.Error(err)
 			return DetailedStockGroup{}, err

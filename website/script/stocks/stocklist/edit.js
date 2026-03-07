@@ -18,8 +18,11 @@ class stocklistEdit extends HTMLElement {
             const shortPrice = getShortNumber(e["Price"]/100)
             html += `<li class="stockOverview" data-stock-id="${e["ID"]}">
                             <div class="containing" onclick="showEditStockModal(${e["ID"]})">
-                                <div class="stockName">${sanitiseText(e["Name"])}</div>
-                                <div>
+                                <div class="identification">
+                                    <div class="change shorthand">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
+                                    <div class="stockName">${sanitiseText(e["Name"])}</div>
+                                </div>
+                                <div class="info">
                                     <div class="change">${shortPrice}</div>
                                 </div>
                             </div>

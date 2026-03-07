@@ -39,17 +39,13 @@ class stockgroupsMembersList extends HTMLElement {
             const shortPrice = getShortNumber(stock["Price"]/100)
             let colorIndicator = ""
 
-            if (stockColorMap.has(stock["ID"])) {
-                colorIndicator = `<div class="stockColorIndicator" style="background-color: ${stockColorMap.get(stock["ID"])}"></div>`
-            }
-
             html += `<li class="stockOverview"  data-stock-id="${stock["ID"]}">
                             <a class="containing" is="a-button" href="/stocks/${stock["ID"]}">
                                 <div class="identification">
-                                    ${colorIndicator}
+                                    <div class="change shorthand" style="background-color: ${stockColorMap.get(stock["ID"])}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
                                     <div class="stockName">${sanitiseText(stock["Name"])}</div>
                                 </div>
-                                <div>
+                                <div class="info">
                                     <div class="change">#${i + 1}</div>
                                     <div class="change">${shortPrice}</div>
                                     <div class="change">${getShortNumber((stock["Price"]/totalGroupValue)*100)}%</div>

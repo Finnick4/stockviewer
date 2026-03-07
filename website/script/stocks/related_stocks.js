@@ -7,7 +7,7 @@ class relatedStocks extends HTMLElement {
             template += `<li class="stockOverview">
                             <a class="containing" is="a-button" href="/stocks">
                                 <div class="stockName">Loading...</div>
-                                <div>
+                                <div class="info">
                                     <div class="change">???</div>
                                     <div class="change">+???€</div>
                                     <div class="change">???%</div>
@@ -39,8 +39,8 @@ class relatedStocks extends HTMLElement {
         const addNoneElement = () => {
             elements += `<li class="stockOverview">
                         <a class="containing" is="a-button" href="/stocks">
-                            <div class="stockName">None...</div>                       
-                            <div>
+                            <div class="stockName"><div class="change shorthand">????</div> None...</div>                       
+                            <div class="info">
                                 <div class="change">---</div>
                                 <div class="change">--€</div>
                                 <div class="change">--%</div>
@@ -51,8 +51,11 @@ class relatedStocks extends HTMLElement {
         const addComparingElement = (elem) => {
             elements += `<li class="stockOverview">
                         <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
-                            <div class="stockName">${sanitiseText(elem["Name"])}</div>
-                            <div>
+                            <div class="identification">
+                                <div class="change shorthand">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
+                                <div class="stockName">${sanitiseText(elem["Name"])}</div>
+                            </div>
+                            <div class="info">
                                 <div class="change">${getShortNumber(elem["Price"]/100)}</div>
                                 <div class="change">${(elem["Price"] - thisStock["Price"] >= 0 ? "+" : "") + getShortNumber(((elem["Price"] - thisStock["Price"])/100))}</div>
                                 <div class="change">${getShortNumber(((elem["Price"]/thisStock["Price"]) * 100))}%</div>

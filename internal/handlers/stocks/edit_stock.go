@@ -12,7 +12,7 @@ import (
 )
 
 func EditStock(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Trying to edit an article")
+	log.Debug("Trying to edit a stock")
 
 	token := r.Context().Value("token").(string)
 
@@ -77,7 +77,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debugf("Current edit has aims name=%v and price=%v", aimName, aimPrice)
+	log.Debugf("Current edit has aims name=%v, shorthand=%v, color=%v and price=%v", aimName, aimShorthand, aimColor, aimPrice)
 
 	success := func() {
 		var response = api.SuccessResponse{

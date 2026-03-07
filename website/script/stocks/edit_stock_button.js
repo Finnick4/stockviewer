@@ -25,7 +25,7 @@ function showEditStockModal(stockID) {
         const stockPrice = sanitiseText(resp["Data"]["Price"])
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
 
-        let html = `<h2>Edit ${stockName}</h2>
+        let html = `<h2>Edit <div class="change shorthand">${stockShorthand}</div> ${stockName}</h2>
                         <div class="pair">
                             <p>Name</p>
                             <input class="name" type="text" placeholder="Stock name..." value="${sanitiseText(stockName)}">
@@ -48,7 +48,7 @@ function showEditStockModal(stockID) {
 
         const infotxt = modal.querySelector(".info")
         const name = modal.querySelector(`.name`)
-        const shorthand = modal.querySelector(`.shorthand`)
+        const shorthand = modal.querySelector(`input.shorthand`)
         const price = modal.querySelector(`.price`)
 
         let permName = false, permPrice = false
@@ -123,7 +123,7 @@ function showEditStockModal(stockID) {
                         id: Number(stockID),
                         name: permName && name.value !== stockName ? name.value : "",
                         price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
-                        shorthand: permName && shorthand.value !== stockShorthand ? stockShorthand : ""
+                        shorthand: permName && shorthand.value !== stockShorthand ? shorthand.value : ""
                     })
                 }).then(r => {
                     if (r.ok) {

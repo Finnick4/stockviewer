@@ -111,10 +111,22 @@ div.change.creationDate {
     width: 19ch;
     background-color: var(--bg);
 }
+div.change.shorthand {
+    width: 5ch;
+    background-color: var(--bg-light);
+    align-self: center;
+}
+div.titlebar div.info div.change.shorthand {
+    color: var(--text);
+    background-color: var(--bg);
+}
 
-div.titlebar div.info {
+div.info {
     display: flex;
     align-items: center;
+    gap: .5rem;
+    margin: .25rem;
+    color: var(--text);
 }
 div.change.author {
     background-color: var(--bg);
@@ -582,18 +594,12 @@ ul.inner p {
 .stockOverview .identification {
     align-self: center;
     display: flex;
+    gap: .5rem;
+    margin: .25rem;
 }
 
 .stockOverview:hover .stockName {
     color: var(--text);
-}
-.identification .stockColorIndicator {
-    aspect-ratio: 1/1;
-    border-radius: 100%;
-    height: auto;
-    width: 1rem;
-    align-self: center;
-    margin-left: .5rem;
 }
 
 .articlePreview {
@@ -648,7 +654,6 @@ stockgroups-list .change {
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;
     border-radius: var(--border-radius);
-    margin: 1ch 1ch 1ch 0;
     width: 8ch;
     text-align: center;
     transition: var(--bg-transition);
@@ -758,7 +763,6 @@ stock-chart svg line.axis {
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;
     border-radius: var(--border-radius);
-    margin: 1ch 0;
     width: fit-content;
     text-align: center;
     transition: var(--bg-transition);

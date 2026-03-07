@@ -11,7 +11,7 @@ class recentArticlesElement extends HTMLElement {
                 html += `<li class="articlePreview" data-article-id="${e["ID"]}">
                             <a is="a-button" href="/articles/${e["ID"]}">
                                 <div class="title">${sanitiseText(e["Title"])}</div>
-                                <div>
+                                <div class="info">
                                     <div class="change">0 affected</div>
                                 </div>
                             </a>

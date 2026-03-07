@@ -24,7 +24,7 @@ class stockgroupsList extends HTMLElement {
             html += `<li class="stockOverview"  data-stock-group-id="${e["ID"]}">
                             <a class="containing" is="a-button" href="/groups/${e["ID"]}">
                                 <div class="stockName">${sanitiseText(e["Name"])}</div>
-                                <div>
+                                <div class="info">
                                     <div class="change">${getShortNumber(e["TotalValue"]/100)}</div>
                                     <div class="change">${e["MemberCount"]} stocks</div>
                                 </div>

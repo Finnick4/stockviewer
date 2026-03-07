@@ -201,7 +201,7 @@ func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, name, shorthand, color, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS avrg
+	rows, err := db.Query(`SELECT id, name, shorthand, COALESCE(color, -1), d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS avrg
 		FROM stockprice sp
 		WHERE stocks.id = stockid
 		GROUP BY bucket
@@ -304,6 +304,7 @@ func SetStockName(id int32, name string) error {
 }
 
 func SetStockShorthand(id int32, shorthand string) error {
+	log.Debugf("Trying to set shorthand of stock %v to %v", id, shorthand)
 	db := getDB()
 
 	_, err := db.Exec(`UPDATE stocks SET shorthand=$1 WHERE id=$2`, shorthand, id)

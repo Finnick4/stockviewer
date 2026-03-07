@@ -4,8 +4,9 @@ class stockHeader extends HTMLElement {
 
         this.innerHTML = `
                         <div class="titlebar">
-                            <div>
+                            <div class="info">
                                 <div class="change price">???€</div>
+                                <div class="change shorthand">?????</div>
                             </div>
                             <h1>Loading name...</h1>
                             <nav>
@@ -24,6 +25,7 @@ class stockHeader extends HTMLElement {
         console.log(data)
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         that.querySelector("div.price").innerHTML = getLocaleString(data["Price"]/100) + "€"
+        that.querySelector("div.shorthand").innerHTML = sanitiseText(data["Shorthand"]).toUpperCase()
         that.querySelector("nav button.star").updateStatus(data["IsStarred"])
     }
 }
