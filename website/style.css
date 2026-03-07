@@ -806,3 +806,23 @@ div.piechart {
 .disabled {
     cursor: not-allowed;
 }
+
+.dropdown div.colorDisplayRow {
+    display: flex;
+    height: 2rem;
+    justify-content: space-evenly;
+    gap: .5rem;
+    margin: .25rem 0;
+}
+.dropdown div.colorDisplayRow div.colorDisplay {
+    width: 100%;
+    border-radius: var(--border-radius);
+}
+.dropdown div.colorDisplayRow div.colorDisplay:hover {
+    box-shadow: var(--button-hover-shadow);
+}
+color-selector button.selector {
+    font-family: Ubuntu, sans-serif;
+    font-size: 16px;
+    width: 34ch;
+}

@@ -25,7 +25,7 @@ class stocklistDelta extends HTMLElement {
             html += `<li class="stockOverview"  data-stock-id="${e["ID"]}">
                             <a class="containing" is="a-button" href="/stocks/${e["ID"]}">
                                 <div class="identification">
-                                    <div class="change shorthand">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
+                                    <div class="change shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
                                     <div class="stockName">${sanitiseText(e["Name"])}</div>
                                 </div>
                                 <div class="info ${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">

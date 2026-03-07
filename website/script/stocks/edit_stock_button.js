@@ -24,8 +24,9 @@ function showEditStockModal(stockID) {
         const stockName = sanitiseText(resp["Data"]["Name"])
         const stockPrice = sanitiseText(resp["Data"]["Price"])
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
+        const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
-        let html = `<h2>Edit <div class="change shorthand">${stockShorthand}</div> ${stockName}</h2>
+        let html = `<h2>Edit ${stockName} <div class="change shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
                         <div class="pair">
                             <p>Name</p>
                             <input class="name" type="text" placeholder="Stock name..." value="${sanitiseText(stockName)}">
@@ -33,6 +34,10 @@ function showEditStockModal(stockID) {
                         <div class="pair">
                             <p>Shorthand</p>
                             <input class="shorthand" type="text" placeholder="Shorthand..." value="${sanitiseText(stockShorthand)}">
+                        </div>
+                        <div class="pair">
+                            <p>Color</p>
+                            <color-selector data-color="${stockColorHex}"></color-selector>
                         </div>
                         <div class="pair">
                             <p>Price (ct)</p>
@@ -49,12 +54,12 @@ function showEditStockModal(stockID) {
         const infotxt = modal.querySelector(".info")
         const name = modal.querySelector(`.name`)
         const shorthand = modal.querySelector(`input.shorthand`)
+        const color = modal.querySelector(`color-selector`)
         const price = modal.querySelector(`.price`)
 
-        let permName = false, permPrice = false
+        let permName = false, permPrice = false, permColor = false
 
         userInformation.writePermission("canEditStockNames", perm => {
-            console.log(perm)
             if (perm !== 1) {
                 name.readOnly = true
             } else {
@@ -62,11 +67,17 @@ function showEditStockModal(stockID) {
             }
         })
         userInformation.writePermission("canEditStockPrices", perm => {
-            console.log(perm)
             if (perm !== 1) {
                 price.readOnly = true
             } else {
                 permPrice = true
+            }
+        })
+        userInformation.writePermission("canEditStockColors", perm => {
+            if (perm !== 1) {
+                color.readOnly = true
+            } else {
+                permColor = true
             }
         })
 
@@ -117,12 +128,15 @@ function showEditStockModal(stockID) {
 
         modal.querySelector(`.submit`).addEventListener("click", () => {
             if (validate()) {
+                console.log("Setting color as:")
+                console.log(permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0)
                 fetch(`${window.location.origin}/api/stocks`, {
                     method: "PATCH",
                     body: JSON.stringify({
                         id: Number(stockID),
                         name: permName && name.value !== stockName ? name.value : "",
                         price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
+                        color: permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0,
                         shorthand: permName && shorthand.value !== stockShorthand ? shorthand.value : ""
                     })
                 }).then(r => {

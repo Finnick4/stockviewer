@@ -39,7 +39,10 @@ class relatedStocks extends HTMLElement {
         const addNoneElement = () => {
             elements += `<li class="stockOverview">
                         <a class="containing" is="a-button" href="/stocks">
-                            <div class="stockName"><div class="change shorthand">????</div> None...</div>                       
+                            <div class="identification">
+                                <div class="change shorthand">?????</div>
+                                <div class="stockName">None...</div>
+                            </div>
                             <div class="info">
                                 <div class="change">---</div>
                                 <div class="change">--€</div>
@@ -49,10 +52,11 @@ class relatedStocks extends HTMLElement {
                     </li>`
         }
         const addComparingElement = (elem) => {
+            console.log(Number(elem["Color"]).toString(16))
             elements += `<li class="stockOverview">
                         <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
                             <div class="identification">
-                                <div class="change shorthand">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
+                                <div class="change shorthand ${Number(elem["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(elem["Color"])}">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
                                 <div class="stockName">${sanitiseText(elem["Name"])}</div>
                             </div>
                             <div class="info">

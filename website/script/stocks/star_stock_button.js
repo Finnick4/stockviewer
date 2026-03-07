@@ -8,10 +8,6 @@ class starStockButtonElement extends HTMLButtonElement {
         this.stockid = Number(this.dataset.stockId)
         this.isStarred = this.dataset.isStarred === "true"
 
-        this.modalhtml = `
-            <h1>This is not yet implemented!</h1>
-            <p>In the future you will be able to star stock ${this.stockid} with this button!</p>
-        `
         this.classList.add("star")
         this.onclick = () => {
             const isStarred = this.isStarred

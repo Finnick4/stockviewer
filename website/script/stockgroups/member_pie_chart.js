@@ -66,10 +66,12 @@ class stockgroupsMemberPieChart extends HTMLElement {
             if (to > 360) {
                 to = 360
             }
-            css += `${getColor(i)} ${from}deg ${to}deg,`
+            const col = Number(stock["Color"]) === -1 ? getColor(i) : "#" + getHexColor(Number(stock["Color"]))
+
+            css += `${col} ${from}deg ${to}deg,`
             from = to
 
-            that.stockColorMap.set(stock["ID"], getColor(i))
+            that.stockColorMap.set(stock["ID"], col)
         })
 
         that.pie.style.cssText = `background: conic-gradient(${css.substring(0, css.length - 1)})`

@@ -12,6 +12,10 @@ function showModalCreateStock(elem) {
                             <p>Shorthand</p>
                             <input class="shorthand" type="text" placeholder="Shorthand...">
                         </div>
+                         <div class="pair">
+                            <p>Color</p>
+                            <color-selector data-color="-1"></color-selector>
+                        </div>
                         <div class="pair">
                             <p>Initial price (ct)</p>
                             <input class="price" type="number">
@@ -28,6 +32,7 @@ function showModalCreateStock(elem) {
     const infotxt = modal.querySelector(".info")
     const name = modal.querySelector(`.name`)
     const shorthand = modal.querySelector(`.shorthand`)
+    const color = modal.querySelector(`color-selector`)
     const price = modal.querySelector(`.price`)
 
     userInformation.writePermission("canCreateStocks", perm => {
@@ -83,7 +88,7 @@ function showModalCreateStock(elem) {
 
     modal.querySelector(".submit").addEventListener("click", () => {
         if (validate()) {
-            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}`, {
+            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}&color=${Number(parseInt(color.color, 16))}`, {
                 method: "POST"
             }).then(r => {
                 if (r.ok) {

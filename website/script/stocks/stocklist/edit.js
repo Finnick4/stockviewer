@@ -19,7 +19,7 @@ class stocklistEdit extends HTMLElement {
             html += `<li class="stockOverview" data-stock-id="${e["ID"]}">
                             <div class="containing" onclick="showEditStockModal(${e["ID"]})">
                                 <div class="identification">
-                                    <div class="change shorthand">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
+                                    <div class="change shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
                                     <div class="stockName">${sanitiseText(e["Name"])}</div>
                                 </div>
                                 <div class="info">
