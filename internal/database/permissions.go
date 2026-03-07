@@ -14,6 +14,7 @@ func resetAdminPermissions() {
 	permissions := []Permission{
 		Permission{Permission: "canCreateStocks", Value: 1},
 		Permission{Permission: "canEditStockNames", Value: 1},
+		Permission{Permission: "canEditStockColors", Value: 1},
 		Permission{Permission: "canEditStockPrices", Value: 1},
 		Permission{Permission: "canArchiveStocks", Value: 1},
 		Permission{Permission: "isStockArchivist", Value: 1},

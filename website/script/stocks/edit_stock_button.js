@@ -23,7 +23,7 @@ function showEditStockModal(stockID) {
     fetch(`/api/stocks?id=${stockID}`).then(r => r.json()).then(resp => {
         const stockName = sanitiseText(resp["Data"]["Name"])
         const stockPrice = sanitiseText(resp["Data"]["Price"])
-        const stockShorthand = ""
+        const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
 
         let html = `<h2>Edit ${stockName}</h2>
                         <div class="pair">

@@ -1,6 +1,8 @@
 package database
 
-import "time"
+import (
+	"time"
+)
 
 type DetailedStock struct {
 	ID        int32
@@ -9,6 +11,7 @@ type DetailedStock struct {
 	Price     int64
 	Stars     int32
 	IsStarred bool
+	Color     int32
 }
 
 type StockPrice struct {
@@ -30,6 +33,8 @@ type Timeframe struct {
 type PriceDelta struct {
 	ID           int64
 	Name         string
+	Shorthand    string
+	Color        int32
 	Price1       int64
 	Price2       int64
 	DeltaAmount  int64

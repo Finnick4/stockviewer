@@ -110,8 +110,11 @@ var (
 	RequestNothingFoundHandler = func(w http.ResponseWriter, msg string) {
 		writeError(w, msg, http.StatusNotFound)
 	}
+	NotImplementedHandler = func(w http.ResponseWriter) {
+		writeError(w, "This is not yet implemented!", http.StatusNotImplemented)
+	}
 	InternalErrorHandler = func(w http.ResponseWriter) {
-		writeError(w, "An Unexpected Error Occured.", http.StatusInternalServerError)
+		writeError(w, "An Unexpected Error occurred.", http.StatusInternalServerError)
 	}
 	RequestUnauthorisedHandler = func(w http.ResponseWriter) {
 		writeError(w, "The request is unauthorised. Please use a token or generate one with the correct name and password!", http.StatusUnauthorized)

@@ -54,16 +54,16 @@ func GetStockInfo(id int32, userID string) (DetailedStock, error) {
 	db := getDB()
 
 	resp := db.QueryRow(`
-	SELECT stocks.name, stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+	SELECT stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
     WHEN starredstocks."userId" = $1 THEN 1
     ELSE 0 END)
 FROM stocks
          JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid
          LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
-WHERE stocks.id=$2 GROUP BY stocks.name, stockprice.price;`, userID, id)
+WHERE stocks.id=$2 GROUP BY stocks.name, stocks.shorthand, stocks.color, stockprice.price;`, userID, id)
 	var data DetailedStock
 	var isStarred int32
-	err := resp.Scan(&data.Name, &data.Price, &data.Stars, &isStarred)
+	err := resp.Scan(&data.Name, &data.Shorthand, &data.Color, &data.Price, &data.Stars, &isStarred)
 	data.ID = id
 	data.IsStarred = isStarred == 1
 
@@ -106,13 +106,13 @@ func GetCurrentStockInformation(userID string) ([]DetailedStock, error) {
 	db := getDB()
 
 	rows, err := db.Query(`
-SELECT stocks.id, stocks.name, stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
     WHEN starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId" THEN 1
     ELSE 0 END)
 FROM stocks
     JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate"
     LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
-GROUP BY stocks.id, stocks.name, stockprice.price ORDER BY stocks.id;`, userID)
+GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
 
 	if err != nil {
 		log.Error(err)
@@ -125,7 +125,7 @@ GROUP BY stocks.id, stocks.name, stockprice.price ORDER BY stocks.id;`, userID)
 	for rows.Next() {
 		var currentData DetailedStock
 		var isStarred int32
-		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Price, &currentData.Stars, &isStarred)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars, &isStarred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -201,7 +201,7 @@ func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, name, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS avrg
+	rows, err := db.Query(`SELECT id, name, shorthand, color, d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS avrg
 		FROM stockprice sp
 		WHERE stocks.id = stockid
 		GROUP BY bucket
@@ -220,7 +220,7 @@ func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
 
 	for rows.Next() {
 		var price float64
-		err = rows.Scan(&currentData.ID, &currentData.Name, &price)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &price)
 
 		if err != nil {
 			log.Error(err)
@@ -262,10 +262,10 @@ func GetStarredStocks(userID string) (DetailedStockGroup, error) {
 	db := getDB()
 
 	rows, err := db.Query(`	
-	SELECT stocks.name, stocks.id, stockprice.price, (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count FROM stocks
+	SELECT stocks.name, stocks.id, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count FROM stocks
 		JOIN starredstocks ON stocks.id = starredstocks."stockId"
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stockprice.price ORDER BY stocks.id;`, userID)
+	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
 
 	defer rows.Close()
 
@@ -278,7 +278,7 @@ func GetStarredStocks(userID string) (DetailedStockGroup, error) {
 
 	for rows.Next() {
 		var currentData DetailedStock
-		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Price, &currentData.Stars)
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars)
 		if err != nil {
 			log.Error(err)
 			return DetailedStockGroup{}, err
@@ -294,6 +294,32 @@ func SetStockName(id int32, name string) error {
 	db := getDB()
 
 	_, err := db.Exec(`UPDATE stocks SET name=$1 WHERE id=$2`, name, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	go notifiers.NotifyStockChange()
+	return nil
+}
+
+func SetStockShorthand(id int32, shorthand string) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stocks SET shorthand=$1 WHERE id=$2`, shorthand, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	go notifiers.NotifyStockChange()
+	return nil
+}
+
+func SetStockNameAndShorthand(id int32, name string, shorthand string) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stocks SET name=$1, shorthand=$2 WHERE id=$3`, name, shorthand, id)
 
 	if err != nil {
 		log.Error(err)
@@ -335,7 +361,11 @@ func UpdateCompleteStock(stock DetailedStock) error {
 		return err
 	}
 
-	_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1, name=$2 WHERE id=$3`, currentTimeStamp, stock.Name, stock.ID)
+	if stock.Color < 0 {
+		_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1, name=$2, color=null WHERE id=$3`, currentTimeStamp, stock.Name, stock.ID)
+	} else {
+		_, err = db.Exec(`UPDATE stocks SET "latestUpdate"=$1, name=$2, color=$3 WHERE id=$4`, currentTimeStamp, stock.Name, stock.Color, stock.ID)
+	}
 
 	if err != nil {
 		log.Error(err)

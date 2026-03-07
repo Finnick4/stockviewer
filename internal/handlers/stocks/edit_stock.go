@@ -18,8 +18,9 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 
 	editNamePerm := database.HasTokenPermission(token, "canEditStockNames")
 	editPricePerm := database.HasTokenPermission(token, "canEditStockPrices")
+	editColorPerm := database.HasTokenPermission(token, "canEditStockColors")
 
-	if !editPricePerm && !editNamePerm {
+	if !editPricePerm && !editNamePerm && !editColorPerm {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return
@@ -44,13 +45,20 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 
 	aimPrice := params.Price != 0
 	aimName := params.Name != ""
+	aimShorthand := params.Shorthand != ""
+	aimColor := params.Color != 0
 
 	if aimPrice && !editPricePerm {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return
 	}
-	if aimName && !editNamePerm {
+	if (aimName || aimShorthand) && !editNamePerm {
+		api.InsufficientPermissionHandler(w)
+		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
+		return
+	}
+	if aimColor && !editColorPerm {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return
@@ -86,41 +94,145 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if aimName && !aimPrice {
-		err = database.SetStockName(params.ID, params.Name)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Error(err)
+	if aimName {
+		if aimPrice && aimShorthand && aimColor {
+			err = database.UpdateCompleteStock(params)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
 			return
 		}
-		success()
-		return
-	}
-	if aimPrice && !aimName {
-		err = database.SetStockPrice(params.ID, params.Price)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Error(err)
+		if aimPrice && aimShorthand && !aimColor {
+			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
 			return
 		}
-		success()
-		return
-	}
-
-	if aimPrice && aimName {
-		err = database.UpdateCompleteStock(params)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Error(err)
+		if aimPrice && !aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
 			return
 		}
-		success()
-		return
-	}
-
-	if !aimName && !aimPrice {
-		log.Debug("Could not identify what to edit")
-		api.RequestMalformedHandler(w, "Could not identify what to edit")
-		return
+		if aimPrice && !aimShorthand && !aimColor {
+			err = database.SetStockName(params.ID, params.Name)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
+			return
+		}
+		if !aimPrice && aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
+			return
+		}
+		if !aimPrice && aimShorthand && !aimColor {
+			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
+			return
+		}
+		if !aimPrice && !aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
+			return
+		}
+		if !aimPrice && !aimShorthand && !aimColor {
+			err = database.SetStockName(params.ID, params.Name)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
+			return
+		}
+	} else {
+		if aimPrice && aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
+			return
+		}
+		if aimPrice && aimShorthand && !aimColor {
+			err = database.SetStockShorthand(params.ID, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
+			return
+		}
+		if aimPrice && !aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
+			return
+		}
+		if aimPrice && !aimShorthand && !aimColor {
+			err = database.SetStockPrice(params.ID, params.Price)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
+			return
+		}
+		if !aimPrice && aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
+			return
+		}
+		if !aimPrice && aimShorthand && !aimColor {
+			err = database.SetStockShorthand(params.ID, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
+			success()
+			return
+		}
+		if !aimPrice && !aimShorthand && aimColor {
+			log.Debug("Tries to edit color. This is not yet implemented")
+			api.NotImplementedHandler(w)
+			return
+		}
+		if !aimPrice && !aimShorthand && !aimColor {
+			log.Debug("Could not identify what to edit")
+			api.RequestMalformedHandler(w, "Could not identify what to edit")
+			return
+		}
 	}
 }
