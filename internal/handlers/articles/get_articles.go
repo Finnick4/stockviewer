@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 
 	"github.com/gorilla/schema"
@@ -14,7 +15,7 @@ import (
 func GetArticles(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("Getting articles")
 
-	var params = api.ArticleGetParams{}
+	var params = dto.ArticleGetParams{}
 
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error

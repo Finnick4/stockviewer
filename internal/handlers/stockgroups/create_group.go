@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
@@ -23,7 +24,7 @@ func CreateStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = api.StockGroupCreateParams{}
+	var params = dto.StockGroupCreateParams{}
 
 	// get parameters
 	err := json.NewDecoder(r.Body).Decode(&params)

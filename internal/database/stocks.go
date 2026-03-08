@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"stockviewer/dto"
 	"stockviewer/internal/notifiers"
 	"strconv"
 	"strings"
@@ -50,7 +51,7 @@ func CreateStock(name string, shorthand string, initPrice int64, creatorID strin
 }
 
 // GetStockInfo returns the current name and price of a stock of the given ID
-func GetStockInfo(id int32, userID string) (DetailedStock, error) {
+func GetStockInfo(id int32, userID string) (dto.DetailedStock, error) {
 	db := getDB()
 
 	resp := db.QueryRow(`
@@ -61,7 +62,7 @@ FROM stocks
          JOIN stockprice ON stocks."latestUpdate"=stockprice.timestamp AND stocks.id=stockprice.stockid
          LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
 WHERE stocks.id=$2 GROUP BY stocks.name, stocks.shorthand, stocks.color, stockprice.price;`, userID, id)
-	var data DetailedStock
+	var data dto.DetailedStock
 	var isStarred int32
 	err := resp.Scan(&data.Name, &data.Shorthand, &data.Color, &data.Price, &data.Stars, &isStarred)
 	data.ID = id
@@ -69,13 +70,13 @@ WHERE stocks.id=$2 GROUP BY stocks.name, stocks.shorthand, stocks.color, stockpr
 
 	if err != nil {
 		log.Error(err)
-		return DetailedStock{}, err
+		return dto.DetailedStock{}, err
 	}
 	return data, nil
 }
 
 // GetStockPrices returns all stock IDs and their respective current price
-func GetStockPrices() ([]StockPrice, error) {
+func GetStockPrices() ([]dto.StockPrice, error) {
 	db := getDB()
 
 	log.Debug("Getting all current stock prices")
@@ -87,10 +88,10 @@ func GetStockPrices() ([]StockPrice, error) {
 	}
 	defer rows.Close()
 
-	var data []StockPrice
+	var data []dto.StockPrice
 
 	for rows.Next() {
-		var currentData StockPrice
+		var currentData dto.StockPrice
 		err = rows.Scan(&currentData.ID, &currentData.Price)
 		if err != nil {
 			log.Error(err)
@@ -102,7 +103,7 @@ func GetStockPrices() ([]StockPrice, error) {
 }
 
 // GetCurrentStockInformation queries all stocks for their ID, name and current price
-func GetCurrentStockInformation(userID string) ([]DetailedStock, error) {
+func GetCurrentStockInformation(userID string) ([]dto.DetailedStock, error) {
 	db := getDB()
 
 	rows, err := db.Query(`
@@ -120,10 +121,10 @@ GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.pric
 	}
 	defer rows.Close()
 
-	var data []DetailedStock
+	var data []dto.DetailedStock
 
 	for rows.Next() {
-		var currentData DetailedStock
+		var currentData dto.DetailedStock
 		var isStarred int32
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars, &isStarred)
 		if err != nil {
@@ -137,7 +138,7 @@ GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.pric
 }
 
 // GetStockPriceHistory gets the price history of a given stock in the given timeframe
-func GetStockPriceHistory(id int32, timeframe Timeframe) ([]StockPriceTime, error) {
+func GetStockPriceHistory(id int32, timeframe dto.Timeframe) ([]dto.StockPriceTime, error) {
 	log.Debugf("Getting history of stock %v in timeframe %v", id, timeframe)
 
 	db := getDB()
@@ -146,14 +147,14 @@ func GetStockPriceHistory(id int32, timeframe Timeframe) ([]StockPriceTime, erro
 		FROM stockprice
 		WHERE stockid = $2
 		GROUP BY bucket
-		ORDER BY bucket DESC LIMIT $3;`, timeframe.bucketWidth, id, timeframe.count)
+		ORDER BY bucket DESC LIMIT $3;`, timeframe.BucketWidth(), id, timeframe.Count())
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	defer rows.Close()
 
-	data := make([]StockPriceTime, 0, timeframe.count)
+	data := make([]dto.StockPriceTime, 0, timeframe.Count())
 
 	for rows.Next() {
 		var ts time.Time
@@ -164,7 +165,7 @@ func GetStockPriceHistory(id int32, timeframe Timeframe) ([]StockPriceTime, erro
 			log.Error(err)
 			return nil, err
 		}
-		data = append(data, StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
+		data = append(data, dto.StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
 	}
 	return data, nil
 }
@@ -196,7 +197,7 @@ func GetActiveStockIds() ([]int32, error) {
 	return data, nil
 }
 
-func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
+func GetStocksPriceDelta(tf dto.Timeframe) ([]dto.PriceDelta, error) {
 	log.Debugf("Getting all stocks deltas in timeframe %v", tf)
 
 	db := getDB()
@@ -206,16 +207,16 @@ func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
 		WHERE stocks.id = stockid
 		GROUP BY bucket
 		ORDER BY bucket DESC LIMIT 2) d ON true
-		ORDER BY id;`, tf.totalWidth)
+		ORDER BY id;`, tf.TotalWidth())
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	defer rows.Close()
 	// new - old - new - old
-	var data []PriceDelta
+	var data []dto.PriceDelta
 	var i = 1
-	var currentData PriceDelta
+	var currentData dto.PriceDelta
 	var currentID int64
 
 	for rows.Next() {
@@ -258,7 +259,7 @@ func GetStocksPriceDelta(tf Timeframe) ([]PriceDelta, error) {
 	return data, nil
 }
 
-func GetStarredStocks(userID string) (DetailedStockGroup, error) {
+func GetStarredStocks(userID string) (dto.DetailedStockGroup, error) {
 	db := getDB()
 
 	rows, err := db.Query(`	
@@ -271,23 +272,23 @@ func GetStarredStocks(userID string) (DetailedStockGroup, error) {
 
 	if err != nil {
 		log.Error(err)
-		return DetailedStockGroup{}, err
+		return dto.DetailedStockGroup{}, err
 	}
 
-	var data []DetailedStock
+	var data []dto.DetailedStock
 
 	for rows.Next() {
-		var currentData DetailedStock
+		var currentData dto.DetailedStock
 		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars)
 		if err != nil {
 			log.Error(err)
-			return DetailedStockGroup{}, err
+			return dto.DetailedStockGroup{}, err
 		}
 		currentData.IsStarred = true
 		data = append(data, currentData)
 	}
 
-	return DetailedStockGroup{ID: -1, Name: "Starred Stocks", Description: "All stocks that you have starred!", Members: data}, nil
+	return dto.DetailedStockGroup{ID: -1, Name: "Starred Stocks", Description: "All stocks that you have starred!", Members: data}, nil
 }
 
 func SetStockName(id int32, name string) error {
@@ -351,7 +352,7 @@ func SetStockPrice(id int32, price int64) error {
 	return nil
 }
 
-func UpdateCompleteStock(stock DetailedStock) error {
+func UpdateCompleteStock(stock dto.DetailedStock) error {
 	db := getDB()
 
 	currentTimeStamp := time.Now()
@@ -377,7 +378,7 @@ func UpdateCompleteStock(stock DetailedStock) error {
 }
 
 // SetStockPrices creates a new price entry at the current time for all provided stocks with the given price. Furthermore, this entry is also set to be the current price.
-func SetStockPrices(stocks []StockPrice) {
+func SetStockPrices(stocks []dto.StockPrice) {
 	log.Debug("Setting new stock prices")
 	currentTimeStamp := time.Now()
 

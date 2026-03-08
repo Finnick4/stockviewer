@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/handlers/sse"
 
@@ -21,7 +22,7 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	var params = api.StockGetParams{}
+	var params = dto.StockGetParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
@@ -38,9 +39,9 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 	var send func() error
 
 	if params.ID > 0 {
-		if database.IsValidTimeframeScope(params.Timeframe) {
+		if dto.IsValidTimeframeScope(params.Timeframe) {
 			send = func() error {
-				history, err := database.GetStockPriceHistory(params.ID, database.GenerateTimeframe(params.Timeframe))
+				history, err := database.GetStockPriceHistory(params.ID, dto.GenerateTimeframe(params.Timeframe))
 				if err != nil {
 					return err
 				}
@@ -83,9 +84,9 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		if database.IsValidTimeframeScope(params.Timeframe) {
+		if dto.IsValidTimeframeScope(params.Timeframe) {
 			send = func() error {
-				deltas, err := database.GetStocksPriceDelta(database.GenerateTimeframe(params.Timeframe))
+				deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe))
 				if err != nil {
 					return err
 				}

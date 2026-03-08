@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 
 	log "github.com/sirupsen/logrus"
@@ -15,7 +16,7 @@ func StarStock(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	var params = api.StockStarParams{}
+	var params = dto.StockStarParams{}
 
 	defer r.Body.Close()
 

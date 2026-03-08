@@ -3,6 +3,7 @@ package stocks
 import (
 	"encoding/json"
 	"net/http"
+	"stockviewer/dto"
 	"stockviewer/internal/utilities"
 	"strconv"
 	"time"
@@ -29,7 +30,7 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = api.StockCreateParams{}
+	var params = dto.StockCreateParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 

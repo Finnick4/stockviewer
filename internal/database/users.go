@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"stockviewer/dto"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -96,8 +97,8 @@ func GetUserTagFromToken(token string) string {
 }
 
 // GetUserNameAndTagFromToken returns the name and tag of the user that bears the given token.
-func GetUserNameAndTagFromToken(token string) (UserIdentification, error) {
-	var info UserIdentification
+func GetUserNameAndTagFromToken(token string) (dto.UserIdentification, error) {
+	var info dto.UserIdentification
 	db := getDB()
 	rows, err := db.Query(`SELECT tag, "displayName", id FROM users WHERE id = (SELECT userid FROM sessions WHERE token = $1)`, hash512(token))
 	if err != nil {

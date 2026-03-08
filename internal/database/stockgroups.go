@@ -2,13 +2,14 @@ package database
 
 import (
 	"database/sql"
+	"stockviewer/dto"
 	"stockviewer/internal/notifiers"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
 
-func GetAllStockGroups() ([]StockGroupOverview, error) {
+func GetAllStockGroups() ([]dto.StockGroupOverview, error) {
 	log.Debug("Getting all stock groups")
 
 	db := getDB()
@@ -33,10 +34,10 @@ func GetAllStockGroups() ([]StockGroupOverview, error) {
 
 	defer rowsMembers.Close()
 
-	var data []StockGroupOverview
+	var data []dto.StockGroupOverview
 
 	for rowsName.Next() {
-		var currentData StockGroupOverview
+		var currentData dto.StockGroupOverview
 		err = rowsName.Scan(&currentData.Name, &currentData.ID)
 		if err != nil {
 			log.Error(err)
@@ -65,7 +66,7 @@ func GetAllStockGroups() ([]StockGroupOverview, error) {
 	return data, nil
 }
 
-func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, error) {
+func GetDetailedStockGroup(userID string, groupID int32) (dto.DetailedStockGroup, error) {
 	log.Debugf("Getting stock group %v", groupID)
 
 	if groupID == -1 {
@@ -78,7 +79,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 
 	if err != nil {
 		log.Error(err)
-		return DetailedStockGroup{}, err
+		return dto.DetailedStockGroup{}, err
 	}
 
 	defer rows.Close()
@@ -90,13 +91,13 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 		err = rows.Scan(&name, &descr)
 		if err != nil {
 			log.Error(err)
-			return DetailedStockGroup{}, err
+			return dto.DetailedStockGroup{}, err
 		}
 	}
 
 	err = rows.Close()
 	if err != nil {
-		return DetailedStockGroup{}, err
+		return dto.DetailedStockGroup{}, err
 	}
 
 	rows, err = db.Query(`	
@@ -112,25 +113,25 @@ func GetDetailedStockGroup(userID string, groupID int32) (DetailedStockGroup, er
 
 	if err != nil {
 		log.Error(err)
-		return DetailedStockGroup{}, err
+		return dto.DetailedStockGroup{}, err
 	}
 
-	var data []DetailedStock
+	var data []dto.DetailedStock
 
 	for rows.Next() {
-		var currentData DetailedStock
+		var currentData dto.DetailedStock
 		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
-			return DetailedStockGroup{}, err
+			return dto.DetailedStockGroup{}, err
 		}
 		data = append(data, currentData)
 	}
 
-	return DetailedStockGroup{ID: groupID, Name: name, Description: descr, Members: data}, nil
+	return dto.DetailedStockGroup{ID: groupID, Name: name, Description: descr, Members: data}, nil
 }
 
-func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
+func GetAnonymousStockGroup(stockIDs []int32) (dto.DetailedStockGroup, error) {
 	db := getDB()
 
 	query := `SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price FROM stocks
@@ -148,27 +149,27 @@ func GetAnonymousStockGroup(stockIDs []int32) (DetailedStockGroup, error) {
 
 	if err != nil {
 		log.Error(err)
-		return DetailedStockGroup{}, err
+		return dto.DetailedStockGroup{}, err
 	}
 
 	defer rows.Close()
 
-	var data []DetailedStock
+	var data []dto.DetailedStock
 
 	for rows.Next() {
-		var currentData DetailedStock
+		var currentData dto.DetailedStock
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price)
 		if err != nil {
 			log.Error(err)
-			return DetailedStockGroup{}, err
+			return dto.DetailedStockGroup{}, err
 		}
 		data = append(data, currentData)
 	}
 
-	return DetailedStockGroup{Members: data}, nil
+	return dto.DetailedStockGroup{Members: data}, nil
 }
 
-func GetAllGroupsWithMemberStockID(stockID int32) ([]StockGroupOverview, error) {
+func GetAllGroupsWithMemberStockID(stockID int32) ([]dto.StockGroupOverview, error) {
 	log.Debugf("Getting all stock groups, %v is in", stockID)
 	db := getDB()
 
@@ -191,10 +192,10 @@ GROUP BY stockgroups.id ORDER BY stockgroups.id;`, stockID)
 
 	defer rows.Close()
 
-	var data []StockGroupOverview
+	var data []dto.StockGroupOverview
 
 	for rows.Next() {
-		var currentData StockGroupOverview
+		var currentData dto.StockGroupOverview
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.TotalValue, &currentData.MemberCount)
 		if err != nil {
 			log.Error(err)

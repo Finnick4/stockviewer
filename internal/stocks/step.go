@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 	"slices"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"time"
 
@@ -26,7 +27,7 @@ func Step() {
 		return
 	}
 
-	newStocks := make([]database.StockPrice, 0, len(stocks))
+	newStocks := make([]dto.StockPrice, 0, len(stocks))
 
 	ids, err := database.GetActiveStockIds()
 
@@ -37,7 +38,7 @@ func Step() {
 
 	log.Debugf("Following ids are stepped: %v", ids)
 
-	stock := new(database.StockPrice)
+	stock := new(dto.StockPrice)
 
 	t2 := time.Now()
 	for _, val := range stocks {

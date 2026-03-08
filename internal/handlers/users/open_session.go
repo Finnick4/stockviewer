@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
@@ -11,7 +12,7 @@ import (
 )
 
 func LoginSession(w http.ResponseWriter, r *http.Request) {
-	var params = api.UserLoginParams{}
+	var params = dto.UserLoginParams{}
 	defer r.Body.Close()
 
 	err := json.NewDecoder(r.Body).Decode(&params)

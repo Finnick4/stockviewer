@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
@@ -27,7 +28,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = api.StockGroupEditParams{}
+	var params = dto.StockGroupEditParams{}
 
 	defer r.Body.Close()
 

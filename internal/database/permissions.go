@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"math"
+	"stockviewer/dto"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -11,30 +12,30 @@ import (
 func resetAdminPermissions() {
 	id := GetUserIDFromTag("admin")
 
-	permissions := []Permission{
-		Permission{Permission: "canCreateStocks", Value: 1},
-		Permission{Permission: "canEditStockNames", Value: 1},
-		Permission{Permission: "canEditStockColors", Value: 1},
-		Permission{Permission: "canEditStockPrices", Value: 1},
-		Permission{Permission: "canArchiveStocks", Value: 1},
-		Permission{Permission: "isStockArchivist", Value: 1},
-		Permission{Permission: "canDisableStocks", Value: 1},
+	permissions := []dto.Permission{
+		dto.Permission{Permission: "canCreateStocks", Value: 1},
+		dto.Permission{Permission: "canEditStockNames", Value: 1},
+		dto.Permission{Permission: "canEditStockColors", Value: 1},
+		dto.Permission{Permission: "canEditStockPrices", Value: 1},
+		dto.Permission{Permission: "canArchiveStocks", Value: 1},
+		dto.Permission{Permission: "isStockArchivist", Value: 1},
+		dto.Permission{Permission: "canDisableStocks", Value: 1},
 
-		Permission{Permission: "canCreateUsers", Value: 1},
-		Permission{Permission: "canEditUserPermissions", Value: 1},
-		Permission{Permission: "canEditUserName", Value: 1},
-		Permission{Permission: "canEditUserPassword", Value: 1},
-		Permission{Permission: "canDisableUsers", Value: 1},
-		Permission{Permission: "canDeleteUsers", Value: 1},
+		dto.Permission{Permission: "canCreateUsers", Value: 1},
+		dto.Permission{Permission: "canEditUserPermissions", Value: 1},
+		dto.Permission{Permission: "canEditUserName", Value: 1},
+		dto.Permission{Permission: "canEditUserPassword", Value: 1},
+		dto.Permission{Permission: "canDisableUsers", Value: 1},
+		dto.Permission{Permission: "canDeleteUsers", Value: 1},
 
-		Permission{Permission: "canCreateArticles", Value: 1},
-		Permission{Permission: "canEditArticles", Value: 1},
+		dto.Permission{Permission: "canCreateArticles", Value: 1},
+		dto.Permission{Permission: "canEditArticles", Value: 1},
 
-		Permission{Permission: "canCreateStockGroups", Value: 1},
-		Permission{Permission: "canEditStockGroupNames", Value: 1},
-		Permission{Permission: "canEditStockGroupDescriptions", Value: 1},
-		Permission{Permission: "canEditStockGroupMembers", Value: 1},
-		Permission{Permission: "canDeleteStockGroups", Value: 1},
+		dto.Permission{Permission: "canCreateStockGroups", Value: 1},
+		dto.Permission{Permission: "canEditStockGroupNames", Value: 1},
+		dto.Permission{Permission: "canEditStockGroupDescriptions", Value: 1},
+		dto.Permission{Permission: "canEditStockGroupMembers", Value: 1},
+		dto.Permission{Permission: "canDeleteStockGroups", Value: 1},
 	}
 
 	var err error
@@ -71,7 +72,7 @@ func HasTokenPermission(token string, permission string) bool {
 	return GetTokenPermission(token, permission) == 1
 }
 
-func GetAllTokenPermissions(token string) ([]Permission, error) {
+func GetAllTokenPermissions(token string) ([]dto.Permission, error) {
 	db := getDB()
 
 	log.Debug("Get all permissions for a token")
@@ -83,10 +84,10 @@ func GetAllTokenPermissions(token string) ([]Permission, error) {
 	}
 	defer rows.Close()
 
-	var perms []Permission
+	var perms []dto.Permission
 
 	for rows.Next() {
-		var perm Permission
+		var perm dto.Permission
 		err = rows.Scan(&perm.Permission, &perm.Value)
 		if err != nil {
 			log.Error(err)
@@ -112,7 +113,7 @@ func GetAllTokenPermissionsMap(token string) (map[string]int32, error) {
 	permMap := make(map[string]int32)
 
 	for rows.Next() {
-		var perm Permission
+		var perm dto.Permission
 		err = rows.Scan(&perm.Permission, &perm.Value)
 		if err != nil {
 			log.Error(err)
@@ -124,7 +125,7 @@ func GetAllTokenPermissionsMap(token string) (map[string]int32, error) {
 }
 
 // SetUserPermission sets or updates the permission of a user.
-func SetUserPermission(id string, permission Permission) error {
+func SetUserPermission(id string, permission dto.Permission) error {
 	db := getDB()
 	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission.Permission)
 	var permValue int32

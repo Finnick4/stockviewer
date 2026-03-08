@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 
 	"github.com/gorilla/schema"
@@ -14,7 +15,7 @@ import (
 func GetStockGroup(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("Getting stock group")
 
-	var params = api.StockGroupGetParams{}
+	var params = dto.StockGroupGetParams{}
 
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)

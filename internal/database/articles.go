@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"stockviewer/dto"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -66,7 +67,7 @@ func EditArticle(id int32, title string, content string) error {
 }
 
 // GetArticles returns the 10 most recent articles. If an offset is provided, it takes the 10 articles n*10 below.
-func GetArticles(offset int32) ([]ArticleOverview, error) {
+func GetArticles(offset int32) ([]dto.ArticleOverview, error) {
 	log.Debugf("Getting ten articles with offset %v", offset)
 	db := getDB()
 
@@ -84,10 +85,10 @@ func GetArticles(offset int32) ([]ArticleOverview, error) {
 		return nil, err
 	}
 
-	articles := make([]ArticleOverview, 0, 10)
+	articles := make([]dto.ArticleOverview, 0, 10)
 
 	for rows.Next() {
-		var article ArticleOverview
+		var article dto.ArticleOverview
 		err = rows.Scan(&article.ID, &article.Title)
 		if err != nil {
 			log.Error(err)
@@ -98,11 +99,11 @@ func GetArticles(offset int32) ([]ArticleOverview, error) {
 	return articles, nil
 }
 
-func GetArticle(id int32) (DetailedArticle, error) {
+func GetArticle(id int32) (dto.DetailedArticle, error) {
 	log.Debugf("Getting article with id %v", id)
 	db := getDB()
 
-	article := DetailedArticle{ID: id}
+	article := dto.DetailedArticle{ID: id}
 
 	row := db.QueryRow(`
 	SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
@@ -118,13 +119,13 @@ func GetArticle(id int32) (DetailedArticle, error) {
 			return article, nil
 		}
 		log.Error(err)
-		return DetailedArticle{}, err
+		return dto.DetailedArticle{}, err
 	}
 
 	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated)
 	if err != nil {
 		log.Error(err)
-		return DetailedArticle{}, err
+		return dto.DetailedArticle{}, err
 	}
 	return article, nil
 }

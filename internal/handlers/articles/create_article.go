@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
@@ -23,7 +24,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = api.ArticleCreateParams{}
+	var params = dto.ArticleCreateParams{}
 
 	// get parameters
 	err := json.NewDecoder(r.Body).Decode(&params)

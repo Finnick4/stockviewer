@@ -1,4 +1,20 @@
-package database
+package dto
+
+type Timeframe struct {
+	count       int64
+	bucketWidth string
+	totalWidth  string
+}
+
+func (tf Timeframe) Count() int64 {
+	return tf.count
+}
+func (tf Timeframe) BucketWidth() string {
+	return tf.bucketWidth
+}
+func (tf Timeframe) TotalWidth() string {
+	return tf.totalWidth
+}
 
 // GenerateTimeframe returns a Timeframe of a given scope. If the scope is invalid the returned timeframe will consist of default values.
 func GenerateTimeframe(scope int64) Timeframe {

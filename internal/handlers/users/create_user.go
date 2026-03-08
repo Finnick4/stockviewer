@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
@@ -22,7 +23,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var params = api.UserCreateParams{}
+	var params = dto.UserCreateParams{}
 
 	defer r.Body.Close()
 

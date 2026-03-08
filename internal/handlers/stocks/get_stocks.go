@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 
 	_ "github.com/glebarez/go-sqlite"
@@ -18,7 +19,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	var params = api.StockGetParams{}
+	var params = dto.StockGetParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
@@ -33,9 +34,9 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	var send func()
 
 	if params.ID > 0 {
-		if database.IsValidTimeframeScope(params.Timeframe) {
+		if dto.IsValidTimeframeScope(params.Timeframe) {
 			send = func() {
-				history, err := database.GetStockPriceHistory(params.ID, database.GenerateTimeframe(params.Timeframe))
+				history, err := database.GetStockPriceHistory(params.ID, dto.GenerateTimeframe(params.Timeframe))
 				if err != nil {
 					log.Error(err)
 					return
@@ -84,9 +85,9 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		if database.IsValidTimeframeScope(params.Timeframe) {
+		if dto.IsValidTimeframeScope(params.Timeframe) {
 			send = func() {
-				deltas, err := database.GetStocksPriceDelta(database.GenerateTimeframe(params.Timeframe))
+				deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe))
 				if err != nil {
 					log.Error(err)
 					return

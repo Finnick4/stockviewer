@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
 
@@ -12,7 +13,7 @@ import (
 
 func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Trying to change PW")
-	var params = api.UserChangePasswordParams{}
+	var params = dto.UserChangePasswordParams{}
 
 	defer r.Body.Close()
 
