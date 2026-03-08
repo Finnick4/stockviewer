@@ -203,6 +203,21 @@ func InitialiseDB() {
 		log.Fatal(err)
 	}
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockinfluences" (
+	"stockId"	INTEGER NOT NULL,
+	"articleId"	INTEGER NOT NULL,
+	"creatorId"	VARCHAR(36) NOT NULL,
+	"duration" INTEGER NOT NULL,
+	"permille" REAL NOT NULL,
+	"falloffType" INTEGER NOT NULL DEFAULT 0,
+	PRIMARY KEY ("stockId", "articleId"),
+	CONSTRAINT "fk_stockinfluences_stockid" FOREIGN KEY("stockId") REFERENCES stocks("id") ON DELETE CASCADE,
+	CONSTRAINT "fk_stockinfluences_articleid" FOREIGN KEY("articleId") REFERENCES articles("id") ON DELETE CASCADE,
+	CONSTRAINT "fk_stockinfluences_creatorid" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	wg.Wait()
 
 	resp := db.QueryRow(`SELECT tag FROM users LIMIT 1;`)

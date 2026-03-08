@@ -127,5 +127,43 @@ func GetArticle(id int32) (dto.DetailedArticle, error) {
 		log.Error(err)
 		return dto.DetailedArticle{}, err
 	}
+
+	rows, err := db.Query(`
+SELECT stockinfluences."stockId", stocks.name, stockinfluences."creatorId", stockinfluences.duration, stockinfluences.permille, stockinfluences."falloffType" FROM stockinfluences
+	JOIN stocks ON stockinfluences."stockId" = stocks.id
+WHERE stockinfluences."articleId" = $1
+`, id)
+	if err != nil {
+		log.Error(err)
+		return dto.DetailedArticle{}, err
+	}
+
+	defer rows.Close()
+
+	var influences []dto.DetailedInfluence
+
+	for rows.Next() {
+		influence := dto.DetailedInfluence{ArticleID: id}
+
+		err = rows.Scan(&influence.StockID, &influence.StockName, &influence.CreatorID, &influence.DurationSeconds, &influence.PermillePerDay, &influence.FalloffType)
+		if err != nil {
+			log.Error(err)
+			return dto.DetailedArticle{}, err
+		}
+		influences = append(influences, influence)
+	}
+
 	return article, nil
+}
+
+func CreateInfluence(influence dto.CreateInfluenceParams) error {
+	db := getDB()
+
+	_, err := db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", duration, permille, "falloffType") VALUES ($1, $2, $3, $4, $5, $6);`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
 }

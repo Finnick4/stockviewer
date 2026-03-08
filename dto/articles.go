@@ -3,8 +3,9 @@ package dto
 import "time"
 
 type ArticleCreateParams struct {
-	Title   string
-	Content string
+	Title      string
+	Content    string
+	Influences []CreateInfluenceParams
 }
 
 type ArticleGetParams struct {
@@ -13,8 +14,9 @@ type ArticleGetParams struct {
 }
 
 type ArticleOverview struct {
-	ID    int32
-	Title string
+	ID              int32
+	Title           string
+	TotalInfluences int32
 }
 
 type DetailedArticle struct {
@@ -24,4 +26,24 @@ type DetailedArticle struct {
 	AuthorID          string
 	AuthorDisplayName string
 	TimeCreated       time.Time
+	Influences        []DetailedInfluence
+}
+
+type CreateInfluenceParams struct {
+	StockID         int32
+	ArticleID       int32
+	CreatorID       string
+	DurationSeconds int32
+	PermillePerDay  float32
+	FalloffType     int32
+}
+
+type DetailedInfluence struct {
+	StockID         int32
+	StockName       string
+	ArticleID       int32
+	CreatorID       string
+	DurationSeconds int32
+	PermillePerDay  float32
+	FalloffType     int32
 }
