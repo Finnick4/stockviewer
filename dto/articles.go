@@ -34,7 +34,7 @@ type CreateInfluenceParams struct {
 	ArticleID       int32
 	CreatorID       string
 	DurationSeconds int32
-	PermillePerDay  float32
+	PermillePerDay  float64
 	FalloffType     int32
 }
 

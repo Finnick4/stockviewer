@@ -21,3 +21,7 @@ func IsPlausibleUserTag(tag string) bool {
 	l := CharCount(tag)
 	return !(l < 3 || l > 32)
 }
+
+func IsValidFalloffType(t int32) bool {
+	return t >= 0 && t < 4
+}

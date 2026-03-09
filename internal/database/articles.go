@@ -132,7 +132,7 @@ func GetArticle(id int32) (dto.DetailedArticle, error) {
 	rows, err := db.Query(`
 SELECT stockinfluences."stockId", stocks.name, stockinfluences."creatorId", stockinfluences.duration, stockinfluences.permille, stockinfluences."falloffType" FROM stockinfluences
 	JOIN stocks ON stockinfluences."stockId" = stocks.id
-WHERE stockinfluences."articleId" = $1
+WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 `, id)
 	if err != nil {
 		log.Error(err)
@@ -153,7 +153,7 @@ WHERE stockinfluences."articleId" = $1
 		}
 		influences = append(influences, influence)
 	}
-
+	article.Influences = influences
 	return article, nil
 }
 
@@ -194,6 +194,7 @@ func CreateInfluences(influences []dto.CreateInfluenceParams) error {
 	_, err := db.Exec(query, values...)
 
 	if err != nil {
+		log.Error(influences)
 		log.Error(err)
 		return err
 	}
