@@ -47,3 +47,11 @@ type DetailedInfluence struct {
 	PermillePerDay  float32
 	FalloffType     int32
 }
+
+type InfluenceFunctional struct {
+	StockID         int32
+	PermillePerDay  float32
+	FalloffType     int32
+	DurationSeconds int32
+	TimeCreated     time.Time
+}

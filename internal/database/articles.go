@@ -157,6 +157,35 @@ WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 	return article, nil
 }
 
+func GetAllActiveInfluences() ([]dto.InfluenceFunctional, error) {
+	db := getDB()
+
+	rows, err := db.Query(`
+	SELECT "stockId", permille, "falloffType", articles."createdAt", duration FROM stockinfluences
+		JOIN articles ON stockinfluences."articleId" = articles.id
+	WHERE articles."createdAt" + INTERVAL '1 second' * stockinfluences.duration > TIMESTAMPTZ $1 ORDER BY "stockId";`, time.Now())
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var influences []dto.InfluenceFunctional
+
+	for rows.Next() {
+		influence := dto.InfluenceFunctional{}
+
+		err = rows.Scan(&influence.StockID, &influence.PermillePerDay, &influence.FalloffType, &influence.TimeCreated, &influence.DurationSeconds)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		influences = append(influences, influence)
+	}
+	return influences, nil
+}
+
 func CreateInfluence(influence dto.CreateInfluenceParams) error {
 	db := getDB()
 	var err error
