@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"stockviewer/dto"
+	"strconv"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -158,12 +159,51 @@ WHERE stockinfluences."articleId" = $1
 
 func CreateInfluence(influence dto.CreateInfluenceParams) error {
 	db := getDB()
+	var err error
 
-	_, err := db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", duration, permille, "falloffType") VALUES ($1, $2, $3, $4, $5, $6);`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+	if influence.CreatorID != "" {
+		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", duration, permille, "falloffType") VALUES ($1, $2, $3, $4, $5, $6);`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+	} else {
+		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", duration, permille, "falloffType") VALUES ($1, $2, $3, $4, $5);`, influence.StockID, influence.ArticleID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+	}
 
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+	return nil
+}
+func CreateInfluences(influences []dto.CreateInfluenceParams) error {
+	query := `INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", duration, permille, "falloffType") VALUES `
+	values := []interface{}{}
+	for i, influence := range influences {
+		values = append(values, influence.StockID, influence.ArticleID, influence.CreatorID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+
+		vals := 6
+		n := i * vals
+		query += `(`
+
+		for j := 0; j < vals; j++ {
+			query += `$` + strconv.Itoa(n+j+1) + `, `
+		}
+		query = query[:len(query)-2] + `),`
+	}
+	query = query[:len(query)-1] + ";"
+
+	db := getDB()
+	_, err := db.Exec(query, values...)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	_, err = db.Exec(`UPDATE stockinfluences SET "creatorId"=null WHERE "creatorId"='';`)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
 	return nil
 }

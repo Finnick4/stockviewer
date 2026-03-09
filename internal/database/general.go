@@ -206,7 +206,7 @@ func InitialiseDB() {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockinfluences" (
 	"stockId"	INTEGER NOT NULL,
 	"articleId"	INTEGER NOT NULL,
-	"creatorId"	VARCHAR(36) NOT NULL,
+	"creatorId"	VARCHAR(36),
 	"duration" INTEGER NOT NULL,
 	"permille" REAL NOT NULL,
 	"falloffType" INTEGER NOT NULL DEFAULT 0,
