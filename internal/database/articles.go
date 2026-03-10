@@ -184,6 +184,20 @@ func GetAllActiveInfluences() ([]dto.InfluenceFunctional, error) {
 	}
 	return influences, nil
 }
+func DecreaseRemainingTime() error {
+	db := getDB()
+
+	_, err := db.Exec(`
+	UPDATE stockinfluences
+	SET "remainingLength" = "remainingLength" - 1
+	WHERE "remainingLength" > 0;`)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
 
 func CreateInfluence(influence dto.CreateInfluenceParams) error {
 	db := getDB()
