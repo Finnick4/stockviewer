@@ -130,7 +130,7 @@ func GetArticle(id int32) (dto.DetailedArticle, error) {
 	}
 
 	rows, err := db.Query(`
-SELECT stockinfluences."stockId", stocks.name, stockinfluences."creatorId", stockinfluences.duration, stockinfluences.permille, stockinfluences."falloffType" FROM stockinfluences
+SELECT stockinfluences."stockId", stocks.name, stockinfluences."creatorId", stockinfluences."totalLength", stockinfluences.permille, stockinfluences."falloffType" FROM stockinfluences
 	JOIN stocks ON stockinfluences."stockId" = stocks.id
 WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 `, id)
@@ -146,7 +146,7 @@ WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 	for rows.Next() {
 		influence := dto.DetailedInfluence{ArticleID: id}
 
-		err = rows.Scan(&influence.StockID, &influence.StockName, &influence.CreatorID, &influence.DurationSeconds, &influence.PermillePerDay, &influence.FalloffType)
+		err = rows.Scan(&influence.StockID, &influence.StockName, &influence.CreatorID, &influence.LengthMinutes, &influence.PermillePerDay, &influence.FalloffType)
 		if err != nil {
 			log.Error(err)
 			return dto.DetailedArticle{}, err
@@ -161,9 +161,8 @@ func GetAllActiveInfluences() ([]dto.InfluenceFunctional, error) {
 	db := getDB()
 
 	rows, err := db.Query(`
-	SELECT "stockId", permille, "falloffType", articles."createdAt", duration FROM stockinfluences
-		JOIN articles ON stockinfluences."articleId" = articles.id
-	WHERE articles."createdAt" + INTERVAL '1 second' * stockinfluences.duration > TIMESTAMPTZ $1 ORDER BY "stockId";`, time.Now())
+	SELECT "stockId", permille, "falloffType", "totalLength", "remainingLength" FROM stockinfluences
+	WHERE "remainingLength" > 0 ORDER BY "stockId";`)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -176,7 +175,7 @@ func GetAllActiveInfluences() ([]dto.InfluenceFunctional, error) {
 	for rows.Next() {
 		influence := dto.InfluenceFunctional{}
 
-		err = rows.Scan(&influence.StockID, &influence.PermillePerDay, &influence.FalloffType, &influence.TimeCreated, &influence.DurationSeconds)
+		err = rows.Scan(&influence.StockID, &influence.PermillePerDay, &influence.FalloffType, &influence.TotalLength, &influence.RemainingLength)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -191,9 +190,9 @@ func CreateInfluence(influence dto.CreateInfluenceParams) error {
 	var err error
 
 	if influence.CreatorID != "" {
-		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", duration, permille, "falloffType") VALUES ($1, $2, $3, $4, $5, $6);`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") VALUES ($1, $2, $3, $4, $4, $5, $6);`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 	} else {
-		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", duration, permille, "falloffType") VALUES ($1, $2, $3, $4, $5);`, influence.StockID, influence.ArticleID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "totalLength", "remainingLength", permille, "falloffType") VALUES ($1, $2, $3, $3, $4, $5);`, influence.StockID, influence.ArticleID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 	}
 
 	if err != nil {
@@ -203,12 +202,12 @@ func CreateInfluence(influence dto.CreateInfluenceParams) error {
 	return nil
 }
 func CreateInfluences(influences []dto.CreateInfluenceParams) error {
-	query := `INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", duration, permille, "falloffType") VALUES `
+	query := `INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") VALUES `
 	values := []interface{}{}
 	for i, influence := range influences {
-		values = append(values, influence.StockID, influence.ArticleID, influence.CreatorID, influence.DurationSeconds, influence.PermillePerDay, influence.FalloffType)
+		values = append(values, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 
-		vals := 6
+		vals := 7
 		n := i * vals
 		query += `(`
 

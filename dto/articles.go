@@ -30,28 +30,28 @@ type DetailedArticle struct {
 }
 
 type CreateInfluenceParams struct {
-	StockID         int32
-	ArticleID       int32
-	CreatorID       string
-	DurationSeconds int32
-	PermillePerDay  float64
-	FalloffType     int32
+	StockID        int32
+	ArticleID      int32
+	CreatorID      string
+	LengthMinutes  int32
+	PermillePerDay float64
+	FalloffType    int32
 }
 
 type DetailedInfluence struct {
-	StockID         int32
-	StockName       string
-	ArticleID       int32
-	CreatorID       string
-	DurationSeconds int32
-	PermillePerDay  float32
-	FalloffType     int32
+	StockID        int32
+	StockName      string
+	ArticleID      int32
+	CreatorID      string
+	LengthMinutes  int32
+	PermillePerDay float32
+	FalloffType    int32
 }
 
 type InfluenceFunctional struct {
 	StockID         int32
 	PermillePerDay  float32
 	FalloffType     int32
-	DurationSeconds int32
-	TimeCreated     time.Time
+	TotalLength     int32
+	RemainingLength int32
 }
