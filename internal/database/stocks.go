@@ -140,7 +140,15 @@ GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.pric
 // GetStockPriceHistory gets the price history of a given stock in the given timeframe
 func GetStockPriceHistory(id int32, timeframe dto.Timeframe) ([]dto.StockPriceTime, error) {
 	log.Debugf("Getting history of stock %v in timeframe %v", id, timeframe)
+	switch timeframe.TotalWidth() {
+	case "AllTime":
+		return getAllTimeStockPriceHistory(id)
+	default:
+		return getDynamicStockPriceHistory(id, timeframe)
+	}
+}
 
+func getDynamicStockPriceHistory(id int32, timeframe dto.Timeframe) ([]dto.StockPriceTime, error) {
 	db := getDB()
 
 	rows, err := db.Query(`SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS price
@@ -155,6 +163,35 @@ func GetStockPriceHistory(id int32, timeframe dto.Timeframe) ([]dto.StockPriceTi
 	defer rows.Close()
 
 	data := make([]dto.StockPriceTime, 0, timeframe.Count())
+
+	for rows.Next() {
+		var ts time.Time
+		var avPrice float64
+
+		err = rows.Scan(&ts, &avPrice)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, dto.StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
+	}
+	return data, nil
+}
+func getAllTimeStockPriceHistory(id int32) ([]dto.StockPriceTime, error) {
+	db := getDB()
+
+	rows, err := db.Query(`SELECT time_bucket(((SELECT timestamp FROM stockprice WHERE stockid = $1 ORDER BY timestamp DESC LIMIT 1) - (SELECT timestamp FROM stockprice WHERE stockid = $1 ORDER BY timestamp ASC LIMIT 1)) / 30, timestamp) AS bucket, avg(price) AS price
+		FROM stockprice
+		WHERE stockid = $1
+		GROUP BY bucket
+		ORDER BY bucket DESC LIMIT 30;`, id)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	data := make([]dto.StockPriceTime, 0, 30)
 
 	for rows.Next() {
 		var ts time.Time
@@ -198,6 +235,9 @@ func GetActiveStockIds() ([]int32, error) {
 }
 
 func GetStocksPriceDelta(tf dto.Timeframe) ([]dto.PriceDelta, error) {
+	if tf.TotalWidth() == "AllTime" {
+		tf = dto.GenerateTimeframe(1)
+	}
 	log.Debugf("Getting all stocks deltas in timeframe %v", tf)
 
 	db := getDB()

@@ -13,7 +13,8 @@ class stockChart extends HTMLElement {
                                 <button class="tf selected" data-tf="1">30m</button>
                                 <button class="tf" data-tf="2">60m</button>
                                 <button class="tf" data-tf="3">6h</button>
-                                <button class="tf" data-tf="4">24h</button>                                                     
+                                <button class="tf" data-tf="4">24h</button>
+                                <button class="tf" data-tf="-1">all</button>                                                     
                             </nav>
                             <h2>Stock History</h2>
                             <div></div>

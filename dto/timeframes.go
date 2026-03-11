@@ -19,6 +19,8 @@ func (tf Timeframe) TotalWidth() string {
 // GenerateTimeframe returns a Timeframe of a given scope. If the scope is invalid the returned timeframe will consist of default values.
 func GenerateTimeframe(scope int64) Timeframe {
 	switch scope {
+	case -1:
+		return Timeframe{count: 30, bucketWidth: "", totalWidth: "AllTime"} // 30 minutes
 	case 1:
 		return Timeframe{count: 30, bucketWidth: "1 minute", totalWidth: "30 minutes"} // 30 minutes
 	case 2:
@@ -33,5 +35,5 @@ func GenerateTimeframe(scope int64) Timeframe {
 }
 
 func IsValidTimeframeScope(scope int64) bool {
-	return scope > 0 && scope <= 4
+	return scope == -1 || (scope > 0 && scope <= 4)
 }
