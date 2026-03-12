@@ -204,9 +204,16 @@ func CreateInfluence(influence dto.CreateInfluenceParams) error {
 	var err error
 
 	if influence.CreatorID != "" {
-		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") VALUES ($1, $2, $3, $4, $4, $5, $6);`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
+		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") 
+VALUES ($1, $2, $3, $4, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + INTERVAL $4 - current_timestamp)) / 60)
+FROM articles
+WHERE articles.id = $2), $5, $6);
+`, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 	} else {
-		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "totalLength", "remainingLength", permille, "falloffType") VALUES ($1, $2, $3, $3, $4, $5);`, influence.StockID, influence.ArticleID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
+		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "totalLength", "remainingLength", permille, "falloffType") 
+VALUES ($1, $2, $3, $4, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + INTERVAL $3 - current_timestamp)) / 60)
+FROM articles
+WHERE articles.id = $2), $5);`, influence.StockID, influence.ArticleID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 	}
 
 	if err != nil {
@@ -219,14 +226,20 @@ func CreateInfluences(influences []dto.CreateInfluenceParams) error {
 	query := `INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") VALUES `
 	values := []interface{}{}
 	for i, influence := range influences {
-		values = append(values, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
+		values = append(values, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 
-		vals := 7
+		vals := 6
 		n := i * vals
 		query += `(`
 
 		for j := 0; j < vals; j++ {
-			query += `$` + strconv.Itoa(n+j+1) + `, `
+			if n+j+1%4 == 0 {
+				query += `$` + strconv.Itoa(n+j+1) + `, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + INTERVAL $4 - current_timestamp)) / 60)
+FROM articles
+WHERE articles.id = $2), `
+			} else {
+				query += `$` + strconv.Itoa(n+j+1) + `, `
+			}
 		}
 		query = query[:len(query)-2] + `),`
 	}
