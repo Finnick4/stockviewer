@@ -8,6 +8,15 @@ type ArticleCreateParams struct {
 	Influences []CreateInfluenceParams
 }
 
+type ArticleEditParams struct {
+	ID                int32
+	Title             string
+	Content           string
+	AddedInfluences   []CreateInfluenceParams
+	EditedInfluences  []InfluenceEditParams
+	RemovedInfluences []int32
+}
+
 type ArticleGetParams struct {
 	Offset int32
 	ID     int32
@@ -30,6 +39,15 @@ type DetailedArticle struct {
 }
 
 type CreateInfluenceParams struct {
+	StockID        int32
+	ArticleID      int32
+	CreatorID      string
+	LengthMinutes  int32
+	PermillePerDay float64
+	FalloffType    int32
+}
+
+type InfluenceEditParams struct {
 	StockID        int32
 	ArticleID      int32
 	CreatorID      string

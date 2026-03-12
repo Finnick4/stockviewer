@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"stockviewer/dto"
 	"strconv"
 	"time"
@@ -48,7 +49,7 @@ func CreateArticle(title string, content string, creatorID string) (int32, error
 	return lastID, nil
 }
 
-func EditArticle(id int32, title string, content string) error {
+func EditArticleTitleAndContent(id int32, title string, content string) error {
 	log.Infof("Editing article %v...", id)
 
 	db := getDB()
@@ -59,6 +60,20 @@ func EditArticle(id int32, title string, content string) error {
 	} else {
 		_, err = db.Exec(`UPDATE articles SET title=$1, content=NULL WHERE id=$2;`, title, id)
 	}
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+func EditArticleContent(id int32, content string) error {
+	log.Infof("Editing article %v...", id)
+
+	db := getDB()
+	var err error
+
+	_, err = db.Exec(`UPDATE articles SET content=$1 WHERE id=$2;`, content, id)
 
 	if err != nil {
 		log.Error(err)
@@ -233,10 +248,8 @@ func CreateInfluences(influences []dto.CreateInfluenceParams) error {
 		query += `(`
 
 		for j := 0; j < vals; j++ {
-			if n+j+1%4 == 0 {
-				query += `$` + strconv.Itoa(n+j+1) + `, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + INTERVAL $4 - current_timestamp)) / 60)
-FROM articles
-WHERE articles.id = $2), `
+			if (n+j+1)%vals == 4 {
+				query += `$` + strconv.Itoa(n+j+1) + fmt.Sprintf(`, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + ($%v::int * (INTERVAL '1 minute')) - current_timestamp)) / 60) FROM articles WHERE articles.id = $2), `, n+j+1)
 			} else {
 				query += `$` + strconv.Itoa(n+j+1) + `, `
 			}
@@ -251,6 +264,8 @@ WHERE articles.id = $2), `
 	if err != nil {
 		log.Error(influences)
 		log.Error(err)
+		log.Error(query)
+		log.Error(values)
 		return err
 	}
 
