@@ -95,199 +95,59 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if aimName {
-		if aimPrice && aimShorthand && aimColor {
-			err = database.UpdateCompleteStock(params)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
+	if !aimName && !aimPrice && !aimShorthand && !aimColor {
+		log.Debug("Could not identify what to edit")
+		api.RequestMalformedHandler(w, "Could not identify what to edit")
+		return
+	}
+
+	if aimName && aimPrice && aimShorthand && aimColor {
+		err = database.UpdateCompleteStock(params)
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Error(err)
 			return
 		}
-		if aimPrice && aimShorthand && !aimColor {
-			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-		if aimPrice && !aimShorthand && aimColor {
+		success()
+		return
+	}
+
+	if aimName || aimShorthand {
+		if aimName && !aimShorthand {
 			err = database.SetStockName(params.ID, params.Name)
 			if err != nil {
 				api.InternalErrorHandler(w)
 				log.Error(err)
 				return
 			}
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			database.SetStockColor(params.ID, params.Color)
-			success()
-			return
 		}
-		if aimPrice && !aimShorthand && !aimColor {
-			err = database.SetStockName(params.ID, params.Name)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-		if !aimPrice && aimShorthand && aimColor {
-			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			database.SetStockColor(params.ID, params.Color)
-			success()
-			return
-		}
-		if !aimPrice && aimShorthand && !aimColor {
-			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-		if !aimPrice && !aimShorthand && aimColor {
-			err = database.SetStockName(params.ID, params.Name)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			database.SetStockColor(params.ID, params.Color)
-			success()
-			return
-		}
-		if !aimPrice && !aimShorthand && !aimColor {
-			err = database.SetStockName(params.ID, params.Name)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-	} else {
-		if aimPrice && aimShorthand && aimColor {
+		if !aimName && aimShorthand {
 			err = database.SetStockShorthand(params.ID, params.Shorthand)
 			if err != nil {
 				api.InternalErrorHandler(w)
 				log.Error(err)
 				return
 			}
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			database.SetStockColor(params.ID, params.Color)
-			success()
+		}
+		err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Error(err)
 			return
 		}
-		if aimPrice && aimShorthand && !aimColor {
-			err = database.SetStockShorthand(params.ID, params.Shorthand)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-		if aimPrice && !aimShorthand && aimColor {
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			database.SetStockColor(params.ID, params.Color)
-			success()
-			return
-		}
-		if aimPrice && !aimShorthand && !aimColor {
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-		if !aimPrice && aimShorthand && aimColor {
-			err = database.SetStockShorthand(params.ID, params.Shorthand)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			err = database.SetStockPrice(params.ID, params.Price)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			database.SetStockColor(params.ID, params.Color)
-			success()
-			return
-		}
-		if !aimPrice && aimShorthand && !aimColor {
-			err = database.SetStockShorthand(params.ID, params.Shorthand)
-			if err != nil {
-				api.InternalErrorHandler(w)
-				log.Error(err)
-				return
-			}
-			success()
-			return
-		}
-		if !aimPrice && !aimShorthand && aimColor {
-			database.SetStockColor(params.ID, params.Color)
-			success()
-			return
-		}
-		if !aimPrice && !aimShorthand && !aimColor {
-			log.Debug("Could not identify what to edit")
-			api.RequestMalformedHandler(w, "Could not identify what to edit")
+
+	}
+	if aimColor {
+		database.SetStockColor(params.ID, params.Color)
+	}
+	if aimPrice {
+		err = database.SetStockPrice(params.ID, params.Price)
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Error(err)
 			return
 		}
 	}
+
+	success()
 }
