@@ -335,3 +335,41 @@ WHERE "articleId" = $4 AND "stockId" = $5 AND stockinfluences."articleId" = a.id
 
 	return nil
 }
+
+func EditInfluences(influences []dto.InfluenceEditParams) error {
+	query := `
+UPDATE stockinfluences
+SET permille = v.permille,
+    "falloffType" = v.falloff,
+    "totalLength" = v.len,
+	"remainingLength" = GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', articles."createdAt" + (v.len * (INTERVAL '1 minute')) - current_timestamp)) / 60)
+FROM (VALUES 
+`
+	values := []interface{}{}
+	for i, influence := range influences {
+		values = append(values, influence.StockID, influence.ArticleID, influence.PermillePerDay, influence.FalloffType, influence.LengthMinutes)
+
+		vals := 5
+		n := i * vals
+		query += `(`
+
+		for j := 0; j < vals; j++ {
+			query += `$` + strconv.Itoa(n+j+1) + `::int, `
+		}
+		query = query[:len(query)-2] + `),`
+	}
+	query = query[:len(query)-1] + `) AS v("stockId", "articleId", permille, falloff, len)
+JOIN articles ON v."articleId" = articles.id
+WHERE stockinfluences."stockId" = v."stockId";`
+
+	db := getDB()
+	_, err := db.Exec(query, values...)
+
+	if err != nil {
+		log.Error(query)
+		log.Error(values)
+		log.Error(err)
+		return err
+	}
+	return nil
+}
