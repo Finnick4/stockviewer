@@ -129,11 +129,13 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-		err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Error(err)
-			return
+		if aimName && aimShorthand {
+			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
+			if err != nil {
+				api.InternalErrorHandler(w)
+				log.Error(err)
+				return
+			}
 		}
 
 	}
