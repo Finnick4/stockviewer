@@ -278,3 +278,40 @@ func CreateInfluences(influences []dto.CreateInfluenceParams) error {
 
 	return nil
 }
+
+func RemoveInfluence(articleID int32, stockID int32) error {
+	log.Debugf("Removing influence on stock %v from article %v", stockID, articleID)
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM stockinfluences WHERE "articleId" = $1 AND "stockId" = $2;`, articleID, stockID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func RemoveInfluences(articleID int32, stockIDs []int32) error {
+	log.Debugf("Removing influence on stocks %v from article %v", stockIDs, articleID)
+
+	query := `DELETE FROM stockinfluences WHERE "articleId" = $1 AND "stockId" IN (`
+	values := []interface{}{}
+	values = append(values, articleID)
+	for i, s := range stockIDs {
+		values = append(values, s)
+
+		query += `$` + strconv.Itoa(i+2) + `, `
+	}
+	query = query[:len(query)-2] + ");"
+	db := getDB()
+	_, err := db.Exec(query, values...)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}

@@ -123,6 +123,20 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	if aimRemoveInfluences {
+		if len(params.RemovedInfluences) == 1 {
+			err = database.RemoveInfluence(params.ID, params.RemovedInfluences[0])
+		} else {
+			err = database.RemoveInfluences(params.ID, params.RemovedInfluences)
+		}
+
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
+	}
+
 	if aimAddInfluences {
 		err := database.CreateInfluences(params.AddedInfluences)
 
@@ -132,7 +146,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if aimRemoveInfluences || aimEditInfluences {
+	if aimEditInfluences {
 		api.NotImplementedHandler(w)
 		log.Warn("Removing / editing influences of an articles is not yet implemented!")
 		return
