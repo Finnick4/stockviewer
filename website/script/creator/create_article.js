@@ -41,7 +41,7 @@ function showModalCreateArticle(elem) {
         if (perm !== 1) {
             stockInfluenceSelector.readOnly = true
         } else {
-            permArticles = true
+            permInfluences = true
         }
     })
     userInformation.writePermission("maxInfluencePermille", perm => {
@@ -69,18 +69,23 @@ function showModalCreateArticle(elem) {
         let escape = false
         stockInfluenceSelector.savedStocks.forEach(stockid => {
             if (!isNaN(stockid)) {
-                console.log(stockid)
                 const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
                 const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
-                console.log(permille.value)
-                console.log(minutes.value)
+
                 if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) < 0) {
                     seterr("All lengths have to be positive!")
                     escape = true
+                    return;
                 }
                 if (isNaN(permille.value) || permille.value === "") {
                     seterr("Permilles have to be numeric!")
                     escape = true
+                    return
+                }
+                if (maxInfluence !== -1 && Math.abs(Number(permille.value)) > maxInfluence) {
+                    seterr(`Cannot set permille higher than ${maxInfluence}!`)
+                    escape = true
+                    return
                 }
             }
         })
@@ -96,7 +101,7 @@ function showModalCreateArticle(elem) {
 
     stockInfluenceSelector.onEdit = validate
 
-        modal.querySelectorAll(`input`).forEach(elem => {
+    modal.querySelectorAll(`input`).forEach(elem => {
         elem.addEventListener("input", () => validate())
     })
 
@@ -109,11 +114,28 @@ function showModalCreateArticle(elem) {
 
     modal.querySelector(`.submit`).addEventListener("click", () => {
         if (validate()) {
+            const influences = []
+            const pushInfluence = (stockid, permille, minutes) => {
+                influences.push({
+                    "StockID": stockid,
+                    "LengthMinutes": minutes,
+                    "PermillePerDay": permille
+                })
+            }
+
+            stockInfluenceSelector.savedStocks.forEach(stockid => {
+                if (!isNaN(stockid)) {
+                    const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
+                    const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
+                    pushInfluence(stockid, Number(permille.value), Number(minutes.value))
+                }
+            })
             fetch(`${window.location.origin}/api/articles`, {
                 method: "POST",
                 body: JSON.stringify({
                     title: title.value,
-                    content: body.value
+                    content: body.value,
+                    influences: permInfluences ? influences : []
                 })
             }).then(r => {
                 if (r.ok) {

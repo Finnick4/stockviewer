@@ -238,6 +238,7 @@ WHERE articles.id = $2), $5);`, influence.StockID, influence.ArticleID, influenc
 	return nil
 }
 func CreateInfluences(influences []dto.CreateInfluenceParams) error {
+	log.Debug("Creating influences!")
 	query := `INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") VALUES `
 	values := []interface{}{}
 	for i, influence := range influences {
