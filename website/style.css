@@ -345,6 +345,29 @@ div.sidebar a.btn.selected:hover {
 .modal stock-selector .inner {
     padding: 0;
 }
+.modal stock-influence-selector .inner {
+    padding: 0;
+}
+
+.modal .influenceInputs input {
+    width: 8ch;
+    background-color: var(--bg-light);
+}
+.modal .stockOverview:hover input {
+    background-color: var(--bg-very-light);
+}
+
+
+.modal .influenceInputs div {
+    display: inline;
+}
+stock-influence-selector .stockOverview .containing {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3rem;
+    padding: .25rem;
+    align-items: center;
+}
+
 
 button {
     font-family: Ubuntu, sans-serif;
@@ -571,6 +594,7 @@ ul.inner p {
     justify-content: space-between;
     text-decoration: none;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .stockOverview:hover {

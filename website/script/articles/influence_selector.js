@@ -42,13 +42,16 @@ class stockInfluenceSelectorElement extends HTMLElement {
                     <div class="containing">
                         <div class="stockName">${sanitiseText(name)}</div>
                         <div class="influenceInputs">
-                            <div><input class="permille" type="number"> &permil;/day</div>
-                            <div>for <input class="minutes" type="number"> minutes</div>
+                            <div><input class="permille" type="number" value="0"> &permil;/day</div>
+                            <div>for <input class="minutes" type="number" value="0"> minutes</div>
                         </div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
                     </div>`
+                elem.addEventListener("input", () => {
+                    this.onEdit()
+                })
                 inner.append(elem)
                 const placeholder = inner.querySelector(`li.placeholder`)
                 if (placeholder !== null) {
@@ -102,6 +105,9 @@ class stockInfluenceSelectorElement extends HTMLElement {
             placeholder.innerHTML = "No influences present..."
             inner.append(placeholder)
         }
+    }
+    onEdit() {
+        return
     }
 }
 

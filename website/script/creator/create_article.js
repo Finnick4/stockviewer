@@ -13,6 +13,7 @@ function showModalCreateArticle(elem) {
                           <p>Content</p>
                           <textarea class="body"></textarea>
                       </div>
+                      <div class="stockInfluenceSelector"></div>
                                     
                       <div class="pair">
                           <div class="info"></div>
@@ -25,13 +26,28 @@ function showModalCreateArticle(elem) {
     const infotxt = modal.querySelector(`.info`)
     const title = modal.querySelector(`.title`)
     const body = modal.querySelector(`.body`)
+    const stockInfluenceSelector = new stockInfluenceSelectorElement()
+    modal.querySelector(`div.stockInfluenceSelector`).append(stockInfluenceSelector)
 
-
+    let permArticles = false, permInfluences = false, maxInfluence = 0
     userInformation.writePermission("canCreateArticles", perm => {
         if (perm !== 1) {
             modal.querySelector(".content").innerHTML = "<h2>Write an article</h2><p>It doesn't seem like you are able to write articles currently!</p>"
+        } else {
+            permArticles = true
         }
     })
+    userInformation.writePermission("canModifyInfluences", perm => {
+        if (perm !== 1) {
+            stockInfluenceSelector.readOnly = true
+        } else {
+            permArticles = true
+        }
+    })
+    userInformation.writePermission("maxInfluencePermille", perm => {
+        maxInfluence = perm
+    })
+
 
     const seterr = err => {
         infotxt.innerHTML = err
@@ -50,6 +66,27 @@ function showModalCreateArticle(elem) {
             return false
         }
 
+        let escape = false
+        stockInfluenceSelector.savedStocks.forEach(stockid => {
+            if (!isNaN(stockid)) {
+                console.log(stockid)
+                const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
+                const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
+                console.log(permille.value)
+                console.log(minutes.value)
+                if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) < 0) {
+                    seterr("All lengths have to be positive!")
+                    escape = true
+                }
+                if (isNaN(permille.value) || permille.value === "") {
+                    seterr("Permilles have to be numeric!")
+                    escape = true
+                }
+            }
+        })
+        if (escape) {
+            return false
+        }
 
         infotxt.innerHTML = "Everything seems to be okay!"
         infotxt.classList.add("positive")
@@ -57,7 +94,9 @@ function showModalCreateArticle(elem) {
         return true
     }
 
-    modal.querySelectorAll(`input`).forEach(elem => {
+    stockInfluenceSelector.onEdit = validate
+
+        modal.querySelectorAll(`input`).forEach(elem => {
         elem.addEventListener("input", () => validate())
     })
 
