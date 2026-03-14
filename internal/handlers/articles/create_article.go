@@ -84,7 +84,11 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 		for i := range params.Influences {
 			params.Influences[i].ArticleID = id
 		}
-		err := database.CreateInfluences(params.Influences)
+		if len(params.Influences) == 1 {
+			err = database.CreateInfluence(params.Influences[0])
+		} else {
+			err = database.CreateInfluences(params.Influences)
+		}
 
 		if err != nil {
 			log.Error(err)
