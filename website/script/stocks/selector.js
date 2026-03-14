@@ -64,8 +64,7 @@ class stockSelectorElement extends HTMLElement {
                     if (possible.length >= 5) {
                         break
                     }
-                    console.log(e.target.value)
-                    if (stock["Name"].toLowerCase().includes(e.target.value.toLowerCase()) || (!isNaN(e.target.value) && String(stock["ID"]).includes(String(e.target.value)))) {
+                    if (stock["Name"].toLowerCase().includes(e.target.value.toLowerCase()) || stock["Shorthand"].toLowerCase().includes(e.target.value.toLowerCase()) || (!isNaN(e.target.value) && String(stock["ID"]).includes(String(e.target.value)))) {
                         possible.push(stock)
                     }
                 }
