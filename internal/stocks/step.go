@@ -60,7 +60,7 @@ func Step() {
 		}
 		influenceFactor /= 10
 
-		var factor float64 = (float64((rand.Int63()%2050)-1000) / 1440.0) + influenceFactor // 1.000 -> 1% in a day
+		var factor float64 = (float64((rand.Int63()%2050)-1000) + influenceFactor /* 1.000 -> 1% in a day */) / 1440.0
 		stock.Price = int64(priceCT + (math.Pow(math.Log10(priceCT)+1, 2)*factor)*1000)
 		if stock.Price <= 1 {
 			stock.Price = 2
