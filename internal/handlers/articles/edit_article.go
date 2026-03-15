@@ -84,6 +84,11 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
 			params.AddedInfluences[i].FalloffType = 0
 		}
+		if influence.LengthMinutes == 0 || influence.PermillePerDay == 0 {
+			log.Debug("Could not edit article as influences with either length or permille of 0 were included!")
+			api.RequestMalformedHandler(w, "Could not edit article as influences with either length or permille of 0 were included!")
+			return
+		}
 		stockIDs[i] = influence.StockID
 		i++
 	}
@@ -96,6 +101,11 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		params.EditedInfluences[i].ArticleID = params.ID
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
 			params.AddedInfluences[i].FalloffType = 0
+		}
+		if influence.LengthMinutes == 0 || influence.PermillePerDay == 0 {
+			log.Debug("Could not edit article as influences with either length or permille of 0 were included!")
+			api.RequestMalformedHandler(w, "Could not edit article as influences with either length or permille of 0 were included!")
+			return
 		}
 		stockIDs[i] = influence.StockID
 		i++

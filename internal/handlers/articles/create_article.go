@@ -59,6 +59,11 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 			log.Debug("Could not process the request as the requestor doesn't have sufficient permissions to choose influence permilles this high.")
 			return
 		}
+		if influence.LengthMinutes == 0 || influence.PermillePerDay == 0 {
+			log.Debug("Could not create article as influences with either length or permille of 0 were included!")
+			api.RequestMalformedHandler(w, "Could not create article as influences with either length or permille of 0 were included!")
+			return
+		}
 		params.Influences[i].CreatorID = userID
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
 			params.Influences[i].FalloffType = 0
