@@ -21,6 +21,17 @@ function showModalEditArticles(articleId) {
     fetch(`/api/articles?id=${articleId}`).then(r => r.json()).then(resp => {
         const artTitle = sanitiseText(resp["Data"]["Title"])
         const artContent = sanitiseText(resp["Data"]["Content"])
+        const artInfluences = []
+        if (resp["Data"]["Influences"] !== null) {
+            resp["Data"]["Influences"].forEach(influence => {
+                artInfluences.push({
+                    "StockID": influence.StockID,
+                    "StockName": influence.StockName,
+                    "LengthMinutes": influence.LengthMinutes,
+                    "PermillePerDay": influence.PermillePerDay
+                })
+            })
+        }
 
         let html = `<h2>Edit an article</h2>
                       <div class="textField">
@@ -28,11 +39,11 @@ function showModalEditArticles(articleId) {
                           <input type="text" class="title" value="${sanitiseText(artTitle)}">
                       </div>
        
-                  
                       <div class="textField">
                           <p>Content</p>
                           <textarea class="body">${sanitiseText(artContent)}</textarea>
                       </div>
+                      <div class="stockInfluenceSelector"></div>
                                     
                       <div class="pair">
                           <div class="info"></div>
@@ -45,6 +56,9 @@ function showModalEditArticles(articleId) {
         const infotxt = modal.querySelector(`.info`)
         const title = modal.querySelector(`.title`)
         const body = modal.querySelector(`.body`)
+        const stockInfluenceSelector = new stockInfluenceSelectorElement()
+        modal.querySelector(`div.stockInfluenceSelector`).append(stockInfluenceSelector)
+        stockInfluenceSelector.setInfluences(artInfluences)
 
         body.style.height = "1px"
         body.style.height = body.scrollHeight + "px"
@@ -85,12 +99,40 @@ function showModalEditArticles(articleId) {
                 return false
             }
 
+            let escape = false
+            stockInfluenceSelector.savedStocks.forEach(stockid => {
+                if (!isNaN(stockid)) {
+                    const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
+                    const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
+
+                    if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) < 0) {
+                        seterr("All lengths have to be positive!")
+                        escape = true
+                        return;
+                    }
+                    if (isNaN(permille.value) || permille.value === "") {
+                        seterr("Permilles have to be numeric!")
+                        escape = true
+                        return
+                    }
+                    if (maxInfluence !== -1 && Math.abs(Number(permille.value)) > maxInfluence) {
+                        seterr(`Cannot set permille higher than ${maxInfluence}!`)
+                        escape = true
+                        return
+                    }
+                }
+            })
+            if (escape) {
+                return false
+            }
 
             infotxt.innerHTML = "Everything seems to be okay!"
             infotxt.classList.add("positive")
             infotxt.classList.remove("negative")
             return true
         }
+
+        stockInfluenceSelector.onEdit = validate
 
         modal.querySelectorAll(`input`).forEach(elem => {
             elem.addEventListener("input", () => validate())

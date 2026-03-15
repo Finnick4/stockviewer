@@ -109,6 +109,46 @@ class stockInfluenceSelectorElement extends HTMLElement {
     onEdit() {
         return
     }
+    setInfluences(influences) {
+        this.savedStocks = new Set()
+        const inner = this.querySelector("ul.inner")
+
+        if (influences.length === 0) {
+            inner.innerHTML = `<li class="placeholder">No influences present...</li>`
+            this.onEdit()
+            return
+        }
+
+        inner.innerHTML = ""
+        influences.forEach(influence => {
+            const elem = document.createElement("li")
+            elem.classList.add("stockOverview")
+            elem.dataset.stockId = influence.StockID
+            elem.innerHTML = `
+                    <div class="containing">
+                        <div class="stockName">${sanitiseText(influence.StockName)}</div>
+                        <div class="influenceInputs">
+                            <div><input class="permille" type="number" value="${influence.PermillePerDay}"> &permil;/day</div>
+                            <div>for <input class="minutes" type="number" value="${influence.LengthMinutes}"> minutes</div>
+                        </div>
+                        <div>
+                            <span class="closeBtn removeStockBtn">&minus;</span>
+                        </div>
+                    </div>`
+            elem.addEventListener("input", () => {
+                this.onEdit()
+            })
+            const removeBtn = elem.querySelector(".removeStockBtn")
+            removeBtn.addEventListener("click", () => {
+                this.removeStock(influence.StockID)
+            })
+            this.savedStocks.add(Number(influence.StockID))
+
+            inner.append(elem)
+        })
+
+        this.onEdit()
+    }
 }
 
 customElements.define('stock-influence-selector', stockInfluenceSelectorElement);
