@@ -7,33 +7,31 @@ class editArticleButtonElement extends HTMLButtonElement {
     connectedCallback() {
         this.articleid = this.getAttribute("data-articleid")
 
-        fetch(`/api/articles?id=${Number(this.articleid)}`).then(r => r.json()).then(resp => {
-            this.artTitle = sanitiseText(resp["Data"]["Title"])
-            this.artContent = sanitiseText(resp["Data"]["Content"])
-        })
-
         this.classList.add("edit")
 
         this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="edit" draggable="false">`
 
-        this.onclick = () => {
-            if (this.artTitle === "") {
-                fetch(`/api/articles?id=${this.articleid}`).then(r => r.json()).then(resp => {
-                    this.artTitle = sanitiseText(resp["Data"]["Title"])
-                    this.artContent = sanitiseText(resp["Data"]["Content"])
-                })
-            }
+        this.onclick = () => showModalEditArticles(this.articleid)
+    }
+}
 
-            let html = `<h2>Edit an article</h2>
+customElements.define('edit-article-button', editArticleButtonElement, {extends: "button"});
+
+function showModalEditArticles(articleId) {
+    fetch(`/api/articles?id=${articleId}`).then(r => r.json()).then(resp => {
+        const artTitle = sanitiseText(resp["Data"]["Title"])
+        const artContent = sanitiseText(resp["Data"]["Content"])
+
+        let html = `<h2>Edit an article</h2>
                       <div class="textField">
                           <p>Title</p>
-                          <input type="text" class="title" value="${sanitiseText(this.artTitle)}">
+                          <input type="text" class="title" value="${sanitiseText(artTitle)}">
                       </div>
        
                   
                       <div class="textField">
                           <p>Content</p>
-                          <textarea class="body">${sanitiseText(this.artContent)}</textarea>
+                          <textarea class="body">${sanitiseText(artContent)}</textarea>
                       </div>
                                     
                       <div class="pair">
@@ -41,83 +39,95 @@ class editArticleButtonElement extends HTMLButtonElement {
                           <button class="submit">Sumbit</button>
                       </div>
                       `
-            const id = createModal(html)
-            const modal = document.getElementById(id)
+        const id = createModal(html)
+        const modal = document.getElementById(id)
 
-            const infotxt = modal.querySelector(`.info`)
-            const title = modal.querySelector(`.title`)
-            const body = modal.querySelector(`.body`)
+        const infotxt = modal.querySelector(`.info`)
+        const title = modal.querySelector(`.title`)
+        const body = modal.querySelector(`.body`)
 
-            body.style.height = "1px"
-            body.style.height = body.scrollHeight + "px"
+        body.style.height = "1px"
+        body.style.height = body.scrollHeight + "px"
 
-            userInformation.writePermission("canEditArticles", perm => {
-                if (perm !== 1) {
-                    modal.querySelector(".content").innerHTML = "<h2>Edit an article</h2><p>It doesn't seem like you are able to edit articles currently!</p>"
-                }
-            })
-
-            const seterr = err => {
-                infotxt.innerHTML = err
-                infotxt.classList.add("negative")
-                infotxt.classList.remove("positive")
+        let permArticles = false, permInfluences = false, maxInfluence = 0
+        userInformation.writePermission("canEditArticles", perm => {
+            if (perm !== 1) {
+                modal.querySelector(".content").innerHTML = "<h2>Write an article</h2><p>It doesn't seem like you are able to edit articles currently!</p>"
+            } else {
+                permArticles = true
             }
-
-            const validate = () => {
-                if (title.value.length < 10) {
-                    seterr("The title is too short!")
-                    return false
-                }
-
-                if (title.value.length > 96) {
-                    seterr("The title is too long!")
-                    return false
-                }
-
-
-                infotxt.innerHTML = "Everything seems to be okay!"
-                infotxt.classList.add("positive")
-                infotxt.classList.remove("negative")
-                return true
+        })
+        userInformation.writePermission("canModifyInfluences", perm => {
+            if (perm !== 1) {
+                stockInfluenceSelector.readOnly = true
+            } else {
+                permInfluences = true
             }
+        })
+        userInformation.writePermission("maxInfluencePermille", perm => {
+            maxInfluence = perm
+        })
 
-            modal.querySelectorAll(`input`).forEach(elem => {
-                elem.addEventListener("input", () => validate())
-            })
-
-            modal.querySelectorAll(`textarea.body`).forEach(elem => {
-                elem.addEventListener("input", () => {
-                    elem.style.height = "1px"
-                    elem.style.height = elem.scrollHeight + "px"
-                })
-            })
-
-            modal.querySelector(`.submit`).addEventListener("click", () => {
-                if (validate()) {
-                    fetch(`${window.location.origin}/api/articles`, {
-                        method: "PATCH",
-                        body: JSON.stringify({
-                            id: Number(this.articleid),
-                            title: title.value,
-                            content: body.value
-                        })
-                    }).then(r => {
-                        if (r.ok) {
-                            closeModal(id)
-                            buildIndividualArticlePage(this.articleid)
-                        } else {
-                            if (r.status >= 400 || r.status < 500) {
-                                seterr("There is an issue with the request.")
-                            } else {
-                                seterr("There is a server-side issue causing this request to not be processed!")
-                            }
-                        }
-                    });
-                }
-            })
-            validate()
+        const seterr = err => {
+            infotxt.innerHTML = err
+            infotxt.classList.add("negative")
+            infotxt.classList.remove("positive")
         }
-    }
-}
 
-customElements.define('edit-article-button', editArticleButtonElement, {extends: "button"});
+        const validate = () => {
+            if (title.value.length < 10) {
+                seterr("The title is too short!")
+                return false
+            }
+
+            if (title.value.length > 96) {
+                seterr("The title is too long!")
+                return false
+            }
+
+
+            infotxt.innerHTML = "Everything seems to be okay!"
+            infotxt.classList.add("positive")
+            infotxt.classList.remove("negative")
+            return true
+        }
+
+        modal.querySelectorAll(`input`).forEach(elem => {
+            elem.addEventListener("input", () => validate())
+        })
+
+        modal.querySelectorAll(`textarea.body`).forEach(elem => {
+            elem.addEventListener("input", () => {
+                elem.style.height = "1px"
+                elem.style.height = elem.scrollHeight + "px"
+            })
+        })
+
+        modal.querySelector(`.submit`).addEventListener("click", () => {
+            if (validate()) {
+                fetch(`${window.location.origin}/api/articles`, {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                        id: Number(articleId),
+                        title: title.value,
+                        content: body.value
+                    })
+                }).then(r => {
+                    if (r.ok) {
+                        closeModal(id)
+                        buildIndividualArticlePage(articleId)
+                    } else {
+                        if (r.status >= 400 || r.status < 500) {
+                            seterr("There is an issue with the request.")
+                        } else {
+                            seterr("There is a server-side issue causing this request to not be processed!")
+                        }
+                    }
+                });
+            }
+        })
+        validate()
+
+
+    })
+}
