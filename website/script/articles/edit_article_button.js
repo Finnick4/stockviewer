@@ -104,18 +104,20 @@ function showModalEditArticles(articleId) {
                 if (!isNaN(stockid)) {
                     const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
                     const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
+                    const originalState = artInfluences.find(influence => influence.StockID === stockid)
+                    const hasBeenAdded = originalState === undefined
 
-                    if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) < 0) {
-                        seterr("All lengths have to be positive!")
+                    if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) <= 0) {
+                        seterr("All lengths have to be positive and not 0!")
                         escape = true
                         return;
                     }
-                    if (isNaN(permille.value) || permille.value === "") {
-                        seterr("Permilles have to be numeric!")
+                    if (isNaN(permille.value) || permille.value === "" || Number(permille.value) === 0) {
+                        seterr("Permilles have to be numeric and not 0!")
                         escape = true
                         return
                     }
-                    if (maxInfluence !== -1 && Math.abs(Number(permille.value)) > maxInfluence) {
+                    if ((hasBeenAdded || (Number(originalState.PermillePerDay) !== Number(permille.value))) && (maxInfluence !== -1 && Math.abs(Number(permille.value)) > maxInfluence)) {
                         seterr(`Cannot set permille higher than ${maxInfluence}!`)
                         escape = true
                         return
@@ -147,12 +149,52 @@ function showModalEditArticles(articleId) {
 
         modal.querySelector(`.submit`).addEventListener("click", () => {
             if (validate()) {
+                let added = [], edited = [], removed = artInfluences.map(x => Number(x.StockID))
+                const pushAddedInfluence = (stockid, permille, minutes) => {
+                    added.push({
+                        "StockID": Number(stockid),
+                        "LengthMinutes": Number(minutes),
+                        "PermillePerDay": Number(permille)
+                    })
+                }
+                const pushEditedInfluence = (stockid, permille, minutes) => {
+                    edited.push({
+                        "StockID": Number(stockid),
+                        "ArticleID": Number(articleId),
+                        "LengthMinutes": Number(minutes),
+                        "PermillePerDay": Number(permille)
+                    })
+                }
+                stockInfluenceSelector.savedStocks.forEach(stockid => {
+                    if (!isNaN(stockid)) {
+                        const numStockID = Number(stockid)
+
+                        const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] input.permille`)
+                        const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] input.minutes`)
+                        const originalState = artInfluences.find(influence => influence.StockID === stockid)
+
+                        if (artInfluences.some(influence => Number(influence.StockID) === numStockID)) { //influence war schon vorher da und ist das immernoch
+                            removed = removed.filter(s => numStockID !== s)
+                            if (!(Number(permille.value) === originalState.PermillePerDay && Number(minutes.value) === originalState.LengthMinutes)) {
+                                pushEditedInfluence(numStockID, Number(permille.value), Number(minutes.value))
+                            }
+                        } else {
+                            if (!removed.includes(numStockID)) {
+                                pushAddedInfluence(numStockID, Number(permille.value), Number(minutes.value))
+                            }
+                        }
+                    }
+                })
+
                 fetch(`${window.location.origin}/api/articles`, {
                     method: "PATCH",
                     body: JSON.stringify({
                         id: Number(articleId),
                         title: title.value,
-                        content: body.value
+                        content: body.value,
+                        AddedInfluences: permInfluences ? added : [],
+                        EditedInfluences: permInfluences ? edited : [],
+                        RemovedInfluences: permInfluences ? removed : []
                     })
                 }).then(r => {
                     if (r.ok) {

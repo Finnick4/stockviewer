@@ -72,13 +72,13 @@ function showModalCreateArticle(elem) {
                 const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
                 const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
 
-                if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) < 0) {
+                if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) <= 0) {
                     seterr("All lengths have to be positive!")
                     escape = true
                     return;
                 }
-                if (isNaN(permille.value) || permille.value === "") {
-                    seterr("Permilles have to be numeric!")
+                if (isNaN(permille.value) || permille.value === "" || Number(permille.value) === 0) {
+                    seterr("Permilles have to be numeric and not 0!")
                     escape = true
                     return
                 }

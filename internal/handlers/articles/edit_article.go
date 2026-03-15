@@ -73,16 +73,16 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	stockIDs := make([]int32, len(params.AddedInfluences)+len(params.EditedInfluences))
 	i := 0
-	for _, influence := range params.AddedInfluences {
+	for index, influence := range params.AddedInfluences {
 		if permMaxPermille != -1 && math.Abs(float64(influence.PermillePerDay)) > float64(permMaxPermille) {
 			api.InsufficientPermissionHandler(w)
 			log.Debug("Could not process the request as the requestor doesn't have sufficient permissions to choose influence permilles this high.")
 			return
 		}
-		params.AddedInfluences[i].CreatorID = userID
-		params.AddedInfluences[i].ArticleID = params.ID
+		params.AddedInfluences[index].CreatorID = userID
+		params.AddedInfluences[index].ArticleID = params.ID
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
-			params.AddedInfluences[i].FalloffType = 0
+			params.AddedInfluences[index].FalloffType = 0
 		}
 		if influence.LengthMinutes == 0 || influence.PermillePerDay == 0 {
 			log.Debug("Could not edit article as influences with either length or permille of 0 were included!")
@@ -92,15 +92,15 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		stockIDs[i] = influence.StockID
 		i++
 	}
-	for _, influence := range params.EditedInfluences {
+	for index, influence := range params.EditedInfluences {
 		if permMaxPermille != -1 && math.Abs(float64(influence.PermillePerDay)) > float64(permMaxPermille) {
 			api.InsufficientPermissionHandler(w)
 			log.Debug("Could not process the request as the requestor doesn't have sufficient permissions to choose influence permilles this high.")
 			return
 		}
-		params.EditedInfluences[i].ArticleID = params.ID
+		params.EditedInfluences[index].ArticleID = params.ID
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
-			params.AddedInfluences[i].FalloffType = 0
+			params.AddedInfluences[index].FalloffType = 0
 		}
 		if influence.LengthMinutes == 0 || influence.PermillePerDay == 0 {
 			log.Debug("Could not edit article as influences with either length or permille of 0 were included!")

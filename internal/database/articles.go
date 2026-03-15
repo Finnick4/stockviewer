@@ -326,7 +326,7 @@ UPDATE stockinfluences
 SET permille = $1,
     "falloffType" = $2,
     "totalLength" = $3,
-    "remainingLength" = GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', a."createdAt" + ($3 * (INTERVAL '1 minute')) - current_timestamp)) / 60) FROM articles a
+    "remainingLength" = GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', a."createdAt" + ($3::int * (INTERVAL '1 minute')) - current_timestamp)) / 60) FROM articles a
 WHERE "articleId" = $4 AND "stockId" = $5 AND stockinfluences."articleId" = a.id;`, influence.PermillePerDay, influence.FalloffType, influence.LengthMinutes, influence.ArticleID, influence.StockID)
 
 	if err != nil {

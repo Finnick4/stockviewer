@@ -63,6 +63,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
                     this.removeStock(id)
                 })
                 this.savedStocks.add(Number(id))
+                this.onEdit()
             }
 
             search.addEventListener("input", e => {
