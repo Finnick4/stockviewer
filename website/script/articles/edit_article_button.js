@@ -28,7 +28,8 @@ function showModalEditArticles(articleId) {
                     "StockID": influence.StockID,
                     "StockName": influence.StockName,
                     "LengthMinutes": influence.LengthMinutes,
-                    "PermillePerDay": influence.PermillePerDay
+                    "PermillePerDay": influence.PermillePerDay,
+                    "FalloffType": influence.FalloffType
                 })
             })
         }

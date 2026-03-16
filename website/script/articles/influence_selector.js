@@ -132,6 +132,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
                         <div class="influenceInputs">
                             <div><input class="permille" type="number" value="${influence.PermillePerDay}"> &permil;/day</div>
                             <div><input class="minutes" type="number" value="${influence.LengthMinutes}"> minutes</div>
+                            <div><falloff-selector></falloff-selector> falloff</div>
                         </div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
@@ -147,6 +148,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
             this.savedStocks.add(Number(influence.StockID))
 
             inner.append(elem)
+            elem.querySelector("falloff-selector").changeValue(influence.FalloffType)
         })
 
         this.onEdit()

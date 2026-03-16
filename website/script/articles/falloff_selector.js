@@ -2,36 +2,47 @@ class falloffSelectorElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<button class="selector">Linear</button>`
         this.value = 0
-        this.valueStr = "Linear"
+        this.valueStr = "None"
 
         this.readOnly = false
 
         const dropdownid = createDropdown(`
-            <div class="currentDisplay">Currently: Linear</div>
+            <div class="currentDisplay">Currently: None</div>
             <button class="option">Linear</button>
             <button class="option">Quadratic</button>
             <button class="option">Cubic</button>
         `)
 
-        const dropdown = document.getElementById(dropdownid)
-        const selector = this.querySelector("button.selector")
-        const currentDisplayHead = dropdown.querySelector("div.currentDisplay")
+        this.dropdown = document.getElementById(dropdownid)
+        this.selector = this.querySelector("button.selector")
+        this.currentDisplayHead = this.dropdown.querySelector("div.currentDisplay")
 
-        selector.popovertarget = dropdownid
-        selector.style.anchorName = `--anchor-${dropdownid}`
-        selector.onclick = () => {
+        this.selector.popovertarget = dropdownid
+        this.selector.style.anchorName = `--anchor-${dropdownid}`
+        this.selector.onclick = () => {
             if (!this.readOnly) {
-                dropdown.togglePopover()
+                this.dropdown.togglePopover()
             }
         }
-        dropdown.querySelectorAll("button.option").forEach((btn, i) => {
+        this.changeValue(1)
+    }
+    changeValue(newVal) {
+        const idFalloff = new Map()
+        idFalloff.set(0, "Linear")
+        idFalloff.set(1, "Linear")
+        idFalloff.set(2, "Quadratic")
+        idFalloff.set(3, "Cubic")
+        this.value = Number(newVal)
+        this.valueStr = idFalloff.get(Number(newVal))
+
+        this.dropdown.querySelectorAll("button.option").forEach((btn, i) => {
             btn.addEventListener("click", () => {
                 if (!this.readOnly) {
                     this.value = i + 1
                     this.valueStr = btn.innerHTML
-                    selector.innerHTML = this.valueStr
-                    currentDisplayHead.innerHTML = `Currently: ${this.valueStr}`
-                    dropdown.togglePopover(false)
+                    this.selector.innerHTML = this.valueStr
+                    this.currentDisplayHead.innerHTML = `Currently: ${this.valueStr}`
+                    this.dropdown.togglePopover(false)
                 }
             })
         })
