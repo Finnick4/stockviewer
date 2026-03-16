@@ -34,6 +34,8 @@ class falloffSelectorElement extends HTMLElement {
         idFalloff.set(3, "Cubic")
         this.value = Number(newVal)
         this.valueStr = idFalloff.get(Number(newVal))
+        this.selector.innerHTML = this.valueStr
+        this.currentDisplayHead.innerHTML = `Currently: ${this.valueStr}`
 
         this.dropdown.querySelectorAll("button.option").forEach((btn, i) => {
             btn.addEventListener("click", () => {

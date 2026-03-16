@@ -115,11 +115,12 @@ function showModalCreateArticle(elem) {
     modal.querySelector(`.submit`).addEventListener("click", () => {
         if (validate()) {
             const influences = []
-            const pushInfluence = (stockid, permille, minutes) => {
+            const pushInfluence = (stockid, permille, minutes, falloff) => {
                 influences.push({
                     "StockID": stockid,
                     "LengthMinutes": minutes,
-                    "PermillePerDay": permille
+                    "PermillePerDay": permille,
+                    "FalloffType": falloff
                 })
             }
 
@@ -127,7 +128,8 @@ function showModalCreateArticle(elem) {
                 if (!isNaN(stockid)) {
                     const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
                     const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
-                    pushInfluence(stockid, Number(permille.value), Number(minutes.value))
+                    const falloff = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] falloff-selector`)
+                    pushInfluence(stockid, Number(permille.value), Number(minutes.value), Number(falloff.value))
                 }
             })
             fetch(`${window.location.origin}/api/articles`, {

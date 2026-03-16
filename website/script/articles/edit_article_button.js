@@ -151,19 +151,21 @@ function showModalEditArticles(articleId) {
         modal.querySelector(`.submit`).addEventListener("click", () => {
             if (validate()) {
                 let added = [], edited = [], removed = artInfluences.map(x => Number(x.StockID))
-                const pushAddedInfluence = (stockid, permille, minutes) => {
+                const pushAddedInfluence = (stockid, permille, minutes, falloff) => {
                     added.push({
                         "StockID": Number(stockid),
                         "LengthMinutes": Number(minutes),
-                        "PermillePerDay": Number(permille)
+                        "PermillePerDay": Number(permille),
+                        "FalloffType": Number(falloff)
                     })
                 }
-                const pushEditedInfluence = (stockid, permille, minutes) => {
+                const pushEditedInfluence = (stockid, permille, minutes, falloff) => {
                     edited.push({
                         "StockID": Number(stockid),
                         "ArticleID": Number(articleId),
                         "LengthMinutes": Number(minutes),
-                        "PermillePerDay": Number(permille)
+                        "PermillePerDay": Number(permille),
+                        "FalloffType": Number(falloff)
                     })
                 }
                 stockInfluenceSelector.savedStocks.forEach(stockid => {
@@ -172,16 +174,17 @@ function showModalEditArticles(articleId) {
 
                         const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] input.permille`)
                         const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] input.minutes`)
+                        const falloff = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] falloff-selector`)
                         const originalState = artInfluences.find(influence => influence.StockID === stockid)
 
-                        if (artInfluences.some(influence => Number(influence.StockID) === numStockID)) { //influence war schon vorher da und ist das immernoch
+                        if (artInfluences.some(influence => Number(influence.StockID) === numStockID)) {
                             removed = removed.filter(s => numStockID !== s)
-                            if (!(Number(permille.value) === originalState.PermillePerDay && Number(minutes.value) === originalState.LengthMinutes)) {
-                                pushEditedInfluence(numStockID, Number(permille.value), Number(minutes.value))
+                            if (!(Number(permille.value) === originalState.PermillePerDay && Number(minutes.value) === originalState.LengthMinutes && Number(falloff.value) === originalState.FalloffType)) {
+                                pushEditedInfluence(numStockID, Number(permille.value), Number(minutes.value), Number(falloff.value))
                             }
                         } else {
                             if (!removed.includes(numStockID)) {
-                                pushAddedInfluence(numStockID, Number(permille.value), Number(minutes.value))
+                                pushAddedInfluence(numStockID, Number(permille.value), Number(minutes.value), Number(falloff.value))
                             }
                         }
                     }
