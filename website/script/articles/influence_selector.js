@@ -43,7 +43,8 @@ class stockInfluenceSelectorElement extends HTMLElement {
                         <div class="stockName">${sanitiseText(name)}</div>
                         <div class="influenceInputs">
                             <div><input class="permille" type="number" value="0"> &permil;/day</div>
-                            <div>for <input class="minutes" type="number" value="0"> minutes</div>
+                            <div><input class="minutes" type="number" value="0"> minutes</div>
+                            <div><falloff-selector></falloff-selector> falloff</div>
                         </div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
@@ -130,7 +131,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
                         <div class="stockName">${sanitiseText(influence.StockName)}</div>
                         <div class="influenceInputs">
                             <div><input class="permille" type="number" value="${influence.PermillePerDay}"> &permil;/day</div>
-                            <div>for <input class="minutes" type="number" value="${influence.LengthMinutes}"> minutes</div>
+                            <div><input class="minutes" type="number" value="${influence.LengthMinutes}"> minutes</div>
                         </div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
