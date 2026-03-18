@@ -220,13 +220,13 @@ func CreateInfluence(influence dto.CreateInfluenceParams) error {
 
 	if influence.CreatorID != "" {
 		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "creatorId", "totalLength", "remainingLength", permille, "falloffType") 
-VALUES ($1, $2, $3, $4, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + ($4 * (INTERVAL '1 minute')) - current_timestamp)) / 60)
+VALUES ($1, $2, $3, $4, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + ($4::int * (INTERVAL '1 minute')) - current_timestamp)) / 60)
 FROM articles
 WHERE articles.id = $2), $5, $6);
 `, influence.StockID, influence.ArticleID, influence.CreatorID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 	} else {
 		_, err = db.Exec(`INSERT INTO stockinfluences ("stockId", "articleId", "totalLength", "remainingLength", permille, "falloffType") 
-VALUES ($1, $2, $3, $4, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + ($3 * (INTERVAL '1 minute')) - current_timestamp)) / 60)
+VALUES ($1, $2, $3, $4, (SELECT GREATEST(0, EXTRACT(EPOCH FROM date_trunc('minutes', "createdAt" + ($3::int * (INTERVAL '1 minute')) - current_timestamp)) / 60)
 FROM articles
 WHERE articles.id = $2), $5);`, influence.StockID, influence.ArticleID, influence.LengthMinutes, influence.PermillePerDay, influence.FalloffType)
 	}
