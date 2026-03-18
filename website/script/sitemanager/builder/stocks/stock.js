@@ -10,5 +10,5 @@ function buildIndividualStockPage(id) {
                         <related-stocks data-stock-id="${id}"></related-stocks>
                         <stock-groups-list data-stock-id="${id}"></stock-groups-list>
                         `;
-    setMainBodyHTML(main, "stockOverviewPage");
+    setMainBodyHTML(main, "individualStockPage");
 }

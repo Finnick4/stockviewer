@@ -15,6 +15,8 @@
     --negative-muted: hsl(0, 80%, 70%);
     --icon-color: #888888;
     --icon-color-highlight: var(--text);
+
+    --main-width: 75%;
     --border-radius: 2ch;
     --bg-transition: background-color .1s;
     --popup-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
@@ -71,39 +73,45 @@ nav.linklist {
 }
 
 main {
-    overflow: auto;
-    margin: 0 .5rem;
+    margin: 0 auto;
+    align-self: center;
+    width: var(--main-width);
 }
 
-main.stockOverviewPage {
+main.homepage {
+    display: grid;
+    grid-template: 40rem 20rem / 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+main.individualStockPage {
     display: grid;
     grid-template: 4rem 40rem 20rem / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
-main.stockOverviewPage stock-header {
+main.individualStockPage stock-header {
     grid-column: 1/6;
 }
 
-main.stockOverviewPage stock-chart {
+main.individualStockPage stock-chart {
     grid-column: 1/4;
     height: 100%;
 }
-main.stockOverviewPage stock-chart .inner {
+main.individualStockPage stock-chart .inner {
     height: calc(100% - 2rem);
 }
 
-main.stockOverviewPage stock-chart svg.chart {
-    height: 33rem;
+main.individualStockPage stock-chart svg.chart {
     display: block;
     margin: 0 auto;
 }
 
-main.stockOverviewPage related-stocks {
+main.individualStockPage related-stocks {
     grid-column: 4/6;
 }
 
-main.stockOverviewPage stock-groups-list {
+main.individualStockPage stock-groups-list {
     grid-column: 4/6;
 }
 
