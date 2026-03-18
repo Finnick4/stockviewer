@@ -13,7 +13,7 @@ import (
 )
 
 // CreateStock creates a new stock with the given name and initial price and returns the ID of the new stock. The newly created stock is active.
-func CreateStock(name string, shorthand string, initPrice int64, creatorID string) (int32, error) {
+func CreateStock(name string, shorthand string, initPrice int64, color int32, creatorID string) (int32, error) {
 	currentTimeStamp := time.Now()
 	shorthandlowered := strings.ToLower(shorthand)
 
@@ -21,10 +21,18 @@ func CreateStock(name string, shorthand string, initPrice int64, creatorID strin
 
 	var resp *sql.Row
 
-	if creatorID == "" {
-		resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate") VALUES ($1, $2, $3) RETURNING id;`, name, shorthandlowered, currentTimeStamp)
+	if color == 0 {
+		if creatorID == "" {
+			resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate") VALUES ($1, $2, $3) RETURNING id;`, name, shorthandlowered, currentTimeStamp)
+		} else {
+			resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate", "creatorId") VALUES ($1, $2, $3, $4) RETURNING id;`, name, shorthandlowered, currentTimeStamp, creatorID)
+		}
 	} else {
-		resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate", "creatorId") VALUES ($1, $2, $3, $4) RETURNING id;`, name, shorthandlowered, currentTimeStamp, creatorID)
+		if creatorID == "" {
+			resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate", color) VALUES ($1, $2, $3, $4) RETURNING id;`, name, shorthandlowered, currentTimeStamp, color)
+		} else {
+			resp = db.QueryRow(`INSERT INTO stocks (name, shorthand, "latestUpdate", color, "creatorId") VALUES ($1, $2, $3, $4, $5) RETURNING id;`, name, shorthandlowered, currentTimeStamp, color, creatorID)
+		}
 	}
 
 	if resp.Err() != nil {

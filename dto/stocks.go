@@ -6,6 +6,7 @@ type StockCreateParams struct {
 	Name      string
 	Shorthand string
 	InitPrice int64
+	Color     int32
 }
 type StockGetParams struct {
 	ID        int32

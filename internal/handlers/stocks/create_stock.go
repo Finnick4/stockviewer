@@ -24,7 +24,7 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 
 	permissions := r.Context().Value("permissions").(map[string]int32)
 
-	if permissions["canCreateStocks"] == 1 {
+	if permissions["canCreateStocks"] != 1 {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return
@@ -61,10 +61,13 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		api.RequestMalformedHandler(w, "Could not accept the request as shorthand is a number")
 		return
 	}
+	if params.Color < 0 {
+		params.Color = 0
+	}
 
 	userid := database.GetUserIDFromToken(r.Context().Value("token").(string))
 
-	lastID, err := database.CreateStock(params.Name, params.Shorthand, params.InitPrice, userid)
+	lastID, err := database.CreateStock(params.Name, params.Shorthand, params.InitPrice, params.Color, userid)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
