@@ -103,8 +103,14 @@ function showModalEditArticles(articleId) {
             let escape = false
             stockInfluenceSelector.savedStocks.forEach(stockid => {
                 if (!isNaN(stockid)) {
-                    const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
-                    const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
+                    const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] edit-influence`).dropdownElem
+                    if (influenceDropdownElem === undefined) {
+                        seterr("There was an error while checking the influences!")
+                        escape = true
+                        return;
+                    }
+                    const permille = influenceDropdownElem.querySelector(`input.permille`)
+                    const minutes = influenceDropdownElem.querySelector(`input.minutes`)
                     const originalState = artInfluences.find(influence => influence.StockID === stockid)
                     const hasBeenAdded = originalState === undefined
 
@@ -171,10 +177,11 @@ function showModalEditArticles(articleId) {
                 stockInfluenceSelector.savedStocks.forEach(stockid => {
                     if (!isNaN(stockid)) {
                         const numStockID = Number(stockid)
+                        const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] edit-influence`).dropdownElem
 
-                        const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] input.permille`)
-                        const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] input.minutes`)
-                        const falloff = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] falloff-selector`)
+                        const permille = influenceDropdownElem.querySelector(`input.permille`)
+                        const minutes = influenceDropdownElem.querySelector(`input.minutes`)
+                        const falloff = influenceDropdownElem.querySelector(`falloff-selector`)
                         const originalState = artInfluences.find(influence => influence.StockID === stockid)
 
                         if (artInfluences.some(influence => Number(influence.StockID) === numStockID)) {

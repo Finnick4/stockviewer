@@ -49,6 +49,9 @@ class falloffSelectorElement extends HTMLElement {
             })
         })
     }
+    disconnectedCallback() {
+        deleteDropdown(this.dropdownid)
+    }
 }
 
 

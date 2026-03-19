@@ -357,10 +357,6 @@ div.sidebar a.btn.selected:hover {
     padding: 0;
 }
 
-.modal .influenceInputs input {
-    width: 8ch;
-    background-color: var(--bg-light);
-}
 .modal .stockOverview:hover input {
     background-color: var(--bg-very-light);
 }
@@ -368,9 +364,6 @@ div.sidebar a.btn.selected:hover {
     background-color: var(--bg-very-light);
 }
 
-.modal .influenceInputs div {
-    display: inline;
-}
 stock-influence-selector .stockOverview .containing {
     display: grid;
     grid-template-columns: 32ch 1fr 2rem;
@@ -384,6 +377,18 @@ stock-influence-selector .stockOverview .containing {
     background-color: var(--bg-light);
 }
 
+edit-influence {
+    width: 20rem;
+    display: block;
+}
+
+edit-influence button.influenceOverview {
+    background-color: var(--bg-light);
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    width: 100%;
+}
 
 button {
     font-family: Ubuntu, sans-serif;
