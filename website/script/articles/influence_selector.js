@@ -48,9 +48,9 @@ class stockInfluenceSelectorElement extends HTMLElement {
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
                     </div>`
-                elem.addEventListener("input", () => {
+                elem.querySelector("edit-influence").onEdit = () => {
                     this.onEdit()
-                })
+                }
                 inner.append(elem)
                 const placeholder = inner.querySelector(`li.placeholder`)
                 if (placeholder !== null) {
@@ -134,9 +134,9 @@ class stockInfluenceSelectorElement extends HTMLElement {
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
                     </div>`
-            elem.addEventListener("input", () => {
+            elem.querySelector("edit-influence").onEdit = () => {
                 this.onEdit()
-            })
+            }
             const removeBtn = elem.querySelector(".removeStockBtn")
             removeBtn.addEventListener("click", () => {
                 this.removeStock(influence.StockID)

@@ -365,8 +365,8 @@ div.sidebar a.btn.selected:hover {
 }
 
 stock-influence-selector .stockOverview .containing {
-    display: grid;
-    grid-template-columns: 32ch 1fr 2rem;
+    display: flex;
+    justify-content: space-between;
     padding: .25rem;
     align-items: center;
 }
@@ -388,6 +388,7 @@ edit-influence button.influenceOverview {
     justify-content: space-evenly;
     gap: 1rem;
     width: 100%;
+    padding: .5rem;
 }
 
 button {

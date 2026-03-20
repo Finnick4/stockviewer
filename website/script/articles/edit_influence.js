@@ -19,8 +19,36 @@ class editInfluence extends HTMLElement {
         this.dropdownElem = document.getElementById(this.dropdownid)
         this.dropdownElem.style.width = "18rem"
         this.dropdownElem.querySelector(".falloff").innerHTML = `<falloff-selector></falloff-selector> falloff`
-        this.dropdownElem.querySelector(".falloff falloff-selector").changeValue(this.falloffType)
 
+        const falloffSelector = this.dropdownElem.querySelector(".falloff falloff-selector")
+        const permilleSelector = this.dropdownElem.querySelector("input.permille")
+        const minuteSelector = this.dropdownElem.querySelector("input.minutes")
+
+        falloffSelector.changeValue(this.falloffType)
+
+        this.updateDisplay()
+
+        falloffSelector.onEdit = () => {
+            console.log("Test")
+            this.falloffType = Number(falloffSelector.value)
+            this.updateDisplay()
+            this.onEdit()
+        }
+        permilleSelector.addEventListener("input", () => {
+            this.permil = Number(permilleSelector.value)
+            this.updateDisplay()
+            this.onEdit()
+        })
+        minuteSelector.addEventListener("input", () => {
+            this.minutes = Number(minuteSelector.value)
+            this.updateDisplay()
+            this.onEdit()
+        })
+    }
+    onEdit() {
+        return
+    }
+    updateDisplay() {
         this.innerHTML = `
             <button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};" class="influenceOverview">
                 <div>&#8597; ${this.permil}&permil;</div>

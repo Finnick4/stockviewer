@@ -45,9 +45,13 @@ class falloffSelectorElement extends HTMLElement {
                     this.selector.innerHTML = this.valueStr
                     this.currentDisplayHead.innerHTML = `Currently: ${this.valueStr}`
                     this.dropdown.togglePopover(false)
+                    this.onEdit()
                 }
             })
         })
+    }
+    onEdit() {
+        return
     }
     disconnectedCallback() {
         deleteDropdown(this.dropdownid)
