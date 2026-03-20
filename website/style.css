@@ -211,7 +211,7 @@ div.sidebar a.btn.selected:hover {
     top: anchor(bottom);
     /*noinspection CssInvalidFunction*/
     left: anchor(left);
-    position-try-fallbacks: --fallback-right;
+    position-try-fallbacks: --fallback-right, --fallback-bottom;
 }
 
 .dropdown:popover-open {
@@ -240,6 +240,15 @@ div.sidebar a.btn.selected:hover {
     top: anchor(bottom);
     /*noinspection CssInvalidFunction*/
     right: anchor(right);
+}
+/*noinspection CssInvalidAtRule*/
+@position-try --fallback-bottom {
+    inset: auto;
+    /*noinspection CssInvalidFunction*/
+    bottom: anchor(top);
+    /*noinspection CssInvalidFunction*/
+    right: anchor(right);
+    margin-block-end: .5rem;
 }
 
 .modal {
@@ -389,6 +398,27 @@ edit-influence button.influenceOverview {
     gap: 1rem;
     width: 100%;
     padding: .5rem;
+}
+div.dropdown div.pair {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .25rem;
+}
+div.dropdown div.pair input {
+    width: 8rem;
+    padding: .25rem;
+    background-color: var(--bg-very-light);
+}
+div.dropdown div.pair:focus-within p {
+    color: var(--text);
+}
+div.dropdown div.pair button {
+    width: 8rem;
+    background-color: var(--bg-very-light);
+}
+div.dropdown div.pair falloff-selector {
+    align-self: center;
 }
 
 button {

@@ -19,6 +19,7 @@ class falloffSelectorElement extends HTMLElement {
 
         this.selector.popovertarget = dropdownid
         this.selector.style.anchorName = `--anchor-${dropdownid}`
+        this.dropdown.style.width = `calc(${this.selector.style.width} - 2rem)`
         this.selector.onclick = () => {
             if (!this.readOnly) {
                 this.dropdown.togglePopover()

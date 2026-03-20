@@ -42,7 +42,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
                     <div class="containing">
                         <div class="stockName">${sanitiseText(name)}</div>
                         <div class="influenceInputs">
-                            <edit-influence></edit-influence>
+                            <edit-influence data-stock-price="${resp["Data"].find(stock => Number(stock["ID"]) === Number(id))["Price"]}"></edit-influence>
                         </div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
@@ -118,35 +118,38 @@ class stockInfluenceSelectorElement extends HTMLElement {
             this.onEdit()
             return
         }
+        const influenceStockIDs = influences.map(infl => infl.StockID)
 
-        inner.innerHTML = ""
-        influences.forEach(influence => {
-            const elem = document.createElement("li")
-            elem.classList.add("stockOverview")
-            elem.dataset.stockId = influence.StockID
-            elem.innerHTML = `
+        fetch(`/api/stockgroups/?members=${influenceStockIDs}`).then(r => r.json()).then(resp => {
+            inner.innerHTML = ""
+            influences.forEach(influence => {
+                const elem = document.createElement("li")
+                elem.classList.add("stockOverview")
+                elem.dataset.stockId = influence.StockID
+                elem.innerHTML = `
                     <div class="containing">
                         <div class="stockName">${sanitiseText(influence.StockName)}</div>
                         <div class="influenceInputs">
-                            <edit-influence data-permil="${influence.PermillePerDay}" data-minutes="${influence.LengthMinutes}" data-falloff-type="${influence.FalloffType}"></edit-influence>
+                            <edit-influence data-stock-price="${resp["Data"]["Members"].find(stock => Number(stock["ID"]) === Number(influence.StockID))["Price"]}"  data-permil="${influence.PermillePerDay}" data-minutes="${influence.LengthMinutes}" data-falloff-type="${influence.FalloffType}"></edit-influence>
                         </div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
                     </div>`
-            elem.querySelector("edit-influence").onEdit = () => {
-                this.onEdit()
-            }
-            const removeBtn = elem.querySelector(".removeStockBtn")
-            removeBtn.addEventListener("click", () => {
-                this.removeStock(influence.StockID)
+                elem.querySelector("edit-influence").onEdit = () => {
+                    this.onEdit()
+                }
+                const removeBtn = elem.querySelector(".removeStockBtn")
+                removeBtn.addEventListener("click", () => {
+                    this.removeStock(influence.StockID)
+                })
+                this.savedStocks.add(Number(influence.StockID))
+
+                inner.append(elem)
             })
-            this.savedStocks.add(Number(influence.StockID))
 
-            inner.append(elem)
+            this.onEdit()
         })
-
-        this.onEdit()
     }
     disconnectedCallback() {
         deleteDropdown(this.dropdownid)

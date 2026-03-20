@@ -11,14 +11,18 @@ class editInfluence extends HTMLElement {
         this.permil = isNaN(Number(this.dataset.permil)) ? 0 : Number(this.dataset.permil)
         this.minutes = isNaN(Number(this.dataset.minutes)) ? 0 : Number(this.dataset.minutes)
         this.falloffType = isNaN(Number(this.dataset.falloffType)) ? 0 : Number(this.dataset.falloffType)
-        console.log(this.falloffType)
+        this.stockPrice = isNaN(Number(this.dataset.stockPrice)) ? 0 : Number(this.dataset.stockPrice)
+        console.log(this.stockPrice)
+        console.log(this.dataset.stockPrice)
         this.dropdownid = createDropdown(`
-                            <div><input class="permille" type="number" value="${this.permil}"> &permil;/day</div>
-                            <div><input class="minutes" type="number" value="${this.minutes}"> minutes</div>
-                            <div class="falloff">falloff</div>`)
+                            <div class="pair"><p>value:</p><p>${getShortNumber(this.stockPrice)}</p></div> 
+                            <div class="pair"><p>&permil;/day:</p><input class="permille" type="number" value="${this.permil}"></div>
+                            <div class="pair"><p>minutes:</p><input class="minutes" type="number" value="${this.minutes}"></div>
+                            <div class="pair falloff"></div>`)
         this.dropdownElem = document.getElementById(this.dropdownid)
         this.dropdownElem.style.width = "18rem"
-        this.dropdownElem.querySelector(".falloff").innerHTML = `<falloff-selector></falloff-selector> falloff`
+        this.dropdownElem.setAttribute("popover", "manual")
+        this.dropdownElem.querySelector(".falloff").innerHTML = `<p>falloff:</p><falloff-selector></falloff-selector>`
 
         const falloffSelector = this.dropdownElem.querySelector(".falloff falloff-selector")
         const permilleSelector = this.dropdownElem.querySelector("input.permille")
