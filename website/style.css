@@ -877,10 +877,22 @@ div.titlebar:has(article-header) {
 
 article-header div.subtitle {
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    margin-bottom: 1rem;
 }
 article-header div.subtitle div:not(.change) {
-    max-width: 50%
+    max-width: 50%;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+article-header div.subtitle div.change {
+    background-color: var(--bg);
+    height: 2.5rem;
+    align-self: center;
+    align-content: center;
+    text-align: center;
 }
 
 div.piechart {
