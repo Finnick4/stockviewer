@@ -93,6 +93,10 @@ function showModalCreateStock(elem) {
             }).then(r => {
                 if (r.ok) {
                     closeModal(id)
+                    r.json().then(resp => {
+                        window.history.pushState(null, null, `${window.location.origin}/stocks/${resp["Data"]}`);
+                        router(`/stocks/${resp["Data"]}`)
+                    })
                 } else {
                     if (r.status >= 400 || r.status < 500) {
                         seterr("There is an issue with the request.")
