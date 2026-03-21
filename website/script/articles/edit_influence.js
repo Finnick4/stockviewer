@@ -11,11 +11,9 @@ class editInfluence extends HTMLElement {
         this.permil = isNaN(Number(this.dataset.permil)) ? 0 : Number(this.dataset.permil)
         this.minutes = isNaN(Number(this.dataset.minutes)) ? 0 : Number(this.dataset.minutes)
         this.falloffType = isNaN(Number(this.dataset.falloffType)) ? 0 : Number(this.dataset.falloffType)
-        this.stockPrice = isNaN(Number(this.dataset.stockPrice)) ? 0 : Number(this.dataset.stockPrice)
-        console.log(this.stockPrice)
-        console.log(this.dataset.stockPrice)
+        this.stockPriceCT = isNaN(Number(this.dataset.stockPrice)) ? 0 : Number(this.dataset.stockPrice)
         this.dropdownid = createDropdown(`
-                            <div class="pair"><p>value:</p><p>${getShortNumber(this.stockPrice)}</p></div> 
+                            <div class="pair"><p>value:</p><p>${getShortNumber(this.stockPriceCT / 100)}</p></div> 
                             <div class="pair"><p>&permil;/day:</p><input class="permille" type="number" value="${this.permil}"></div>
                             <div class="pair"><p>minutes:</p><input class="minutes" type="number" value="${this.minutes}"></div>
                             <div class="pair falloff"></div>`)

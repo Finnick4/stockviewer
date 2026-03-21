@@ -69,8 +69,14 @@ function showModalCreateArticle(elem) {
         let escape = false
         stockInfluenceSelector.savedStocks.forEach(stockid => {
             if (!isNaN(stockid)) {
-                const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
-                const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
+                const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] edit-influence`).dropdownElem
+                if (influenceDropdownElem === undefined) {
+                    seterr("There was an error while checking the influences!")
+                    escape = true
+                    return;
+                }
+                const permille = influenceDropdownElem.querySelector(`input.permille`)
+                const minutes = influenceDropdownElem.querySelector(`input.minutes`)
 
                 if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) <= 0) {
                     seterr("All lengths have to be positive!")
@@ -126,9 +132,13 @@ function showModalCreateArticle(elem) {
 
             stockInfluenceSelector.savedStocks.forEach(stockid => {
                 if (!isNaN(stockid)) {
-                    const permille = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.permille`)
-                    const minutes = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] input.minutes`)
-                    const falloff = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] falloff-selector`)
+                    const numStockID = Number(stockid)
+                    const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] edit-influence`).dropdownElem
+
+                    const permille = influenceDropdownElem.querySelector(`input.permille`)
+                    const minutes = influenceDropdownElem.querySelector(`input.minutes`)
+                    const falloff = influenceDropdownElem.querySelector(`falloff-selector`)
+
                     pushInfluence(stockid, Number(permille.value), Number(minutes.value), Number(falloff.value))
                 }
             })
