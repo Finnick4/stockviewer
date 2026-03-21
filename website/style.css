@@ -866,10 +866,10 @@ stock-chart svg line.axis {
     background-color: var(--bg-dark);
     border-radius: var(--border-radius);
     padding: 1rem;
-    max-width: 50rem;
+    width: 50rem;
     line-height: 1.5em;
     font-size: 20px;
-    margin: auto;
+    margin: auto auto 1rem;
 }
 div.titlebar:has(article-header) {
     grid-template-columns: 1fr 50rem 1fr;
@@ -894,6 +894,16 @@ article-header div.subtitle div.change {
     align-content: center;
     text-align: center;
     font-size: 16px;
+}
+
+influenced-stocks {
+    width: 52rem;
+    display: block;
+    margin: auto auto 1rem;
+}
+
+influenced-stocks div.change {
+    width: 10ch;
 }
 
 div.piechart {

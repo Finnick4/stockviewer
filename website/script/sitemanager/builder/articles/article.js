@@ -16,11 +16,13 @@ function buildIndividualArticlePage(id) {
                         <div class="article">
                             Loading article...
                         </div>
+                        <div class="effectInfo"></div>
                         `;
     setMainBodyHTML(main);
 
     const article = document.querySelector("main div.article")
     const articleTitleElem = document.querySelector("main article-header")
+    const effectInfoElem = document.querySelector("main div.effectInfo")
 
     fetch(`/api/articles?id=${id}`).then(r => r.json()).then(resp => {
         const data = resp["Data"]
@@ -33,5 +35,13 @@ function buildIndividualArticlePage(id) {
 
         article.innerHTML = data["Content"] === "" ? `<i>This article doesn't have a body (yet).<br>
             If you have the permission to do so, you can fix it by editing this article!</i>` : parseStyle(data["Content"])
+
+        if (data["Influences"] !== null) {
+            const stocks = data["Influences"].map(influence => influence["StockID"])
+
+            const affectedStocksElem = new affectedStocks()
+            affectedStocksElem.setData(stocks, resp["Data"]["Influences"])
+            effectInfoElem.appendChild(affectedStocksElem)
+        }
     })
 }
