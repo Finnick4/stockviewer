@@ -141,7 +141,7 @@ div.info {
 }
 div.change.author {
     background-color: var(--bg);
-    max-width: calc(100% - 22ch - 3.25rem);
+    max-width: calc(100% - 19ch - 1.5rem);
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -866,10 +866,21 @@ stock-chart svg line.axis {
     background-color: var(--bg-dark);
     border-radius: var(--border-radius);
     padding: 1rem;
-    max-width: 70ch;
+    max-width: 50rem;
     line-height: 1.5em;
     font-size: 20px;
     margin: auto;
+}
+div.titlebar:has(article-header) {
+    grid-template-columns: 1fr 50rem 1fr;
+}
+
+article-header div.subtitle {
+    display: flex;
+    justify-content: space-between;
+}
+article-header div.subtitle div:not(.change) {
+    max-width: 50%
 }
 
 div.piechart {

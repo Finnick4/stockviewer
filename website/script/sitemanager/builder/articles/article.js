@@ -6,11 +6,8 @@ function buildIndividualArticlePage(id) {
 
     const main = `
                         <div class="titlebar">
-                            <div class="info">
-                                <div class="creationDate change"></div>
-                                <div class="author change"></div>
-                            </div>
-                            <h1>Loading name...</h1>
+                            <div></div>
+                            <article-header></article-header>
                             <nav>
                                 <button is="star-article-button" data-articleid="${id}"></button>
                                 <button is="edit-article-button" data-articleid="${id}"></button>
@@ -23,25 +20,17 @@ function buildIndividualArticlePage(id) {
     setMainBodyHTML(main);
 
     const article = document.querySelector("main div.article")
-    const title = document.querySelector("main div.titlebar h1")
-    const author = document.querySelector("main div.titlebar .author")
-    const createdAt = document.querySelector("main div.titlebar .creationDate")
+    const articleTitleElem = document.querySelector("main article-header")
 
     fetch(`/api/articles?id=${id}`).then(r => r.json()).then(resp => {
         const data = resp["Data"]
         if (data["AuthorID"] !== "") {
-            author.innerHTML = sanitiseText(data["AuthorDisplayName"])
+            articleTitleElem.authorName = sanitiseText(data["AuthorDisplayName"])
         }
-        const creationDate = new Date(data["TimeCreated"])
-        createdAt.innerHTML = Intl.DateTimeFormat("en", {
-            month: 'long',
-            day: "numeric",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        }).format(creationDate)
+        articleTitleElem.creationDate =  new Date(data["TimeCreated"])
+        articleTitleElem.title = data["Title"]
+        articleTitleElem.update()
 
-        title.innerHTML = data["Title"]
         article.innerHTML = data["Content"] === "" ? `<i>This article doesn't have a body (yet).<br>
             If you have the permission to do so, you can fix it by editing this article!</i>` : parseStyle(data["Content"])
     })
