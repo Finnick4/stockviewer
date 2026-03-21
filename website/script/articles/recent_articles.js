@@ -12,7 +12,7 @@ class recentArticlesElement extends HTMLElement {
                             <a is="a-button" href="/articles/${e["ID"]}">
                                 <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div class="info">
-                                    <div class="change">0 affected</div>
+                                    <div class="change">${e["TotalInfluences"]} affected</div>
                                 </div>
                             </a>
                         </li>`
@@ -37,7 +37,7 @@ class recentArticlesElement extends HTMLElement {
                         elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
                                               <div class="title">${sanitiseText(e["Title"])}</div>
                                               <div>
-                                                <div class="change">0 affected</div>
+                                                <div class="change">${e["TotalInfluences"]} affected</div>
                                               </div>
                                           </a>`
                         ul.insertBefore(elem, loadMoreBtn)

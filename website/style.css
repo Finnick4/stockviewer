@@ -116,7 +116,7 @@ main.individualStockPage stock-groups-list {
 }
 
 div.change.creationDate {
-    width: 19ch;
+    width: fit-content;
     background-color: var(--bg);
 }
 div.change.shorthand {
@@ -889,10 +889,11 @@ article-header div.subtitle div:not(.change) {
 }
 article-header div.subtitle div.change {
     background-color: var(--bg);
-    height: 2.5rem;
+    height: 1.5rem;
     align-self: center;
     align-content: center;
     text-align: center;
+    font-size: 16px;
 }
 
 div.piechart {

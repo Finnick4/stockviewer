@@ -91,7 +91,10 @@ func GetArticles(offset int32) ([]dto.ArticleOverview, error) {
 		offset = 0
 	}
 
-	rows, err := db.Query(`SELECT id, title FROM articles ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
+	rows, err := db.Query(`
+SELECT id, title, COUNT(stockinfluences."stockId") FROM articles
+    LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
+GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
 	defer rows.Close()
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -105,7 +108,7 @@ func GetArticles(offset int32) ([]dto.ArticleOverview, error) {
 
 	for rows.Next() {
 		var article dto.ArticleOverview
-		err = rows.Scan(&article.ID, &article.Title)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences)
 		if err != nil {
 			log.Error(err)
 			return nil, err
