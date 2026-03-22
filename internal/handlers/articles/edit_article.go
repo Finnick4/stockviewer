@@ -43,11 +43,12 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	aimTitle := params.Title != ""
 	aimContent := params.Content != ""
+	aimDeleteContent := !aimContent && params.RemoveContent
 	aimAddInfluences := len(params.AddedInfluences) > 0
 	aimEditInfluences := len(params.EditedInfluences) > 0
 	aimRemoveInfluences := len(params.RemovedInfluences) > 0
 
-	if (aimTitle || aimContent) && !permArticles {
+	if (aimTitle || aimContent || aimDeleteContent) && !permArticles {
 		api.InsufficientPermissionHandler(w)
 		log.Debug("Could not process the request as the requestor doesn't have sufficient permissions.")
 		return
@@ -118,6 +119,9 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if aimTitle {
+		// The database ignores content if it is set to "".
+		// Thus, if both are to be changed, they are.
+		// If only the title has to be modified, the database handles this.
 		err = database.EditArticleTitleAndContent(params.ID, params.Title, params.Content)
 		if err != nil {
 			log.Error(err)
@@ -126,7 +130,17 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !aimTitle && aimContent {
+		// Changing the title or title and content is handled above!
 		err = database.EditArticleContent(params.ID, params.Content)
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
+	}
+
+	if aimDeleteContent {
+		err = database.RemoveArticleContent(params.ID)
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)

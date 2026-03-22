@@ -81,6 +81,20 @@ func EditArticleContent(id int32, content string) error {
 	}
 	return nil
 }
+func RemoveArticleContent(id int32) error {
+	log.Infof("Removing content of article %v", id)
+
+	db := getDB()
+	var err error
+
+	_, err = db.Exec(`UPDATE articles SET content=NULL WHERE id=$1;`, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
 
 // GetArticles returns the 10 most recent articles. If an offset is provided, it takes the 10 articles n*10 below.
 func GetArticles(offset int32) ([]dto.ArticleOverview, error) {

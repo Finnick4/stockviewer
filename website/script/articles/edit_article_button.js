@@ -202,7 +202,8 @@ function showModalEditArticles(articleId) {
                     body: JSON.stringify({
                         id: Number(articleId),
                         title: title.value,
-                        content: body.value,
+                        content: body.value === artContent ? "" : body.value,
+                        RemoveContent: body.value === "",
                         AddedInfluences: permInfluences ? added : [],
                         EditedInfluences: permInfluences ? edited : [],
                         RemovedInfluences: permInfluences ? removed : []

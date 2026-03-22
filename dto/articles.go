@@ -12,6 +12,7 @@ type ArticleEditParams struct {
 	ID                int32
 	Title             string
 	Content           string
+	RemoveContent     bool
 	AddedInfluences   []CreateInfluenceParams
 	EditedInfluences  []InfluenceEditParams
 	RemovedInfluences []int32
