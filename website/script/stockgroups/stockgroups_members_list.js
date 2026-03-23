@@ -1,8 +1,9 @@
 class stockgroupsMembersList extends HTMLElement {
     connectedCallback() {
         this.groupid = this.dataset.stockGroupId
+        this.title = this.dataset.altTitle === "" ? "All members" : this.dataset.altTitle
         this.innerHTML = `<div class="inner">
-                <nav><h2>All members</h2></nav>
+                <nav><h2>${this.title}</h2></nav>
                 <p>Loading stock data...</p>
             </div>`
         this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
@@ -16,7 +17,7 @@ class stockgroupsMembersList extends HTMLElement {
         let html = ""
         if (data["Members"] === null || data["Members"] === undefined) {
             that.innerHTML = `<div class="inner">
-                <nav><h2>All members</h2></nav>
+                <nav><h2>${that.title}</h2></nav>
                 <p>This group doesn't have any members...</p>
             </div>`
             return
@@ -62,7 +63,7 @@ class stockgroupsMembersList extends HTMLElement {
         that.innerHTML = `<ul class="inner">
                         <div class="titlebar">
                             <div></div>
-                            <h2>All members</h2>
+                            <h2>${that.title}</h2>
                             <div></div>
                         </div>
                         ${html}
