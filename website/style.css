@@ -165,6 +165,10 @@ main.stockGroupOverviewPage stockgroups-members-list {
     grid-column: 3/6;
     overflow: auto;
 }
+main.stockGroupOverviewPage stockgroups-members-list ul.inner {
+    height: calc(100% - 2rem);
+    margin: 0;
+}
 
 main.stockGroupOverviewPage stock-group-description {
     grid-column: 3/6;

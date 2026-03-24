@@ -1,7 +1,7 @@
 class stockgroupsMembersList extends HTMLElement {
     connectedCallback() {
         this.groupid = this.dataset.stockGroupId
-        this.title = this.dataset.altTitle === "" ? "All members" : this.dataset.altTitle
+        this.title = this.dataset.altTitle === undefined ? "All members" : this.dataset.altTitle
         this.innerHTML = `<div class="inner">
                 <nav><h2>${this.title}</h2></nav>
                 <p>Loading stock data...</p>
