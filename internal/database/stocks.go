@@ -581,3 +581,34 @@ func GetStockIDStarStatus(stockID int32, userID string) bool {
 
 	return id == stockID
 }
+
+func GetActiveInfluencesOnStock(stockID int32) ([]dto.InfluenceOnStock, error) {
+	db := getDB()
+
+	rows, err := db.Query(`	
+	SELECT stockinfluences."articleId", stockinfluences."totalLength", stockinfluences.permille, stockinfluences."falloffType", articles.title
+	FROM stockinfluences
+    	JOIN articles ON stockinfluences."articleId" = articles.id
+	WHERE "stockId"= $1 AND stockinfluences."remainingLength" > 0;`, stockID)
+
+	defer rows.Close()
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var data []dto.InfluenceOnStock
+
+	for rows.Next() {
+		var currentData dto.InfluenceOnStock
+		err = rows.Scan(&currentData.ArticleID, &currentData.LengthMinutes, &currentData.PermillePerDay, &currentData.FalloffType, &currentData.ArticleTitle)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+
+	return data, nil
+}

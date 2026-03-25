@@ -173,10 +173,10 @@ WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 
 	defer rows.Close()
 
-	var influences []dto.DetailedInfluence
+	var influences []dto.InfluenceByArticle
 
 	for rows.Next() {
-		influence := dto.DetailedInfluence{ArticleID: id}
+		influence := dto.InfluenceByArticle{ArticleID: id}
 
 		err = rows.Scan(&influence.StockID, &influence.StockName, &influence.CreatorID, &influence.LengthMinutes, &influence.PermillePerDay, &influence.FalloffType)
 		if err != nil {

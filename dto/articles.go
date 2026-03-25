@@ -36,7 +36,7 @@ type DetailedArticle struct {
 	AuthorID          string
 	AuthorDisplayName string
 	TimeCreated       time.Time
-	Influences        []DetailedInfluence
+	Influences        []InfluenceByArticle
 }
 
 type CreateInfluenceParams struct {
@@ -57,11 +57,18 @@ type InfluenceEditParams struct {
 	FalloffType    int32
 }
 
-type DetailedInfluence struct {
+type InfluenceByArticle struct {
 	StockID        int32
 	StockName      string
 	ArticleID      int32
 	CreatorID      string
+	LengthMinutes  int32
+	PermillePerDay float32
+	FalloffType    int32
+}
+type InfluenceOnStock struct {
+	ArticleID      int32
+	ArticleTitle   string
 	LengthMinutes  int32
 	PermillePerDay float32
 	FalloffType    int32
