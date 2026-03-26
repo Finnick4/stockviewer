@@ -6,12 +6,21 @@ import (
 	"stockviewer/api"
 	"stockviewer/dto"
 	"stockviewer/internal/database"
+	"strconv"
 
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 )
 
 func StarStock(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Trying to star a stock")
+	stockID, err := strconv.Atoi(chi.URLParam(r, "stockID"))
+
+	if err != nil {
+		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+		return
+	}
+
+	log.Debugf("Trying to star stock %v", stockID)
 
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
@@ -20,25 +29,25 @@ func StarStock(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	err := json.NewDecoder(r.Body).Decode(&params)
+	err = json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		log.Debug(err)
 		return
 	}
 
-	if !database.AreActiveStockIDs([]int32{params.ID}) {
+	if !database.AreActiveStockIDs([]int32{int32(stockID)}) {
 		api.RequestMalformedHandler(w, "Cannot star invalid stock id!")
-		log.Debugf("Stock id %v is invalid", params.ID)
+		log.Debugf("Stock id %v is invalid", int32(stockID))
 		return
 	}
 
-	log.Debugf("User tries to star (%v) stock id %v", params.Result, params.ID)
+	log.Debugf("User tries to star (%v) stock id %v", params.Result, int32(stockID))
 
 	if params.Result {
-		err = database.StarStockID(params.ID, userID)
+		err = database.StarStockID(int32(stockID), userID)
 	} else {
-		err = database.UnstarStockID(params.ID, userID)
+		err = database.UnstarStockID(int32(stockID), userID)
 	}
 
 	if err != nil {

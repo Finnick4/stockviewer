@@ -11,10 +11,9 @@ class starStockButtonElement extends HTMLButtonElement {
         this.classList.add("star")
         this.onclick = () => {
             const isStarred = this.isStarred
-            fetch("/api/stocks/star", {
+            fetch(`/api/stocks/${this.stockid}/star`, {
                 method: "PUT",
                 body: JSON.stringify({
-                    id: this.stockid,
                     result: !isStarred
                 })
             }).catch(r => {

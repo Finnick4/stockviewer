@@ -9,7 +9,6 @@ type StockCreateParams struct {
 	Color     int32
 }
 type StockGetParams struct {
-	ID        int32
 	Timeframe int64
 }
 type StockGetHistoryParams struct {
@@ -17,12 +16,7 @@ type StockGetHistoryParams struct {
 	Timeframe int64
 }
 
-type StockGroupMembershipParams struct {
-	ID int32
-}
-
 type StockStarParams struct {
-	ID     int32
 	Result bool
 }
 

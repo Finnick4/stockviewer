@@ -20,7 +20,7 @@ customElements.define('edit-stock-button', editStockButtonElement, {extends: "bu
 
 
 function showEditStockModal(stockID) {
-    fetch(`/api/stocks?id=${stockID}`).then(r => r.json()).then(resp => {
+    fetch(`/api/stocks/${stockID}`).then(r => r.json()).then(resp => {
         const stockName = sanitiseText(resp["Data"]["Name"])
         const stockPrice = sanitiseText(resp["Data"]["Price"])
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
@@ -130,10 +130,9 @@ function showEditStockModal(stockID) {
             if (validate()) {
                 console.log("Setting color as:")
                 console.log(permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0)
-                fetch(`${window.location.origin}/api/stocks`, {
+                fetch(`${window.location.origin}/api/stocks/${stockID}`, {
                     method: "PATCH",
                     body: JSON.stringify({
-                        id: Number(stockID),
                         name: permName && name.value !== stockName ? name.value : "",
                         price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
                         color: permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0,

@@ -33,99 +33,46 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 
 	var send func()
 
-	if params.ID > 0 {
-		if dto.IsValidTimeframeScope(params.Timeframe) {
-			send = func() {
-				history, err := database.GetStockPriceHistory(params.ID, dto.GenerateTimeframe(params.Timeframe))
-				if err != nil {
-					log.Error(err)
-					return
-				}
-
-				if len(history) == 0 {
-					log.Error(err)
-					api.RequestNothingFoundHandler(w, "Did not find a stock with the given ID.")
-					return
-				}
-
-				var response = api.SuccessResponse{
-					Code: http.StatusOK,
-					Data: history,
-				}
-
-				w.Header().Set("Content-Type", "application/json")
-				err = json.NewEncoder(w).Encode(response)
-				if err != nil {
-					log.Error(err)
-					api.InternalErrorHandler(w)
-					return
-				}
+	if dto.IsValidTimeframeScope(params.Timeframe) {
+		send = func() {
+			deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe))
+			if err != nil {
+				log.Error(err)
+				return
 			}
 
-		} else {
-			send = func() {
-				price, err := database.GetStockInfo(params.ID, userID)
-				if err != nil {
-					log.Error(err)
-					return
-				}
+			var response = api.SuccessResponse{
+				Code: http.StatusOK,
+				Data: deltas,
+			}
 
-				var response = api.SuccessResponse{
-					Code: http.StatusOK,
-					Data: price,
-				}
-
-				w.Header().Set("Content-Type", "application/json")
-				err = json.NewEncoder(w).Encode(response)
-				if err != nil {
-					log.Error(err)
-					api.InternalErrorHandler(w)
-					return
-				}
+			w.Header().Set("Content-Type", "application/json")
+			err = json.NewEncoder(w).Encode(response)
+			if err != nil {
+				log.Error(err)
+				api.InternalErrorHandler(w)
+				return
 			}
 		}
 	} else {
-		if dto.IsValidTimeframeScope(params.Timeframe) {
-			send = func() {
-				deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe))
-				if err != nil {
-					log.Error(err)
-					return
-				}
-
-				var response = api.SuccessResponse{
-					Code: http.StatusOK,
-					Data: deltas,
-				}
-
-				w.Header().Set("Content-Type", "application/json")
-				err = json.NewEncoder(w).Encode(response)
-				if err != nil {
-					log.Error(err)
-					api.InternalErrorHandler(w)
-					return
-				}
+		send = func() {
+			data, err := database.GetCurrentStockInformation(userID)
+			if err != nil {
+				log.Error(err)
+				return
 			}
-		} else {
-			send = func() {
-				data, err := database.GetCurrentStockInformation(userID)
-				if err != nil {
-					log.Error(err)
-					return
-				}
 
-				var response = api.SuccessResponse{
-					Code: http.StatusOK,
-					Data: data,
-				}
+			var response = api.SuccessResponse{
+				Code: http.StatusOK,
+				Data: data,
+			}
 
-				w.Header().Set("Content-Type", "application/json")
-				err = json.NewEncoder(w).Encode(response)
-				if err != nil {
-					log.Error(err)
-					api.InternalErrorHandler(w)
-					return
-				}
+			w.Header().Set("Content-Type", "application/json")
+			err = json.NewEncoder(w).Encode(response)
+			if err != nil {
+				log.Error(err)
+				api.InternalErrorHandler(w)
+				return
 			}
 		}
 	}

@@ -5,41 +5,35 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
-	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/handlers/sse"
+	"strconv"
 
-	"github.com/gorilla/schema"
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 )
 
 func GetStockGroupMembershipSSE(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Getting all groups a stock is a member of")
+	stockID, err := strconv.Atoi(chi.URLParam(r, "stockID"))
 
-	var params = dto.StockGroupMembershipParams{}
-	var decoder *schema.Decoder = schema.NewDecoder()
-	var err error
-
-	// get parameters
-	err = decoder.Decode(&params, r.URL.Query())
 	if err != nil {
-		log.Error("Error while decoding params")
-		log.Error(err)
-		api.InternalErrorHandler(w)
+		api.RequestMalformedHandler(w, "Could not parse stock ID!")
 		return
 	}
 
-	if params.ID <= 0 {
-		log.Debugf("Invalid stock ID %v", params.ID)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Invalid stock ID %v", params.ID))
+	log.Debugf("Getting all groups stock %v is a member of", stockID)
+
+	if int32(stockID) <= 0 {
+		log.Debugf("Invalid stock ID %v", int32(stockID))
+		api.RequestMalformedHandler(w, fmt.Sprintf("Invalid stock ID %v", int32(stockID)))
 		return
 	}
 
 	rc := http.NewResponseController(w)
 
 	send := func() error {
-		log.Debugf("Getting all groups stock %v is a member of", params.ID)
-		data, err := database.GetAllGroupsWithMemberStockID(params.ID)
+		log.Debugf("Getting all groups stock %v is a member of", int32(stockID))
+		data, err := database.GetAllGroupsWithMemberStockID(int32(stockID))
 		if err != nil {
 			log.Error("Error while querying DB (database.GetAllGroupsWithMemberStockID)")
 			api.InternalErrorHandler(w)

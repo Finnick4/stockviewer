@@ -29,16 +29,19 @@ func Handler(r *chi.Mux) {
 	r.Handle("/icons/*", fs)
 
 	r.With(middleware.ValidateToken).Route("/api/stocks", func(router chi.Router) {
-		router.With(middleware.ExtractPermissions).Post("/", stocks.CreateStock)
 		router.Get("/{stockID}", stocks.GetStock)
 		router.Get("/{stockID}/sse", stocks.GetStockSSE)
+		router.Get("/{stockID}/influences", stocks.GetInfluences)
+		router.Get("/{stockID}/groups", stocks.GetStockGroupMembership)
+		router.Get("/{stockID}/groups/sse", stocks.GetStockGroupMembershipSSE)
+		router.Put("/{stockID}/star", stocks.StarStock)
+
+		router.With(middleware.ExtractPermissions).Patch("/{stockID}", stocks.EditStock)
+
 		router.Get("/", stocks.GetStocks)
 		router.Get("/sse", stocks.GetStocksSSE)
-		router.Get("/{stockID}/influences", stocks.GetInfluences)
-		router.With(middleware.ExtractPermissions).Patch("/", stocks.EditStock)
-		router.Get("/groups", stocks.GetStockGroupMembership)
-		router.Get("/groups/sse", stocks.GetStockGroupMembershipSSE)
-		router.Put("/star", stocks.StarStock)
+
+		router.With(middleware.ExtractPermissions).Post("/", stocks.CreateStock)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/stockgroups", func(router chi.Router) {

@@ -8,12 +8,21 @@ import (
 	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
+	"strconv"
 
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 )
 
 func EditStock(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Trying to edit a stock")
+	stockID, err := strconv.Atoi(chi.URLParam(r, "stockID"))
+
+	if err != nil {
+		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+		return
+	}
+
+	log.Debugf("Trying to edit stock %v", stockID)
 
 	permissions := r.Context().Value("permissions").(map[string]int32)
 
@@ -31,16 +40,16 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	err := json.NewDecoder(r.Body).Decode(&params)
+	err = json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		log.Debug(err)
 		return
 	}
 
-	if params.ID <= 0 {
-		log.Debugf("Could not edit stock %v as the id is invalid", params.ID)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit stock %v as the id is invalid", params.ID))
+	if int32(stockID) <= 0 {
+		log.Debugf("Could not edit stock %v as the id is invalid", int32(stockID))
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit stock %v as the id is invalid", int32(stockID)))
 		return
 	}
 
@@ -114,7 +123,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 
 	if aimName || aimShorthand {
 		if aimName && !aimShorthand {
-			err = database.SetStockName(params.ID, params.Name)
+			err = database.SetStockName(int32(stockID), params.Name)
 			if err != nil {
 				api.InternalErrorHandler(w)
 				log.Error(err)
@@ -122,7 +131,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if !aimName && aimShorthand {
-			err = database.SetStockShorthand(params.ID, params.Shorthand)
+			err = database.SetStockShorthand(int32(stockID), params.Shorthand)
 			if err != nil {
 				api.InternalErrorHandler(w)
 				log.Error(err)
@@ -130,7 +139,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if aimName && aimShorthand {
-			err = database.SetStockNameAndShorthand(params.ID, params.Name, params.Shorthand)
+			err = database.SetStockNameAndShorthand(int32(stockID), params.Name, params.Shorthand)
 			if err != nil {
 				api.InternalErrorHandler(w)
 				log.Error(err)
@@ -140,10 +149,10 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 
 	}
 	if aimColor {
-		database.SetStockColor(params.ID, params.Color)
+		database.SetStockColor(int32(stockID), params.Color)
 	}
 	if aimPrice {
-		err = database.SetStockPrice(params.ID, params.Price)
+		err = database.SetStockPrice(int32(stockID), params.Price)
 		if err != nil {
 			api.InternalErrorHandler(w)
 			log.Error(err)

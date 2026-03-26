@@ -2,7 +2,6 @@ package stocks
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"stockviewer/api"
@@ -38,91 +37,45 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 
 	var send func() error
 
-	if params.ID > 0 {
-		if dto.IsValidTimeframeScope(params.Timeframe) {
-			send = func() error {
-				history, err := database.GetStockPriceHistory(params.ID, dto.GenerateTimeframe(params.Timeframe))
-				if err != nil {
-					return err
-				}
-
-				if len(history) == 0 {
-					api.RequestNothingFoundHandler(w, "Did not find a stock with the given ID.")
-					return errors.New("no such stock found")
-				}
-
-				resp, err := json.Marshal(history)
-				if err != nil {
-					return err
-				}
-
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-				if err != nil {
-					return err
-				}
-				err = rc.Flush()
+	if dto.IsValidTimeframeScope(params.Timeframe) {
+		send = func() error {
+			deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe))
+			if err != nil {
 				return err
 			}
-		} else {
-			send = func() error {
-				price, err := database.GetStockInfo(params.ID, userID)
-				if err != nil {
-					return err
-				}
 
-				resp, err := json.Marshal(price)
-				if err != nil {
-					return err
-				}
-
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-				if err != nil {
-					return err
-				}
-				err = rc.Flush()
+			resp, err := json.Marshal(deltas)
+			if err != nil {
 				return err
 			}
+
+			_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+			if err != nil {
+				return err
+			}
+			err = rc.Flush()
+			return err
 		}
 	} else {
-		if dto.IsValidTimeframeScope(params.Timeframe) {
-			send = func() error {
-				deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe))
-				if err != nil {
-					return err
-				}
-
-				resp, err := json.Marshal(deltas)
-				if err != nil {
-					return err
-				}
-
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-				if err != nil {
-					return err
-				}
-				err = rc.Flush()
+		send = func() error {
+			data, err := database.GetCurrentStockInformation(userID)
+			if err != nil {
 				return err
 			}
-		} else {
-			send = func() error {
-				data, err := database.GetCurrentStockInformation(userID)
-				if err != nil {
-					return err
-				}
 
-				resp, err := json.Marshal(data)
-				if err != nil {
-					return err
-				}
-
-				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-				if err != nil {
-					return err
-				}
-				err = rc.Flush()
+			resp, err := json.Marshal(data)
+			if err != nil {
 				return err
 			}
+
+			_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+			if err != nil {
+				return err
+			}
+			err = rc.Flush()
+			return err
 		}
+
 	}
 
 	sse.SendSSEOnStockChange(w, r, send)
