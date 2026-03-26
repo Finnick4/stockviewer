@@ -26,7 +26,7 @@ class stockChart extends HTMLElement {
                             </svg>
                         </div>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${this.timeframe}&Id=${this.stockid}`, addThisToFunctionCall(this.redrawGraph, this))
+        this.closeSubscription = subscribeToAPI(`/api/stocks/${this.stockid}/sse/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.redrawGraph, this))
         this.querySelectorAll("button.tf").forEach(b => {
             b.addEventListener("click", () => {
                 this.changeTimeframe(b.dataset.tf, this)

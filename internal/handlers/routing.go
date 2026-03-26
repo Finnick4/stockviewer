@@ -30,9 +30,11 @@ func Handler(r *chi.Mux) {
 
 	r.With(middleware.ValidateToken).Route("/api/stocks", func(router chi.Router) {
 		router.With(middleware.ExtractPermissions).Post("/", stocks.CreateStock)
+		router.Get("/{stockID}", stocks.GetStock)
+		router.Get("/{stockID}/sse", stocks.GetStockSSE)
 		router.Get("/", stocks.GetStocks)
-		router.Get("/{stockID}/influences", stocks.GetInfluences)
 		router.Get("/sse", stocks.GetStocksSSE)
+		router.Get("/{stockID}/influences", stocks.GetInfluences)
 		router.With(middleware.ExtractPermissions).Patch("/", stocks.EditStock)
 		router.Get("/groups", stocks.GetStockGroupMembership)
 		router.Get("/groups/sse", stocks.GetStockGroupMembershipSSE)
