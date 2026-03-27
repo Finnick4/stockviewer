@@ -31,6 +31,7 @@ function buildIndividualArticlePage(id) {
         }
         articleTitleElem.creationDate =  new Date(data["TimeCreated"])
         articleTitleElem.titleVal = data["Title"]
+        articleTitleElem.views = data["TotalViews"]
         articleTitleElem.update()
 
         article.innerHTML = data["Content"] === "" ? `<i>This article doesn't have a body (yet).<br>

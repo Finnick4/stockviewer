@@ -37,8 +37,8 @@ class articleHeader extends HTMLElement {
         }).format(this.creationDate)
         this.elemTitle.innerHTML = this.titleVal
         this.elemAuthor.innerHTML = this.authorName
-        this.elemHearts.innerHTML = `&#9825; ${this.hearts}`
-        this.elemViews.innerHTML = `&#128065; ${this.views}`
+        this.elemHearts.innerHTML = `&#9825; ${getShortNumber(this.hearts)}`
+        this.elemViews.innerHTML = `&#128065; ${getShortNumber(this.views)}`
     }
 }
 

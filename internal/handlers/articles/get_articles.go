@@ -34,7 +34,10 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := database.GetArticles(params.Offset)
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
+	data, err := database.GetArticles(params.Offset, userID)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		log.Debug(err)

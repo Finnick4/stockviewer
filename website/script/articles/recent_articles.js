@@ -8,10 +8,11 @@ class recentArticlesElement extends HTMLElement {
         fetch(`/api/articles?offset=${offset++}`).then(r => r.json()).then(resp => {
             let html = ""
             resp["Data"].forEach(e => {
-                html += `<li class="articlePreview" data-article-id="${e["ID"]}">
+                html += `<li class="articlePreview ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}">
                             <a is="a-button" href="/articles/${e["ID"]}">
                                 <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div class="info">
+                                    <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
                                     <div class="change">${e["TotalInfluences"]} affected</div>
                                 </div>
                             </a>
@@ -33,11 +34,13 @@ class recentArticlesElement extends HTMLElement {
                     resp["Data"].forEach(e => {
                         const elem = document.createElement("li")
                         elem.classList.add("articlePreview")
+                        elem.classList.add(`${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}"`)
                         elem.dataset.articleId = e["ID"]
                         elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
                                               <div class="title">${sanitiseText(e["Title"])}</div>
-                                              <div>
-                                                <div class="change">${e["TotalInfluences"]} affected</div>
+                                              <div class="info">
+                                                    <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
+                                                    <div class="change">${e["TotalInfluences"]} affected</div>
                                               </div>
                                           </a>`
                         ul.insertBefore(elem, loadMoreBtn)

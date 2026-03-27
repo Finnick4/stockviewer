@@ -41,8 +41,8 @@ func GetArticle(w http.ResponseWriter, r *http.Request) {
 	if !data.Viewed {
 		data.TotalViews++
 		data.Viewed = true
+		go database.SetArticleAsViewedForUserID(int32(articleID), userID)
 	}
-	go database.SetArticleAsViewedForUserID(int32(articleID), userID)
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,

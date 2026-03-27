@@ -109,7 +109,7 @@ func RemoveArticleContent(id int32) error {
 }
 
 // GetArticles returns the 10 most recent articles. If an offset is provided, it takes the 10 articles n*10 below.
-func GetArticles(offset int32) ([]dto.ArticleOverview, error) {
+func GetArticles(offset int32, userID string) ([]dto.ArticleOverview, error) {
 	log.Debugf("Getting ten articles with offset %v", offset)
 	db := getDB()
 
@@ -118,10 +118,10 @@ func GetArticles(offset int32) ([]dto.ArticleOverview, error) {
 	}
 
 	rows, err := db.Query(`
-SELECT id, title, COUNT(stockinfluences."stockId"), COUNT(articleviews."userId") FROM articles
+SELECT id, title, COUNT(DISTINCT stockinfluences."stockId"), COUNT(DISTINCT articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1 AND articleviews."articleId" = id) FROM articles
     LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
 	LEFT JOIN articleviews ON articles.id = articleviews."articleId"
-GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
+GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
 	defer rows.Close()
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -135,7 +135,7 @@ GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
 
 	for rows.Next() {
 		var article dto.ArticleOverview
-		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews, &article.Viewed)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -155,7 +155,7 @@ func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
 		SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
 		WHEN articles."creatorId" IS NOT NULL THEN users."displayName"
 		ELSE ''
-		END, articles."createdAt", COUNT(articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "articleId" = $1 AND "userId" = $2) FROM articles 
+		END, articles."createdAt", COUNT(DISTINCT articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "articleId" = $1 AND "userId" = $2) FROM articles 
 			JOIN users ON articles."creatorId" = users.id
 			LEFT JOIN articleviews ON articles.id = articleviews."articleId"
 		WHERE articles.id = $1 
