@@ -49,6 +49,18 @@ func CreateArticle(title string, content string, creatorID string) (int32, error
 	return lastID, nil
 }
 
+func SetArticleAsViewedForUserID(articleID int32, userID string) {
+	db := getDB()
+
+	_, err := db.Exec(`INSERT INTO articleviews ("articleId", "userId") VALUES ($1, $2) ON CONFLICT ("articleId", "userId") DO NOTHING;`, articleID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	return
+}
+
 func EditArticleTitleAndContent(id int32, title string, content string) error {
 	log.Infof("Editing article %v...", id)
 

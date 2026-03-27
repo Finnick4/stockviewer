@@ -20,13 +20,18 @@ func GetArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debugf("Getting article %v", articleID)
-
 	if int32(articleID) <= 0 {
 		log.Debugf("Cannot get article with id %v", int32(articleID))
 		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get article with id %v", int32(articleID)))
 		return
 	}
+
+	log.Debugf("Getting article %v", articleID)
+
+	go func() {
+		userID := database.GetUserIDFromToken(r.Context().Value("token").(string))
+		database.SetArticleAsViewedForUserID(int32(articleID), userID)
+	}()
 
 	data, err := database.GetArticle(int32(articleID))
 	if err != nil {

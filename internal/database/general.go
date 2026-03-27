@@ -161,6 +161,16 @@ func InitialiseDB() {
 	go createIndex("articles", "creatorId")
 	go createIndex("articles", "title")
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "articleviews" (
+	"articleId"	INTEGER NOT NULL,
+	"userId"	VARCHAR(36) NOT NULL,
+	PRIMARY KEY ("articleId", "userId"),
+	CONSTRAINT "fk_articleviews_article" FOREIGN KEY("articleId") REFERENCES articles("id") ON DELETE CASCADE,
+    CONSTRAINT "fk_articleviews_user" FOREIGN KEY("userId") REFERENCES users("id") ON DELETE CASCADE);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockgroups" (
 	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
 	"name"	VARCHAR(32) NOT NULL,

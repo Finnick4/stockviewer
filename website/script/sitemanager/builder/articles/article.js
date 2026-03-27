@@ -30,7 +30,7 @@ function buildIndividualArticlePage(id) {
             articleTitleElem.authorName = sanitiseText(data["AuthorDisplayName"])
         }
         articleTitleElem.creationDate =  new Date(data["TimeCreated"])
-        articleTitleElem.title = data["Title"]
+        articleTitleElem.titleVal = data["Title"]
         articleTitleElem.update()
 
         article.innerHTML = data["Content"] === "" ? `<i>This article doesn't have a body (yet).<br>
