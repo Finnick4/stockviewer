@@ -33,57 +33,24 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get articles with offset %v", params.Offset))
 		return
 	}
-	if params.ID < 0 {
-		log.Debugf("Cannot get article with id %v", params.ID)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get article with id %v", params.ID))
+
+	data, err := database.GetArticles(params.Offset)
+	if err != nil {
+		api.InternalErrorHandler(w)
+		log.Debug(err)
 		return
 	}
 
-	if params.ID > 0 {
-		data, err := database.GetArticle(params.ID)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return
-		}
-
-		var response = api.SuccessResponse{
-			Code: http.StatusOK,
-			Data: data,
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		err = json.NewEncoder(w).Encode(response)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return
-		}
-		return
+	var response = api.SuccessResponse{
+		Code: http.StatusOK,
+		Data: data,
 	}
 
-	if params.Offset >= 0 {
-		data, err := database.GetArticles(params.Offset)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return
-		}
-
-		var response = api.SuccessResponse{
-			Code: http.StatusOK,
-			Data: data,
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		err = json.NewEncoder(w).Encode(response)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return
-		}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		api.InternalErrorHandler(w)
+		log.Debug(err)
 		return
 	}
-
-	api.RequestMalformedHandler(w, "Could not guess what to do with request.")
 }

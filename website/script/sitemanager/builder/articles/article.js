@@ -24,7 +24,7 @@ function buildIndividualArticlePage(id) {
     const articleTitleElem = document.querySelector("main article-header")
     const effectInfoElem = document.querySelector("main div.effectInfo")
 
-    fetch(`/api/articles?id=${id}`).then(r => r.json()).then(resp => {
+    fetch(`/api/articles/${id}`).then(r => r.json()).then(resp => {
         const data = resp["Data"]
         if (data["AuthorID"] !== "") {
             articleTitleElem.authorName = sanitiseText(data["AuthorDisplayName"])

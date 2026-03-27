@@ -19,7 +19,7 @@ class articleHeader extends HTMLElement {
         this.elemViews = this.querySelector("div.views")
         this.elemHearts = this.querySelector("div.hearts")
 
-        this.title = this.dataset.articleTitle === undefined ? "unnamed article" : sanitiseText(this.dataset.articleTitle)
+        this.titleVal = this.dataset.articleTitle === undefined ? "unnamed article" : sanitiseText(this.dataset.articleTitle)
         this.authorName = this.dataset.authorName === undefined ? "unknown author" : sanitiseText(this.dataset.authorName)
         this.creationDate = this.dataset.creationDate === undefined ? new Date(1) : new Date(sanitiseText(this.dataset.creationDate))
         this.views = this.dataset.views === undefined ? 0 : Number(sanitiseText(this.dataset.views))
@@ -35,7 +35,7 @@ class articleHeader extends HTMLElement {
             hour: "2-digit",
             minute: "2-digit",
         }).format(this.creationDate)
-        this.elemTitle.innerHTML = this.title
+        this.elemTitle.innerHTML = this.titleVal
         this.elemAuthor.innerHTML = this.authorName
         this.elemHearts.innerHTML = `&#9825; ${this.hearts}`
         this.elemViews.innerHTML = `&#128065; ${this.views}`

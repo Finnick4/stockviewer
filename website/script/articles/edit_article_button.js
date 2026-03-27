@@ -18,7 +18,7 @@ class editArticleButtonElement extends HTMLButtonElement {
 customElements.define('edit-article-button', editArticleButtonElement, {extends: "button"});
 
 function showModalEditArticles(articleId) {
-    fetch(`/api/articles?id=${articleId}`).then(r => r.json()).then(resp => {
+    fetch(`/api/articles/${articleId}`).then(r => r.json()).then(resp => {
         const artTitle = sanitiseText(resp["Data"]["Title"])
         const artContent = sanitiseText(resp["Data"]["Content"])
         const artInfluences = []
@@ -197,10 +197,9 @@ function showModalEditArticles(articleId) {
                     }
                 })
 
-                fetch(`${window.location.origin}/api/articles`, {
+                fetch(`${window.location.origin}/api/articles/${articleId}`, {
                     method: "PATCH",
                     body: JSON.stringify({
-                        id: Number(articleId),
                         title: title.value,
                         content: body.value === artContent ? "" : body.value,
                         RemoveContent: body.value === "",

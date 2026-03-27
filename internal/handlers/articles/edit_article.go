@@ -9,12 +9,21 @@ import (
 	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
+	"strconv"
 
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 )
 
 func EditArticle(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Trying to edit an article")
+	articleID, err := strconv.Atoi(chi.URLParam(r, "articleID"))
+
+	if err != nil {
+		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+		return
+	}
+
+	log.Debugf("Trying to edit article %v", articleID)
 
 	permissions := r.Context().Value("permissions").(map[string]int32)
 	token := r.Context().Value("token").(string)
@@ -34,7 +43,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	err := json.NewDecoder(r.Body).Decode(&params)
+	err = json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		log.Debug(err)
@@ -59,9 +68,9 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.ID < 1 {
-		log.Debugf("Could not edit article as the id %v is invalid!", params.ID)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit article as the id %v is invalid!", params.ID))
+	if int32(articleID) < 1 {
+		log.Debugf("Could not edit article as the id %v is invalid!", int32(articleID))
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit article as the id %v is invalid!", int32(articleID)))
 		return
 	}
 
@@ -81,7 +90,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		params.AddedInfluences[index].CreatorID = userID
-		params.AddedInfluences[index].ArticleID = params.ID
+		params.AddedInfluences[index].ArticleID = int32(articleID)
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
 			params.AddedInfluences[index].FalloffType = 0
 		}
@@ -99,7 +108,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			log.Debug("Could not process the request as the requestor doesn't have sufficient permissions to choose influence permilles this high.")
 			return
 		}
-		params.EditedInfluences[index].ArticleID = params.ID
+		params.EditedInfluences[index].ArticleID = int32(articleID)
 		if !utilities.IsValidFalloffType(influence.FalloffType) {
 			params.AddedInfluences[index].FalloffType = 0
 		}
@@ -122,7 +131,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		// The database ignores content if it is set to "".
 		// Thus, if both are to be changed, they are.
 		// If only the title has to be modified, the database handles this.
-		err = database.EditArticleTitleAndContent(params.ID, params.Title, params.Content)
+		err = database.EditArticleTitleAndContent(int32(articleID), params.Title, params.Content)
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)
@@ -131,7 +140,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	}
 	if !aimTitle && aimContent {
 		// Changing the title or title and content is handled above!
-		err = database.EditArticleContent(params.ID, params.Content)
+		err = database.EditArticleContent(int32(articleID), params.Content)
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)
@@ -140,7 +149,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if aimDeleteContent {
-		err = database.RemoveArticleContent(params.ID)
+		err = database.RemoveArticleContent(int32(articleID))
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)
@@ -164,9 +173,9 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	if aimRemoveInfluences {
 		if len(params.RemovedInfluences) == 1 {
-			err = database.RemoveInfluence(params.ID, params.RemovedInfluences[0])
+			err = database.RemoveInfluence(int32(articleID), params.RemovedInfluences[0])
 		} else {
-			err = database.RemoveInfluences(params.ID, params.RemovedInfluences)
+			err = database.RemoveInfluences(int32(articleID), params.RemovedInfluences)
 		}
 
 		if err != nil {

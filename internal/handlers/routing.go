@@ -64,8 +64,10 @@ func Handler(r *chi.Mux) {
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/articles", func(router chi.Router) {
-		router.With(middleware.ExtractPermissions).Post("/", articles.CreateArticle)
+		router.Get("/{articleID}", articles.GetArticle)
+		router.With(middleware.ExtractPermissions).Patch("/{articleID}", articles.EditArticle)
+
 		router.Get("/", articles.GetArticles)
-		router.With(middleware.ExtractPermissions).Patch("/", articles.EditArticle)
+		router.With(middleware.ExtractPermissions).Post("/", articles.CreateArticle)
 	})
 }
