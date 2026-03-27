@@ -27,6 +27,8 @@ type ArticleOverview struct {
 	ID              int32
 	Title           string
 	TotalInfluences int32
+	TotalViews      int64
+	Viewed          bool
 }
 
 type DetailedArticle struct {
@@ -37,6 +39,8 @@ type DetailedArticle struct {
 	AuthorDisplayName string
 	TimeCreated       time.Time
 	Influences        []InfluenceByArticle
+	TotalViews        int64
+	Viewed            bool
 }
 
 type CreateInfluenceParams struct {

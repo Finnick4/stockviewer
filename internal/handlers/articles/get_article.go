@@ -28,17 +28,21 @@ func GetArticle(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("Getting article %v", articleID)
 
-	go func() {
-		userID := database.GetUserIDFromToken(r.Context().Value("token").(string))
-		database.SetArticleAsViewedForUserID(int32(articleID), userID)
-	}()
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
 
-	data, err := database.GetArticle(int32(articleID))
+	data, err := database.GetArticle(int32(articleID), userID)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		log.Debug(err)
 		return
 	}
+
+	if !data.Viewed {
+		data.TotalViews++
+		data.Viewed = true
+	}
+	go database.SetArticleAsViewedForUserID(int32(articleID), userID)
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,

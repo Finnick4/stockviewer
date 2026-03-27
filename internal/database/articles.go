@@ -118,8 +118,9 @@ func GetArticles(offset int32) ([]dto.ArticleOverview, error) {
 	}
 
 	rows, err := db.Query(`
-SELECT id, title, COUNT(stockinfluences."stockId") FROM articles
+SELECT id, title, COUNT(stockinfluences."stockId"), COUNT(articleviews."userId") FROM articles
     LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
+	LEFT JOIN articleviews ON articles.id = articleviews."articleId"
 GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
 	defer rows.Close()
 	if err != nil {
@@ -134,7 +135,7 @@ GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
 
 	for rows.Next() {
 		var article dto.ArticleOverview
-		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -144,19 +145,21 @@ GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $1;`, offset*10)
 	return articles, nil
 }
 
-func GetArticle(id int32) (dto.DetailedArticle, error) {
-	log.Debugf("Getting article with id %v", id)
+func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
+	log.Debugf("Getting article with id %v", articleID)
 	db := getDB()
 
-	article := dto.DetailedArticle{ID: id}
+	article := dto.DetailedArticle{ID: articleID}
 
 	row := db.QueryRow(`
-	SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
-	WHEN articles."creatorId" IS NOT NULL THEN users."displayName"
-	ELSE ''
-	END, articles."createdAt" FROM articles 
-		JOIN public.users users on articles."creatorId" = users.id                                                                                      
-	WHERE articles.id = $1;`, id)
+		SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
+		WHEN articles."creatorId" IS NOT NULL THEN users."displayName"
+		ELSE ''
+		END, articles."createdAt", COUNT(articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "articleId" = $1 AND "userId" = $2) FROM articles 
+			JOIN users ON articles."creatorId" = users.id
+			LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+		WHERE articles.id = $1 
+		GROUP BY articles.title, articles.content, articles."creatorId", users."displayName", articles."createdAt";`, articleID, userID)
 
 	err := row.Err()
 	if err != nil {
@@ -167,7 +170,7 @@ func GetArticle(id int32) (dto.DetailedArticle, error) {
 		return dto.DetailedArticle{}, err
 	}
 
-	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated)
+	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated, &article.TotalViews, &article.Viewed)
 	if err != nil {
 		log.Error(err)
 		return dto.DetailedArticle{}, err
@@ -177,7 +180,7 @@ func GetArticle(id int32) (dto.DetailedArticle, error) {
 SELECT stockinfluences."stockId", stocks.name, stockinfluences."creatorId", stockinfluences."totalLength", stockinfluences.permille, stockinfluences."falloffType" FROM stockinfluences
 	JOIN stocks ON stockinfluences."stockId" = stocks.id
 WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
-`, id)
+`, articleID)
 	if err != nil {
 		log.Error(err)
 		return dto.DetailedArticle{}, err
@@ -188,7 +191,7 @@ WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 	var influences []dto.InfluenceByArticle
 
 	for rows.Next() {
-		influence := dto.InfluenceByArticle{ArticleID: id}
+		influence := dto.InfluenceByArticle{ArticleID: articleID}
 
 		err = rows.Scan(&influence.StockID, &influence.StockName, &influence.CreatorID, &influence.LengthMinutes, &influence.PermillePerDay, &influence.FalloffType)
 		if err != nil {
