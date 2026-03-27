@@ -6,7 +6,7 @@ class stockgroupsMembersList extends HTMLElement {
                 <nav><h2>${this.title}</h2></nav>
                 <p>Loading stock data...</p>
             </div>`
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
     }
 
     disconnectedCallback() {

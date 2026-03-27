@@ -20,7 +20,7 @@ customElements.define('edit-stock-group-button', editStockGroupButtonElement, {e
 
 
 function showModalEditStockGroup(groupid) {
-    fetch(`/api/stockgroups?id=${groupid}`).then(r => r.json()).then(resp => {
+    fetch(`/api/stockgroups/${groupid}`).then(r => r.json()).then(resp => {
         const groupName = sanitiseText(resp["Data"]["Name"])
         const groupDescription = sanitiseText(resp["Data"]["Description"])
         const groupMembers = resp["Data"]["Members"].map(stock => Number(stock["ID"]))
@@ -132,10 +132,9 @@ function showModalEditStockGroup(groupid) {
                     AddedMembers: permMembers && added.length !== 0 ? added : [],
                     RemovedMembers: permMembers && removed.length !== 0 ? removed : []
                 })
-                fetch(`${window.location.origin}/api/stockgroups`, {
+                fetch(`${window.location.origin}/api/stockgroups/${groupid}`, {
                     method: "PATCH",
                     body: JSON.stringify({
-                        ID: Number(groupid),
                         Name: permName && name.value !== groupName ? name.value : "",
                         Description: permDesc && description.value !== groupDescription ? description.value : "",
                         AddedMembers: permMembers && added.length !== 0 ? added : [],

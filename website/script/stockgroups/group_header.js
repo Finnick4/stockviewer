@@ -18,7 +18,7 @@ class stockGroupHeader extends HTMLElement {
         if (this.groupid < 0) {
             this.querySelector("nav.buttons").innerHTML = ""
         }
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
     }
     disconnectedCallback() {
         this.closeSubscription()

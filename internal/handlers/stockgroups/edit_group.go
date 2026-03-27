@@ -8,12 +8,21 @@ import (
 	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
+	"strconv"
 
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 )
 
 func EditStockGroup(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Trying to edit a stock group")
+	groupID, err := strconv.Atoi(chi.URLParam(r, "groupID"))
+
+	if err != nil {
+		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+		return
+	}
+
+	log.Debugf("Trying to edit stock group %v", groupID)
 
 	token := r.Context().Value("token").(string)
 	permissions := r.Context().Value("permissions").(map[string]int32)
@@ -32,7 +41,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	err := json.NewDecoder(r.Body).Decode(&params)
+	err = json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
 		api.InternalErrorHandler(w)
 		log.Debug(err)
@@ -68,9 +77,9 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.ID <= 0 {
-		log.Debugf("Could not edit stock group %v as the id is invalid", params.ID)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit stock group %v as the id is invalid", params.ID))
+	if int32(groupID) <= 0 {
+		log.Debugf("Could not edit stock group %v as the id is invalid", int32(groupID))
+		api.RequestMalformedHandler(w, fmt.Sprintf("Could not edit stock group %v as the id is invalid", int32(groupID)))
 		return
 	}
 
@@ -90,7 +99,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 	userID := database.GetUserIDFromToken(token)
 
 	if aimName {
-		err = database.SetStockGroupName(params.ID, params.Name)
+		err = database.SetStockGroupName(int32(groupID), params.Name)
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)
@@ -98,7 +107,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if aimDescription {
-		err = database.SetStockGroupDescription(params.ID, params.Description)
+		err = database.SetStockGroupDescription(int32(groupID), params.Description)
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)
@@ -107,10 +116,10 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 	}
 	if aimAddMembers {
 		if len(params.AddedMembers) == 1 {
-			err = database.AddStockToGroup(params.ID, params.AddedMembers[0], userID)
+			err = database.AddStockToGroup(int32(groupID), params.AddedMembers[0], userID)
 		}
 		if len(params.AddedMembers) > 1 {
-			err = database.AddStocksToGroup(params.ID, params.AddedMembers, userID)
+			err = database.AddStocksToGroup(int32(groupID), params.AddedMembers, userID)
 		}
 		if err != nil {
 			log.Error(err)
@@ -120,10 +129,10 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 	}
 	if aimRemoveMembers {
 		if len(params.RemovedMembers) == 1 {
-			err = database.RemoveStockFromGroup(params.ID, params.RemovedMembers[0])
+			err = database.RemoveStockFromGroup(int32(groupID), params.RemovedMembers[0])
 		}
 		if len(params.RemovedMembers) > 1 {
-			err = database.RemoveStocksFromGroup(params.ID, params.RemovedMembers)
+			err = database.RemoveStocksFromGroup(int32(groupID), params.RemovedMembers)
 		}
 		if err != nil {
 			log.Error(err)

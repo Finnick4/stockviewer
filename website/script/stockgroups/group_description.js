@@ -7,7 +7,7 @@ class stockGroupDescription extends HTMLElement {
                             ${parseStyle("Loading description...")}
                         </div>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?id=${this.groupid}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
     }
     disconnectedCallback() {
         this.closeSubscription()

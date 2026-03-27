@@ -5,46 +5,34 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
-	"stockviewer/dto"
 	"stockviewer/internal/database"
+	"strconv"
 
-	"github.com/gorilla/schema"
+	"github.com/go-chi/chi"
 	log "github.com/sirupsen/logrus"
 )
 
 func GetStockGroup(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Getting stock group")
+	groupID, err := strconv.Atoi(chi.URLParam(r, "groupID"))
 
-	var params = dto.StockGroupGetParams{}
+	if err != nil {
+		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+		return
+	}
+
+	log.Debugf("Getting stock group %v", groupID)
 
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	var decoder *schema.Decoder = schema.NewDecoder()
-	var err error
-
-	// get parameters
-	err = decoder.Decode(&params, r.URL.Query())
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
+	if int32(groupID) < -1 {
+		log.Debugf("Cannot get stock group with id %v", int32(groupID))
+		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get stock group with id %v", int32(groupID)))
 		return
 	}
 
-	if params.ID < -1 {
-		log.Debugf("Cannot get stock group with id %v", params.ID)
-		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get stock group with id %v", params.ID))
-		return
-	}
-
-	if !database.AreActiveStockIDs(params.Members) {
-		log.Debug("One of the stocks to be queried is invalid.")
-		api.RequestMalformedHandler(w, "One of the stocks to be queried is invalid.")
-		return
-	}
-
-	if params.ID > 0 || params.ID == -1 {
-		data, err := database.GetDetailedStockGroup(userID, params.ID)
+	if int32(groupID) > 0 || int32(groupID) == -1 {
+		data, err := database.GetDetailedStockGroup(userID, int32(groupID))
 		if err != nil {
 			api.InternalErrorHandler(w)
 			log.Debug(err)
@@ -66,49 +54,5 @@ func GetStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if params.ID == 0 && len(params.Members) != 0 {
-		log.Debug("Getting anonymous stock group")
-		data, err := database.GetAnonymousStockGroup(params.Members)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return
-		}
-
-		var response = api.SuccessResponse{
-			Code: http.StatusOK,
-			Data: data,
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		err = json.NewEncoder(w).Encode(response)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return
-		}
-		return
-	}
-
-	log.Debug("Getting all stock groups")
-	data, err := database.GetAllStockGroups()
-	if err != nil {
-		api.InternalErrorHandler(w)
-		log.Debug(err)
-		return
-	}
-
-	var response = api.SuccessResponse{
-		Code: http.StatusOK,
-		Data: data,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		api.InternalErrorHandler(w)
-		log.Debug(err)
-		return
-	}
-	return
+	api.RequestMalformedHandler(w, "The provided ID is invalid.")
 }

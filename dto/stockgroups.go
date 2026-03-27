@@ -12,7 +12,6 @@ type StockGroupGetParams struct {
 }
 
 type StockGroupEditParams struct {
-	ID             int32
 	Name           string
 	Description    string
 	AddedMembers   []int32

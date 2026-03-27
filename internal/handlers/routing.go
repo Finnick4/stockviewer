@@ -45,10 +45,15 @@ func Handler(r *chi.Mux) {
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/stockgroups", func(router chi.Router) {
+		router.Get("/{groupID}", stockgroups.GetStockGroup)
+		router.Get("/{groupID}/sse", stockgroups.GetStockGroupSSE)
+
+		router.With(middleware.ExtractPermissions).Patch("/{groupID}", stockgroups.EditStockGroup)
+
+		router.Get("/", stockgroups.GetStockGroups)
+		router.Get("/sse", stockgroups.GetStockGroupsSSE)
+
 		router.With(middleware.ExtractPermissions).Post("/", stockgroups.CreateStockGroup)
-		router.Get("/", stockgroups.GetStockGroup)
-		router.Get("/sse", stockgroups.GetStockGroupSSE)
-		router.With(middleware.ExtractPermissions).Patch("/", stockgroups.EditStockGroup)
 	})
 
 	r.With(middleware.ValidateToken).Route("/api/users", func(router chi.Router) {
