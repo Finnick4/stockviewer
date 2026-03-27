@@ -86,7 +86,7 @@ main.homepage {
 
 main.individualStockPage {
     display: grid;
-    grid-template: 4rem 40rem 20rem / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: 4rem 40.3rem 20rem / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
@@ -108,7 +108,17 @@ main.individualStockPage stock-chart svg.chart {
 }
 
 main.individualStockPage related-stocks {
+    overflow: auto;
     grid-column: 4/6;
+}
+
+main.individualStockPage related-stocks ul.inner {
+    margin: 0;
+}
+
+
+main.individualStockPage stock-influence-list {
+    grid-column: 1/4;
 }
 
 main.individualStockPage stock-groups-list {
