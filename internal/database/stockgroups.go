@@ -9,12 +9,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetAllStockGroups() ([]dto.StockGroupOverview, error) {
+func GetAllStockGroups(userID string) ([]dto.StockGroupOverview, error) {
 	log.Debug("Getting all stock groups")
 
 	db := getDB()
 
-	rowsName, err := db.Query(`	SELECT stockgroups.name, stockgroups.id FROM stockgroups ORDER BY stockgroups.id;`)
+	rowsName, err := db.Query(`	
+SELECT stockgroups.name, stockgroups.id, COUNT(starredstockgroups."userId") AS stars, MAX(CASE
+    WHEN starredstockgroups."userId" = $1 AND stockgroups.id = starredstockgroups."groupId" THEN 1
+    ELSE 0 END) 
+FROM stockgroups
+	LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
+GROUP BY stockgroups.name, stockgroups.id 
+ORDER BY stockgroups.id;`, userID)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -22,11 +29,13 @@ func GetAllStockGroups() ([]dto.StockGroupOverview, error) {
 
 	defer rowsName.Close()
 
-	rowsMembers, err := db.Query(`	SELECT stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers" FROM stockgroups
-										JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-										JOIN stocks ON stockgroupmembers."stockId" = stocks.id
-										LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-									GROUP BY stockgroups.id ORDER BY stockgroups.id;`)
+	rowsMembers, err := db.Query(`	
+SELECT stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers"
+FROM stockgroups
+	JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+	JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+	LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+GROUP BY stockgroups.id ORDER BY stockgroups.id;`)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -38,7 +47,7 @@ func GetAllStockGroups() ([]dto.StockGroupOverview, error) {
 
 	for rowsName.Next() {
 		var currentData dto.StockGroupOverview
-		err = rowsName.Scan(&currentData.Name, &currentData.ID)
+		err = rowsName.Scan(&currentData.Name, &currentData.ID, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -75,7 +84,14 @@ func GetDetailedStockGroup(userID string, groupID int32) (dto.DetailedStockGroup
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT stockgroups.name, COALESCE(stockgroups.description, '') FROM stockgroups WHERE stockgroups.id = $1`, groupID)
+	rows, err := db.Query(`
+SELECT stockgroups.name, COALESCE(stockgroups.description, ''), COUNT(starredstockgroups."userId"), MAX(CASE
+    WHEN starredstockgroups."userId" = $1 AND stockgroups.id = starredstockgroups."groupId" THEN 1
+    ELSE 0 END)
+FROM stockgroups
+	LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
+WHERE stockgroups.id = $2
+GROUP BY stockgroups.name, stockgroups.description;`, userID, groupID)
 
 	if err != nil {
 		log.Error(err)
@@ -86,9 +102,11 @@ func GetDetailedStockGroup(userID string, groupID int32) (dto.DetailedStockGroup
 
 	var name string
 	var descr string
+	var starred bool
+	var stars int32
 
 	for rows.Next() {
-		err = rows.Scan(&name, &descr)
+		err = rows.Scan(&name, &descr, &stars, &starred)
 		if err != nil {
 			log.Error(err)
 			return dto.DetailedStockGroup{}, err
@@ -128,23 +146,30 @@ func GetDetailedStockGroup(userID string, groupID int32) (dto.DetailedStockGroup
 		data = append(data, currentData)
 	}
 
-	return dto.DetailedStockGroup{ID: groupID, Name: name, Description: descr, Members: data}, nil
+	return dto.DetailedStockGroup{ID: groupID, Name: name, Description: descr, IsStarred: starred, Stars: stars, Members: data}, nil
 }
 
-func GetAnonymousStockGroup(stockIDs []int32) (dto.DetailedStockGroup, error) {
+func GetAnonymousStockGroup(stockIDs []int32, userID string) (dto.DetailedStockGroup, error) {
 	db := getDB()
 
-	query := `SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price FROM stocks
-				JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-				WHERE id IN (`
+	query := `
+SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, COUNT(starredstocks."userId"), MAX(CASE
+    WHEN starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId" THEN 1
+    ELSE 0 END) 
+FROM stocks
+	JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+	LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
+WHERE id IN (`
 	values := []interface{}{}
+	values = append(values, userID)
+
 	for i, id := range stockIDs {
 		values = append(values, id)
 
-		query += `$` + strconv.Itoa(i+1) + `, `
+		query += `$` + strconv.Itoa(i+2) + `, `
 	}
 
-	query = query[:len(query)-2] + `) ORDER BY stocks.id;`
+	query = query[:len(query)-2] + `) GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`
 	rows, err := db.Query(query, values...)
 
 	if err != nil {
@@ -158,7 +183,7 @@ func GetAnonymousStockGroup(stockIDs []int32) (dto.DetailedStockGroup, error) {
 
 	for rows.Next() {
 		var currentData dto.DetailedStock
-		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return dto.DetailedStockGroup{}, err
@@ -392,4 +417,44 @@ func SetStockGroupDescription(id int32, description string) error {
 	}
 	notifiers.NotifyStockGroupChange()
 	return nil
+}
+
+func StarStockGroupID(groupID int32, userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`INSERT INTO starredstockgroups ("groupId", "userId") VALUES ($1, $2) ON CONFLICT DO NOTHING;`, groupID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func UnstarStockGroupID(groupID int32, userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM starredstockgroups WHERE "groupId" = $1 AND "userId" = $2;`, groupID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func IsValidGroupID(groupID int32) bool {
+	db := getDB()
+
+	row := db.QueryRow(`SELECT EXISTS(SELECT 1 FROM stockgroups WHERE id = $1);`, groupID)
+
+	if row.Err() != nil {
+		return false
+	}
+	exists := false
+	err := row.Scan(&exists)
+	if err != nil {
+		return false
+	}
+	return exists
 }

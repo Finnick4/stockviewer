@@ -47,6 +47,7 @@ func Handler(r *chi.Mux) {
 	r.With(middleware.ValidateToken).Route("/api/stockgroups", func(router chi.Router) {
 		router.Get("/{groupID}", stockgroups.GetStockGroup)
 		router.Get("/{groupID}/sse", stockgroups.GetStockGroupSSE)
+		router.Put("/{groupID}/star", stockgroups.StarStockGroup)
 
 		router.With(middleware.ExtractPermissions).Patch("/{groupID}", stockgroups.EditStockGroup)
 

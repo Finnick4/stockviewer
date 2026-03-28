@@ -16,7 +16,7 @@ type StockGetHistoryParams struct {
 	Timeframe int64
 }
 
-type StockStarParams struct {
+type StarParams struct {
 	Result bool
 }
 

@@ -34,6 +34,9 @@ func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
 	rc := http.NewResponseController(w)
 
 	var send func() error
@@ -41,7 +44,7 @@ func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
 	if len(params.Members) != 0 {
 		send = func() error {
 			log.Debug("Getting anonymous stock group")
-			data, err := database.GetAnonymousStockGroup(params.Members)
+			data, err := database.GetAnonymousStockGroup(params.Members, userID)
 			if err != nil {
 				log.Debug(err)
 				return err
@@ -64,7 +67,7 @@ func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
 	if len(params.Members) == 0 {
 		send = func() error {
 			log.Debug("Getting all stock groups")
-			data, err := database.GetAllStockGroups()
+			data, err := database.GetAllStockGroups(userID)
 			if err != nil {
 				api.InternalErrorHandler(w)
 				log.Debug(err)

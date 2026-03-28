@@ -1,4 +1,4 @@
-package stocks
+package stockgroups
 
 import (
 	"encoding/json"
@@ -12,15 +12,15 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func StarStock(w http.ResponseWriter, r *http.Request) {
-	stockID, err := strconv.Atoi(chi.URLParam(r, "stockID"))
+func StarStockGroup(w http.ResponseWriter, r *http.Request) {
+	groupID, err := strconv.Atoi(chi.URLParam(r, "groupID"))
 
 	if err != nil {
-		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+		api.RequestMalformedHandler(w, "Could not parse group ID!")
 		return
 	}
 
-	log.Debugf("Trying to star stock %v", stockID)
+	log.Debugf("Trying to star stock group %v", groupID)
 
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
@@ -36,18 +36,18 @@ func StarStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !database.AreActiveStockIDs([]int32{int32(stockID)}) {
-		api.RequestMalformedHandler(w, "Cannot star invalid stock id!")
-		log.Debugf("Stock id %v is invalid", int32(stockID))
+	if !database.IsValidGroupID(int32(groupID)) {
+		api.RequestMalformedHandler(w, "Cannot star invalid stock group id!")
+		log.Debugf("Stock group id %v is invalid", int32(groupID))
 		return
 	}
 
-	log.Debugf("User tries to star (%v) stock id %v", params.Result, int32(stockID))
+	log.Debugf("User tries to star (%v) stock group id %v", params.Result, int32(groupID))
 
 	if params.Result {
-		err = database.StarStockID(int32(stockID), userID)
+		err = database.StarStockGroupID(int32(groupID), userID)
 	} else {
-		err = database.UnstarStockID(int32(stockID), userID)
+		err = database.UnstarStockGroupID(int32(groupID), userID)
 	}
 
 	if err != nil {
