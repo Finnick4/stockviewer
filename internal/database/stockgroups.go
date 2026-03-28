@@ -14,40 +14,28 @@ func GetAllStockGroups(userID string) ([]dto.StockGroupOverview, error) {
 
 	db := getDB()
 
-	rowsName, err := db.Query(`	
-SELECT stockgroups.name, stockgroups.id, COUNT(starredstockgroups."userId") AS stars, MAX(CASE
+	rows, err := db.Query(`	
+SELECT stockgroups.name, stockgroups.id, COALESCE(SUM(stockprice.price), 0) AS "totalPrice", COUNT(DISTINCT stockgroupmembers."stockId") AS "totalMembers", COUNT(DISTINCT starredstockgroups."userId") AS stars, MAX(CASE
     WHEN starredstockgroups."userId" = $1 AND stockgroups.id = starredstockgroups."groupId" THEN 1
-    ELSE 0 END) 
+    ELSE 0 END) AS starred 
 FROM stockgroups
-	LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
-GROUP BY stockgroups.name, stockgroups.id 
-ORDER BY stockgroups.id;`, userID)
+    LEFT JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+    LEFT JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+    LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+    LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
+GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`, userID)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	defer rowsName.Close()
-
-	rowsMembers, err := db.Query(`	
-SELECT stockgroups.id, SUM(stockprice.price) AS "totalPrice", COUNT(stockgroupmembers."stockId") AS "totalMembers"
-FROM stockgroups
-	JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-	JOIN stocks ON stockgroupmembers."stockId" = stocks.id
-	LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-GROUP BY stockgroups.id ORDER BY stockgroups.id;`)
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-
-	defer rowsMembers.Close()
+	defer rows.Close()
 
 	var data []dto.StockGroupOverview
 
-	for rowsName.Next() {
+	for rows.Next() {
 		var currentData dto.StockGroupOverview
-		err = rowsName.Scan(&currentData.Name, &currentData.ID, &currentData.Stars, &currentData.IsStarred)
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.TotalValue, &currentData.MemberCount, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -55,23 +43,6 @@ GROUP BY stockgroups.id ORDER BY stockgroups.id;`)
 		data = append(data, currentData)
 	}
 
-	for rowsMembers.Next() {
-		var id int32
-		var count int32
-		var totalValue int64
-
-		err = rowsMembers.Scan(&id, &totalValue, &count)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-		for i, stockGroup := range data {
-			if id == stockGroup.ID {
-				data[i].MemberCount = count
-				data[i].TotalValue = totalValue
-			}
-		}
-	}
 	return data, nil
 }
 
@@ -222,6 +193,40 @@ GROUP BY stockgroups.id ORDER BY stockgroups.id;`, stockID)
 	for rows.Next() {
 		var currentData dto.StockGroupOverview
 		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.TotalValue, &currentData.MemberCount)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+
+	return data, nil
+}
+
+func GetStarredStockGroups(userID string) ([]dto.StockGroupOverview, error) {
+	db := getDB()
+
+	rows, err := db.Query(`	
+SELECT stockgroups.name, stockgroups.id, COALESCE(SUM(stockprice.price), 0) AS "totalPrice", COUNT(DISTINCT stockgroupmembers."stockId") AS "totalMembers", COUNT(DISTINCT starredstockgroups."userId") AS stars, true AS starred
+FROM stockgroups
+    LEFT JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
+    LEFT JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+    LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+    LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
+WHERE starredstockgroups."userId" = $1 AND stockgroups.id = starredstockgroups."groupId"
+GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`, userID)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var data []dto.StockGroupOverview
+
+	for rows.Next() {
+		var currentData dto.StockGroupOverview
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.TotalValue, &currentData.MemberCount, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return nil, err

@@ -53,6 +53,8 @@ func Handler(r *chi.Mux) {
 
 		router.Get("/", stockgroups.GetStockGroups)
 		router.Get("/sse", stockgroups.GetStockGroupsSSE)
+		router.Get("/starred", stockgroups.GetStarredStockGroups)
+		router.Get("/starred/sse", stockgroups.GetStarredStockGroupsSSE)
 
 		router.With(middleware.ExtractPermissions).Post("/", stockgroups.CreateStockGroup)
 	})

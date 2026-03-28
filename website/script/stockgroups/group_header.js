@@ -25,18 +25,20 @@ class stockGroupHeader extends HTMLElement {
     }
 
     updateData(data, that) {
-        console.log(data)
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         let totalValue = 0
         let memberCount = 0
-        if (data["Members"] !== undefined) {
+        if (data["Members"] !== undefined && data["Members"] !== null) {
             data["Members"].forEach(stock => totalValue += stock["Price"])
             memberCount = data["Members"].length
         }
         that.querySelector("div.price").innerHTML = getLocaleString(totalValue/100) + "€"
         that.querySelector("div.members").innerHTML = memberCount + " stocks"
         if (Number(that.groupid) >= 0) {
-            that.querySelector("nav button.star").updateStatus(data["IsStarred"])
+            const starBtn = that.querySelector("nav button.star")
+            if (starBtn !== null) {
+                starBtn.updateStatus(data["IsStarred"])
+            }
         }
     }
 }

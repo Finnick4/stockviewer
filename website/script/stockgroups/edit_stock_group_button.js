@@ -23,8 +23,7 @@ function showModalEditStockGroup(groupid) {
     fetch(`/api/stockgroups/${groupid}`).then(r => r.json()).then(resp => {
         const groupName = sanitiseText(resp["Data"]["Name"])
         const groupDescription = sanitiseText(resp["Data"]["Description"])
-        const groupMembers = resp["Data"]["Members"].map(stock => Number(stock["ID"]))
-        console.log(groupMembers)
+        const groupMembers = resp["Data"]["Members"] !== null ? resp["Data"]["Members"].map(stock => Number(stock["ID"])) : []
 
         let html = `<h2>Edit ${sanitiseText(groupName)}</h2>
                         <div class="pair">
