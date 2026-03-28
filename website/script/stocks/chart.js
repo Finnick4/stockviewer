@@ -45,7 +45,7 @@ class stockChart extends HTMLElement {
     changeTimeframe(tf, that) {
         that.timeframe = tf
         that.closeSubscription()
-        that.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${that.timeframe}&Id=${that.stockid}`, addThisToFunctionCall(that.redrawGraph, that))
+        that.closeSubscription = subscribeToAPI(`/api/stocks/${that.stockid}/sse/?Timeframe=${that.timeframe}`, addThisToFunctionCall(that.redrawGraph, that))
     }
 
     redrawGraph(data, that) {

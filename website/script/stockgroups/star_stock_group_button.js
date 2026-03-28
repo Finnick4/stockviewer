@@ -7,16 +7,27 @@ class starStockGroupButtonElement extends HTMLButtonElement {
     connectedCallback() {
         this.groupid = Number(this.dataset.stockGroupId)
 
+        this.isStarred = this.dataset.isStarred === "true"
 
-
-        this.modalhtml = `
-            <h1>This is not yet implemented!</h1>
-            <p>In the future you will be able to star stock group ${this.stockid} with this button!</p>
-        `
         this.classList.add("star")
-        this.onclick = () => createModal(this.modalhtml)
+        this.onclick = () => {
+            const isStarred = this.isStarred
+            fetch(`/api/stockgroups/${this.groupid}/star`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    result: !isStarred
+                })
+            }).catch(() => {
+                this.updateStatus(isStarred)
+            })
+            this.updateStatus(!isStarred)
+        }
 
-        this.innerHTML = `<img class="icon" src="/icons/star_empty.svg" alt="give star" draggable="false">`
+        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="give star" draggable="false">`
+    }
+    updateStatus(newStatus) {
+        this.isStarred = newStatus === "true" || newStatus === true
+        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="give star" draggable="false">`
     }
 }
 

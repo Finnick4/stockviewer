@@ -35,6 +35,9 @@ class stockGroupHeader extends HTMLElement {
         }
         that.querySelector("div.price").innerHTML = getLocaleString(totalValue/100) + "€"
         that.querySelector("div.members").innerHTML = memberCount + " stocks"
+        if (Number(that.groupid) >= 0) {
+            that.querySelector("nav button.star").updateStatus(data["IsStarred"])
+        }
     }
 }
 

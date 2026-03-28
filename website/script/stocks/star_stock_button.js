@@ -16,7 +16,7 @@ class starStockButtonElement extends HTMLButtonElement {
                 body: JSON.stringify({
                     result: !isStarred
                 })
-            }).catch(r => {
+            }).catch(() => {
                 this.updateStatus(isStarred)
             })
             this.updateStatus(!isStarred)
