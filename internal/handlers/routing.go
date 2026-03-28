@@ -68,6 +68,7 @@ func Handler(r *chi.Mux) {
 		router.With(middleware.ExtractPermissions).Patch("/{articleID}", articles.EditArticle)
 
 		router.Get("/", articles.GetArticles)
+		router.Get("/unread", articles.GetUnreadArticles)
 		router.With(middleware.ExtractPermissions).Post("/", articles.CreateArticle)
 	})
 }

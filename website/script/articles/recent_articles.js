@@ -1,11 +1,35 @@
 class recentArticlesElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<div class="inner">
-                <h2>All articles</h2>
-                <p>Loading articles...</p>
+                <div class="titlebar">
+                    <nav class="displaySelctor">
+                        <button class="toggleViewed">Hide seen</button>                                                     
+                    </nav>
+                    <h2>All articles</h2>
+                    <div></div>
+                </div>
+                <ul class="inner">
+                    <p>Loading articles...</p>
+                </ul>
             </div>`
-        let offset = 0
-        fetch(`/api/articles?offset=${offset++}`).then(r => r.json()).then(resp => {
+        this.offset = 0
+        this.articlesList = this.querySelector("ul.inner")
+        this.btnToggleViewed = this.querySelector("button.toggleViewed")
+        this.titleElem = this.querySelector("div.titlebar h2")
+        this.onlyUnread = false
+
+        this.btnToggleViewed.addEventListener("click", () => {
+            this.onlyUnread = !this.onlyUnread
+            this.titleElem.innerHTML = this.onlyUnread ? "Unread articles" : "All articles"
+            this.btnToggleViewed.innerHTML = this.onlyUnread ? "Show seen" : "Hide seen"
+            this.offset = 0
+            this.updateContent()
+        })
+        this.updateContent()
+    }
+
+    updateContent() {
+        fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
             let html = ""
             resp["Data"].forEach(e => {
                 html += `<li class="articlePreview ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}">
@@ -19,18 +43,14 @@ class recentArticlesElement extends HTMLElement {
                         </li>`
             })
 
-            this.innerHTML = `<ul class="inner">
-                        <h2>All articles</h2>
+            this.articlesList.innerHTML = `
                         ${html}
                         <button class="articlePreview loadMore">Load more articles</button>
-                    </ul>
                 `
             const loadMoreBtn = this.querySelector("button.loadMore")
             const ul = this.querySelector("ul.inner")
             loadMoreBtn.addEventListener("click", () => {
-                console.log("Load more!")
-
-                fetch(`/api/articles?offset=${offset++}`).then(r => r.json()).then(resp => {
+                fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
                     resp["Data"].forEach(e => {
                         const elem = document.createElement("li")
                         elem.classList.add("articlePreview")

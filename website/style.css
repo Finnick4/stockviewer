@@ -876,6 +876,15 @@ stock-chart svg line.axis {
     align-self: center;
 }
 
+recent-articles nav.displaySelctor {
+    display: flex;
+    justify-content: start;
+    justify-self: left;
+}
+recent-articles div.inner ul.inner {
+    padding: 0;
+}
+
 .article {
     background-color: var(--bg-dark);
     border-radius: var(--border-radius);

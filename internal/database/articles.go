@@ -145,6 +145,43 @@ GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
 	return articles, nil
 }
 
+func GetUnreadArticles(offset int32, userID string) ([]dto.ArticleOverview, error) {
+	log.Debugf("Getting ten unread articles with offset %v", offset)
+	db := getDB()
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	rows, err := db.Query(`
+SELECT articles.id, title, COUNT(DISTINCT stockinfluences."stockId"), COUNT(DISTINCT articleviews."userId"), false AS viewed FROM articles
+    LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
+    LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+WHERE NOT EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1)
+GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
+	defer rows.Close()
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		log.Error(err)
+		return nil, err
+	}
+
+	articles := make([]dto.ArticleOverview, 0, 10)
+
+	for rows.Next() {
+		var article dto.ArticleOverview
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews, &article.Viewed)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
+}
+
 func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
 	log.Debugf("Getting article with id %v", articleID)
 	db := getDB()

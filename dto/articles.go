@@ -20,7 +20,6 @@ type ArticleEditParams struct {
 
 type ArticleGetParams struct {
 	Offset int32
-	ID     int32
 }
 
 type ArticleOverview struct {
