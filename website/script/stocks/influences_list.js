@@ -13,6 +13,7 @@ class stockInfluenceList extends HTMLElement {
                 <nav><h2>Influences</h2></nav>
                 <p>This stock currently is not influenced by any article...</p>
             </div>`
+                return
             }
 
             let html = ""

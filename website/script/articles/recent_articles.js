@@ -31,8 +31,14 @@ class recentArticlesElement extends HTMLElement {
     updateContent() {
         fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
             let html = ""
-            resp["Data"].forEach(e => {
-                html += `<li class="articlePreview ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}">
+
+            if (resp["Data"] === null || resp["Data"].length === 0) {
+                this.articlesList.innerHTML = `
+                        <p>There are no${this.onlyUnread ? " unread" : ""} articles</p>
+                `
+            } else {
+                resp["Data"].forEach(e => {
+                    html += `<li class="articlePreview ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}">
                             <a is="a-button" href="/articles/${e["ID"]}">
                                 <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div class="info">
@@ -41,35 +47,36 @@ class recentArticlesElement extends HTMLElement {
                                 </div>
                             </a>
                         </li>`
-            })
+                })
 
-            this.articlesList.innerHTML = `
+                this.articlesList.innerHTML = `
                         ${html}
                         <button class="articlePreview loadMore">Load more articles</button>
                 `
-            const loadMoreBtn = this.querySelector("button.loadMore")
-            const ul = this.querySelector("ul.inner")
-            loadMoreBtn.addEventListener("click", () => {
-                fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
-                    resp["Data"].forEach(e => {
-                        const elem = document.createElement("li")
-                        elem.classList.add("articlePreview")
-                        elem.classList.add(`${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}"`)
-                        elem.dataset.articleId = e["ID"]
-                        elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
+                const loadMoreBtn = this.querySelector("button.loadMore")
+                const ul = this.querySelector("ul.inner")
+                loadMoreBtn.addEventListener("click", () => {
+                    fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
+                        resp["Data"].forEach(e => {
+                            const elem = document.createElement("li")
+                            elem.classList.add("articlePreview")
+                            elem.classList.add(`${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}"`)
+                            elem.dataset.articleId = e["ID"]
+                            elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
                                               <div class="title">${sanitiseText(e["Title"])}</div>
                                               <div class="info">
                                                     <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
                                                     <div class="change">${e["TotalInfluences"]} affected</div>
                                               </div>
                                           </a>`
-                        ul.insertBefore(elem, loadMoreBtn)
+                            ul.insertBefore(elem, loadMoreBtn)
+                        })
+                        if (resp["Data"].length < 10) {
+                            loadMoreBtn.remove()
+                        }
                     })
-                    if (resp["Data"].length < 10) {
-                        loadMoreBtn.remove()
-                    }
                 })
-            })
+            }
         })
     }
 }

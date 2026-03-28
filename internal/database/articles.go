@@ -154,11 +154,12 @@ func GetUnreadArticles(offset int32, userID string) ([]dto.ArticleOverview, erro
 	}
 
 	rows, err := db.Query(`
-SELECT articles.id, title, COUNT(DISTINCT stockinfluences."stockId"), COUNT(DISTINCT articleviews."userId"), false AS viewed FROM articles
+SELECT articles.id, title, COUNT(DISTINCT stockinfluences."stockId") AS affected, COUNT(DISTINCT articleviews."userId") AS views, false AS viewed FROM articles
     LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
     LEFT JOIN articleviews ON articles.id = articleviews."articleId"
-WHERE NOT EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1)
-GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
+WHERE (NOT EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1 AND articleviews."articleId" = articles.id))
+  AND (SELECT created FROM users WHERE "id" = $1) < articles."createdAt"
+GROUP BY articles.id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
 	defer rows.Close()
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
