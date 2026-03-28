@@ -108,6 +108,20 @@ func RemoveArticleContent(id int32) error {
 	return nil
 }
 
+func DeleteArticle(id int32) error {
+	log.Infof("Deleting article %v", id)
+
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM articles WHERE id=$1;`, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
 // GetArticles returns the 10 most recent articles. If an offset is provided, it takes the 10 articles n*10 below.
 func GetArticles(offset int32, userID string) ([]dto.ArticleOverview, error) {
 	log.Debugf("Getting ten articles with offset %v", offset)
@@ -210,6 +224,9 @@ func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
 
 	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated, &article.TotalViews, &article.Viewed)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return dto.DetailedArticle{}, err
+		}
 		log.Error(err)
 		return dto.DetailedArticle{}, err
 	}

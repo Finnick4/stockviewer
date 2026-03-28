@@ -25,6 +25,11 @@ function buildIndividualArticlePage(id) {
     const effectInfoElem = document.querySelector("main div.effectInfo")
 
     fetch(`/api/articles/${id}`).then(r => r.json()).then(resp => {
+        if (resp["Code"] === 404) {
+            setMainBodyHTML(`<h1>This article does not exist!</h1>`);
+            return
+        }
+
         const data = resp["Data"]
         if (data["AuthorID"] !== "") {
             articleTitleElem.authorName = sanitiseText(data["AuthorDisplayName"])

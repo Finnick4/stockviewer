@@ -1,7 +1,9 @@
 package articles
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"stockviewer/api"
@@ -33,6 +35,10 @@ func GetArticle(w http.ResponseWriter, r *http.Request) {
 
 	data, err := database.GetArticle(int32(articleID), userID)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			api.RequestNothingFoundHandler(w, "This article does not exist.")
+			return
+		}
 		api.InternalErrorHandler(w)
 		log.Debug(err)
 		return

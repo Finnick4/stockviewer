@@ -98,6 +98,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Error(err)
 			api.InternalErrorHandler(w)
+			_ = database.DeleteArticle(id)
 			return
 		}
 	}
