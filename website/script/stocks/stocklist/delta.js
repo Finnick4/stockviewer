@@ -2,8 +2,8 @@ class stocklistDelta extends HTMLElement {
     connectedCallback() {
         this.timeframe = 1
         this.innerHTML = `<div class="inner">
-                <nav><h2>All stocks</h2></nav>
-                <p>Loading stock data...</p>
+                <nav><h2>${getTranslatedStr("stocks.list.all_stocks")}</h2></nav>
+                <p>${getTranslatedStr("stocks.list.loading")}</p>
             </div>`
         this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.updateData, this))
     }
@@ -45,7 +45,7 @@ class stocklistDelta extends HTMLElement {
                                 <button class="tf" data-tf="3">6h</button>
                                 <button class="tf" data-tf="4">24h</button>                                                     
                             </nav>
-                            <h2>All stocks</h2>
+                            <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
                             <div></div>
                         </div>
                         ${html}

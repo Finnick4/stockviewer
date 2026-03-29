@@ -22,11 +22,11 @@ class starStockButtonElement extends HTMLButtonElement {
             this.updateStatus(!isStarred)
         }
 
-        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="give star" draggable="false">`
+        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="${this.isStarred ? getTranslatedStr("stocks.stars.icon_alt_text_starred") : getTranslatedStr("stocks.stars.icon_alt_text_unstarred")}" draggable="false">`
     }
     updateStatus(newStatus) {
         this.isStarred = newStatus === "true" || newStatus === true
-        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="give star" draggable="false">`
+        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="${this.isStarred ? getTranslatedStr("stocks.stars.icon_alt_text_starred") : getTranslatedStr("stocks.stars.icon_alt_text_unstarred")}" draggable="false">`
     }
 }
 

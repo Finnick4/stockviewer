@@ -1,34 +1,47 @@
 
 function changeLanguage(targetLanguage) {
     initialiseLanguages()
+    langCode = ""
 
-    if (typeof targetLanguage === "string" || Object.keys(supportedLanguages).includes(targetLanguage)) {
-        lang = supportedLanguages[targetLanguage]
+    const updateLanguage = () => {
+        lang = supportedLanguages[langCode]
         const header = document.querySelector(`header-bar`)
         if (header !== null) {
             header.remove()
         }
         router()
+    }
+    if (typeof targetLanguage === "string" || Object.keys(supportedLanguages).includes(targetLanguage)) {
+        langCode = targetLanguage
+        updateLanguage()
         return
     }
 
     for (const language of navigator.languages) {
         if (Object.keys(supportedLanguages).includes(language)) {
             console.log(`Found language in browser preferences: ${language}`)
-            lang = supportedLanguages[language]
-            const header = document.querySelector(`header-bar`)
-            if (header !== null) {
-                header.remove()
-            }
-            router()
+            langCode = language
+            updateLanguage()
             return
         }
     }
     console.log(`Falling back to default language: en`)
-    lang = supportedLanguages.en
-    const header = document.querySelector(`header-bar`)
-    if (header !== null) {
-        header.remove()
+    langCode = "en"
+    updateLanguage()
+}
+
+
+function getTranslatedStr(key) {
+    if (typeof key !== "string") {
+        return key
     }
-    router()
+
+    const path = key.split('.')
+    try {
+        const language = supportedLanguages[langCode ?? "en"]
+        const res = path.reduce((a, v) => a[v], language)
+        return typeof res === "string" ? res : key
+    } catch {
+        return key
+    }
 }

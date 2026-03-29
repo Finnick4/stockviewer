@@ -4,9 +4,9 @@ class headerBarElement extends HTMLElement {
         this.innerHTML = `
                 <a is="a-button" href="/"><h1>Stock Viewer</h1></a>
                 <nav class="move">
-                    <a is="a-button" href="/stocks">${lang.header.stocks}</a>
-                    <a is="a-button" href="/articles">${lang.header.articles}</a>
-                    <a is="a-button" href="/groups">${lang.header.stock_groups}</a>
+                    <a is="a-button" href="/stocks">${getTranslatedStr("header.stocks")}</a>
+                    <a is="a-button" href="/articles">${getTranslatedStr("header.articles")}</a>
+                    <a is="a-button" href="/groups">${getTranslatedStr("header.stock_groups")}</a>
                 </nav>
                 <search-bar></search-bar>
                 <nav class="create"></nav>

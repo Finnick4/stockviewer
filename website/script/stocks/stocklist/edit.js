@@ -2,8 +2,8 @@ class stocklistEdit extends HTMLElement {
     connectedCallback() {
         this.timeframe = 1
         this.innerHTML = `<div class="inner">
-                <h2>All stocks</h2>
-                <p>Loading stock data...</p>
+                <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
+                <p>${getTranslatedStr("stocks.list.loading")}</p>
             </div>`
         this.closeSubscription = subscribeToAPI(`/api/stocks/sse/`, addThisToFunctionCall(this.updateData, this))
     }
@@ -32,7 +32,7 @@ class stocklistEdit extends HTMLElement {
         that.innerHTML = `<ul class="inner">
                         <div class="titlebar">
                             <div></div>
-                            <h2>All stocks</h2>
+                            <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
                             <div></div>
                         </div>
                         ${html}

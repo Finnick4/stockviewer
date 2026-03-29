@@ -9,7 +9,7 @@ class editStockButtonElement extends HTMLButtonElement {
 
         this.classList.add("edit")
 
-        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="edit" draggable="false">`
+        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="${getTranslatedStr("stocks.modify.edit_icon_alt_text")}" draggable="false">`
 
         this.onclick = () => showEditStockModal(this.stockid)
     }
@@ -26,26 +26,26 @@ function showEditStockModal(stockID) {
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
         const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
-        let html = `<h2>Edit ${stockName} <div class="change shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
+        let html = `<h2>${interpolateStr(getTranslatedStr("stocks.modify.edit_title"), {name: stockName})} <div class="change shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
                         <div class="pair">
-                            <p>Name</p>
-                            <input class="name" type="text" placeholder="Stock name..." value="${sanitiseText(stockName)}">
+                            <p>${getTranslatedStr("stocks.name")}</p>
+                            <input class="name" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_name_placeholder")}" value="${sanitiseText(stockName)}">
                         </div>
                         <div class="pair">
-                            <p>Shorthand</p>
+                            <p>${getTranslatedStr("stocks.shorthand")}</p>
                             <input class="shorthand" type="text" placeholder="Shorthand..." value="${sanitiseText(stockShorthand)}">
                         </div>
                         <div class="pair">
-                            <p>Color</p>
+                            <p>${getTranslatedStr("stocks.color")}</p>
                             <color-selector data-color="${stockColorHex}"></color-selector>
                         </div>
                         <div class="pair">
-                            <p>Price (ct)</p>
+                            <p>${getTranslatedStr("stocks.price_ct")}</p>
                             <input class="price" type="number" value="${sanitiseText(stockPrice)}">
                         </div>
                         <div class="pair">
                             <div class="info"></div>
-                            <button class="submit">Submit</button>
+                            <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
                         </div>
                       `
         const id = createModal(html)
@@ -90,33 +90,33 @@ function showEditStockModal(stockID) {
         const validate = () => {
 
             if (name.value.length > 32) {
-                seterr("The name is too long! (2 - 32 characters)")
+                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_name_too_long"), {min: 2, max: 32}))
                 return false
             }
             if (name.value.length < 2) {
-                seterr("The name is too short! (2 - 32 characters)")
+                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_name_too_short"), {min: 2, max: 32}))
                 return false
             }
 
             if (shorthand.value.length > 5) {
-                seterr("The shorthand is too long! (2 - 5 characters)")
+                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_shorthand_too_long"), {min: 2, max: 5}))
                 return false
             }
             if (shorthand.value.length < 2) {
-                seterr("The shorthand is too short! (2 - 5 characters)")
+                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_shorthand_too_short"), {min: 2, max: 5}))
                 return false
             }
             if (!isNaN(shorthand.value)) {
-                seterr("The shorthand may not be a number!")
+                seterr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
                 return false
             }
 
             if (price.value < 2) {
-                seterr("The price has to be at least 0.02€!")
+                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_price_too_low"), {price: "0.02€"}))
                 return false
             }
 
-            infotxt.innerHTML = "Values are okay"
+            infotxt.innerHTML = getTranslatedStr("stocks.modify.values_okay")
             infotxt.classList.add("positive")
             infotxt.classList.remove("negative")
             return true
@@ -128,8 +128,6 @@ function showEditStockModal(stockID) {
 
         modal.querySelector(`.submit`).addEventListener("click", () => {
             if (validate()) {
-                console.log("Setting color as:")
-                console.log(permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0)
                 fetch(`${window.location.origin}/api/stocks/${stockID}`, {
                     method: "PATCH",
                     body: JSON.stringify({
@@ -143,9 +141,9 @@ function showEditStockModal(stockID) {
                         closeModal(id)
                     } else {
                         if (r.status >= 400 || r.status < 500) {
-                            seterr("There is an issue with the request.")
+                            seterr(interpolateStr(getTranslatedStr("network.issues.generic_request"), {code: r.status}))
                         } else {
-                            seterr("There is a server-side issue causing this request to not be processed!")
+                            seterr(interpolateStr(getTranslatedStr("network.issues.generic_server"), {code: r.status}))
                         }
                     }
                 });

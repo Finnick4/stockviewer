@@ -2,8 +2,8 @@ class stockGroupsList extends HTMLElement {
     connectedCallback() {
         this.stockId = this.dataset.stockId
         this.innerHTML = `<div class="inner">
-                <nav><h2>Stock group memberships</h2></nav>
-                <p>Loading stock groups...</p>
+                <nav><h2>${getTranslatedStr("stocks.group_memberships.stock_group_memberships")}</h2></nav>
+                <p>${getTranslatedStr("stocks.group_memberships.loading")}</p>
             </div>`
         this.closeSubscription = subscribeToAPI(`/api/stocks/${this.stockId}/groups/sse`, addThisToFunctionCall(this.updateData, this))
     }
@@ -15,8 +15,8 @@ class stockGroupsList extends HTMLElement {
     updateData(data, that) {
         if (data === null) {
             that.innerHTML = `<div class="inner">
-                <nav><h2>Stock groups memberships</h2></nav>
-                <p>This stock isn't a part of any stock groups...</p>
+                <nav><h2>${getTranslatedStr("stocks.group_memberships.stock_group_memberships")}</h2></nav>
+                <p>${getTranslatedStr("stocks.group_memberships.no_membership")}</p>
             </div>`
             return
         }
@@ -36,7 +36,7 @@ class stockGroupsList extends HTMLElement {
         that.innerHTML = `<ul class="inner">
                         <div class="titlebar">
                             <nav></nav>
-                            <h2>Stock groups memberships</h2>
+                            <h2>${getTranslatedStr("stocks.group_memberships.stock_group_memberships")}</h2>
                             <div></div>
                         </div>
                         ${html}

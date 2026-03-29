@@ -1,7 +1,7 @@
 
 class searchBarElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<input type="text" placeholder="${lang.header.search.placeholder}">`
+        this.innerHTML = `<input type="text" placeholder="${getTranslatedStr("header.search.placeholder")}">`
     }
 }
 

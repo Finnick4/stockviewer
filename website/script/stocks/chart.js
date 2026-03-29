@@ -16,7 +16,7 @@ class stockChart extends HTMLElement {
                                 <button class="tf" data-tf="4">24h</button>
                                 <button class="tf" data-tf="-1">all</button>                                                     
                             </nav>
-                            <h2>Stock History</h2>
+                            <h2>${getTranslatedStr("stocks.chart.stock_history")}</h2>
                             <div></div>
                             </div>
                             <svg class="chart" viewbox="5 0 90 47">

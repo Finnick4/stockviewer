@@ -17,7 +17,7 @@ function getShortNumber(num) {
     if (isNaN(num) || typeof(num) !== "number") {
         return "0"
     }
-    return Number(num).toLocaleString('en-us', {
+    return Number(num).toLocaleString(langCode, {
         maximumFractionDigits: 2,
         notation: 'compact',
         compactDisplay: 'short'
@@ -28,7 +28,7 @@ function getLocaleString(num) {
     if (isNaN(num) || typeof(num) !== "number") {
         return "0"
     }
-    return Number(num).toLocaleString('en-us', {
+    return Number(num).toLocaleString(langCode, {
         maximumFractionDigits: 2
     });
 }
@@ -51,4 +51,12 @@ function getHexColor(num) {
         hex = "0" + hex
     }
     return hex
+}
+
+function interpolateStr(str, obj) {
+    if (typeof str !== "string" || typeof obj !== "object") {
+        return str
+    }
+    console.log("String interpolation is not yet implemented!")
+    return str
 }

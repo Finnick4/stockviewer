@@ -6,7 +6,7 @@ class relatedStocks extends HTMLElement {
         for (let i = 0; i < 5; i++) {
             template += `<li class="stockOverview">
                             <a class="containing" is="a-button" href="/stocks">
-                                <div class="stockName">Loading...</div>
+                                <div class="stockName">${getTranslatedStr("stocks.related.stock_loading_name")}</div>
                                 <div class="info">
                                     <div class="change">???</div>
                                     <div class="change">+???€</div>
@@ -18,7 +18,7 @@ class relatedStocks extends HTMLElement {
 
         this.innerHTML = `
                         <ul class="inner">
-                            <h2>Related Stocks</h2>
+                            <h2>${getTranslatedStr("stocks.related.related_stocks")}</h2>
                             ${template}                    
                         </ul>
                         `
@@ -41,7 +41,7 @@ class relatedStocks extends HTMLElement {
                         <a class="containing" is="a-button" href="/stocks">
                             <div class="identification">
                                 <div class="change shorthand">?????</div>
-                                <div class="stockName">None...</div>
+                                <div class="stockName">${getTranslatedStr("stocks.related.stock_none_name")}</div>
                             </div>
                             <div class="info">
                                 <div class="change">---</div>
@@ -52,7 +52,6 @@ class relatedStocks extends HTMLElement {
                     </li>`
         }
         const addComparingElement = (elem) => {
-            console.log(Number(elem["Color"]).toString(16))
             elements += `<li class="stockOverview">
                         <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
                             <div class="identification">
@@ -96,8 +95,8 @@ class relatedStocks extends HTMLElement {
 
         that.innerHTML = `
                         <ul class="inner">
-                            <h2>Related Stocks</h2>
-                            ${elements}                    
+                            <h2>${getTranslatedStr("stocks.related.related_stocks")}</h2>
+                            ${elements}
                         </ul>
                         `
     }

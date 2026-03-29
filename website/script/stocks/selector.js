@@ -2,16 +2,16 @@ class stockSelectorElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
                 <div class="pair">
-                    <p>Stock selection</p>
-                    <input type="text" class="search" placeholder="Search stocks...">
+                    <p>${getTranslatedStr("stocks.selector.stock_selection")}</p>
+                    <input type="text" class="search" placeholder="${getTranslatedStr("stocks.selector.search_placeholder")}">
                 </div>
                 <ul class="inner">
-                    <li class="placeholder">No stocks selected...</li>
+                    <li class="placeholder">${getTranslatedStr("stocks.selector.empty_selection")}</li>
                 </ul>`
 
         this.readOnly = false
 
-        this.dropdownid = createDropdown(`Please type to search...`)
+        this.dropdownid = createDropdown(getTranslatedStr("stocks.selector.empty_search_query"))
 
         const search = this.querySelector("input.search")
         const dropdown = document.getElementById(this.dropdownid)
@@ -73,7 +73,7 @@ class stockSelectorElement extends HTMLElement {
                     html += `<button class="searchResult ${this.readOnly ? "disabled" : ""}" data-stock-id="${stock["ID"]}">${sanitiseText(stock["Name"])}</button>`
                 })
                 if (possible.length === 0) {
-                    html = "No stocks found"
+                    html = getTranslatedStr("stocks.selector.empty_search_result")
                 }
                 dropdown.innerHTML = html
                 dropdown.querySelectorAll(".searchResult").forEach(elem => {
@@ -95,7 +95,7 @@ class stockSelectorElement extends HTMLElement {
         if (inner.querySelectorAll("li.stockOverview").length === 0) {
             const placeholder = document.createElement("li")
             placeholder.className = "placeholder"
-            placeholder.innerHTML = "No stocks selected..."
+            placeholder.innerHTML = getTranslatedStr("stocks.selector.empty_selection")
             inner.append(placeholder)
         }
     }

@@ -3,15 +3,15 @@ class stockInfluenceList extends HTMLElement {
         this.stockid = Number(this.getAttribute("data-stock-id"))
 
         this.innerHTML = `<div class="inner">
-                <nav><h2>Influences</h2></nav>
-                <p>Loading influences on stock...</p>
+                <nav><h2>${getTranslatedStr("stocks.influences.influences")}</h2></nav>
+                <p>${getTranslatedStr("stocks.influences.loading")}</p>
             </div>`
         fetch(`/api/stocks/${this.stockid}/influences`).then(r => r.json()).then(resp => {
             const data = resp["Data"]
             if (data === null || data.length === 0) {
                 this.innerHTML = `<div class="inner">
-                <nav><h2>Influences</h2></nav>
-                <p>This stock currently is not influenced by any article...</p>
+                <nav><h2>${getTranslatedStr("stocks.influences.influences")}</h2></nav>
+                <p>${getTranslatedStr("stocks.influences.no_active_influences")}</p>
             </div>`
                 return
             }
@@ -30,7 +30,7 @@ class stockInfluenceList extends HTMLElement {
             })
 
             this.innerHTML = `<ul class="inner">
-                        <nav><h2>Influences</h2></nav>
+                        <nav><h2>${getTranslatedStr("stocks.influences.influences")}</h2></nav>
                         ${html}
                     </ul>
                 `
