@@ -1,0 +1,21 @@
+{
+  "header": {
+    "stocks": "Aktien",
+    "articles": "Artikel",
+    "stock_groups": "Gruppen",
+    "search": {
+      "placeholder": "Suche..."
+    }
+  },
+  "creator": {
+    "stock": "Aktie erstellen",
+    "stock_group": "Aktiengruppe erstellen",
+    "article": "Artikel erstellen",
+    "user": "Benutzer erstellen"
+  },
+  "user_manager": {
+    "dashboard_account": "Benutzereinstellungen",
+    "dashboard_admin": "Administration",
+    "logout": "Abmelden"
+  }
+}

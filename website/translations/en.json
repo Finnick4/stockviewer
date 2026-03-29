@@ -1,0 +1,21 @@
+{
+  "header": {
+    "stocks": "Stocks",
+    "articles": "Articles",
+    "stock_groups": "Groups",
+    "search": {
+      "placeholder": "Search..."
+    }
+  },
+  "creator": {
+    "stock": "Create Stock",
+    "stock_group": "Create Stock Group",
+    "article": "Create Article",
+    "user": "Create User"
+  },
+  "user_manager": {
+    "dashboard_account": "Account Settings",
+    "dashboard_admin": "Administration",
+    "logout": "Log out"
+  }
+}

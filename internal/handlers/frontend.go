@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"stockviewer/internal/utilities"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -13,6 +14,7 @@ var indexBuffer []byte
 var cssBuffer []byte
 var jsBuffer []byte
 var jsCompileBuffer []byte
+var translationsCompileBuffer []byte
 
 func HandleIndexHTML(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
@@ -65,6 +67,21 @@ func initBuffers() {
 		compileJSDir("./website/script/")
 
 		jsBuffer = jsCompileBuffer
+
+		log.Debug("Loading translations")
+		translationsCompileBuffer = append(translationsCompileBuffer, []byte("{")...)
+
+		compileTranslations("./website/translations")
+
+		translationsCompileBuffer = translationsCompileBuffer[:len(translationsCompileBuffer)-2]
+		translationsCompileBuffer = append(translationsCompileBuffer, []byte("}")...)
+
+		jsBuffer = append(jsBuffer, []byte(`function initialiseLanguages() {
+lang = {};
+supportedLanguages = `)...)
+		jsBuffer = append(jsBuffer, translationsCompileBuffer...)
+
+		jsBuffer = append(jsBuffer, []byte("}\n")...)
 	}()
 }
 
@@ -88,6 +105,34 @@ func compileJSDir(path string) {
 			}
 			js = append(js, []byte("\n")...)
 			jsCompileBuffer = append(jsCompileBuffer, js...)
+		}
+	}
+}
+
+func compileTranslations(path string) {
+	dir, err := os.ReadDir(path)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	for i := range dir {
+		name := dir[i].Name()
+		if dir[i].IsDir() {
+			compileTranslations(fmt.Sprintf("%v%v/", path, name))
+			continue
+		}
+
+		if strings.HasSuffix(name, ".json") {
+			langname := name[:utilities.CharCount(name)-5]
+			translation := []byte(fmt.Sprintf(`"%v": `, langname))
+
+			file, err := os.ReadFile(fmt.Sprintf("%v/%v", path, name))
+			if err != nil || file == nil {
+				log.Error(err)
+			}
+			translation = append(translation, file...)
+			translation = append(translation, []byte(",\n")...)
+			translationsCompileBuffer = append(translationsCompileBuffer, translation...)
 		}
 	}
 }
