@@ -75,5 +75,6 @@ window.addEventListener("popstate", e => {
     router()
 })
 
+changeLanguage()
 router()
 checkLoggedIn()

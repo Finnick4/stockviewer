@@ -2,9 +2,9 @@
 class userManagerElement extends HTMLElement {
     connectedCallback() {
         this.dropdownid = createDropdown(`
-        <a is="a_link" class="btn" href="/user-settings">Account Settings</a>
-        <a is="a_link" class="btn" href="/admin">Administration</a>
-        <button onclick="logout()">Log out</button>
+        <a is="a_link" class="btn" href="/user-settings">${lang.user_manager.dashboard_account}</a>
+        <a is="a_link" class="btn" href="/admin">${lang.user_manager.dashboard_admin}</a>
+        <button onclick="logout()">${lang.user_manager.logout}</button>
         `)
         this.innerHTML = `
         <button popovertarget="${this.dropdownid}" class="usermanager" style="anchor-name: --anchor-${this.dropdownid};">
