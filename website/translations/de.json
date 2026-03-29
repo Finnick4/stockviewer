@@ -1,21 +1,80 @@
 {
-  "header": {
-    "stocks": "Aktien",
-    "articles": "Artikel",
-    "stock_groups": "Gruppen",
-    "search": {
-      "placeholder": "Suche..."
+    "header": {
+        "stocks": "Aktien",
+        "articles": "Artikel",
+        "stock_groups": "Gruppen",
+        "search": {
+            "placeholder": "Suche..."
+        }
+    },
+    "creator": {
+        "stock": "Aktie erstellen",
+        "stock_group": "Aktiengruppe erstellen",
+        "article": "Artikel erstellen",
+        "user": "Benutzer erstellen"
+    },
+    "user_manager": {
+        "dashboard_account": "Benutzereinstellungen",
+        "dashboard_admin": "Administration",
+        "logout": "Abmelden"
+    },
+    "stocks": {
+        "name": "Name",
+        "shorthand": "Kurzschrift",
+        "color": "Farbe",
+        "price": "Preis",
+        "price_ct": "Preis (ct)",
+        "list": {
+            "all_stocks": "Alle Aktien",
+            "loading": "Lade Aktiendaten..."
+        },
+        "chart": {
+            "stock_history": "Aktienkurs"
+        },
+        "modify": {
+            "edit_icon_alt_text": "Aktie bearbeiten",
+            "edit_title": "{name} bearbeiten",
+            "stock_name_placeholder": "Aktienname...",
+            "submit": "Absenden",
+            "err_name_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
+            "err_name_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
+            "err_shorthand_too_long": "Die Kurzschrift ist zu lang! ({min} - {max} Zeichen)",
+            "err_shorthand_too_short": "Die Kurzschrift ist zu kurz! ({min} - {max} Zeichen)",
+            "err_shorthand_numeric": "Die Kurzschrift darf nicht numerisch sein!",
+            "err_price_too_low": "Der Preis muss mindestens {price} betragen!",
+            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten"
+        },
+        "influences": {
+            "influences": "Einflüsse",
+            "loading": "Lade Einflüsse auf die Aktie...",
+            "no_active_influences": "Die Aktie wird momentan von keinem Artikel beeinflusst..."
+        },
+        "related": {
+            "related_stocks": "Ähnliche Aktien",
+            "stock_loading_name": "Lade...",
+            "stock_none_name": "Nichts..."
+        },
+        "selector": {
+            "stock_selection": "Aktienauswahl",
+            "search_placeholder": "Suche nach Aktien...",
+            "empty_selection": "Keine Aktien ausgewählt...",
+            "empty_search_query": "Suche eingeben...",
+            "empty_search_result": "Keine Aktien gefunden..."
+        },
+        "stars": {
+            "icon_alt_text_starred": "Aktie nicht mehr markieren",
+            "icon_alt_text_unstarred": "Aktie markieren"
+        },
+        "group_memberships": {
+            "stock_group_memberships": "Aktiengruppenmitgliedschaft",
+            "loading": "Lade...",
+            "no_membership": "Diese Aktie ist in keiner Aktiengruppe..."
+        }
+    },
+    "network": {
+        "issues": {
+            "generic_request": "Es besteht ein Problem mit der Anfrage. ({code})",
+            "generic_server": "Ein Problem mit dem Server verhindert, dass die Anfrage bearbeitet wird! ({code})"
+        }
     }
-  },
-  "creator": {
-    "stock": "Aktie erstellen",
-    "stock_group": "Aktiengruppe erstellen",
-    "article": "Artikel erstellen",
-    "user": "Benutzer erstellen"
-  },
-  "user_manager": {
-    "dashboard_account": "Benutzereinstellungen",
-    "dashboard_admin": "Administration",
-    "logout": "Abmelden"
-  }
 }
