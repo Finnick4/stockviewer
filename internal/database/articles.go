@@ -286,6 +286,96 @@ func GetAllActiveInfluences() ([]dto.InfluenceFunctional, error) {
 	}
 	return influences, nil
 }
+
+func GetArticlesActivelyAffectingStarredStocksAndStarredStockGroups(userID string) ([]dto.ArticleOverview, error) {
+	db := getDB()
+
+	rows, err := db.Query(`
+	SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
+       EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1) AS viewed,
+       COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
+FROM articles
+         JOIN stockinfluences ON stockinfluences."articleId" = articles.id
+         LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+         JOIN stocks ON stockinfluences."stockId" = stocks.id
+WHERE stockinfluences."remainingLength" > 0 AND "stockId"
+    IN (SELECT DISTINCT stocks.id
+        FROM stocks
+               LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
+               LEFT JOIN stockgroupmembers ON stocks.id = stockgroupmembers."stockId"
+               LEFT JOIN starredstockgroups ON stockgroupmembers."groupId" = starredstockgroups."groupId"
+        WHERE ((starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId")
+          OR (starredstockgroups."userId" = $1 AND stockgroupmembers."groupId" = starredstockgroups."groupId")))
+GROUP BY articles.id, articles.title
+ORDER BY articles.id DESC LIMIT 10;`, userID)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var articles []dto.ArticleOverview
+
+	for rows.Next() {
+		article := dto.ArticleOverview{}
+
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
+}
+
+func GetUnreadArticlesActivelyAffectingStarredStocksAndStarredStockGroups(userID string) ([]dto.ArticleOverview, error) {
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
+       false AS viewed,
+       COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
+FROM articles
+         JOIN stockinfluences ON stockinfluences."articleId" = articles.id
+         LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+         JOIN stocks ON stockinfluences."stockId" = stocks.id
+WHERE stockinfluences."remainingLength" > 0
+  AND (SELECT created FROM users WHERE "id" = $1) < articles."createdAt"
+  AND NOT(EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1))
+  AND "stockId"
+    IN (SELECT DISTINCT stocks.id
+        FROM stocks
+                 LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
+                 LEFT JOIN stockgroupmembers ON stocks.id = stockgroupmembers."stockId"
+                 LEFT JOIN starredstockgroups ON stockgroupmembers."groupId" = starredstockgroups."groupId"
+        WHERE ((starredstocks."userId" = $1 AND stocks.id = starredstocks."stockId")
+            OR (starredstockgroups."userId" = $1 AND stockgroupmembers."groupId" = starredstockgroups."groupId")))
+GROUP BY articles.id, articles.title
+ORDER BY articles.id DESC LIMIT 10;`, userID)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var articles []dto.ArticleOverview
+
+	for rows.Next() {
+		article := dto.ArticleOverview{}
+
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
+}
+
 func DecreaseRemainingTime() error {
 	db := getDB()
 

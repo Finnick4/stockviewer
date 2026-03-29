@@ -23,11 +23,13 @@ type ArticleGetParams struct {
 }
 
 type ArticleOverview struct {
-	ID              int32
-	Title           string
-	TotalInfluences int32
-	TotalViews      int64
-	Viewed          bool
+	ID                       int32
+	Title                    string
+	TotalRelevantAbsPermille int64
+	TotalRelevantInfluences  int32
+	TotalInfluences          int32
+	TotalViews               int64
+	Viewed                   bool
 }
 
 type DetailedArticle struct {
