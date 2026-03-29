@@ -2,7 +2,7 @@ class recentArticlesElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<div class="inner">
                 <div class="titlebar">
-                    <nav class="displaySelctor">
+                    <nav class="displaySelector">
                         <button class="toggleViewed">Hide seen</button>                                                     
                     </nav>
                     <h2>All articles</h2>
@@ -17,6 +17,7 @@ class recentArticlesElement extends HTMLElement {
         this.btnToggleViewed = this.querySelector("button.toggleViewed")
         this.titleElem = this.querySelector("div.titlebar h2")
         this.onlyUnread = false
+        this.classList.add("articleList")
 
         this.btnToggleViewed.addEventListener("click", () => {
             this.onlyUnread = !this.onlyUnread

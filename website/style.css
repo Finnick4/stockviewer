@@ -80,8 +80,23 @@ main {
 
 main.homepage {
     display: grid;
-    grid-template: 40rem 20rem / 1fr 1fr 1fr;
+    grid-template: 40rem auto / repeat(6, 1fr);
     gap: 1rem;
+}
+
+main.homepage ul.inner {
+    margin: 0;
+}
+
+main.homepage .starredStocksList {
+    grid-column: 1/4;
+    overflow: auto;
+}
+
+main.homepage .articleInbox {
+    grid-column: 1/7;
+    height: 100%;
+    overflow: auto;
 }
 
 main.individualStockPage {
@@ -876,12 +891,12 @@ stock-chart svg line.axis {
     align-self: center;
 }
 
-recent-articles nav.displaySelctor {
+.articleList nav.displaySelector {
     display: flex;
     justify-content: start;
     justify-self: left;
 }
-recent-articles div.inner ul.inner {
+.articleList div.inner ul.inner {
     padding: 0;
 }
 
