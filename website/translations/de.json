@@ -158,5 +158,22 @@
             "no_stocks_affected": "Durch diesen Artikel werden keine Aktien beeinflusst…",
             "loading": "Lade Aktiendaten…"
         }
+    },
+    "color_selector": {
+        "select": "Auswählen",
+        "remove_color": "Farbe entfernen"
+    },
+    "login": {
+        "title": "Bitte anmelden",
+        "tag": "Benutzer-Tag",
+        "password": "Kennwort",
+        "log_in": "Anmelden",
+        "checking": "Überprüfung der Anmeldeinformationen",
+        "success": "Erfolgreich",
+        "err_tag": "Bitte einen gültigen Tag eingeben",
+        "err_pw": "Bitte ein gültiges Kennwort eingeben",
+        "err_invalid_credentials": "Ungültige Anmeldedaten. Versuchen Sie es erneut!",
+        "err_pw_change": "Sie müssen Ihr Kennwort ändern. Nutzen Sie das Modale!",
+        "err_generic": "Ein Fehler ist aufgetreten!"
     }
 }
