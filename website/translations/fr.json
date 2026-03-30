@@ -1,7 +1,7 @@
 {
     "language": {
-        "name_local": "Changements climatiques",
-        "name_global": "Changements climatiques"
+        "name_local": "Français",
+        "name_global": "French"
     },
     "header": {
         "stocks": "Stocks",
@@ -39,7 +39,7 @@
         },
         "relevant_articles": {
             "title_all": "Articles pertinents",
-            "title_unread": "Articles non lus",
+            "title_unread": "Articles pertinents non lus",
             "loading": "Chargement des articles",
             "no_articles": "Il n'y a pas d'articles pertinents",
             "no_unread_articles": "Il n'y a pas d'articles non lus"
@@ -75,7 +75,7 @@
         "falloff_currently": "Maintenant",
         "view": "vue",
         "views": "vues",
-        "affected": "touché(e)s",
+        "affected": "touchées",
         "total_change": "changement",
         "load_more": "Charger plus d'articles",
         "title": "Titre",
@@ -87,9 +87,9 @@
             "cubic": "Cubique"
         },
         "affected_stocks": {
-            "title": "Actions touchées(e)s",
+            "title": "Actions concernées",
             "loading": "Chargement des données d'actions…",
-            "no_stocks_affected": "Cet article ne touche aucune action…"
+            "no_stocks_affected": "Les actions n'y sont pas concernées…"
         }
     },
     "stocks": {
