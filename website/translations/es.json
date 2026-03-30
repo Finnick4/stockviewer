@@ -109,7 +109,8 @@
         },
         "affected_stocks": {
             "title": "Stocks afected",
-            "no_stocks_affected": "Este artículo no afecta a ninguna acción.."
+            "no_stocks_affected": "Este artículo no afecta a ninguna acción..",
+            "loading": "Cargando datos de acciones…"
         },
         "modify": {
             "edit_icon_alt_text": "Editar artículo",
@@ -121,7 +122,9 @@
             "err_influences_generic": "Se produjo un error al revisar las influencias",
             "err_influences_length": "Todas las longitudes de influencias tienen que ser mayores de 0 minutos",
             "err_influences_permille": "Todos los valores de permille tienen que ser numéricos y no 0",
-            "err_influences_permille_too_high": "No se le permite establecer valores de permille mayores que {max}"
+            "err_influences_permille_too_high": "No se le permite establecer valores de permille mayores que {max}",
+            "submit_create": "Enviar",
+            "values_okay": "Los valores proporcionados son correctos"
         },
         "title": "Título",
         "content": "Índice",
