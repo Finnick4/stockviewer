@@ -14,7 +14,7 @@ function buildIndividualArticlePage(id) {
                             </nav>
                         </div>
                         <div class="article">
-                            Loading article...
+                            ${getTranslatedStr("articles.individual_page.loading")}
                         </div>
                         <div class="effectInfo"></div>
                         `;
@@ -26,7 +26,7 @@ function buildIndividualArticlePage(id) {
 
     fetch(`/api/articles/${id}`).then(r => r.json()).then(resp => {
         if (resp["Code"] === 404) {
-            setMainBodyHTML(`<h1>This article does not exist!</h1>`);
+            setMainBodyHTML(`<h1>${getTranslatedStr("articles.individual_page.err_not_exist")}</h1>`);
             return
         }
 
@@ -39,8 +39,8 @@ function buildIndividualArticlePage(id) {
         articleTitleElem.views = data["TotalViews"]
         articleTitleElem.update()
 
-        article.innerHTML = data["Content"] === "" ? `<i>This article doesn't have a body (yet).<br>
-            If you have the permission to do so, you can fix it by editing this article!</i>` : parseStyle(data["Content"])
+        article.innerHTML = data["Content"] === "" ? `<i>${getTranslatedStr("articles.individual_page.empty_content_notice")}<br>
+            ${getTranslatedStr("articles.individual_page.empty_content_hint")}</i>` : parseStyle(data["Content"])
 
         if (data["Influences"] !== null) {
             const stocks = data["Influences"].map(influence => influence["StockID"])

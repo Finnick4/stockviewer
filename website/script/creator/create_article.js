@@ -3,21 +3,21 @@ function showModalCreateArticle(elem) {
         elem.parentElement.togglePopover(false)
     }
 
-    let html = `<h2>Write an article</h2>
+    let html = `<h2>${getTranslatedStr("articles.modify.title_create")}</h2>
                       <div class="textField">
-                          <p>Title</p>
+                          <p>${getTranslatedStr("articles.title")}</p>
                           <input type="text" class="title">
                       </div>
                   
                       <div class="textField">
-                          <p>Content</p>
+                          <p>${getTranslatedStr("articles.content")}</p>
                           <textarea class="body"></textarea>
                       </div>
                       <div class="stockInfluenceSelector"></div>
                                     
                       <div class="pair">
                           <div class="info"></div>
-                          <button class="submit">Sumbit</button>
+                          <button class="submit">${getTranslatedStr("articles.modify.submit_create")}</button>
                       </div>
                       `
     const id = createModal(html)
@@ -32,7 +32,7 @@ function showModalCreateArticle(elem) {
     let permArticles = false, permInfluences = false, maxInfluence = 0
     userInformation.writePermission("canCreateArticles", perm => {
         if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = "<h2>Write an article</h2><p>It doesn't seem like you are able to write articles currently!</p>"
+            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("articles.modify.title_create")}</h2><p>${getTranslatedStr("articles.modify.err_no_create_permission")}</p>`
         } else {
             permArticles = true
         }
@@ -57,12 +57,12 @@ function showModalCreateArticle(elem) {
 
     const validate = () => {
         if (title.value.length < 10) {
-            seterr("The title is too short!")
+            seterr(getTranslatedStr("articles.modify.err_title_too_short", {min: 10, max: 96}))
             return false
         }
 
         if (title.value.length > 96) {
-            seterr("The title is too long!")
+            seterr(getTranslatedStr("articles.modify.err_title_too_long", {min: 10, max: 96}))
             return false
         }
 
@@ -71,7 +71,7 @@ function showModalCreateArticle(elem) {
             if (!isNaN(stockid)) {
                 const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] edit-influence`).dropdownElem
                 if (influenceDropdownElem === undefined) {
-                    seterr("There was an error while checking the influences!")
+                    seterr(getTranslatedStr("articles.modify.err_influences_generic"))
                     escape = true
                     return;
                 }
@@ -79,17 +79,17 @@ function showModalCreateArticle(elem) {
                 const minutes = influenceDropdownElem.querySelector(`input.minutes`)
 
                 if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) <= 0) {
-                    seterr("All lengths have to be positive!")
+                    seterr(getTranslatedStr("articles.modify.err_influences_length"))
                     escape = true
                     return;
                 }
                 if (isNaN(permille.value) || permille.value === "" || Number(permille.value) === 0) {
-                    seterr("Permilles have to be numeric and not 0!")
+                    seterr(getTranslatedStr("articles.modify.err_influences_permille"))
                     escape = true
                     return
                 }
                 if (maxInfluence !== -1 && Math.abs(Number(permille.value)) > maxInfluence) {
-                    seterr(`Cannot set permille higher than ${maxInfluence}!`)
+                    seterr(getTranslatedStr("articles.modify.err_influences_permille_too_high", {max: maxInfluence}))
                     escape = true
                     return
                 }
@@ -99,7 +99,7 @@ function showModalCreateArticle(elem) {
             return false
         }
 
-        infotxt.innerHTML = "Everything seems to be okay!"
+        infotxt.innerHTML = getTranslatedStr("articles.modify.values_okay")
         infotxt.classList.add("positive")
         infotxt.classList.remove("negative")
         return true
@@ -158,9 +158,9 @@ function showModalCreateArticle(elem) {
                     })
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr("There is an issue with the request.")
+                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr("There is a server-side issue causing this request to not be processed!")
+                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });
