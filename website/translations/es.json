@@ -42,7 +42,11 @@
             "err_shorthand_too_short": "¡La abreviatura es demasiado corta! ({min} - {max} caracteres)",
             "err_shorthand_numeric": "¡La abreviatura no puede ser un número!",
             "err_price_too_low": "¡El precio tiene que ser de al menos {price}!",
-            "values_okay": "Los valores proporcionados son correctos"
+            "values_okay": "Los valores proporcionados son correctos",
+            "create_title": "Crear nuevo stock",
+            "stock_shorthand_placeholder": "Stock shorthand..",
+            "initial_price_ct": "Precio inicial (ct)",
+            "err_no_create_permission": "¡No parece que puedas crear acciones actualmente!"
         },
         "influences": {
             "influences": "Influencias",
@@ -80,5 +84,69 @@
     "language": {
         "name_local": "Español",
         "name_global": "Spanish"
+    },
+    "articles": {
+        "permille_per_day": "' permil;/día",
+        "length_minutes": "minutos",
+        "length_minutes_short": "m",
+        "unknown_author": "desconocido autor",
+        "unknown_title": "artículo sin nombre",
+        "hide_seen": "Oculto visto",
+        "show_seen": "Mostrar visto",
+        "falloff": "fallo",
+        "stock_value": "valor",
+        "falloff_currently": "Actualmente",
+        "view": "vista",
+        "views": "opiniones",
+        "affected": "afectados",
+        "total_change": "cambio",
+        "load_more": "Cargar más artículos",
+        "falloff_types": {
+            "linear": "Linear",
+            "quadratic": "Quadratic",
+            "cubic": "Cubic"
+        },
+        "affected_stocks": {
+            "title": "Stocks afected",
+            "no_stocks_affected": "Este artículo no afecta a ninguna acción.."
+        },
+        "modify": {
+            "edit_icon_alt_text": "Editar artículo",
+            "title_edit": "Editar artículo",
+            "title_create": "Escribir artículo",
+            "submit_edit": "Presentar cambios",
+            "err_no_edit_permission": "No parece que puedas editar artículos actualmente",
+            "err_no_create_permission": "No parece que puedas escribir artículos en la actualidad",
+            "err_influences_generic": "Se produjo un error al revisar las influencias",
+            "err_influences_length": "Todas las longitudes de influencias tienen que ser mayores de 0 minutos",
+            "err_influences_permille": "Todos los valores de permille tienen que ser numéricos y no 0",
+            "err_influences_permille_too_high": "No se le permite establecer valores de permille mayores que {max}"
+        },
+        "title": "Título",
+        "content": "Índice",
+        "individual_page": {
+            "loading": "Cargando artículo",
+            "err_not_exist": "¡Este artículo no existe!",
+            "empty_content_notice": "Este artículo no tiene un cuerpo (sí).",
+            "empty_content_hint": "Si tienes el permiso para hacerlo, puedes arreglarlo editando este artículo!"
+        },
+        "influence_selector": {
+            "title": "Influencias de las poblaciones",
+            "no_influences": "No hay influencias presentes.."
+        },
+        "recent_articles": {
+            "title_all": "Todos los artículos",
+            "title_unread": "Artículos no leídos",
+            "loading": "Cargando artículos",
+            "no_articles": "No hay artículos",
+            "no_unread_articles": "No hay artículos no leídos"
+        },
+        "relevant_articles": {
+            "title_all": "Artículos pertinentes",
+            "title_unread": "Artículos pertinentes",
+            "loading": "Cargando artículos",
+            "no_articles": "No hay artículos pertinentes",
+            "no_unread_articles": "No hay ningún artículo pertinente que no esté leído"
+        }
     }
 }
