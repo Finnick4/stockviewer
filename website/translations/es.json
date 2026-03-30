@@ -104,7 +104,8 @@
         "falloff_types": {
             "linear": "Linear",
             "quadratic": "Quadratic",
-            "cubic": "Cubic"
+            "cubic": "Cubic",
+            "none": "Ninguno…"
         },
         "affected_stocks": {
             "title": "Stocks afected",
