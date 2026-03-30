@@ -76,5 +76,9 @@
             "generic_request": "Es besteht ein Problem mit der Anfrage. ({code})",
             "generic_server": "Ein Problem mit dem Server verhindert, dass die Anfrage bearbeitet wird! ({code})"
         }
+    },
+    "language": {
+        "name_local": "Deutsch",
+        "name_global": "German"
     }
 }
