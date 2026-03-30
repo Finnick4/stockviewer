@@ -46,7 +46,8 @@
             "create_title": "Neues Lager erstellen",
             "stock_shorthand_placeholder": "Auf Lager kurz..",
             "initial_price_ct": "Anfangspreis (ct)",
-            "err_no_create_permission": "Es scheint nicht, als ob Sie in der Lage sind, Aktien derzeit zu erstellen!"
+            "err_no_create_permission": "Es scheint nicht, als ob Sie in der Lage sind, Aktien derzeit zu erstellen!",
+            "err_initial_price_too_low": "Der Preis muss mindestens {price} betragen!"
         },
         "influences": {
             "influences": "Einflüsse",
@@ -73,7 +74,10 @@
             "stock_group_memberships": "Aktiengruppenmitgliedschaft",
             "loading": "Laden…",
             "no_membership": "Diese Aktie ist in keiner Aktiengruppe…"
-        }
+        },
+        "search_placeholder": "Suche nach Aktien…",
+        "search_empty_query": "Suche eingeben…",
+        "search_empty_result": "Keine Aktien gefunden…"
     },
     "network": {
         "issues": {
@@ -106,7 +110,9 @@
             "err_influences_permille_too_high": "Sie dürfen keine Permillewerte größer als {max} einstellen",
             "edit_icon_alt_text": "Artikel bearbeiten",
             "submit_create": "Absenden",
-            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten"
+            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten",
+            "err_title_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
+            "err_title_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)"
         },
         "influence_selector": {
             "title": "Bestandseinflüsse",
