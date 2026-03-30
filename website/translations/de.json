@@ -43,10 +43,10 @@
             "err_shorthand_numeric": "Die Kurzschrift darf nicht numerisch sein!",
             "err_price_too_low": "Der Preis muss mindestens {price} betragen!",
             "values_okay": "Es findet sich kein Problem mit den gegebenen Werten",
-            "create_title": "Neues Lager erstellen",
-            "stock_shorthand_placeholder": "Auf Lager kurz..",
-            "initial_price_ct": "Anfangspreis (ct)",
-            "err_no_create_permission": "Es scheint nicht, als ob Sie in der Lage sind, Aktien derzeit zu erstellen!",
+            "create_title": "Neue Aktie erstellen",
+            "stock_shorthand_placeholder": "Aktienkurzschrift..",
+            "initial_price_ct": "Startpreis (ct)",
+            "err_no_create_permission": "Es sieht so aus, als ob du derzeit keine Aktien erstellen kannst!",
             "err_initial_price_too_low": "Der Preis muss mindestens {price} betragen!"
         },
         "influences": {
@@ -95,19 +95,19 @@
         "individual_page": {
             "loading": "Artikel laden",
             "err_not_exist": "Dieser Artikel existiert nicht!",
-            "empty_content_notice": "Dieser Artikel hat keinen Körper (noch).",
-            "empty_content_hint": "Wenn Sie die Erlaubnis haben, dies zu tun, können Sie es reparieren, indem Sie diesen Artikel bearbeiten!"
+            "empty_content_notice": "Dieser Artikel hat (bisher) keinen Inhalt.",
+            "empty_content_hint": "Wenn du die Berechtigung dazu hast, könnest du einen hinzufügen, indem du diesen Artikel bearbeitest!"
         },
         "modify": {
             "title_edit": "Artikel bearbeiten",
-            "title_create": "Schreiben Sie den Artikel",
-            "submit_edit": "Änderungen einreichen",
-            "err_no_edit_permission": "Es scheint nicht, als ob Sie in der Lage sind, Artikel derzeit zu bearbeiten",
-            "err_no_create_permission": "Es scheint nicht, als ob Sie in der Lage sind, Artikel zu schreiben derzeit",
-            "err_influences_generic": "Ein Fehler beim Überprüfen der Einflüsse",
-            "err_influences_length": "Alle Längen der Einflüsse müssen größer als 0 Minuten sein",
-            "err_influences_permille": "Alle Permillewerte müssen numerisch sein und nicht 0",
-            "err_influences_permille_too_high": "Sie dürfen keine Permillewerte größer als {max} einstellen",
+            "title_create": "Artikel verfassen",
+            "submit_edit": "Änderungen absenden",
+            "err_no_edit_permission": "Es sieht so aus, als ob du derzeit keine Artikel bearbeiten kannst",
+            "err_no_create_permission": "Es sieht so aus, als ob du derzeit keine Artikel verfassen kannst",
+            "err_influences_generic": "Ein Fehler ist beim Überprüfen der Einflüsse aufgetreten",
+            "err_influences_length": "Die Länge jeglicher Einflüsse muss größer als 0 Minuten sein",
+            "err_influences_permille": "Alle Promillewerte müssen numerisch und größer als 0 sein",
+            "err_influences_permille_too_high": "Du darfst keine Promillewerte größer als {max} einstellen",
             "edit_icon_alt_text": "Artikel bearbeiten",
             "submit_create": "Absenden",
             "values_okay": "Es findet sich kein Problem mit den gegebenen Werten",
@@ -115,20 +115,20 @@
             "err_title_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)"
         },
         "influence_selector": {
-            "title": "Bestandseinflüsse",
+            "title": "Einflüsse auf Aktien",
             "no_influences": "Keine Einflüsse vorhanden.."
         },
         "recent_articles": {
             "title_all": "Alle Artikel",
-            "title_unread": "Unverarbeitete Waren",
-            "loading": "Ladeartikel",
+            "title_unread": "Ungelesene Artikel",
+            "loading": "Artikel werden geladen",
             "no_articles": "Es gibt keine Artikel",
             "no_unread_articles": "Es gibt keine ungelesenen Artikel"
         },
         "relevant_articles": {
             "title_all": "Relevante Artikel",
-            "title_unread": "Nicht zutreffende Artikel lesen",
-            "loading": "Ladeartikel",
+            "title_unread": "Ungelesene relevante Artikel",
+            "loading": "Artikel werden geladen",
             "no_articles": "Es gibt keine relevanten Artikel",
             "no_unread_articles": "Es gibt keine ungelesenen relevanten Artikel"
         },
