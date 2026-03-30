@@ -1,6 +1,6 @@
 class colorSelectorElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<button class="selector">Select</button>`
+        this.innerHTML = `<button class="selector">${getTranslatedStr("color_selector.select")}</button>`
 
         this.readOnly = false
 
@@ -86,7 +86,7 @@ class colorSelectorElement extends HTMLElement {
                 <div class="colorDisplay" data-color="808080"></div>
                 <div class="colorDisplay" data-color="8f8f8f"></div>
             </div>
-            <button class="remove">Remove Color</button>
+            <button class="remove">${getTranslatedStr("color_selector.remove_color")}</button>
         `)
 
         const dropdown = document.getElementById(dropdownid)

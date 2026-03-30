@@ -1,37 +1,37 @@
 function buildPageLogin() {
     document.body.innerHTML = `<h1>Stock Viewer</h1>
         <div class="login-field">
-            <h2>Please log in</h2>
+            <h2>${getTranslatedStr("login.title")}</h2>
             
             <div class="pair">
-                <p>User tag</p>
+                <p>${getTranslatedStr("login.tag")}</p>
                 <input type="text">            
             </div>
             
             <div class="pair">
-                <p>Password</p>
+                <p>${getTranslatedStr("login.password")}</p>
                 <input type="password">            
             </div>
                         
             <div class="pair">
                 <div class="info"></div>
-                <button class="primary">Log in</button>
+                <button class="primary">${getTranslatedStr("login.log_in")}</button>
             </div>
         </div>
     `
 
     document.querySelector("button.primary").addEventListener("click", event => {
         const inftxt = document.querySelector(".info");
-        inftxt.innerHTML = "Checking credentials.";
+        inftxt.innerHTML = getTranslatedStr("login.checking");
         const tag = document.querySelector('input[type="text"]').value;
         const pw = document.querySelector('input[type="password"]').value;
 
         if (tag.length === 0 || tag.length > 32) {
-            inftxt.innerHTML = "Please enter a valid tag";
+            inftxt.innerHTML = getTranslatedStr("login.err_tag");
             return;
         }
         if (pw.length === 0 || pw.length > 72) {
-            inftxt.innerHTML = "Please enter a valid password";
+            inftxt.innerHTML = getTranslatedStr("login.err_pw");
             return;
         }
 
@@ -44,19 +44,19 @@ function buildPageLogin() {
         }).then(r => {
             switch (r.status) {
                 case 200:
-                    inftxt.innerHTML = "Success.";
+                    inftxt.innerHTML = getTranslatedStr("login.success");
                     window.history.pushState(null, null, `${window.location.origin}`);
                     router();
                     break;
                 case 401:
-                    inftxt.innerHTML = "Invalid credentials.";
+                    inftxt.innerHTML = getTranslatedStr("login.err_invalid_credentials");
                     break;
                 case 403:
-                    inftxt.innerHTML = "You have to change your password.";
+                    inftxt.innerHTML = getTranslatedStr("login.err_pw_change");
                     showChangePasswordModal();
                     break;
                 default:
-                    inftxt.innerHTML = "An error occurred!";
+                    inftxt.innerHTML = getTranslatedStr("login.err_generic");
                     break;
             }
         })

@@ -156,5 +156,22 @@
             "generic_request": "There is an issue with the request. ({code})",
             "generic_server": "There is a server-side issue causing this request to not be processed! ({code})"
         }
+    },
+    "color_selector": {
+        "select": "Select",
+        "remove_color": "Remove color"
+    },
+    "login": {
+        "title": "Please log in",
+        "tag": "User tag",
+        "password": "Password",
+        "log_in": "Log in",
+        "checking": "Checking credentials",
+        "success": "Success",
+        "err_tag": "Please enter a valid tag",
+        "err_pw": "Please enter a valid password",
+        "err_invalid_credentials": "Invalid credentials. Try again!",
+        "err_pw_change": "You have to change your password. Use the modal!",
+        "err_generic": "An error occurred!"
     }
 }
