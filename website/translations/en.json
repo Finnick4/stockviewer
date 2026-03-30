@@ -1,4 +1,8 @@
 {
+    "language": {
+        "name_local": "English",
+        "name_global": "English"
+    },
     "header": {
         "stocks": "Stocks",
         "articles": "Articles",
@@ -34,7 +38,10 @@
         "modify": {
             "edit_icon_alt_text": "Edit stock",
             "edit_title": "Edit {name}",
+            "create_title": "Create new stock",
             "stock_name_placeholder": "Stock name…",
+            "stock_shorthand_placeholder": "Stock shorthand…",
+            "initial_price_ct": "Initial price (ct)",
             "submit": "Submit",
             "err_name_too_long": "The name is too long! ({min} - {max} characters)",
             "err_name_too_short": "The name is too short! ({min} - {max} characters)",
@@ -42,6 +49,8 @@
             "err_shorthand_too_short": "The shorthand is too short! ({min} - {max} characters)",
             "err_shorthand_numeric": "The shorthand may not be a number!",
             "err_price_too_low": "The price has to be at least {price}!",
+            "err_initial_price_too_low": "The initial price has to be at least {price}!",
+            "err_no_create_permission": "It doesn't seem like you are able to create stocks currently!",
             "values_okay": "The provided values are okay"
         },
         "influences": {

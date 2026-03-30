@@ -3,26 +3,26 @@ function showModalCreateStock(elem) {
         elem.parentElement.togglePopover(false)
     }
 
-    let html = `<h2>Create a new stock</h2>
+    let html = `<h2>${getTranslatedStr("stocks.modify.create_title")}</h2>
                         <div class="pair">
-                            <p>Name</p>
-                            <input class="name" type="text" placeholder="Stock name...">
+                            <p>${getTranslatedStr("stocks.name")}</p>
+                            <input class="name" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_name_placeholder")}">
                         </div>
                         <div class="pair">
-                            <p>Shorthand</p>
-                            <input class="shorthand" type="text" placeholder="Shorthand...">
+                            <p>${getTranslatedStr("stocks.shorthand")}</p>
+                            <input class="shorthand" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_shorthand_placeholder")}">
                         </div>
                          <div class="pair">
-                            <p>Color</p>
+                            <p>${getTranslatedStr("stocks.color")}</p>
                             <color-selector data-color="-1"></color-selector>
                         </div>
                         <div class="pair">
-                            <p>Initial price (ct)</p>
+                            <p>${getTranslatedStr("stocks.modify.initial_price_ct")}</p>
                             <input class="price" type="number">
                         </div>
                         <div class="pair">
                             <div class="info"></div>
-                            <button class="submit">Submit</button>
+                            <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
                         </div>
                         `
 
@@ -37,7 +37,7 @@ function showModalCreateStock(elem) {
 
     userInformation.writePermission("canCreateStocks", perm => {
         if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = "<h2>Create a new stock</h2><p>It doesn't seem like you are able to create stocks currently!</p>"
+            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("stocks.modify.create_title")}</h2><p>${getTranslatedStr("stocks.modify.err_no_create_permission")}</p>`
         }
     })
 
@@ -50,33 +50,33 @@ function showModalCreateStock(elem) {
     const validate = () => {
 
         if (name.value.length > 32) {
-            seterr("The name is too long! (2 - 32 characters)")
+            seterr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
             return false
         }
         if (name.value.length < 2) {
-            seterr("The name is too short! (2 - 32 characters)")
+            seterr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
             return false
         }
 
         if (shorthand.value.length > 5) {
-            seterr("The shorthand is too long! (2 - 5 characters)")
+            seterr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
             return false
         }
         if (shorthand.value.length < 2) {
-            seterr("The shorthand is too short! (2 - 5 characters)")
+            seterr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
             return false
         }
         if (!isNaN(shorthand.value)) {
-            seterr("The shorthand may not be a number!")
+            seterr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
             return false
         }
 
         if (price.value < 10000000) {
-            seterr("The initial price has to be at least 100k!")
+            seterr(getTranslatedStr("stocks.modify.err_initial_price_too_low", {price: getShortNumber(10000000) + "€"}))
             return false
         }
 
-        infotxt.innerHTML = "Values are okay"
+        infotxt.innerHTML = getTranslatedStr("stocks.modify.values_okay")
         infotxt.classList.add("positive")
         infotxt.classList.remove("negative")
         return true
@@ -99,9 +99,9 @@ function showModalCreateStock(elem) {
                     })
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr("There is an issue with the request.")
+                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr("There is a server-side issue causing this request to not be processed!")
+                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });

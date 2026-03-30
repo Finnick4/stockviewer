@@ -57,6 +57,12 @@ function interpolateStr(str, obj) {
     if (typeof str !== "string" || typeof obj !== "object") {
         return str
     }
-    console.log("String interpolation is not yet implemented!")
-    return str
+
+    return str.replace(
+        /{([^{}]*)}/g,
+        (template, key) => {
+            const replaceVal = obj[key];
+            return typeof replaceVal === 'string' || !isNaN(replaceVal) ? replaceVal : template
+        }
+    )
 }

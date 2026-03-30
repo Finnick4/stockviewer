@@ -26,14 +26,14 @@ function showEditStockModal(stockID) {
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
         const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
-        let html = `<h2>${interpolateStr(getTranslatedStr("stocks.modify.edit_title"), {name: stockName})} <div class="change shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
+        let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="change shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
                         <div class="pair">
                             <p>${getTranslatedStr("stocks.name")}</p>
                             <input class="name" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_name_placeholder")}" value="${sanitiseText(stockName)}">
                         </div>
                         <div class="pair">
                             <p>${getTranslatedStr("stocks.shorthand")}</p>
-                            <input class="shorthand" type="text" placeholder="Shorthand..." value="${sanitiseText(stockShorthand)}">
+                            <input class="shorthand" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_shorthand_placeholder")}" value="${sanitiseText(stockShorthand)}">
                         </div>
                         <div class="pair">
                             <p>${getTranslatedStr("stocks.color")}</p>
@@ -90,20 +90,20 @@ function showEditStockModal(stockID) {
         const validate = () => {
 
             if (name.value.length > 32) {
-                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_name_too_long"), {min: 2, max: 32}))
+                seterr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
                 return false
             }
             if (name.value.length < 2) {
-                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_name_too_short"), {min: 2, max: 32}))
+                seterr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
                 return false
             }
 
             if (shorthand.value.length > 5) {
-                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_shorthand_too_long"), {min: 2, max: 5}))
+                seterr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
                 return false
             }
             if (shorthand.value.length < 2) {
-                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_shorthand_too_short"), {min: 2, max: 5}))
+                seterr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
                 return false
             }
             if (!isNaN(shorthand.value)) {
@@ -112,7 +112,7 @@ function showEditStockModal(stockID) {
             }
 
             if (price.value < 2) {
-                seterr(interpolateStr(getTranslatedStr("stocks.modify.err_price_too_low"), {price: "0.02€"}))
+                seterr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
                 return false
             }
 
@@ -141,9 +141,9 @@ function showEditStockModal(stockID) {
                         closeModal(id)
                     } else {
                         if (r.status >= 400 || r.status < 500) {
-                            seterr(interpolateStr(getTranslatedStr("network.issues.generic_request"), {code: r.status}))
+                            seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                         } else {
-                            seterr(interpolateStr(getTranslatedStr("network.issues.generic_server"), {code: r.status}))
+                            seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                         }
                     }
                 });

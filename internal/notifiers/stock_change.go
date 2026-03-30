@@ -1,22 +1,29 @@
 package notifiers
 
 import (
+	"sync"
+
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
 var openStockChannels = make(map[string]chan bool)
+var stockChangeMutex sync.Mutex
 
 func GetStockChangeNotification() (<-chan bool, func()) {
 	id := uuid.New().String()
 
 	newChannel := make(chan bool)
 
+	stockChangeMutex.Lock()
 	openStockChannels[id] = newChannel
+	stockChangeMutex.Unlock()
 
 	return newChannel, func() {
 		close(newChannel)
+		stockChangeMutex.Lock()
 		delete(openStockChannels, id)
+		stockChangeMutex.Unlock()
 	}
 }
 

@@ -31,7 +31,7 @@ function changeLanguage(targetLanguage) {
 }
 
 
-function getTranslatedStr(key) {
+function getTranslatedStr(key, values) {
     if (typeof key !== "string") {
         return key
     }
@@ -40,7 +40,11 @@ function getTranslatedStr(key) {
     try {
         const language = supportedLanguages[langCode ?? "en"]
         const res = path.reduce((a, v) => a[v], language)
-        return typeof res === "string" ? res : key
+        if (typeof res === "string") {
+            return typeof values === "object" ? interpolateStr(res, values) : res
+        } else {
+            return key
+        }
     } catch {
         return key
     }
