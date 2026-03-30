@@ -104,7 +104,9 @@
             "err_influences_length": "Alle Längen der Einflüsse müssen größer als 0 Minuten sein",
             "err_influences_permille": "Alle Permillewerte müssen numerisch sein und nicht 0",
             "err_influences_permille_too_high": "Sie dürfen keine Permillewerte größer als {max} einstellen",
-            "edit_icon_alt_text": "Artikel bearbeiten"
+            "edit_icon_alt_text": "Artikel bearbeiten",
+            "submit_create": "Absenden",
+            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten"
         },
         "influence_selector": {
             "title": "Bestandseinflüsse",
@@ -146,7 +148,8 @@
         },
         "affected_stocks": {
             "title": "Betroffene Aktien",
-            "no_stocks_affected": "Durch diesen Artikel werden keine Aktien beeinflusst…"
+            "no_stocks_affected": "Durch diesen Artikel werden keine Aktien beeinflusst…",
+            "loading": "Lade Aktiendaten…"
         }
     }
 }
