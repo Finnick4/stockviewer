@@ -170,7 +170,7 @@
         "log_in": "Anmelden",
         "checking": "Überprüfung der Anmeldeinformationen",
         "success": "Erfolgreich",
-        "err_tag": "Bitte einen gültigen Tag eingeben",
+        "err_tag": "Gebe einen gültigen Benutzer-Etiquette ein",
         "err_pw": "Bitte gebe ein gültiges Kennwort ein",
         "err_invalid_credentials": "Ungültige Anmeldedaten. Versuche es erneut!",
         "err_pw_change": "Sie müssen Ihr Kennwort ändern.",
