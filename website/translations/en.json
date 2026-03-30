@@ -1,80 +1,80 @@
 {
-  "header": {
-    "stocks": "Stocks",
-    "articles": "Articles",
-    "stock_groups": "Groups",
-    "search": {
-      "placeholder": "Search..."
+    "header": {
+        "stocks": "Stocks",
+        "articles": "Articles",
+        "stock_groups": "Groups",
+        "search": {
+            "placeholder": "Search…"
+        }
+    },
+    "creator": {
+        "stock": "Create Stock",
+        "stock_group": "Create Stock Group",
+        "article": "Create Article",
+        "user": "Create User"
+    },
+    "user_manager": {
+        "dashboard_account": "Account Settings",
+        "dashboard_admin": "Administration",
+        "logout": "Log out"
+    },
+    "stocks": {
+        "name": "Name",
+        "shorthand": "Shorthand",
+        "color": "Color",
+        "price": "Price",
+        "price_ct": "Price (ct)",
+        "list": {
+            "all_stocks": "All stocks",
+            "loading": "Loading stock data…"
+        },
+        "chart": {
+            "stock_history": "Stock history"
+        },
+        "modify": {
+            "edit_icon_alt_text": "Edit stock",
+            "edit_title": "Edit {name}",
+            "stock_name_placeholder": "Stock name…",
+            "submit": "Submit",
+            "err_name_too_long": "The name is too long! ({min} - {max} characters)",
+            "err_name_too_short": "The name is too short! ({min} - {max} characters)",
+            "err_shorthand_too_long": "The shorthand is too long! ({min} - {max} characters)",
+            "err_shorthand_too_short": "The shorthand is too short! ({min} - {max} characters)",
+            "err_shorthand_numeric": "The shorthand may not be a number!",
+            "err_price_too_low": "The price has to be at least {price}!",
+            "values_okay": "The provided values are okay"
+        },
+        "influences": {
+            "influences": "Influences",
+            "loading": "Loading influences on stock…",
+            "no_active_influences": "This stock is currently not influenced by any article…"
+        },
+        "related": {
+            "related_stocks": "Related Stocks",
+            "stock_loading_name": "Loading…",
+            "stock_none_name": "None…"
+        },
+        "selector": {
+            "stock_selection": "Stock selection",
+            "search_placeholder": "Search stocks…",
+            "empty_selection": "No stocks selected…",
+            "empty_search_query": "Please type to search…",
+            "empty_search_result": "No stocks found…"
+        },
+        "stars": {
+            "icon_alt_text_starred": "Unstar stock",
+            "icon_alt_text_unstarred": "Star stock"
+        },
+        "group_memberships": {
+            "stock_group_memberships": "Stock group memberships",
+            "loading": "Loading…",
+            "no_membership": "This stock isn't a part of any stock groups…"
+        }
+    },
+    "network": {
+        "issues": {
+            "generic_request": "There is an issue with the request. ({code})",
+            "generic_server": "There is a server-side issue causing this request to not be processed! ({code})"
+        }
     }
-  },
-  "creator": {
-    "stock": "Create Stock",
-    "stock_group": "Create Stock Group",
-    "article": "Create Article",
-    "user": "Create User"
-  },
-  "user_manager": {
-    "dashboard_account": "Account Settings",
-    "dashboard_admin": "Administration",
-    "logout": "Log out"
-  },
-  "stocks": {
-    "name": "Name",
-    "shorthand": "Shorthand",
-    "color": "Color",
-    "price": "Price",
-    "price_ct": "Price (ct)",
-    "list": {
-      "all_stocks": "All stocks",
-      "loading": "Loading stock data..."
-    },
-    "chart": {
-      "stock_history": "Stock history"
-    },
-    "modify": {
-      "edit_icon_alt_text": "Edit stock",
-      "edit_title": "Edit {name}",
-      "stock_name_placeholder": "Stock name...",
-      "submit": "Submit",
-      "err_name_too_long": "The name is too long! ({min} - {max} characters)",
-      "err_name_too_short": "The name is too short! ({min} - {max} characters)",
-      "err_shorthand_too_long": "The shorthand is too long! ({min} - {max} characters)",
-      "err_shorthand_too_short": "The shorthand is too short! ({min} - {max} characters)",
-      "err_shorthand_numeric": "The shorthand may not be a number!",
-      "err_price_too_low": "The price has to be at least {price}!",
-      "values_okay": "The provided values are okay"
-    },
-    "influences": {
-      "influences": "Influences",
-      "loading": "Loading influences on stock...",
-      "no_active_influences": "This stock is currently not influenced by any article..."
-    },
-    "related": {
-      "related_stocks": "Related Stocks",
-      "stock_loading_name": "Loading...",
-      "stock_none_name": "None..."
-    },
-    "selector": {
-      "stock_selection": "Stock selection",
-      "search_placeholder": "Search stocks...",
-      "empty_selection": "No stocks selected...",
-      "empty_search_query": "Please type to search...",
-      "empty_search_result": "No stocks found..."
-    },
-    "stars": {
-      "icon_alt_text_starred": "Unstar stock",
-      "icon_alt_text_unstarred": "Star stock"
-    },
-    "group_memberships": {
-      "stock_group_memberships": "Stock group memberships",
-      "loading": "Loading...",
-      "no_membership": "This stock isn't a part of any stock groups..."
-    }
-  },
-  "network": {
-    "issues": {
-      "generic_request": "There is an issue with the request. ({code})",
-      "generic_server": "There is a server-side issue causing this request to not be processed! ({code})"
-    }
-  }
 }
