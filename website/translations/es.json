@@ -1,5 +1,80 @@
 {
     "header": {
-        "stocks": ""
+        "stocks": "Acciones",
+        "articles": "Artículos",
+        "stock_groups": "Grupos",
+        "search": {
+            "placeholder": "Buscar…"
+        }
+    },
+    "creator": {
+        "stock": "Crear acción",
+        "stock_group": "Crear grupo de acciones",
+        "article": "Crear artículo",
+        "user": "Crear usuario"
+    },
+    "user_manager": {
+        "dashboard_account": "Configuración",
+        "dashboard_admin": "Administración",
+        "logout": "Cerrar sesión"
+    },
+    "stocks": {
+        "name": "Nombre",
+        "shorthand": "Taquigrafía",
+        "color": "Color",
+        "price": "Precio",
+        "price_ct": "Precio (ct)",
+        "list": {
+            "all_stocks": "Todas las acciones",
+            "loading": "Cargando datos de acciones…"
+        },
+        "chart": {
+            "stock_history": "Cotización de las acciones"
+        },
+        "modify": {
+            "edit_icon_alt_text": "Editar acción",
+            "edit_title": "Editar {name}",
+            "stock_name_placeholder": "Nombre de la acción…",
+            "submit": "Enviar",
+            "err_name_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)",
+            "err_name_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
+            "err_shorthand_too_long": "¡La abreviatura es demasiado larga! ({min} - {max} caracteres)",
+            "err_shorthand_too_short": "¡La abreviatura es demasiado corta! ({min} - {max} caracteres)",
+            "err_shorthand_numeric": "¡La abreviatura no puede ser un número!",
+            "err_price_too_low": "¡El precio tiene que ser de al menos {price}!",
+            "values_okay": "Los valores proporcionados son correctos"
+        },
+        "influences": {
+            "influences": "Influencias",
+            "loading": "Cargando datos sobre las acciones…",
+            "no_active_influences": "Actualmente, esta acción no es afectada por ningún artículo…"
+        },
+        "related": {
+            "related_stocks": "Acciones similares",
+            "stock_loading_name": "Cargando…",
+            "stock_none_name": "Ninguno…"
+        },
+        "selector": {
+            "stock_selection": "Selección de acciones",
+            "search_placeholder": "Buscar acciones…",
+            "empty_selection": "No se han seleccionado acciones…",
+            "empty_search_query": "Escribe el texto que deseas buscar…",
+            "empty_search_result": "No se han encontrado acciones…"
+        },
+        "stars": {
+            "icon_alt_text_starred": "Desfavorecer acción",
+            "icon_alt_text_unstarred": "Favorecer acción"
+        },
+        "group_memberships": {
+            "stock_group_memberships": "Miembros de grupos de acción",
+            "loading": "Cargando…",
+            "no_membership": "Esta acción no forma parte de ningún grupo de acciones…"
+        }
+    },
+    "network": {
+        "issues": {
+            "generic_request": "Hay un problema con la solicitud. ({code})",
+            "generic_server": "¡Hay un problema del lado del servidor que impide que se procese esta solicitud! ({code})"
+        }
     }
 }
