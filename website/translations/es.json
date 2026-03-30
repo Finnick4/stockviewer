@@ -76,5 +76,9 @@
             "generic_request": "Hay un problema con la solicitud. ({code})",
             "generic_server": "¡Hay un problema del lado del servidor que impide que se procese esta solicitud! ({code})"
         }
+    },
+    "language": {
+        "name_local": "Español",
+        "name_global": "Spanish"
     }
 }
