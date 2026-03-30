@@ -158,5 +158,22 @@
             "no_articles": "No hay artículos pertinentes",
             "no_unread_articles": "No hay ningún artículo pertinente que no esté leído"
         }
+    },
+    "color_selector": {
+        "select": "Selecciona",
+        "remove_color": "Quitar color"
+    },
+    "login": {
+        "title": "Por favor, inicia sesión",
+        "tag": "Etiqueta de usuario",
+        "password": "Contraseña",
+        "log_in": "Iniciar sesión",
+        "checking": "Verificando credenciales",
+        "success": "Éxito",
+        "err_tag": "Por favor, ingresa una etiqueta válida",
+        "err_pw": "Por favor, ingresa una contraseña válida",
+        "err_invalid_credentials": "Credenciales inválidas. Inténtalo de nuevo!",
+        "err_pw_change": "Debes cambiar tu contraseña. Utiliza el cuadro modal!",
+        "err_generic": "Ocurrió un error!"
     }
 }
