@@ -42,7 +42,11 @@
             "err_shorthand_too_short": "Die Kurzschrift ist zu kurz! ({min} - {max} Zeichen)",
             "err_shorthand_numeric": "Die Kurzschrift darf nicht numerisch sein!",
             "err_price_too_low": "Der Preis muss mindestens {price} betragen!",
-            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten"
+            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten",
+            "create_title": "Neues Lager erstellen",
+            "stock_shorthand_placeholder": "Auf Lager kurz..",
+            "initial_price_ct": "Anfangspreis (ct)",
+            "err_no_create_permission": "Es scheint nicht, als ob Sie in der Lage sind, Aktien derzeit zu erstellen!"
         },
         "influences": {
             "influences": "Einflüsse",
@@ -80,5 +84,69 @@
     "language": {
         "name_local": "Deutsch",
         "name_global": "German"
+    },
+    "articles": {
+        "title": "Titel",
+        "content": "Inhalt",
+        "individual_page": {
+            "loading": "Artikel laden",
+            "err_not_exist": "Dieser Artikel existiert nicht!",
+            "empty_content_notice": "Dieser Artikel hat keinen Körper (noch).",
+            "empty_content_hint": "Wenn Sie die Erlaubnis haben, dies zu tun, können Sie es reparieren, indem Sie diesen Artikel bearbeiten!"
+        },
+        "modify": {
+            "title_edit": "Artikel bearbeiten",
+            "title_create": "Schreiben Sie den Artikel",
+            "submit_edit": "Änderungen einreichen",
+            "err_no_edit_permission": "Es scheint nicht, als ob Sie in der Lage sind, Artikel derzeit zu bearbeiten",
+            "err_no_create_permission": "Es scheint nicht, als ob Sie in der Lage sind, Artikel zu schreiben derzeit",
+            "err_influences_generic": "Ein Fehler beim Überprüfen der Einflüsse",
+            "err_influences_length": "Alle Längen der Einflüsse müssen größer als 0 Minuten sein",
+            "err_influences_permille": "Alle Permillewerte müssen numerisch sein und nicht 0",
+            "err_influences_permille_too_high": "Sie dürfen keine Permillewerte größer als {max} einstellen",
+            "edit_icon_alt_text": "Artikel bearbeiten"
+        },
+        "influence_selector": {
+            "title": "Bestandseinflüsse",
+            "no_influences": "Keine Einflüsse vorhanden.."
+        },
+        "recent_articles": {
+            "title_all": "Alle Artikel",
+            "title_unread": "Unverarbeitete Waren",
+            "loading": "Ladeartikel",
+            "no_articles": "Es gibt keine Artikel",
+            "no_unread_articles": "Es gibt keine ungelesenen Artikel"
+        },
+        "relevant_articles": {
+            "title_all": "Relevante Artikel",
+            "title_unread": "Nicht zutreffende Artikel lesen",
+            "loading": "Ladeartikel",
+            "no_articles": "Es gibt keine relevanten Artikel",
+            "no_unread_articles": "Es gibt keine ungelesenen relevanten Artikel"
+        },
+        "permille_per_day": "‰/tag",
+        "length_minutes": "minuten",
+        "length_minutes_short": "m",
+        "unknown_author": "unbekannter autor",
+        "unknown_title": "artikel ohne namen",
+        "hide_seen": "Versteckt gesehen",
+        "show_seen": "Gesehen",
+        "falloff": "fall",
+        "stock_value": "wert",
+        "falloff_currently": "Derzeit",
+        "view": "blick",
+        "views": "blick",
+        "affected": "betroffen",
+        "total_change": "änderung",
+        "load_more": "Mehr Artikel laden",
+        "falloff_types": {
+            "linear": "Linear",
+            "quadratic": "Quadratisch",
+            "cubic": "Cubic"
+        },
+        "affected_stocks": {
+            "title": "Betroffene Bestände",
+            "no_stocks_affected": "Dieser Artikel beeinflusst keine Bestände.."
+        }
     }
 }
