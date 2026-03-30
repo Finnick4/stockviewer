@@ -90,29 +90,29 @@
         "name_global": "Spanish"
     },
     "articles": {
-        "permille_per_day": "' permil;/día",
+        "permille_per_day": "&permil;/día",
         "length_minutes": "minutos",
         "length_minutes_short": "m",
-        "unknown_author": "desconocido autor",
+        "unknown_author": "autor desconocido",
         "unknown_title": "artículo sin nombre",
-        "hide_seen": "Oculto visto",
-        "show_seen": "Mostrar visto",
+        "hide_seen": "Ocultar vistos",
+        "show_seen": "Mostrar vistos",
         "falloff": "fallo",
         "stock_value": "valor",
         "falloff_currently": "Actualmente",
         "view": "vista",
-        "views": "opiniones",
+        "views": "vistas",
         "affected": "afectados",
         "total_change": "cambio",
         "load_more": "Cargar más artículos",
         "falloff_types": {
             "linear": "Linear",
-            "quadratic": "Quadratic",
+            "quadratic": "Quadrado",
             "cubic": "Cubic",
             "none": "Ninguno…"
         },
         "affected_stocks": {
-            "title": "Stocks afected",
+            "title": "acciones afectadas",
             "no_stocks_affected": "Este artículo no afecta a ninguna acción..",
             "loading": "Cargando datos de acciones…"
         },
@@ -120,24 +120,24 @@
             "edit_icon_alt_text": "Editar artículo",
             "title_edit": "Editar artículo",
             "title_create": "Escribir artículo",
-            "submit_edit": "Presentar cambios",
+            "submit_edit": "Guadar cambios",
             "err_no_edit_permission": "No parece que puedas editar artículos actualmente",
-            "err_no_create_permission": "No parece que puedas escribir artículos en la actualidad",
+            "err_no_create_permission": "Parece que no puedes escribir artículos ahoramente",
             "err_influences_generic": "Se produjo un error al revisar las influencias",
             "err_influences_length": "Todas las longitudes de influencias tienen que ser mayores de 0 minutos",
             "err_influences_permille": "Todos los valores de permille tienen que ser numéricos y no 0",
             "err_influences_permille_too_high": "No se le permite establecer valores de permille mayores que {max}",
-            "submit_create": "Enviar",
+            "submit_create": "Guadar",
             "values_okay": "Los valores proporcionados son correctos",
-            "err_title_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
-            "err_title_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)"
+            "err_title_too_short": "¡El nombre es demasiado corto! ({min} - {max} carácteres)",
+            "err_title_too_long": "¡El nombre es demasiado largo! ({min} - {max} carácteres)"
         },
         "title": "Título",
-        "content": "Índice",
+        "content": "Contenido",
         "individual_page": {
             "loading": "Cargando artículo",
             "err_not_exist": "¡Este artículo no existe!",
-            "empty_content_notice": "Este artículo no tiene un cuerpo (sí).",
+            "empty_content_notice": "Este artículo no tiene contenido (actualmente).",
             "empty_content_hint": "Si tienes el permiso para hacerlo, puedes arreglarlo editando este artículo!"
         },
         "influence_selector": {
@@ -153,7 +153,7 @@
         },
         "relevant_articles": {
             "title_all": "Artículos pertinentes",
-            "title_unread": "Artículos pertinentes",
+            "title_unread": "Artícolus no leídos relevantes",
             "loading": "Cargando artículos",
             "no_articles": "No hay artículos pertinentes",
             "no_unread_articles": "No hay ningún artículo pertinente que no esté leído"
