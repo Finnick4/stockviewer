@@ -124,29 +124,29 @@
             "no_articles": "Es gibt keine relevanten Artikel",
             "no_unread_articles": "Es gibt keine ungelesenen relevanten Artikel"
         },
-        "permille_per_day": "‰/tag",
-        "length_minutes": "minuten",
+        "permille_per_day": "&permil;/Tag",
+        "length_minutes": "Minuten",
         "length_minutes_short": "m",
-        "unknown_author": "unbekannter autor",
-        "unknown_title": "artikel ohne namen",
-        "hide_seen": "Versteckt gesehen",
-        "show_seen": "Gesehen",
-        "falloff": "fall",
-        "stock_value": "wert",
-        "falloff_currently": "Derzeit",
-        "view": "blick",
-        "views": "blick",
+        "unknown_author": "unbekannter Author",
+        "unknown_title": "namenloser Artikel",
+        "hide_seen": "Gelesene verbergen",
+        "show_seen": "Gelesene zeigen",
+        "falloff": "Abfall",
+        "stock_value": "Wert",
+        "falloff_currently": "Aktuell",
+        "view": "Aufruf",
+        "views": "Aufrufe",
         "affected": "betroffen",
-        "total_change": "änderung",
-        "load_more": "Mehr Artikel laden",
+        "total_change": "Änderung",
+        "load_more": "Weitere Artikel laden",
         "falloff_types": {
             "linear": "Linear",
             "quadratic": "Quadratisch",
-            "cubic": "Cubic"
+            "cubic": "Kubisch"
         },
         "affected_stocks": {
-            "title": "Betroffene Bestände",
-            "no_stocks_affected": "Dieser Artikel beeinflusst keine Bestände.."
+            "title": "Betroffene Aktien",
+            "no_stocks_affected": "Durch diesen Artikel werden keine Aktien beeinflusst…"
         }
     }
 }
