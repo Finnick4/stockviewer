@@ -4,7 +4,7 @@
         "articles": "Artikel",
         "stock_groups": "Gruppen",
         "search": {
-            "placeholder": "Suche..."
+            "placeholder": "Suche…"
         }
     },
     "creator": {
@@ -26,7 +26,7 @@
         "price_ct": "Preis (ct)",
         "list": {
             "all_stocks": "Alle Aktien",
-            "loading": "Lade Aktiendaten..."
+            "loading": "Lade Aktiendaten…"
         },
         "chart": {
             "stock_history": "Aktienkurs"
@@ -34,7 +34,7 @@
         "modify": {
             "edit_icon_alt_text": "Aktie bearbeiten",
             "edit_title": "{name} bearbeiten",
-            "stock_name_placeholder": "Aktienname...",
+            "stock_name_placeholder": "Aktienname…",
             "submit": "Absenden",
             "err_name_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
             "err_name_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
@@ -46,29 +46,29 @@
         },
         "influences": {
             "influences": "Einflüsse",
-            "loading": "Lade Einflüsse auf die Aktie...",
-            "no_active_influences": "Die Aktie wird momentan von keinem Artikel beeinflusst..."
+            "loading": "Lade Einflüsse auf die Aktie…",
+            "no_active_influences": "Die Aktie wird momentan von keinem Artikel beeinflusst…"
         },
         "related": {
             "related_stocks": "Ähnliche Aktien",
-            "stock_loading_name": "Lade...",
-            "stock_none_name": "Nichts..."
+            "stock_loading_name": "Laden…",
+            "stock_none_name": "Nichts…"
         },
         "selector": {
             "stock_selection": "Aktienauswahl",
-            "search_placeholder": "Suche nach Aktien...",
-            "empty_selection": "Keine Aktien ausgewählt...",
-            "empty_search_query": "Suche eingeben...",
-            "empty_search_result": "Keine Aktien gefunden..."
+            "search_placeholder": "Suche nach Aktien…",
+            "empty_selection": "Keine Aktien ausgewählt…",
+            "empty_search_query": "Suche eingeben…",
+            "empty_search_result": "Keine Aktien gefunden…"
         },
         "stars": {
-            "icon_alt_text_starred": "Aktie nicht mehr markieren",
-            "icon_alt_text_unstarred": "Aktie markieren"
+            "icon_alt_text_starred": "Aktie entfavoritisieren",
+            "icon_alt_text_unstarred": "Aktie favoritisieren"
         },
         "group_memberships": {
             "stock_group_memberships": "Aktiengruppenmitgliedschaft",
-            "loading": "Lade...",
-            "no_membership": "Diese Aktie ist in keiner Aktiengruppe..."
+            "loading": "Laden…",
+            "no_membership": "Diese Aktie ist in keiner Aktiengruppe…"
         }
     },
     "network": {
