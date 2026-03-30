@@ -160,20 +160,20 @@
         }
     },
     "color_selector": {
-        "select": "Auswählen",
+        "select": "Wählen",
         "remove_color": "Farbe entfernen"
     },
     "login": {
-        "title": "Bitte anmelden",
+        "title": "Anmelden",
         "tag": "Benutzer-Tag",
         "password": "Kennwort",
         "log_in": "Anmelden",
         "checking": "Überprüfung der Anmeldeinformationen",
         "success": "Erfolgreich",
         "err_tag": "Bitte einen gültigen Tag eingeben",
-        "err_pw": "Bitte ein gültiges Kennwort eingeben",
-        "err_invalid_credentials": "Ungültige Anmeldedaten. Versuchen Sie es erneut!",
-        "err_pw_change": "Sie müssen Ihr Kennwort ändern. Nutzen Sie das Modale!",
+        "err_pw": "Bitte gebe ein gültiges Kennwort ein",
+        "err_invalid_credentials": "Ungültige Anmeldedaten. Versuche es erneut!",
+        "err_pw_change": "Sie müssen Ihr Kennwort ändern.",
         "err_generic": "Ein Fehler ist aufgetreten!"
     }
 }
