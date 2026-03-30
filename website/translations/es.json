@@ -160,7 +160,7 @@
         }
     },
     "color_selector": {
-        "select": "Selecciona",
+        "select": "Seleccionar",
         "remove_color": "Quitar color"
     },
     "login": {
@@ -173,7 +173,7 @@
         "err_tag": "Por favor, ingresa una etiqueta válida",
         "err_pw": "Por favor, ingresa una contraseña válida",
         "err_invalid_credentials": "Credenciales inválidas. Inténtalo de nuevo!",
-        "err_pw_change": "Debes cambiar tu contraseña. Utiliza el cuadro modal!",
-        "err_generic": "Ocurrió un error!"
+        "err_pw_change": "Debes cambiar tu contraseña.",
+        "err_generic": "Se ocurrió un error!"
     }
 }
