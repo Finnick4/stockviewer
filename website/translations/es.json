@@ -46,7 +46,8 @@
             "create_title": "Crear nuevo stock",
             "stock_shorthand_placeholder": "Stock shorthand..",
             "initial_price_ct": "Precio inicial (ct)",
-            "err_no_create_permission": "¡No parece que puedas crear acciones actualmente!"
+            "err_no_create_permission": "¡No parece que puedas crear acciones actualmente!",
+            "err_initial_price_too_low": "¡El precio tiene que ser de al menos {price}!"
         },
         "influences": {
             "influences": "Influencias",
@@ -73,7 +74,10 @@
             "stock_group_memberships": "Miembros de grupos de acción",
             "loading": "Cargando…",
             "no_membership": "Esta acción no forma parte de ningún grupo de acciones…"
-        }
+        },
+        "search_placeholder": "Buscar acciones…",
+        "search_empty_query": "Escriba el texto que desea buscar…",
+        "search_empty_result": "No se han encontrado acciones…"
     },
     "network": {
         "issues": {
@@ -124,7 +128,9 @@
             "err_influences_permille": "Todos los valores de permille tienen que ser numéricos y no 0",
             "err_influences_permille_too_high": "No se le permite establecer valores de permille mayores que {max}",
             "submit_create": "Enviar",
-            "values_okay": "Los valores proporcionados son correctos"
+            "values_okay": "Los valores proporcionados son correctos",
+            "err_title_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
+            "err_title_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)"
         },
         "title": "Título",
         "content": "Índice",
