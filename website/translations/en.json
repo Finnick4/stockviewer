@@ -53,7 +53,7 @@
 
         },
         "individual_page": {
-            "loading": "Loading article",
+            "loading": "Loading article…",
             "err_not_exist": "This article does not exist!",
             "empty_content_notice": "This article doesn't have a body (yet).",
             "empty_content_hint": "If you have the permission to do so, you can fix it by editing this article!"
@@ -81,14 +81,14 @@
         "recent_articles": {
             "title_all": "All articles",
             "title_unread": "Unread articles",
-            "loading": "Loading articles",
+            "loading": "Loading articles…",
             "no_articles": "There are no articles",
             "no_unread_articles": "There are no unread articles"
         },
         "relevant_articles": {
             "title_all": "Relevant articles",
             "title_unread": "Unread relevant articles",
-            "loading": "Loading articles",
+            "loading": "Loading articles…",
             "no_articles": "There are no relevant articles",
             "no_unread_articles": "There are no unread relevant articles"
         }
@@ -166,12 +166,12 @@
         "tag": "User tag",
         "password": "Password",
         "log_in": "Log in",
-        "checking": "Checking credentials",
+        "checking": "Checking credentials…",
         "success": "Success",
         "err_tag": "Please enter a valid tag",
         "err_pw": "Please enter a valid password",
         "err_invalid_credentials": "Invalid credentials. Try again!",
-        "err_pw_change": "You have to change your password. Use the modal!",
+        "err_pw_change": "You have to change your password.",
         "err_generic": "An error occurred!"
     }
 }

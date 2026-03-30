@@ -43,6 +43,25 @@ function getTranslatedStr(key, values) {
         if (typeof res === "string") {
             return typeof values === "object" ? interpolateStr(res, values) : res
         } else {
+            return getEnStr(key, values)
+        }
+    } catch {
+        return getEnStr(key, values)
+    }
+}
+
+function getEnStr(key, values) {
+    if (typeof key !== "string") {
+        return key
+    }
+
+    const path = key.split('.')
+    try {
+        const language = supportedLanguages["en"]
+        const res = path.reduce((a, v) => a[v], language)
+        if (typeof res === "string") {
+            return typeof values === "object" ? interpolateStr(res, values) : res
+        } else {
             return key
         }
     } catch {
