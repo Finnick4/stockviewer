@@ -32,7 +32,10 @@
         "show_seen": "Afficher vu",
         "recent_articles": {
             "no_articles": "Il n'y a aucun article",
-            "no_unread_articles": "Il n'y a aucun article non lu"
+            "no_unread_articles": "Il n'y a aucun article non lu",
+            "title_all": "Tous les articles",
+            "title_unread": "Articles non lus",
+            "loading": "Chargement des articles"
         },
         "relevant_articles": {
             "title_all": "Articles pertinents",
@@ -40,6 +43,53 @@
             "loading": "Chargement des articles",
             "no_articles": "Il n'y a pas d'articles pertinents",
             "no_unread_articles": "Il n'y a pas d'articles non lus"
+        },
+        "individual_page": {
+            "empty_content_hint": "Si vous avez la permission de le faire, vous pouvez corriger cet article !",
+            "loading": "Chargement de l'article",
+            "err_not_exist": "Cet article n'existe pas !",
+            "empty_content_notice": "Cet article n'a pas encore de corps."
+        },
+        "modify": {
+            "edit_icon_alt_text": "Modifier l'article",
+            "title_edit": "Modifier l'article",
+            "title_create": "Écrire un article",
+            "submit_edit": "Soumettre les modifications",
+            "submit_create": "Soumettre",
+            "err_no_edit_permission": "Il ne semble pas que vous puissiez éditer les articles actuellement",
+            "err_no_create_permission": "Il ne semble pas que vous puissiez écrire des articles actuellement",
+            "err_title_too_short": "Le titre est trop court ! ({min} - {max} caractères)",
+            "err_title_too_long": "Le titre est trop long ! ({min} - {max} caractères)",
+            "err_influences_generic": "Une erreur s'est produite lors de la vérification des influences",
+            "err_influences_length": "Toutes les durées d'influence doivent être supérieures à 0 minute",
+            "err_influences_permille": "Tous les valeurs en permille doivent être numériques et non nulles",
+            "err_influences_permille_too_high": "Vous n'êtes pas autorisé à définir des valeurs en permille supérieures à {max}",
+            "values_okay": "Les valeurs fournies sont correctes"
+        },
+        "influence_selector": {
+            "title": "Influences de stock",
+            "no_influences": "Aucune influence présente…"
+        },
+        "falloff": "déclin",
+        "stock_value": "valeur",
+        "falloff_currently": "Maintenant",
+        "view": "vue",
+        "views": "vues",
+        "affected": "touché(e)s",
+        "total_change": "changement",
+        "load_more": "Charger plus d'articles",
+        "title": "Titre",
+        "content": "Contenu",
+        "falloff_types": {
+            "none": "Aucun",
+            "linear": "Linéaire",
+            "quadratic": "Quadratique",
+            "cubic": "Cubique"
+        },
+        "affected_stocks": {
+            "title": "Actions touchées(e)s",
+            "loading": "Chargement des données d'actions…",
+            "no_stocks_affected": "Cet article ne touche aucune action…"
         }
     },
     "stocks": {
@@ -60,7 +110,67 @@
         },
         "modify": {
             "edit_icon_alt_text": "Modifier le stock",
-            "edit_title": "Modifier {nom}"
+            "edit_title": "Modifier {nom}",
+            "create_title": "Créer de nouvelles actions",
+            "stock_name_placeholder": "Nom de l'action…",
+            "stock_shorthand_placeholder": "Abréviation de l'action…",
+            "initial_price_ct": "Prix initial (ct)",
+            "submit": "Soumettre",
+            "err_name_too_long": "Le nom est trop long ! ({min} - {max} caractères)",
+            "err_name_too_short": "Le nom est trop court ! ({min} - {max} caractères)",
+            "err_shorthand_too_long": "L'abréviation est trop longue ! ({min} - {max} caractères)",
+            "err_shorthand_too_short": "L'abréviation est trop courte ! ({min} - {max} caractères)",
+            "err_shorthand_numeric": "L'abréviation ne peut pas être un nombre !",
+            "err_price_too_low": "Le prix doit être au moins de {price} !",
+            "err_initial_price_too_low": "Le prix initial doit être d'au moins {price} !",
+            "err_no_create_permission": "Il semble que vous ne puissiez pas créer des actions actuellement !",
+            "values_okay": "Les valeurs fournies sont correctes"
+        },
+        "influences": {
+            "influences": "Influences",
+            "loading": "Chargement des influences sur l'action…",
+            "no_active_influences": "Cette action n'est influencée par aucun article…"
+        },
+        "related": {
+            "related_stocks": "Actions connexes",
+            "stock_loading_name": "Chargement…",
+            "stock_none_name": "Aucune…"
+        },
+        "selector": {
+            "stock_selection": "Sélection de titres",
+            "empty_selection": "Aucun titre sélectionné…"
+        },
+        "stars": {
+            "icon_alt_text_starred": "Déselectionner un titre",
+            "icon_alt_text_unstarred": "Sélectionner un titre"
+        },
+        "group_memberships": {
+            "stock_group_memberships": "Membreships des groupes de titres",
+            "loading": "Chargement…",
+            "no_membership": "Ce titre ne fait pas partie d'aucun groupe de titres…"
         }
+    },
+    "network": {
+        "issues": {
+            "generic_request": "Il y a une erreur avec la requête. ({code})",
+            "generic_server": "Il existe un problème côté serveur provoquant ce que cette requête n'est pas traitée ! ({code})"
+        }
+    },
+    "color_selector": {
+        "select": "Sélectionner",
+        "remove_color": "Enlever la couleur"
+    },
+    "login": {
+        "title": "Connectez-vous, s'il vous plaît",
+        "tag": "Tag de l'utilisateur",
+        "password": "Mot de passe",
+        "log_in": "Connexion",
+        "checking": "Vérification des identifiants",
+        "success": "Succès",
+        "err_tag": "Merci d'entrer un tag valide",
+        "err_pw": "Veuillez entrer un mot de passe valide",
+        "err_invalid_credentials": "Identifiants invalides. Réessayez !",
+        "err_pw_change": "Vous devez changer votre mot de passe. Utilisez le modèle !",
+        "err_generic": "Une erreur est survenue !"
     }
 }
