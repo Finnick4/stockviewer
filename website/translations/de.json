@@ -150,7 +150,8 @@
         "falloff_types": {
             "linear": "Linear",
             "quadratic": "Quadratisch",
-            "cubic": "Kubisch"
+            "cubic": "Kubisch",
+            "none": "Nichts…"
         },
         "affected_stocks": {
             "title": "Betroffene Aktien",
