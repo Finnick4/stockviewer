@@ -3,7 +3,7 @@ class stockSelectorElement extends HTMLElement {
         this.innerHTML = `
                 <div class="pair">
                     <p>${getTranslatedStr("stocks.selector.stock_selection")}</p>
-                    <input type="text" class="search" placeholder="${getTranslatedStr("stocks.selector.search_placeholder")}">
+                    <input type="text" class="search" placeholder="${getTranslatedStr("stocks.search_placeholder")}">
                 </div>
                 <ul class="inner">
                     <li class="placeholder">${getTranslatedStr("stocks.selector.empty_selection")}</li>
@@ -11,7 +11,7 @@ class stockSelectorElement extends HTMLElement {
 
         this.readOnly = false
 
-        this.dropdownid = createDropdown(getTranslatedStr("stocks.selector.empty_search_query"))
+        this.dropdownid = createDropdown(getTranslatedStr("stocks.search_empty_query"))
 
         const search = this.querySelector("input.search")
         const dropdown = document.getElementById(this.dropdownid)
@@ -73,7 +73,7 @@ class stockSelectorElement extends HTMLElement {
                     html += `<button class="searchResult ${this.readOnly ? "disabled" : ""}" data-stock-id="${stock["ID"]}">${sanitiseText(stock["Name"])}</button>`
                 })
                 if (possible.length === 0) {
-                    html = getTranslatedStr("stocks.selector.empty_search_result")
+                    html = getTranslatedStr("stocks.search_empty_result")
                 }
                 dropdown.innerHTML = html
                 dropdown.querySelectorAll(".searchResult").forEach(elem => {

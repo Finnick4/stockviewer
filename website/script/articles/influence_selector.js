@@ -2,16 +2,16 @@ class stockInfluenceSelectorElement extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
                 <div class="pair">
-                    <p>Stock influences</p>
-                    <input type="text" class="search" placeholder="Search stocks...">
+                    <p>${getTranslatedStr("articles.influence_selector.title")}</p>
+                    <input type="text" class="search" placeholder="${getTranslatedStr("stocks.search_placeholder")}">
                 </div>
                 <ul class="inner">
-                    <li class="placeholder">No influences present...</li>
+                    <li class="placeholder">${getTranslatedStr("articles.influence_selector.no_influences")}</li>
                 </ul>`
 
         this.readOnly = false
 
-        this.dropdownid = createDropdown(`Please type to search...`)
+        this.dropdownid = createDropdown(getTranslatedStr("stocks.search_empty_query"))
 
         const search = this.querySelector("input.search")
         const dropdown = document.getElementById(this.dropdownid)
@@ -80,7 +80,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
                     html += `<button class="searchResult ${this.readOnly ? "disabled" : ""}" data-stock-id="${stock["ID"]}">${sanitiseText(stock["Name"])}</button>`
                 })
                 if (possible.length === 0) {
-                    html = "No stocks found"
+                    html = getTranslatedStr("stocks.search_empty_result")
                 }
                 dropdown.innerHTML = html
                 dropdown.querySelectorAll(".searchResult").forEach(elem => {
@@ -102,7 +102,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
         if (inner.querySelectorAll("li.stockOverview").length === 0) {
             const placeholder = document.createElement("li")
             placeholder.className = "placeholder"
-            placeholder.innerHTML = "No influences present..."
+            placeholder.innerHTML = getTranslatedStr("articles.influence_selector.no_influences")
             inner.append(placeholder)
         }
     }
@@ -114,7 +114,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
         const inner = this.querySelector("ul.inner")
 
         if (influences.length === 0) {
-            inner.innerHTML = `<li class="placeholder">No influences present...</li>`
+            inner.innerHTML = `<li class="placeholder">${getTranslatedStr("articles.influence_selector.no_influences")}</li>`
             this.onEdit()
             return
         }

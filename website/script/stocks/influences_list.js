@@ -22,8 +22,8 @@ class stockInfluenceList extends HTMLElement {
                             <a is="a-button" href="/articles/${article["ArticleID"]}">
                                 <div class="title">${sanitiseText(article["ArticleTitle"])}</div>
                                 <div class="info ${article["PermillePerDay"] >= 0 ? "positive" : "negative"}">
-                                    <div class="change">${article["PermillePerDay"]}&permil;/day</div>
-                                    <div class="change">${article["LengthMinutes"]}m</div>
+                                    <div class="change">${article["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
+                                    <div class="change">${article["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>
                                 </div>
                             </a>
                         </li>`

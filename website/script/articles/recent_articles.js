@@ -3,13 +3,13 @@ class recentArticlesElement extends HTMLElement {
         this.innerHTML = `<div class="inner">
                 <div class="titlebar">
                     <nav class="displaySelector">
-                        <button class="toggleViewed">Hide seen</button>                                                     
+                        <button class="toggleViewed">${getTranslatedStr("articles.hide_seen")}</button>                                                     
                     </nav>
-                    <h2>All articles</h2>
+                    <h2>${getTranslatedStr("articles.recent_articles.title_all")}</h2>
                     <div></div>
                 </div>
                 <ul class="inner">
-                    <p>Loading articles...</p>
+                    <p>${getTranslatedStr("articles.recent_articles.loading")}</p>
                 </ul>
             </div>`
         this.offset = 0
@@ -21,8 +21,8 @@ class recentArticlesElement extends HTMLElement {
 
         this.btnToggleViewed.addEventListener("click", () => {
             this.onlyUnread = !this.onlyUnread
-            this.titleElem.innerHTML = this.onlyUnread ? "Unread articles" : "All articles"
-            this.btnToggleViewed.innerHTML = this.onlyUnread ? "Show seen" : "Hide seen"
+            this.titleElem.innerHTML = this.onlyUnread ? getTranslatedStr("articles.recent_articles.title_unread") : getTranslatedStr("articles.recent_articles.title_all")
+            this.btnToggleViewed.innerHTML = this.onlyUnread ? getTranslatedStr("articles.show_seen") : getTranslatedStr("articles.hide_seen")
             this.offset = 0
             this.updateContent()
         })
@@ -35,7 +35,7 @@ class recentArticlesElement extends HTMLElement {
 
             if (resp["Data"] === null || resp["Data"].length === 0) {
                 this.articlesList.innerHTML = `
-                        <p>There are no${this.onlyUnread ? " unread" : ""} articles</p>
+                        <p>${this.onlyUnread ? getTranslatedStr("articles.recent_articles.no_unread_articles") : getTranslatedStr("articles.recent_articles.no_articles")}</p>
                 `
             } else {
                 resp["Data"].forEach(e => {
@@ -43,8 +43,8 @@ class recentArticlesElement extends HTMLElement {
                             <a is="a-button" href="/articles/${e["ID"]}">
                                 <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div class="info">
-                                    <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
-                                    <div class="change">${e["TotalInfluences"]} affected</div>
+                                    <div class="change">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
+                                    <div class="change">${e["TotalInfluences"]} ${getTranslatedStr("articles.affected")}</div>
                                 </div>
                             </a>
                         </li>`
@@ -52,7 +52,7 @@ class recentArticlesElement extends HTMLElement {
 
                 this.articlesList.innerHTML = `
                         ${html}
-                        <button class="articlePreview loadMore">Load more articles</button>
+                        <button class="articlePreview loadMore">${getTranslatedStr("articles.load_more")}</button>
                 `
                 const loadMoreBtn = this.querySelector("button.loadMore")
                 const ul = this.querySelector("ul.inner")
@@ -66,8 +66,8 @@ class recentArticlesElement extends HTMLElement {
                             elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
                                               <div class="title">${sanitiseText(e["Title"])}</div>
                                               <div class="info">
-                                                    <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
-                                                    <div class="change">${e["TotalInfluences"]} affected</div>
+                                                    <div class="change">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
+                                                    <div class="change">${e["TotalInfluences"]} ${getTranslatedStr("articles.affected")}</div>
                                               </div>
                                           </a>`
                             ul.insertBefore(elem, loadMoreBtn)

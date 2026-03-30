@@ -1,8 +1,8 @@
 class affectedStocks extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<div class="inner">
-                <h2>Affected stocks</h2>
-                <p>Loading stock data...</p>
+                <h2>${getTranslatedStr("articles.affected_stocks.title")}</h2>
+                <p>${getTranslatedStr("articles.affected_stocks.loading")}</p>
             </div>`
     }
 
@@ -21,8 +21,8 @@ class affectedStocks extends HTMLElement {
         let html = ""
         if (data["Members"] === null || data["Members"] === undefined) {
             that.innerHTML = `<div class="inner">
-                <nav><h2>Affected stocks</h2></nav>
-                <p>This article doesn't affect any stocks...</p>
+                <nav><h2>${getTranslatedStr("articles.affected_stocks.title")}</h2></nav>
+                <p>${getTranslatedStr("articles.affected_stocks.no_stocks_affected")}</p>
             </div>`
             return
         }
@@ -41,8 +41,8 @@ class affectedStocks extends HTMLElement {
                                 </div>
                                 <div class="info">
                                     <div class="change">${shortPrice}</div>
-                                    <div class="change">${influence["PermillePerDay"]}&permil;/day</div>
-                                    <div class="change">${influence["LengthMinutes"]}m</div>
+                                    <div class="change">${influence["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
+                                    <div class="change">${influence["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>
                                 </div>
                             </a>
                         </li>`
@@ -51,7 +51,7 @@ class affectedStocks extends HTMLElement {
         that.innerHTML = `<ul class="inner">
                         <div class="titlebar">
                             <div></div>
-                            <h2>Affected stocks</h2>
+                            <h2>${getTranslatedStr("articles.affected_stocks.title")}</h2>
                             <div></div>
                         </div>
                         ${html}

@@ -19,8 +19,8 @@ class articleHeader extends HTMLElement {
         this.elemViews = this.querySelector("div.views")
         this.elemHearts = this.querySelector("div.hearts")
 
-        this.titleVal = this.dataset.articleTitle === undefined ? "unnamed article" : sanitiseText(this.dataset.articleTitle)
-        this.authorName = this.dataset.authorName === undefined ? "unknown author" : sanitiseText(this.dataset.authorName)
+        this.titleVal = this.dataset.articleTitle === undefined ? getTranslatedStr("articles.unknown_title") : sanitiseText(this.dataset.articleTitle)
+        this.authorName = this.dataset.authorName === undefined ? getTranslatedStr("articles.unknown_author") : sanitiseText(this.dataset.authorName)
         this.creationDate = this.dataset.creationDate === undefined ? new Date(1) : new Date(sanitiseText(this.dataset.creationDate))
         this.views = this.dataset.views === undefined ? 0 : Number(sanitiseText(this.dataset.views))
         this.hearts = this.dataset.hearts === undefined ? 0 : Number(sanitiseText(this.dataset.hearts))
@@ -28,7 +28,7 @@ class articleHeader extends HTMLElement {
         this.update()
     }
     update() {
-        this.elemCreatedAt.innerHTML = Intl.DateTimeFormat("en", {
+        this.elemCreatedAt.innerHTML = Intl.DateTimeFormat(langCode, {
             month: 'long',
             day: "numeric",
             year: "numeric",

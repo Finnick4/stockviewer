@@ -22,12 +22,65 @@
         "dashboard_admin": "Administration",
         "logout": "Log out"
     },
+    "articles": {
+        "permille_per_day": "&permil;/day",
+        "length_minutes": "minutes",
+        "length_minutes_short": "m",
+        "unknown_author": "unknown author",
+        "unknown_title": "unnamed article",
+        "hide_seen": "Hide seen",
+        "show_seen": "Show seen",
+        "falloff": "falloff",
+        "stock_value": "value",
+        "falloff_currently": "Currently",
+        "view": "view",
+        "views": "views",
+        "affected": "affected",
+        "total_change": "change",
+        "load_more": "Load more articles",
+        "falloff_types": {
+            "none": "None",
+            "linear": "Linear",
+            "quadratic": "Quadratic",
+            "cubic": "Cubic"
+        },
+        "affected_stocks": {
+            "title": "Affected stocks",
+            "loading": "Loading stock data…",
+            "no_stocks_affected": "This article doesn't affect any stocks…"
+
+        },
+        "modify": {
+            "edit_icon_alt_text": "Edit article"
+        },
+        "influence_selector": {
+            "title": "Stock influences",
+            "no_influences": "No influences present…"
+        },
+        "recent_articles": {
+            "title_all": "All articles",
+            "title_unread": "Unread articles",
+            "loading": "Loading articles",
+            "no_articles": "There are no articles",
+            "no_unread_articles": "There are no unread articles"
+        },
+        "relevant_articles": {
+            "title_all": "Relevant articles",
+            "title_unread": "Unread relevant articles",
+            "loading": "Loading articles",
+            "no_articles": "There are no relevant articles",
+            "no_unread_articles": "There are no unread relevant articles"
+        }
+    },
     "stocks": {
         "name": "Name",
         "shorthand": "Shorthand",
         "color": "Color",
         "price": "Price",
         "price_ct": "Price (ct)",
+        "search_placeholder": "Search stocks…",
+        "search_empty_query": "Please type to search…",
+        "search_empty_result": "No stocks found…",
         "list": {
             "all_stocks": "All stocks",
             "loading": "Loading stock data…"
@@ -65,10 +118,7 @@
         },
         "selector": {
             "stock_selection": "Stock selection",
-            "search_placeholder": "Search stocks…",
-            "empty_selection": "No stocks selected…",
-            "empty_search_query": "Please type to search…",
-            "empty_search_result": "No stocks found…"
+            "empty_selection": "No stocks selected…"
         },
         "stars": {
             "icon_alt_text_starred": "Unstar stock",

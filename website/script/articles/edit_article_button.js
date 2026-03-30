@@ -9,7 +9,8 @@ class editArticleButtonElement extends HTMLButtonElement {
 
         this.classList.add("edit")
 
-        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="edit" draggable="false">`
+        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="${getTranslatedStr("articles.modify.edit_icon_alt_text")}" draggable="false">`
+        this.title = getTranslatedStr("articles.modify.edit_icon_alt_text")
 
         this.onclick = () => showModalEditArticles(this.articleid)
     }

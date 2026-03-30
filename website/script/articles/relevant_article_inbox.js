@@ -3,13 +3,13 @@ class relevantArticlesElement extends HTMLElement {
         this.innerHTML = `<div class="inner">
                 <div class="titlebar">
                     <nav class="displaySelector">
-                        <button class="toggleViewed">Hide seen</button>                                                     
+                        <button class="toggleViewed">${getTranslatedStr("articles.hide_seen")}</button>                                                     
                     </nav>
-                    <h2>Relevant articles</h2>
+                    <h2>${getTranslatedStr("articles.relevant_articles.title_all")}</h2>
                     <div></div>
                 </div>
                 <ul class="inner">
-                    <p>Loading articles...</p>
+                    <p>${getTranslatedStr("articles.relevant_articles.loading")}</p>
                 </ul>
             </div>`
         this.offset = 0
@@ -21,8 +21,8 @@ class relevantArticlesElement extends HTMLElement {
 
         this.btnToggleViewed.addEventListener("click", () => {
             this.onlyUnread = !this.onlyUnread
-            this.titleElem.innerHTML = this.onlyUnread ? "Unread relevant articles" : "Relevant articles"
-            this.btnToggleViewed.innerHTML = this.onlyUnread ? "Show seen" : "Hide seen"
+            this.titleElem.innerHTML = this.onlyUnread ? getTranslatedStr("articles.relevant_articles.title_unread") : getTranslatedStr("articles.relevant_articles.title_all")
+            this.btnToggleViewed.innerHTML = this.onlyUnread ? getTranslatedStr("articles.show_seen") : getTranslatedStr("articles.hide_seen")
             this.offset = 0
             this.updateContent()
         })
@@ -35,7 +35,7 @@ class relevantArticlesElement extends HTMLElement {
 
             if (resp["Data"] === null || resp["Data"].length === 0) {
                 this.articlesList.innerHTML = `
-                        <p>There are no${this.onlyUnread ? " unread" : ""} relevant articles</p>
+                        <p>${this.onlyUnread ? getTranslatedStr("articles.relevant_articles.no_unread_articles") : getTranslatedStr("articles.relevant_articles.no_articles")}</p>
                 `
             } else {
                 resp["Data"].forEach(e => {
@@ -44,8 +44,8 @@ class relevantArticlesElement extends HTMLElement {
                                 <div class="title">${sanitiseText(e["Title"])}</div>
                                 <div class="info">
                                     <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
-                                    <div class="change">${e["TotalRelevantAbsPermille"]}&permil; change</div>
-                                    <div class="change">${e["TotalRelevantInfluences"]} affected</div>
+                                    <div class="change">${e["TotalRelevantAbsPermille"]}&permil; ${getTranslatedStr("articles.total_change")}</div>
+                                    <div class="change">${e["TotalRelevantInfluences"]} ${getTranslatedStr("articles.affected")}</div>
                                 </div>
                             </a>
                         </li>`
