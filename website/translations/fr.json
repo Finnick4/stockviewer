@@ -1,1 +1,66 @@
-{}
+{
+    "language": {
+        "name_local": "Changements climatiques",
+        "name_global": "Changements climatiques"
+    },
+    "header": {
+        "stocks": "Stocks",
+        "articles": "Articles",
+        "stock_groups": "Groupes",
+        "search": {
+            "placeholder": "Rechercher.."
+        }
+    },
+    "creator": {
+        "stock": "Créer un stock",
+        "stock_group": "Créer un groupe de stocks",
+        "article": "Créer un article",
+        "user": "Créer un utilisateur"
+    },
+    "user_manager": {
+        "dashboard_account": "Paramètres du compte",
+        "dashboard_admin": "Administration",
+        "logout": "Déconnexion"
+    },
+    "articles": {
+        "permille_per_day": "‰/jour",
+        "length_minutes": "minutes",
+        "length_minutes_short": "m",
+        "unknown_author": "auteur inconnu",
+        "unknown_title": "article sans nom",
+        "hide_seen": "Cacher vu",
+        "show_seen": "Afficher vu",
+        "recent_articles": {
+            "no_articles": "Il n'y a aucun article",
+            "no_unread_articles": "Il n'y a aucun article non lu"
+        },
+        "relevant_articles": {
+            "title_all": "Articles pertinents",
+            "title_unread": "Articles non lus",
+            "loading": "Chargement des articles",
+            "no_articles": "Il n'y a pas d'articles pertinents",
+            "no_unread_articles": "Il n'y a pas d'articles non lus"
+        }
+    },
+    "stocks": {
+        "name": "Nom",
+        "shorthand": "Aiguille",
+        "color": "Couleur",
+        "price": "Prix",
+        "price_ct": "Prix (ct)",
+        "search_placeholder": "Rechercher les stocks..",
+        "search_empty_query": "Veuillez saisir à la recherche..",
+        "search_empty_result": "Aucun stock trouvé..",
+        "list": {
+            "all_stocks": "Tous stocks",
+            "loading": "Chargement des données de stock.."
+        },
+        "chart": {
+            "stock_history": "Historique des stocks"
+        },
+        "modify": {
+            "edit_icon_alt_text": "Modifier le stock",
+            "edit_title": "Modifier {nom}"
+        }
+    }
+}
