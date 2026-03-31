@@ -185,6 +185,11 @@
             "loading": "Loading stock groups...",
             "none": "There aren't any stock groups yet..."
         },
+        "starred_list": {
+            "title": "Starred stock groups",
+            "loading": "Loading starred stock groups...",
+            "none": "You haven't starred any stock groups yet..."
+        },
         "members_list": {
             "title": "All members",
             "loading": "Loading stock data...",

@@ -92,6 +92,10 @@ main.homepage .starredStocksList {
     grid-column: 1/4;
     overflow: auto;
 }
+main.homepage stockgroups-starred-list {
+    grid-column: 4/7;
+    overflow: auto;
+}
 
 main.homepage .articleInbox {
     grid-column: 1/7;
