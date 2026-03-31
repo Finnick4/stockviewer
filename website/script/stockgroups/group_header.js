@@ -6,9 +6,9 @@ class stockGroupHeader extends HTMLElement {
                         <div class="titlebar">
                             <div>
                                 <div class="change price">???€</div>
-                                <div class="change members">??? stocks</div>
+                                <div class="change members">${getTranslatedStr("stockgroups.header_element.member_count")}</div>
                             </div>
-                            <h1>Loading name...</h1>
+                            <h1>${getTranslatedStr("stockgroups.header_element.loading_name")}</h1>
                             <nav class="buttons">
                                 <button is="star-stock-group-button" data-stock-group-id="${this.groupid}"></button>
                                 <button is="edit-stock-group-button" data-stock-group-id="${this.groupid}"></button>
@@ -33,7 +33,7 @@ class stockGroupHeader extends HTMLElement {
             memberCount = data["Members"].length
         }
         that.querySelector("div.price").innerHTML = getLocaleString(totalValue/100) + "€"
-        that.querySelector("div.members").innerHTML = memberCount + " stocks"
+        that.querySelector("div.members").innerHTML = getTranslatedStr("stockgroups.member_count", {num: memberCount})
         if (Number(that.groupid) >= 0) {
             const starBtn = that.querySelector("nav button.star")
             if (starBtn !== null) {

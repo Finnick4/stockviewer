@@ -50,7 +50,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug(params)
 
-	aimName := utilities.CharCount(params.Name) > 2 && utilities.CharCount(params.Name) <= 32
+	aimName := utilities.CharCount(params.Name) >= 2 && utilities.CharCount(params.Name) <= 32
 	aimDescription := params.Description != ""
 	aimAddMembers := len(params.AddedMembers) != 0
 	aimRemoveMembers := len(params.RemovedMembers) != 0

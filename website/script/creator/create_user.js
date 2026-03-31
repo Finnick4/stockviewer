@@ -3,25 +3,25 @@ function showModalCreateUser(elem) {
         elem.parentElement.togglePopover(false)
     }
 
-    let html = `<h2>Create a new user</h2>
+    let html = `<h2>${getTranslatedStr("users.create.title")}</h2>
                       <div class="pair">
-                          <p>User tag</p>
+                          <p>${getTranslatedStr("users.create.tag")}</p>
                           <input type="text" class="tag">            
                       </div>
                         
                       <div class="pair">
-                          <p>Temporary password</p>
+                          <p>${getTranslatedStr("users.create.temp_pw")}</p>
                           <input type="password" class="pw1">            
                       </div>
                       
                       <div class="pair">
-                          <p>Repeat temporary password</p>
+                          <p>${getTranslatedStr("users.create.temp_pw_repeat")}</p>
                           <input type="password" class="pw2">            
                       </div>
                                     
                       <div class="pair">
                           <div class="info"></div>
-                          <button class="submit">Sumbit</button>
+                          <button class="submit">${getTranslatedStr("users.create.submit")}</button>
                       </div>
                       `
     const id = createModal(html)
@@ -35,7 +35,7 @@ function showModalCreateUser(elem) {
 
     userInformation.writePermission("canCreateUsers", perm => {
         if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = "<h2>Create a new user</h2><p>It doesn't seem like you are able to create users currently!</p>"
+            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("users.create.title")}</h2><p>${getTranslatedStr("users.create.err_no_create_permission")}</p>`
         }
     })
 
@@ -69,21 +69,21 @@ function showModalCreateUser(elem) {
 
     const validate = () => {
         if (!plausibleTag(tag.value)) {
-            seterr("The tag is not plausible!")
+            seterr(getTranslatedStr("users.create.err_tag_implausible"))
             return false
         }
 
         if (!plausiblePW(pw.value)) {
-            seterr("The password is not plausible!")
+            seterr(getTranslatedStr("users.create.err_pw_implausible"))
             return false
         }
 
         if (pw.value !== pwrep.value) {
-            seterr("The password isn't identical to the repetition!")
+            seterr(getTranslatedStr("users.create.err_pw_repeat"))
             return false
         }
 
-        infotxt.innerHTML = "Everything seems to be okay!"
+        infotxt.innerHTML = getTranslatedStr("users.create.values_okay")
         infotxt.classList.add("positive")
         infotxt.classList.remove("negative")
         return true
@@ -106,9 +106,9 @@ function showModalCreateUser(elem) {
                     closeModal(id)
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr("There is an issue with the request.")
+                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr("There is a server-side issue causing this request to not be processed!")
+                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });

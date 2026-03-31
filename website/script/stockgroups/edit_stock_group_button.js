@@ -11,7 +11,8 @@ class editStockGroupButtonElement extends HTMLButtonElement {
 
         this.onclick = () => showModalEditStockGroup(this.groupid)
 
-        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="edit" draggable="false">`
+        this.title = getTranslatedStr("stockgroups.modify.title_create")
+        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="${getTranslatedStr("stockgroups.modify.title_edit")}" draggable="false">`
     }
 
 }
@@ -25,20 +26,20 @@ function showModalEditStockGroup(groupid) {
         const groupDescription = sanitiseText(resp["Data"]["Description"])
         const groupMembers = resp["Data"]["Members"] !== null ? resp["Data"]["Members"].map(stock => Number(stock["ID"])) : []
 
-        let html = `<h2>Edit ${sanitiseText(groupName)}</h2>
+        let html = `<h2>${getTranslatedStr("stockgroups.modify.title_edit", {name: sanitiseText(groupName)})}</h2>
                         <div class="pair">
-                            <p>Name</p>
-                            <input class="name" type="text" placeholder="Group name..." value="${sanitiseText(groupName)}">
+                            <p>${getTranslatedStr("stockgroups.modify.name")}</p>
+                            <input class="name" type="text" placeholder="${getTranslatedStr("stockgroups.modify.name_placeholder")}" value="${sanitiseText(groupName)}">
                         </div>
                         <div class="textField">
-                            <p>Description</p>
+                            <p>${getTranslatedStr("stockgroups.modify.description")}</p>
                             <textarea class="description">${groupDescription}</textarea>
                         </div>
                         <div class="stockSelector"></div>
                       
                         <div class="pair">
                             <div class="info"></div>
-                            <button class="submit">Submit</button>
+                            <button class="submit">${getTranslatedStr("stockgroups.modify.submit_edit")}</button>
                         </div>
                         `
 
@@ -87,15 +88,15 @@ function showModalEditStockGroup(groupid) {
 
         const validate = () => {
             if (name.value.length > 32) {
-                seterr("The name is too long! (2 - 32 characters)")
+                seterr(getTranslatedStr("stockgroups.modify.err_name_too_long", {min: 2, max: 32}))
                 return false
             }
-            if (name.value.length <= 2) {
-                seterr("The name is too short! (2 - 32 characters)")
+            if (name.value.length < 2) {
+                seterr(getTranslatedStr("stockgroups.modify.err_name_too_short", {min: 2, max: 32}))
                 return false
             }
 
-            infotxt.innerHTML = "Values are okay"
+            infotxt.innerHTML = getTranslatedStr("stockgroups.modify.values_okay")
             infotxt.classList.add("positive")
             infotxt.classList.remove("negative")
             return true
@@ -145,9 +146,9 @@ function showModalEditStockGroup(groupid) {
                         closeModal(id)
                     } else {
                         if (r.status >= 400 || r.status < 500) {
-                            seterr("There is an issue with the request.")
+                            seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                         } else {
-                            seterr("There is a server-side issue causing this request to not be processed!")
+                            seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                         }
                     }
                 });

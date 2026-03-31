@@ -3,20 +3,20 @@ function showModalCreateStockGroup(elem) {
         elem.parentElement.togglePopover(false)
     }
 
-    let html = `<h2>Create a new stock group</h2>
+    let html = `<h2>${getTranslatedStr("stockgroups.modify.title_create")}</h2>
                         <div class="pair">
-                            <p>Name</p>
-                            <input class="name" type="text" placeholder="Group name...">
+                            <p>${getTranslatedStr("stockgroups.modify.name")}</p>
+                            <input class="name" type="text" placeholder="${getTranslatedStr("stockgroups.modify.name_placeholder")}">
                         </div>
                         <div class="textField">
-                            <p>Description</p>
+                            <p>${getTranslatedStr("stockgroups.modify.description")}</p>
                             <textarea class="description"></textarea>
                         </div>
                         <div class="stockSelector"></div>
                       
                         <div class="pair">
                             <div class="info"></div>
-                            <button class="submit">Submit</button>
+                            <button class="submit">${getTranslatedStr("stockgroups.modify.submit_create")}</button>
                         </div>
                         `
 
@@ -32,7 +32,7 @@ function showModalCreateStockGroup(elem) {
 
     userInformation.writePermission("canCreateStockGroups", perm => {
         if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = "<h2>Create a new stock group</h2><p>It doesn't seem like you are able to create stock groups currently!</p>"
+            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("stockgroups.modify.title_create")}</h2><p>${getTranslatedStr("stockgroups.modify.err_no_create_permission")}</p>`
         }
     })
 
@@ -45,15 +45,15 @@ function showModalCreateStockGroup(elem) {
     const validate = () => {
 
         if (name.value.length > 32) {
-            seterr("The name is too long! (2 - 32 characters)")
+            seterr(getTranslatedStr("stockgroups.modify.err_name_too_long", {min: 2, max: 32}))
             return false
         }
-        if (name.value.length <= 2) {
-            seterr("The name is too short! (2 - 32 characters)")
+        if (name.value.length < 2) {
+            seterr(getTranslatedStr("stockgroups.modify.err_name_too_short", {min: 2, max: 32}))
             return false
         }
 
-        infotxt.innerHTML = "Values are okay"
+        infotxt.innerHTML = getTranslatedStr("stockgroups.modify.values_okay")
         infotxt.classList.add("positive")
         infotxt.classList.remove("negative")
         return true
@@ -94,9 +94,9 @@ function showModalCreateStockGroup(elem) {
                     })
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr("There is an issue with the request.")
+                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr("There is a server-side issue causing this request to not be processed!")
+                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });

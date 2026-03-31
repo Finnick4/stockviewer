@@ -63,7 +63,7 @@
             "title_edit": "Edit article",
             "title_create": "Write article",
             "submit_edit": "Submit changes",
-            "submit_create": "Submit",
+            "submit_create": "Create",
             "err_no_edit_permission": "It doesn't seem like you are able to edit articles currently",
             "err_no_create_permission": "It doesn't seem like you are able to write articles currently",
             "err_title_too_short": "The title is too short! ({min} - {max} character)",
@@ -151,6 +151,46 @@
             "no_membership": "This stock isn't a part of any stock groups…"
         }
     },
+    "stockgroups": {
+        "member_count": "{num} stocks",
+        "modify": {
+            "edit_icon_alt_text": "Edit stock group",
+            "title_edit": "Edit {name}",
+            "title_create": "Create stock group",
+            "name": "Name",
+            "name_placeholder": "Group name...",
+            "description": "Description",
+            "submit_create": "Create",
+            "submit_edit":"Submit changes",
+            "err_no_create_permission": "It doesn't seem like you are able to create stock groups currently!",
+            "err_name_too_long": "The name is too long! ({min} - {max} characters)",
+            "err_name_too_short": "The name is too short! ({min} - {max} characters)",
+            "values_okay": "The provided values are okay"
+        },
+        "description_element": {
+            "empty_notice": "This group doesn't have a description!",
+            "empty_hint": "If you wanted, you could add one, given you have the required permission.",
+            "loading": "Loading description..."
+        },
+        "header_element": {
+            "loading_member_count": "??? stocks",
+            "loading_name": "Loading name..."
+        },
+        "star_button": {
+            "alt_unstarred": "Star stock group",
+            "alt_starred": "Unstar stock group"
+        },
+        "list": {
+            "title": "All stock groups",
+            "loading": "Loading stock groups...",
+            "none": "There aren't any stock groups yet..."
+        },
+        "members_list": {
+            "title": "All members",
+            "loading": "Loading stock data...",
+            "none": "This group doesn't have any members!"
+        }
+    },
     "network": {
         "issues": {
             "generic_request": "There is an issue with the request. ({code})",
@@ -173,5 +213,33 @@
         "err_invalid_credentials": "Invalid credentials. Try again!",
         "err_pw_change": "You have to change your password.",
         "err_generic": "An error occurred!"
+    },
+    "users": {
+        "create": {
+            "title": "Create new user",
+            "tag": "User tag",
+            "temp_pw": "Temporary password",
+            "temp_pw_repeat": "Repeat temporary password",
+            "submit": "Create",
+            "err_no_create_permission": "It doesn't seem like you are able to create users currently!",
+            "err_tag_implausible": "The tag is not plausible",
+            "err_pw_implausible": "The password is not plausible",
+            "err_pw_repeat": "The password isn't identical to the repetition",
+            "values_okay": "Everything seems to be okay!"
+        }
+    },
+    "change_password": {
+        "title": "Change password",
+        "tag": "User tag",
+        "old_pw": "Old password",
+        "new_pw": "New password",
+        "new_pw_repeat": "Repeat new password",
+        "submit": "Submit",
+        "err_tag_too_long": "The tag is too long! ({min} - {max} characters)",
+        "err_tag_too_short": "The tag is too short! ({min} - {max} characters)",
+        "err_old_pw_implausible": "The old password is not plausible!",
+        "err_new_pw_implausible": "The new password is not plausible!",
+        "err_pw_repetition": "The new password isn't identical to the repetition!",
+        "values_okay": "Everything seems to be okay!"
     }
 }

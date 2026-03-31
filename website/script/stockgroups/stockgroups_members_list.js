@@ -1,10 +1,10 @@
 class stockgroupsMembersList extends HTMLElement {
     connectedCallback() {
         this.groupid = this.dataset.stockGroupId
-        this.title = this.dataset.altTitle === undefined ? "All members" : this.dataset.altTitle
+        this.titleVal = this.dataset.altTitle === undefined ? getTranslatedStr("stockgroups.members_list.title") : this.dataset.altTitle
         this.innerHTML = `<div class="inner">
-                <nav><h2>${this.title}</h2></nav>
-                <p>Loading stock data...</p>
+                <nav><h2>${this.titleVal}</h2></nav>
+                <p>${getTranslatedStr("stockgroups.members_list.loading")}</p>
             </div>`
         this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
     }
@@ -17,8 +17,8 @@ class stockgroupsMembersList extends HTMLElement {
         let html = ""
         if (data["Members"] === null || data["Members"] === undefined) {
             that.innerHTML = `<div class="inner">
-                <nav><h2>${that.title}</h2></nav>
-                <p>This group doesn't have any members...</p>
+                <nav><h2>${that.titleVal}</h2></nav>
+                <p>${getTranslatedStr("stockgroups.members_list.none")}</p>
             </div>`
             return
         }
@@ -63,7 +63,7 @@ class stockgroupsMembersList extends HTMLElement {
         that.innerHTML = `<ul class="inner">
                         <div class="titlebar">
                             <div></div>
-                            <h2>${that.title}</h2>
+                            <h2>${that.titleVal}</h2>
                             <div></div>
                         </div>
                         ${html}

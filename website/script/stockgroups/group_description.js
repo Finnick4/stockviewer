@@ -4,7 +4,7 @@ class stockGroupDescription extends HTMLElement {
 
         this.innerHTML = `
                         <div class="inner">
-                            ${parseStyle("Loading description...")}
+                            ${parseStyle(getTranslatedStr("stockgroups.description.loading"))}
                         </div>
                         `
         this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
@@ -17,7 +17,7 @@ class stockGroupDescription extends HTMLElement {
         if (data["Description"] !== "") {
             that.querySelector("div.inner").innerHTML = parseStyle(data["Description"])
         } else {
-            that.querySelector("div.inner").innerHTML = parseStyle("This group doesn't have a description!\nIf you wanted, you could add one, given you have the required permission.")
+            that.querySelector("div.inner").innerHTML = parseStyle(`${getTranslatedStr("stockgroups.description_element.empty_notice")}\n${getTranslatedStr("stockgroups.description_element.empty_hint")}`)
         }
     }
 }

@@ -3,30 +3,30 @@ function showChangePasswordModal(elem) {
         elem.parentElement.togglePopover(false)
     }
 
-    let html = `<h2>Change password</h2>
+    let html = `<h2>${getTranslatedStr("change_password.title")}</h2>
                       <div class="pair">
-                          <p>User tag</p>
+                          <p>${getTranslatedStr("change_password.tag")}</p>
                           <input type="text" class="tag">            
                       </div>
                         
                       <div class="pair">
-                          <p>Old password</p>
+                          <p>${getTranslatedStr("change_password.old_pw")}</p>
                           <input type="password" class="oldpw">            
                       </div>
                       
                       <div class="pair">
-                          <p>New password</p>
+                          <p>${getTranslatedStr("change_password.new_pw")}</p>
                           <input type="password" class="newpw1">            
                       </div>
                       
                       <div class="pair">
-                          <p>Repeat new password</p>
+                          <p>${getTranslatedStr("change_password.new_pw_repeat")}</p>
                           <input type="password" class="newpw2">            
                       </div>
                                     
                       <div class="pair">
                           <div class="info"></div>
-                          <button class="submit">Sumbit</button>
+                          <button class="submit">${getTranslatedStr("change_password.submit")}</button>
                       </div>
                       `
     const id = createModal(html)
@@ -50,30 +50,30 @@ function showChangePasswordModal(elem) {
 
     const validate = () => {
         if (tag.value.length > 32) {
-            seterr("The name is too long! (2 - 32 characters)")
+            seterr(getTranslatedStr("change_password.err_tag_too_long", {min: 2, max: 32}))
             return false
         }
         if (tag.value.length <= 2) {
-            seterr("The name is too short! (2 - 32 characters)")
+            seterr(getTranslatedStr("change_password.err_tag_too_short", {min: 2, max: 32}))
             return false
         }
 
         if (!plausiblePW(oldPW.value)) {
-            seterr("The old password is not plausible!")
+            seterr(getTranslatedStr("change_password.err_old_pw_implausible"))
             return false
         }
 
         if (!plausiblePW(newPW1.value)) {
-            seterr("The new password is not plausible!")
+            seterr(getTranslatedStr("change_password.err_new_pw_implausible"))
             return false
         }
 
         if (newPW1.value !== newPW2.value) {
-            seterr("The new password isn't identical to the repetition!")
+            seterr(getTranslatedStr("change_password.err_pw_repetition"))
             return false
         }
 
-        infotxt.innerHTML = "Everything seems to be okay!"
+        infotxt.innerHTML = getTranslatedStr("change_password.values_okay")
         infotxt.classList.add("positive")
         infotxt.classList.remove("negative")
         return true
@@ -97,9 +97,9 @@ function showChangePasswordModal(elem) {
                     closeModal(id)
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr("There is an issue with the request.")
+                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr("There is a server-side issue causing this request to not be processed!")
+                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });
