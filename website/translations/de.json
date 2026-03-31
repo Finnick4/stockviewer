@@ -175,5 +175,25 @@
         "err_invalid_credentials": "Ungültige Anmeldedaten. Versuche es erneut!",
         "err_pw_change": "Sie müssen Ihr Kennwort ändern.",
         "err_generic": "Ein Fehler ist aufgetreten!"
+    },
+    "stockgroups": {
+        "modify": {
+            "title_edit": "{name} bearbeiten",
+            "title_create": "Aktiengruppe erstellen",
+            "name": "Name",
+            "submit_edit": "Änderungen absenden",
+            "err_name_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
+            "err_name_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
+            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten"
+        }
+    },
+    "users": {
+        "create": {
+            "tag": "Benutzer-Tag"
+        }
+    },
+    "change_password": {
+        "tag": "Benutzer-Tag",
+        "submit": "Absenden"
     }
 }
