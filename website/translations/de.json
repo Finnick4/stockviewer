@@ -184,16 +184,23 @@
             "submit_edit": "Änderungen absenden",
             "err_name_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
             "err_name_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
-            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten"
+            "values_okay": "Es findet sich kein Problem mit den gegebenen Werten",
+            "err_no_create_permission": "Es sieht so aus, als ob du derzeit keine Aktien erstellen kannst"
+        },
+        "members_list": {
+            "loading": "Lade Aktiendaten..."
         }
     },
     "users": {
         "create": {
-            "tag": "Benutzer-Tag"
+            "tag": "Benutzer-Tag",
+            "err_no_create_permission": "Es sieht so aus, als ob du derzeit keine Aktien erstellen kannst"
         }
     },
     "change_password": {
         "tag": "Benutzer-Tag",
-        "submit": "Absenden"
+        "submit": "Absenden",
+        "err_tag_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
+        "err_tag_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)"
     }
 }
