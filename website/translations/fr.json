@@ -172,5 +172,28 @@
         "err_invalid_credentials": "Identifiants invalides. Réessayez !",
         "err_pw_change": "Vous devez changer votre mot de passe. Utilisez le modèle !",
         "err_generic": "Une erreur est survenue !"
+    },
+    "stockgroups": {
+        "modify": {
+            "title_edit": "Modifier {nom}",
+            "title_create": "Créer un groupe de stocks",
+            "name": "Nom",
+            "submit_edit": "Soumettre les modifications",
+            "err_name_too_long": "Le nom est trop long ! ({min} - {max} caractères)",
+            "err_name_too_short": "Le nom est trop court ! ({min} - {max} caractères)",
+            "values_okay": "Les valeurs fournies sont correctes"
+        },
+        "members_list": {
+            "loading": "Chargement des données d'actions…"
+        }
+    },
+    "users": {
+        "create": {
+            "tag": "Tag de l'utilisateur"
+        }
+    },
+    "change_password": {
+        "tag": "Tag de l'utilisateur",
+        "submit": "Soumettre"
     }
 }
