@@ -175,5 +175,25 @@
         "err_invalid_credentials": "Credenciales inválidas. Inténtalo de nuevo!",
         "err_pw_change": "Debes cambiar tu contraseña.",
         "err_generic": "Se ocurrió un error!"
+    },
+    "stockgroups": {
+        "modify": {
+            "title_edit": "Editar {name}",
+            "title_create": "Crear grupo de acciones",
+            "name": "Nombre",
+            "submit_edit": "Guadar cambios",
+            "err_name_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)",
+            "err_name_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
+            "values_okay": "Los valores proporcionados son correctos"
+        }
+    },
+    "users": {
+        "create": {
+            "tag": "Etiqueta de usuario"
+        }
+    },
+    "change_password": {
+        "tag": "Etiqueta de usuario",
+        "submit": "Enviar"
     }
 }
