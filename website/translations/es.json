@@ -184,16 +184,23 @@
             "submit_edit": "Guadar cambios",
             "err_name_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)",
             "err_name_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
-            "values_okay": "Los valores proporcionados son correctos"
+            "values_okay": "Los valores proporcionados son correctos",
+            "err_no_create_permission": "Parece que no puedes escribir artículos ahoramente"
+        },
+        "members_list": {
+            "loading": "Cargando datos de existencias..."
         }
     },
     "users": {
         "create": {
-            "tag": "Etiqueta de usuario"
+            "tag": "Etiqueta de usuario",
+            "err_no_create_permission": "Parece que no puedes escribir artículos ahoramente"
         }
     },
     "change_password": {
         "tag": "Etiqueta de usuario",
-        "submit": "Enviar"
+        "submit": "Enviar",
+        "err_tag_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)",
+        "err_tag_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)"
     }
 }
