@@ -21,25 +21,25 @@ class stockgroupsStarredList extends HTMLElement {
         }
         let html = ""
         data.forEach(e => {
-            html += `<li class="stockOverview"  data-stock-group-id="${e["ID"]}">
-                            <a class="containing" is="a-button" href="/groups/${e["ID"]}">
-                                <div class="stockName">${sanitiseText(e["Name"])}</div>
-                                <div class="info">
-                                    <div class="change">${getShortNumber(e["TotalValue"]/100)}</div>
-                                    <div class="change">${getTranslatedStr("stockgroups.member_count", {num: e["MemberCount"]})}</div>
-                                </div>
-                            </a>
-                        </li>`
+            html += `
+                <a class="containing" is="a-button" href="/groups/${e["ID"]}">
+                    <div class="name">${sanitiseText(e["Name"])}</div>
+                    <div class="value">${getShortNumber(e["TotalValue"]/100)}</div>
+                    <div class="value">${getTranslatedStr("stockgroups.member_count", {num: e["MemberCount"]})}</div>
+                </a>
+`
         })
 
-        that.innerHTML = `<ul class="inner">
+        that.innerHTML = `<div class="inner">
                         <div class="titlebar">
                             <nav></nav>
                             <h2>${getTranslatedStr("stockgroups.starred_list.title")}</h2>
                             <div></div>
                         </div>
-                        ${html}
-                    </ul>
+                        <div class="contentTable">
+                            ${html}
+                        </div>
+                    </div>
                 `
     }
 }

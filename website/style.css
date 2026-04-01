@@ -978,3 +978,58 @@ color-selector button.selector {
     font-size: 16px;
     width: 34ch;
 }
+
+div.contentTable {
+    display: grid;
+    gap: .5rem .25rem;
+}
+
+stockgroups-starred-list div.contentTable {
+    grid-template-columns: 1fr auto auto;
+}
+
+div.contentTable .containing {
+    grid-column: 1/final;
+    display: grid;
+    grid-template-columns: subgrid;
+    background-color: var(--bg);
+    border-radius: var(--border-radius);
+    padding: .25rem;
+    transition: var(--bg-transition);
+}
+
+div.contentTable .containing:hover {
+    background-color: var(--bg-light);
+    color: var(--text);
+    box-shadow: var(--button-hover-shadow);
+}
+
+.value {
+    background-color: var(--bg-light);
+    font-family: "Ubuntu Mono",monospace;
+    padding: .75rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    transition: var(--bg-transition);
+    color: var(--text-muted);
+}
+
+.containing:hover .value {
+    background-color: var(--bg-very-light);
+    color: var(--text);
+}
+
+.name {
+    word-break: break-word;
+    text-decoration: none;
+    align-self: center;
+    color: var(--text-muted);
+}
+
+.containing:hover .name {
+    color: var(--text);
+}
+
+a.containing {
+    text-decoration: none;
+}
