@@ -8,12 +8,12 @@ class recentArticlesElement extends HTMLElement {
                     <h2>${getTranslatedStr("articles.recent_articles.title_all")}</h2>
                     <div></div>
                 </div>
-                <ul class="inner">
-                    <p>${getTranslatedStr("articles.recent_articles.loading")}</p>
-                </ul>
+                <div class="contentTable grid-0-name-2">
+                    <p class="grid-full-width">${getTranslatedStr("articles.recent_articles.loading")}</p>
+                </div>
             </div>`
         this.offset = 0
-        this.articlesList = this.querySelector("ul.inner")
+        this.articlesList = this.querySelector("div.contentTable")
         this.btnToggleViewed = this.querySelector("button.toggleViewed")
         this.titleElem = this.querySelector("div.titlebar h2")
         this.onlyUnread = false
@@ -35,42 +35,36 @@ class recentArticlesElement extends HTMLElement {
 
             if (resp["Data"] === null || resp["Data"].length === 0) {
                 this.articlesList.innerHTML = `
-                        <p>${this.onlyUnread ? getTranslatedStr("articles.recent_articles.no_unread_articles") : getTranslatedStr("articles.recent_articles.no_articles")}</p>
+                        <p class="grid-full-width">${this.onlyUnread ? getTranslatedStr("articles.recent_articles.no_unread_articles") : getTranslatedStr("articles.recent_articles.no_articles")}</p>
                 `
             } else {
                 resp["Data"].forEach(e => {
-                    html += `<li class="articlePreview ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}">
-                            <a is="a-button" href="/articles/${e["ID"]}">
-                                <div class="title">${sanitiseText(e["Title"])}</div>
-                                <div class="info">
-                                    <div class="change">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
-                                    <div class="change">${e["TotalInfluences"]} ${getTranslatedStr("articles.affected")}</div>
-                                </div>
-                            </a>
-                        </li>`
+                    html += `
+                            <a class="containing ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" is="a-button" href="/articles/${e["ID"]}" data-article-id="${e["ID"]}">
+                                <div class="name">${sanitiseText(e["Title"])}</div>
+                                <div class="value">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
+                                <div class="value">${e["TotalInfluences"]} ${getTranslatedStr("articles.affected")}</div>
+                            </a>`
                 })
 
                 this.articlesList.innerHTML = `
                         ${html}
-                        <button class="articlePreview loadMore">${getTranslatedStr("articles.load_more")}</button>
+                        <button class="loadMore grid-full-width">${getTranslatedStr("articles.load_more")}</button>
                 `
                 const loadMoreBtn = this.querySelector("button.loadMore")
-                const ul = this.querySelector("ul.inner")
                 loadMoreBtn.addEventListener("click", () => {
                     fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
                         resp["Data"].forEach(e => {
-                            const elem = document.createElement("li")
-                            elem.classList.add("articlePreview")
+                            const elem = new aLinkButtonElement()
+                            elem.classList.add("containing")
                             elem.classList.add(`${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}"`)
                             elem.dataset.articleId = e["ID"]
-                            elem.innerHTML = `<a is="a-button" href="/articles/${e["ID"]}">
-                                              <div class="title">${sanitiseText(e["Title"])}</div>
-                                              <div class="info">
-                                                    <div class="change">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
-                                                    <div class="change">${e["TotalInfluences"]} ${getTranslatedStr("articles.affected")}</div>
-                                              </div>
+                            elem.href = `/articles/${e["ID"]}`
+                            elem.innerHTML = `<div class="name">${sanitiseText(e["Title"])}</div>
+                                              <div class="value">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
+                                              <div class="value">${e["TotalInfluences"]} ${getTranslatedStr("articles.affected")}</div>
                                           </a>`
-                            ul.insertBefore(elem, loadMoreBtn)
+                            this.articlesList.insertBefore(elem, loadMoreBtn)
                         })
                         if (resp["Data"].length < 10) {
                             loadMoreBtn.remove()

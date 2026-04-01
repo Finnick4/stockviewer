@@ -8,12 +8,12 @@ class relevantArticlesElement extends HTMLElement {
                     <h2>${getTranslatedStr("articles.relevant_articles.title_all")}</h2>
                     <div></div>
                 </div>
-                <ul class="inner">
-                    <p>${getTranslatedStr("articles.relevant_articles.loading")}</p>
-                </ul>
+                <div class="contentTable grid-0-name-3">
+                    <p class="grid-full-width">${getTranslatedStr("articles.relevant_articles.loading")}</p>
+                </div>
             </div>`
         this.offset = 0
-        this.articlesList = this.querySelector("ul.inner")
+        this.articlesList = this.querySelector("div.contentTable")
         this.btnToggleViewed = this.querySelector("button.toggleViewed")
         this.titleElem = this.querySelector("div.titlebar h2")
         this.onlyUnread = false
@@ -35,20 +35,17 @@ class relevantArticlesElement extends HTMLElement {
 
             if (resp["Data"] === null || resp["Data"].length === 0) {
                 this.articlesList.innerHTML = `
-                        <p>${this.onlyUnread ? getTranslatedStr("articles.relevant_articles.no_unread_articles") : getTranslatedStr("articles.relevant_articles.no_articles")}</p>
+                        <p class="grid-full-width">${this.onlyUnread ? getTranslatedStr("articles.relevant_articles.no_unread_articles") : getTranslatedStr("articles.relevant_articles.no_articles")}</p>
                 `
             } else {
                 resp["Data"].forEach(e => {
-                    html += `<li class="articlePreview ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}">
-                            <a is="a-button" href="/articles/${e["ID"]}">
-                                <div class="title">${sanitiseText(e["Title"])}</div>
-                                <div class="info">
-                                    <div class="change">${getShortNumber(e["TotalViews"])} view${Number(e["TotalViews"]) === 1 ? "" : "s"}</div>
-                                    <div class="change">${e["TotalRelevantAbsPermille"]}&permil; ${getTranslatedStr("articles.total_change")}</div>
-                                    <div class="change">${e["TotalRelevantInfluences"]} ${getTranslatedStr("articles.affected")}</div>
-                                </div>
-                            </a>
-                        </li>`
+                    html += `
+                            <a class="articlePreview containing ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}" is="a-button" href="/articles/${e["ID"]}">
+                                <div class="name">${sanitiseText(e["Title"])}</div>
+                                <div class="value">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
+                                <div class="value">${e["TotalRelevantAbsPermille"]}&permil; ${getTranslatedStr("articles.total_change")}</div>
+                                <div class="value">${e["TotalRelevantInfluences"]} ${getTranslatedStr("articles.affected")}</div>
+                            </a>`
                 })
 
                 this.articlesList.innerHTML = html

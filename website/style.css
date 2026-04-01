@@ -984,8 +984,24 @@ div.contentTable {
     gap: .5rem .25rem;
 }
 
-stockgroups-starred-list div.contentTable {
+div.contentTable.grid-1-name-3 {
+    grid-template-columns: auto 1fr auto auto auto;
+}
+
+div.contentTable.grid-1-name-1 {
+    grid-template-columns: auto 1fr auto;
+}
+
+div.contentTable.grid-0-name-3 {
+    grid-template-columns: 1fr auto auto auto;
+}
+
+div.contentTable.grid-0-name-2 {
     grid-template-columns: 1fr auto auto;
+}
+
+div.contentTable .grid-full-width {
+    grid-column: 1/final;
 }
 
 div.contentTable .containing {
@@ -1010,6 +1026,7 @@ div.contentTable .containing:hover {
     padding: .75rem;
     border-radius: var(--border-radius);
     text-align: center;
+    align-self: center;
     transition: var(--bg-transition);
     color: var(--text-muted);
 }
@@ -1027,6 +1044,25 @@ div.contentTable .containing:hover {
 }
 
 .containing:hover .name {
+    color: var(--text);
+}
+
+.shorthand {
+    background-color: var(--bg-light);
+    font-family: "Ubuntu Mono",monospace;
+    padding: .75rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    align-self: center;
+    transition: var(--bg-transition);
+    color: var(--text-muted);
+}
+.containing:hover .shorthand {
+    background-color: var(--bg-very-light);
+    color: var(--text);
+}
+
+.shorthand.colored {
     color: var(--text);
 }
 

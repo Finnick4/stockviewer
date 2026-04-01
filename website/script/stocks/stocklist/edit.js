@@ -16,27 +16,24 @@ class stocklistEdit extends HTMLElement {
         let html = ""
         data.forEach(e => {
             const shortPrice = getShortNumber(e["Price"]/100)
-            html += `<li class="stockOverview" data-stock-id="${e["ID"]}">
-                            <div class="containing" onclick="showEditStockModal(${e["ID"]})">
-                                <div class="identification">
-                                    <div class="change shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
-                                    <div class="stockName">${sanitiseText(e["Name"])}</div>
-                                </div>
-                                <div class="info">
-                                    <div class="change">${shortPrice}</div>
-                                </div>
-                            </div>
-                        </li>`
+            html += `
+                <div class="containing" onclick="showEditStockModal(${e["ID"]})" data-stock-id="${e["ID"]}">
+                    <div class="shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
+                    <div class="name">${sanitiseText(e["Name"])}</div>
+                    <div class="value">${shortPrice}</div>
+                </div>`
         })
 
-        that.innerHTML = `<ul class="inner">
+        that.innerHTML = `<div class="inner">
                         <div class="titlebar">
                             <div></div>
                             <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
                             <div></div>
                         </div>
-                        ${html}
-                    </ul>
+                        <div class="contentTable grid-1-name-1">
+                            ${html}
+                        </div>
+                    </div>
                 `
     }
 }

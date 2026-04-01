@@ -33,29 +33,26 @@ class affectedStocks extends HTMLElement {
             const color = `#${getHexColor(Number(stock["Color"]))}`
             const influence = that.influences.find(infl => infl["StockID"] === stock["ID"])
 
-            html += `<li class="stockOverview"  data-stock-id="${stock["ID"]}">
-                            <a class="containing" is="a-button" href="/stocks/${stock["ID"]}">
-                                <div class="identification">
-                                    <div class="change shorthand ${Number(stock["Color"]) === -1 ? "" : "colored"}" style="background-color: ${color}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
-                                    <div class="stockName">${sanitiseText(stock["Name"])}</div>
-                                </div>
-                                <div class="info">
-                                    <div class="change">${shortPrice}</div>
-                                    <div class="change">${influence["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
-                                    <div class="change">${influence["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>
-                                </div>
-                            </a>
-                        </li>`
+            html += `
+                <a class="containing" is="a-button" href="/stocks/${stock["ID"]}" data-stock-id="${stock["ID"]}">
+                        <div class="shorthand ${Number(stock["Color"]) === -1 ? "" : "colored"}" style="background-color: ${color}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
+                        <div class="name">${sanitiseText(stock["Name"])}</div>
+                        <div class="value">${shortPrice}</div>
+                        <div class="value">${influence["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
+                        <div class="value">${influence["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>
+                </a>`
         })
 
-        that.innerHTML = `<ul class="inner">
+        that.innerHTML = `<div class="inner">
                         <div class="titlebar">
                             <div></div>
                             <h2>${getTranslatedStr("articles.affected_stocks.title")}</h2>
                             <div></div>
                         </div>
-                        ${html}
-                    </ul>
+                        <div class="contentTable grid-1-name-3">
+                            ${html}
+                        </div>
+                    </div>
                 `
     }
 

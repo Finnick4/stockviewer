@@ -36,7 +36,7 @@ class stockgroupsStarredList extends HTMLElement {
                             <h2>${getTranslatedStr("stockgroups.starred_list.title")}</h2>
                             <div></div>
                         </div>
-                        <div class="contentTable">
+                        <div class="contentTable grid-0-name-2">
                             ${html}
                         </div>
                     </div>

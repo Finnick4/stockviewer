@@ -4,23 +4,22 @@ class relatedStocks extends HTMLElement {
         let template = ""
 
         for (let i = 0; i < 5; i++) {
-            template += `<li class="stockOverview">
+            template += `
                             <a class="containing" is="a-button" href="/stocks">
-                                <div class="stockName">${getTranslatedStr("stocks.related.stock_loading_name")}</div>
-                                <div class="info">
-                                    <div class="change">???</div>
-                                    <div class="change">+???€</div>
-                                    <div class="change">???%</div>
-                                </div>
-                            </a>
-                        </li>`
+                                <div class="name">${getTranslatedStr("stocks.related.stock_loading_name")}</div>
+                                <div class="value">???</div>
+                                <div class="value">+???€</div>
+                                <div class="value">???%</div>
+                            </a>`
         }
 
         this.innerHTML = `
-                        <ul class="inner">
+                        <div class="inner">
                             <h2>${getTranslatedStr("stocks.related.related_stocks")}</h2>
-                            ${template}                    
-                        </ul>
+                            <div class="contentTable grid-0-name-3">
+                                ${template}                    
+                            </div>
+                        </div>
                         `
         this.closeSubscription = subscribeToAPI(`/api/stocks/sse/`, addThisToFunctionCall(this.updateData, this))
     }
@@ -37,34 +36,24 @@ class relatedStocks extends HTMLElement {
         let elements = ""
 
         const addNoneElement = () => {
-            elements += `<li class="stockOverview">
+            elements += `
                         <a class="containing" is="a-button" href="/stocks">
-                            <div class="identification">
-                                <div class="change shorthand">?????</div>
-                                <div class="stockName">${getTranslatedStr("stocks.related.stock_none_name")}</div>
-                            </div>
-                            <div class="info">
-                                <div class="change">---</div>
-                                <div class="change">--€</div>
-                                <div class="change">--%</div>
-                            </div>
-                        </a>
-                    </li>`
+                            <div class="shorthand">?????</div>
+                            <div class="name">${getTranslatedStr("stocks.related.stock_none_name")}</div>
+                            <div class="value">---</div>
+                            <div class="value">--€</div>
+                            <div class="value">--%</div>
+                        </a>`
         }
         const addComparingElement = (elem) => {
-            elements += `<li class="stockOverview">
+            elements += `
                         <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
-                            <div class="identification">
-                                <div class="change shorthand ${Number(elem["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(elem["Color"])}">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
-                                <div class="stockName">${sanitiseText(elem["Name"])}</div>
-                            </div>
-                            <div class="info">
-                                <div class="change">${getShortNumber(elem["Price"]/100)}</div>
-                                <div class="change">${(elem["Price"] - thisStock["Price"] >= 0 ? "+" : "") + getShortNumber(((elem["Price"] - thisStock["Price"])/100))}</div>
-                                <div class="change">${getShortNumber(((elem["Price"]/thisStock["Price"]) * 100))}%</div>
-                            </div>
-                        </a>
-                    </li>`
+                            <div class="shorthand ${Number(elem["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(elem["Color"])}">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
+                            <div class="name">${sanitiseText(elem["Name"])}</div>
+                            <div class="value">${getShortNumber(elem["Price"]/100)}</div>
+                            <div class="value">${(elem["Price"] - thisStock["Price"] >= 0 ? "+" : "") + getShortNumber(((elem["Price"] - thisStock["Price"])/100))}</div>
+                            <div class="value">${getShortNumber(((elem["Price"]/thisStock["Price"]) * 100))}%</div>
+                        </a>`
         }
 
         if (thisStockIndex !== sorted.length - 1) {
@@ -94,10 +83,12 @@ class relatedStocks extends HTMLElement {
         }
 
         that.innerHTML = `
-                        <ul class="inner">
+                        <div class="inner">
                             <h2>${getTranslatedStr("stocks.related.related_stocks")}</h2>
-                            ${elements}
-                        </ul>
+                            <div class="contentTable grid-1-name-3">                            
+                                ${elements}
+                            </div>
+                        </div>
                         `
     }
 }

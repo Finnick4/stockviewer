@@ -22,22 +22,17 @@ class stocklistDelta extends HTMLElement {
         let html = ""
         data.forEach(e => {
             const shortPrice = getShortNumber(e["Price2"]/100)
-            html += `<li class="stockOverview"  data-stock-id="${e["ID"]}">
-                            <a class="containing" is="a-button" href="/stocks/${e["ID"]}">
-                                <div class="identification">
-                                    <div class="change shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
-                                    <div class="stockName">${sanitiseText(e["Name"])}</div>
-                                </div>
-                                <div class="info ${e["DeltaAmount"] >= 0 ? "positive" : "negative"}">
-                                    <div class="change">${shortPrice}</div>
-                                    <div class="change">${(e["DeltaAmount"] >= 0 ? "+" : "") + getShortNumber(e["DeltaAmount"] / 100)}€</div>
-                                    <div class="change">${getShortNumber((e["Price2"]/e["Price1"] - 1.0)*100)}%</div>
-                                </div>
-                            </a>
-                        </li>`
+            html += `
+                            <a class="containing" is="a-button" href="/stocks/${e["ID"]}" data-stock-id="${e["ID"]}">
+                                <div class="shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
+                                <div class="name">${sanitiseText(e["Name"])}</div>
+                                <div class="value">${shortPrice}</div>
+                                <div class="value">${(e["DeltaAmount"] >= 0 ? "+" : "") + getShortNumber(e["DeltaAmount"] / 100)}€</div>
+                                <div class="value">${getShortNumber((e["Price2"]/e["Price1"] - 1.0)*100)}%</div>
+                            </a>`
         })
 
-        that.innerHTML = `<ul class="inner">
+        that.innerHTML = `<div class="inner">
                         <div class="titlebar">
                             <nav class="timeframeSelector">
                                 <button class="tf" data-tf="1">30m</button>
@@ -48,8 +43,10 @@ class stocklistDelta extends HTMLElement {
                             <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
                             <div></div>
                         </div>
-                        ${html}
-                    </ul>
+                        <div class="contentTable grid-1-name-3">
+                            ${html}
+                        </div>
+                    </div>
                 `
         that.querySelectorAll("button.tf").forEach(b => {
             if (Number(b.dataset.tf) === Number(that.timeframe)) {

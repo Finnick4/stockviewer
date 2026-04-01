@@ -18,21 +18,20 @@ class stockInfluenceList extends HTMLElement {
 
             let html = ""
             data.forEach(article => {
-                html += `<li class="articlePreview" data-article-id="${article["ArticleID"]}">
-                            <a is="a-button" href="/articles/${article["ArticleID"]}">
-                                <div class="title">${sanitiseText(article["ArticleTitle"])}</div>
-                                <div class="info ${article["PermillePerDay"] >= 0 ? "positive" : "negative"}">
-                                    <div class="change">${article["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
-                                    <div class="change">${article["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>
-                                </div>
-                            </a>
-                        </li>`
+                html += `
+                    <a is="a-button" href="/articles/${article["ArticleID"]}" data-article-id="${article["ArticleID"]}">
+                        <div class="name">${sanitiseText(article["ArticleTitle"])}</div>
+                        <div class="value">${article["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
+                        <div class="value">${article["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>
+                    </a>`
             })
 
-            this.innerHTML = `<ul class="inner">
+            this.innerHTML = `<div class="inner">
                         <nav><h2>${getTranslatedStr("stocks.influences.influences")}</h2></nav>
-                        ${html}
-                    </ul>
+                        <div class="contentTable grid-0-name-2">                        
+                            ${html}
+                        </div>
+                    </div>
                 `
         })
     }
