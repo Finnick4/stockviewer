@@ -839,6 +839,9 @@ div.contentTable.grid-0-name-2 {
 div.contentTable.grid-influence-stock-selector {
     grid-template-columns: 1fr 1fr 2rem;
 }
+div.contentTable.grid-stock-selector {
+    grid-template-columns: 1fr 2rem;
+}
 
 div.contentTable .grid-full-width {
     grid-column: 1/final;

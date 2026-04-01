@@ -5,9 +5,9 @@ class stockSelectorElement extends HTMLElement {
                     <p>${getTranslatedStr("stocks.selector.stock_selection")}</p>
                     <input type="text" class="search" placeholder="${getTranslatedStr("stocks.search_placeholder")}">
                 </div>
-                <ul class="inner">
-                    <li class="placeholder">${getTranslatedStr("stocks.selector.empty_selection")}</li>
-                </ul>`
+                <div class="contentTable grid-stock-selector">
+                    <p class="placeholder grid-full-width">${getTranslatedStr("stocks.selector.empty_selection")}</p>
+                </div>`
 
         this.readOnly = false
 
@@ -15,7 +15,7 @@ class stockSelectorElement extends HTMLElement {
 
         const search = this.querySelector("input.search")
         const dropdown = document.getElementById(this.dropdownid)
-        const inner = this.querySelector("ul.inner")
+        const inner = this.querySelector("div.contentTable")
         this.savedStocks = new Set()
 
         search.popovertarget = this.dropdownid
@@ -34,19 +34,19 @@ class stockSelectorElement extends HTMLElement {
                 if (this.savedStocks.has(Number(id)) || this.readOnly) {
                     return
                 }
-                const elem = document.createElement("li")
-                elem.classList.add("stockOverview")
+                const elem = document.createElement("div")
+                elem.classList.add("containing")
                 elem.dataset.stockId = id
                 const name = sanitiseText(idNameMap.get(Number(id)))
                 elem.innerHTML = `
                     <div class="containing">
-                        <div class="stockName">${sanitiseText(name)}</div>
+                        <div class="name">${sanitiseText(name)}</div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
                     </div>`
                 inner.append(elem)
-                const placeholder = inner.querySelector(`li.placeholder`)
+                const placeholder = inner.querySelector(`p.placeholder`)
                 if (placeholder !== null) {
                     inner.removeChild(placeholder)
                 }
@@ -90,11 +90,12 @@ class stockSelectorElement extends HTMLElement {
             return
         }
         this.savedStocks.delete(Number(id))
-        const inner = this.querySelector("ul.inner")
-        inner.removeChild(inner.querySelector(`li.stockOverview[data-stock-id="${id}"]`))
-        if (inner.querySelectorAll("li.stockOverview").length === 0) {
-            const placeholder = document.createElement("li")
+        const inner = this.querySelector("div.contentTable")
+        inner.removeChild(inner.querySelector(`div.containing[data-stock-id="${id}"]`))
+        if (inner.querySelectorAll("div.containing").length === 0) {
+            const placeholder = document.createElement("p")
             placeholder.className = "placeholder"
+            placeholder.className = "grid-full-width"
             placeholder.innerHTML = getTranslatedStr("stocks.selector.empty_selection")
             inner.append(placeholder)
         }
@@ -105,20 +106,18 @@ class stockSelectorElement extends HTMLElement {
             const idNameMap = new Map(data.map((stock) => [stock["ID"], stock["Name"]]));
 
             this.savedStocks = new Set()
-            const inner = this.querySelector("ul.inner")
+            const inner = this.querySelector("div.contentTable")
             inner.innerHTML = ""
             arr.forEach(stockid => {
-                const elem = document.createElement("li")
-                elem.classList.add("stockOverview")
+                const elem = document.createElement("div")
+                elem.classList.add("containing")
                 elem.dataset.stockId = stockid
                 const name = sanitiseText(idNameMap.get(Number(stockid)))
                 elem.innerHTML = `
-                    <div class="containing">
-                        <div class="stockName">${sanitiseText(name)}</div>
+                        <div class="name">${sanitiseText(name)}</div>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
-                        </div>
-                    </div>`
+                        </div>`
                 inner.append(elem)
 
                 const removeBtn = elem.querySelector(".removeStockBtn")
