@@ -4,12 +4,12 @@ class articleHeader extends HTMLElement {
             <h1></h1>
             <div class="subtitle">
                 <div class="creationInfo">
-                    <div class="creationDate change"></div>
-                    <div class="author change"></div>
+                    <div class="creationDate value"></div>
+                    <div class="author value"></div>
                 </div>
                 <div class="articleReception">
-                    <div class="change views"></div>
-                    <div class="change hearts"></div>
+                    <div class="value views"></div>
+                    <div class="value hearts"></div>
                 </div>
             </div>
         `

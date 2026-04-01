@@ -40,7 +40,7 @@ class relevantArticlesElement extends HTMLElement {
             } else {
                 resp["Data"].forEach(e => {
                     html += `
-                            <a class="articlePreview containing ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}" is="a-button" href="/articles/${e["ID"]}">
+                            <a class="containing ${Boolean(e["Viewed"]) ? "viewed" : "unviewed"}" data-article-id="${e["ID"]}" is="a-button" href="/articles/${e["ID"]}">
                                 <div class="name">${sanitiseText(e["Title"])}</div>
                                 <div class="value">${getShortNumber(e["TotalViews"])} ${Number(e["TotalViews"]) === 1 ? getTranslatedStr("articles.view") : getTranslatedStr("articles.views")}</div>
                                 <div class="value">${e["TotalRelevantAbsPermille"]}&permil; ${getTranslatedStr("articles.total_change")}</div>

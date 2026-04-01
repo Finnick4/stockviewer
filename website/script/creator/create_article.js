@@ -69,7 +69,7 @@ function showModalCreateArticle(elem) {
         let escape = false
         stockInfluenceSelector.savedStocks.forEach(stockid => {
             if (!isNaN(stockid)) {
-                const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${stockid}"] edit-influence`).dropdownElem
+                const influenceDropdownElem = stockInfluenceSelector.querySelector(`div.containing[data-stock-id="${stockid}"] edit-influence`).dropdownElem
                 if (influenceDropdownElem === undefined) {
                     seterr(getTranslatedStr("articles.modify.err_influences_generic"))
                     escape = true
@@ -133,7 +133,7 @@ function showModalCreateArticle(elem) {
             stockInfluenceSelector.savedStocks.forEach(stockid => {
                 if (!isNaN(stockid)) {
                     const numStockID = Number(stockid)
-                    const influenceDropdownElem = stockInfluenceSelector.querySelector(`li.stockOverview[data-stock-id="${numStockID}"] edit-influence`).dropdownElem
+                    const influenceDropdownElem = stockInfluenceSelector.querySelector(`div.containing[data-stock-id="${numStockID}"] edit-influence`).dropdownElem
 
                     const permille = influenceDropdownElem.querySelector(`input.permille`)
                     const minutes = influenceDropdownElem.querySelector(`input.minutes`)

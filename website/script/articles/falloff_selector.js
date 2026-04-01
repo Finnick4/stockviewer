@@ -6,19 +6,19 @@ class falloffSelectorElement extends HTMLElement {
 
         this.readOnly = false
 
-        const dropdownid = createDropdown(`
+        this.dropdownid = createDropdown(`
             <div class="currentDisplay">${getTranslatedStr("articles.falloff_currently")}: ${getTranslatedStr("articles.falloff.none")}</div>
             <button class="option">${getTranslatedStr("articles.falloff.linear")}</button>
             <button class="option">${getTranslatedStr("articles.falloff.quadratic")}</button>
             <button class="option">${getTranslatedStr("articles.falloff.cubic")}</button>
         `)
 
-        this.dropdown = document.getElementById(dropdownid)
+        this.dropdown = document.getElementById(this.dropdownid)
         this.selector = this.querySelector("button.selector")
         this.currentDisplayHead = this.dropdown.querySelector("div.currentDisplay")
 
-        this.selector.popovertarget = dropdownid
-        this.selector.style.anchorName = `--anchor-${dropdownid}`
+        this.selector.popovertarget = this.dropdownid
+        this.selector.style.anchorName = `--anchor-${this.dropdownid}`
         this.dropdown.style.width = `calc(${this.selector.style.width} - 2rem)`
         this.selector.onclick = () => {
             if (!this.readOnly) {

@@ -144,33 +144,18 @@ main.individualStockPage stock-groups-list {
     grid-column: 4/6;
 }
 
-div.change.creationDate {
+div.creationDate {
     width: fit-content;
     background-color: var(--bg);
 }
-div.change.shorthand {
-    width: 5ch;
-    background-color: var(--bg-light);
-    align-self: center;
-}
-div.change.shorthand.colored {
-    color: var(--text);
-}
-div.titlebar div.info div.change.shorthand {
+
+div.titlebar div.info div.value {
     color: var(--text);
     background-color: var(--bg);
 }
 
-div.info {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    margin: .25rem;
-    color: var(--text);
-}
-div.change.author {
+div.author {
     background-color: var(--bg);
-    max-width: calc(100% - 19ch - 1.5rem);
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -419,11 +404,6 @@ stock-influence-selector .stockOverview .containing {
     background-color: var(--bg-light);
 }
 
-edit-influence {
-    width: 20rem;
-    display: block;
-}
-
 edit-influence button.influenceOverview {
     background-color: var(--bg-light);
     display: flex;
@@ -432,6 +412,10 @@ edit-influence button.influenceOverview {
     width: 100%;
     padding: .5rem;
 }
+div.containing:hover edit-influence button.influenceOverview {
+    background-color: var(--bg-very-light);
+}
+
 div.dropdown div.pair {
     display: flex;
     justify-content: space-between;
@@ -664,77 +648,6 @@ ul.inner p {
     text-align: center;
 }
 
-.stockOverview {
-    background-color: var(--bg);
-    color: var(--text-muted);
-    max-width: 100%;
-    border-radius: var(--border-radius);
-    transition: var(--bg-transition), color 0.1s;
-    margin: 0;
-    align-items: center;
-}
-
-.stockOverview .containing {
-    display: flex;
-    justify-content: space-between;
-    text-decoration: none;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.stockOverview:hover {
-    background-color: var(--bg-light);
-    color: var(--text);
-    box-shadow: var(--button-hover-shadow);
-}
-
-.stockOverview:hover .change {
-    color: var(--text);
-    background-color: var(--bg-very-light);
-}
-
-.stockName {
-    word-break: break-word;
-    max-width: 32ch;
-    min-width: 20ch;
-    margin: 1ch;
-    text-decoration: none;
-    align-self: center;
-    color: var(--text-muted);
-}
-
-.stockOverview .identification {
-    align-self: center;
-    display: flex;
-    gap: .5rem;
-    margin: .25rem;
-}
-
-.stockOverview:hover .stockName {
-    color: var(--text);
-}
-
-.articlePreview {
-    background-color: var(--bg);
-    color: var(--text-muted);
-    max-width: 100%;
-    border-radius: var(--border-radius);
-    transition: var(--bg-transition), color 0.1s;
-    margin: 0;
-    align-items: center;
-}
-
-.articlePreview a {
-    display: flex;
-    justify-content: space-between;
-    text-decoration: none;
-}
-
-.articlePreview:hover {
-    background-color: var(--bg-light);
-    color: var(--text);
-    box-shadow: var(--button-hover-shadow);
-}
 .title {
     word-break: break-word;
     width: 40%;
@@ -742,50 +655,6 @@ ul.inner p {
     text-decoration: none;
     align-self: center;
     color: var(--text-muted);
-}
-
-.articlePreview:hover .titel {
-    color: var(--text);
-}
-
-.articlePreview .change {
-    width: 12ch;
-}
-.articlePreview:hover .change {
-    color: var(--text);
-    background-color: var(--bg-very-light);
-}
-
-stockgroups-list .change {
-    width: 10ch;
-}
-
-.change {
-    display: inline-block;
-    background-color: var(--bg-light);
-    font-family: "Ubuntu Mono",monospace;
-    padding: .75rem;
-    border-radius: var(--border-radius);
-    width: 8ch;
-    text-align: center;
-    transition: var(--bg-transition);
-    color: var(--text-muted);
-}
-
-.positive > .change {
-    color: var(--positiv-muted);
-}
-
-.stockOverview:hover .positive > .change {
-    color: var(--positiv);
-}
-
-.negative > .change {
-    color: var(--negative-muted);
-}
-
-.stockOverview:hover .negative > .change {
-    color: var(--negative);
 }
 
 nav.timeframeSelector {
@@ -869,39 +738,10 @@ stock-chart svg line.axis {
     justify-self: left;
 }
 
-.price {
-    display: inline-block;
-    background-color: var(--bg);
-    font-family: "Ubuntu Mono",monospace;
-    padding: .75rem;
-    border-radius: var(--border-radius);
-    width: fit-content;
-    text-align: center;
-    transition: var(--bg-transition);
-    color: var(--text);
-    align-self: center;
-}
-.members {
-    display: inline-block;
-    background-color: var(--bg);
-    font-family: "Ubuntu Mono",monospace;
-    padding: .75rem;
-    border-radius: var(--border-radius);
-    margin: 1ch 0;
-    width: fit-content;
-    text-align: center;
-    transition: var(--bg-transition);
-    color: var(--text);
-    align-self: center;
-}
-
 .articleList nav.displaySelector {
     display: flex;
     justify-content: start;
     justify-self: left;
-}
-.articleList div.inner ul.inner {
-    padding: 0;
 }
 
 .article {
@@ -914,7 +754,7 @@ stock-chart svg line.axis {
     margin: auto auto 1rem;
 }
 div.titlebar:has(article-header) {
-    grid-template-columns: 1fr 50rem 1fr;
+    grid-template-columns: 1fr 52rem 1fr;
 }
 
 article-header div.subtitle {
@@ -923,13 +763,13 @@ article-header div.subtitle {
     justify-content: space-between;
     margin-bottom: 1rem;
 }
-article-header div.subtitle div:not(.change) {
+article-header div.subtitle div:not(.value) {
     max-width: 50%;
     display: flex;
     gap: .5rem;
     align-items: center;
 }
-article-header div.subtitle div.change {
+article-header div.subtitle div.value {
     background-color: var(--bg);
     height: 1.5rem;
     align-self: center;
@@ -942,10 +782,6 @@ influenced-stocks {
     width: 52rem;
     display: block;
     margin: auto auto 1rem;
-}
-
-influenced-stocks div.change {
-    width: 10ch;
 }
 
 div.piechart {
@@ -1000,6 +836,10 @@ div.contentTable.grid-0-name-2 {
     grid-template-columns: 1fr auto auto;
 }
 
+div.contentTable.grid-influence-stock-selector {
+    grid-template-columns: 1fr 1fr 2rem;
+}
+
 div.contentTable .grid-full-width {
     grid-column: 1/final;
 }
@@ -1021,6 +861,7 @@ div.contentTable .containing:hover {
 }
 
 .value {
+    display: inline;
     background-color: var(--bg-light);
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;
@@ -1047,7 +888,8 @@ div.contentTable .containing:hover {
     color: var(--text);
 }
 
-.shorthand {
+.shorthand:not(input) {
+    display: inline;
     background-color: var(--bg-light);
     font-family: "Ubuntu Mono",monospace;
     padding: .75rem;

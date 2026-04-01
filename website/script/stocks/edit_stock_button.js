@@ -26,7 +26,7 @@ function showEditStockModal(stockID) {
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
         const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
-        let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="change shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
+        let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
                         <div class="pair">
                             <p>${getTranslatedStr("stocks.name")}</p>
                             <input class="name" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_name_placeholder")}" value="${sanitiseText(stockName)}">

@@ -4,9 +4,9 @@ class stockGroupHeader extends HTMLElement {
 
         this.innerHTML = `
                         <div class="titlebar">
-                            <div>
-                                <div class="change price">???€</div>
-                                <div class="change members">${getTranslatedStr("stockgroups.header_element.member_count")}</div>
+                            <div class="info">
+                                <div class="value price">???€</div>
+                                <div class="value members">${getTranslatedStr("stockgroups.header_element.member_count")}</div>
                             </div>
                             <h1>${getTranslatedStr("stockgroups.header_element.loading_name")}</h1>
                             <nav class="buttons">

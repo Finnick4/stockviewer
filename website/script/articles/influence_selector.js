@@ -5,9 +5,9 @@ class stockInfluenceSelectorElement extends HTMLElement {
                     <p>${getTranslatedStr("articles.influence_selector.title")}</p>
                     <input type="text" class="search" placeholder="${getTranslatedStr("stocks.search_placeholder")}">
                 </div>
-                <ul class="inner">
-                    <li class="placeholder">${getTranslatedStr("articles.influence_selector.no_influences")}</li>
-                </ul>`
+                <div class="contentTable grid-influence-stock-selector">
+                    <p class="placeholder grid-full-width">${getTranslatedStr("articles.influence_selector.no_influences")}</p>
+                </div>`
 
         this.readOnly = false
 
@@ -15,7 +15,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
 
         const search = this.querySelector("input.search")
         const dropdown = document.getElementById(this.dropdownid)
-        const inner = this.querySelector("ul.inner")
+        const inner = this.querySelector("div.contentTable")
         this.savedStocks = new Set()
 
         search.popovertarget = this.dropdownid
@@ -34,16 +34,13 @@ class stockInfluenceSelectorElement extends HTMLElement {
                 if (this.savedStocks.has(Number(id)) || this.readOnly) {
                     return
                 }
-                const elem = document.createElement("li")
-                elem.classList.add("stockOverview")
+                const elem = document.createElement("div")
+                elem.classList.add("containing")
                 elem.dataset.stockId = id
                 const name = sanitiseText(idNameMap.get(Number(id)))
                 elem.innerHTML = `
-                    <div class="containing">
-                        <div class="stockName">${sanitiseText(name)}</div>
-                        <div class="influenceInputs">
-                            <edit-influence data-stock-price="${resp["Data"].find(stock => Number(stock["ID"]) === Number(id))["Price"]}"></edit-influence>
-                        </div>
+                        <div class="name">${sanitiseText(name)}</div>
+                        <edit-influence data-stock-price="${resp["Data"].find(stock => Number(stock["ID"]) === Number(id))["Price"]}"></edit-influence>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
@@ -52,7 +49,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
                     this.onEdit()
                 }
                 inner.append(elem)
-                const placeholder = inner.querySelector(`li.placeholder`)
+                const placeholder = inner.querySelector(`p.placeholder`)
                 if (placeholder !== null) {
                     inner.removeChild(placeholder)
                 }
@@ -97,11 +94,12 @@ class stockInfluenceSelectorElement extends HTMLElement {
             return
         }
         this.savedStocks.delete(Number(id))
-        const inner = this.querySelector("ul.inner")
-        inner.removeChild(inner.querySelector(`li.stockOverview[data-stock-id="${id}"]`))
-        if (inner.querySelectorAll("li.stockOverview").length === 0) {
-            const placeholder = document.createElement("li")
+        const inner = this.querySelector("div.contentTable")
+        inner.removeChild(inner.querySelector(`div.containing[data-stock-id="${id}"]`))
+        if (inner.querySelectorAll("div.containing").length === 0) {
+            const placeholder = document.createElement("p")
             placeholder.className = "placeholder"
+            placeholder.className = "grid-full-width"
             placeholder.innerHTML = getTranslatedStr("articles.influence_selector.no_influences")
             inner.append(placeholder)
         }
@@ -111,10 +109,10 @@ class stockInfluenceSelectorElement extends HTMLElement {
     }
     setInfluences(influences) {
         this.savedStocks = new Set()
-        const inner = this.querySelector("ul.inner")
+        const inner = this.querySelector("div.contentTable")
 
         if (influences.length === 0) {
-            inner.innerHTML = `<li class="placeholder">${getTranslatedStr("articles.influence_selector.no_influences")}</li>`
+            inner.innerHTML = `<p class="placeholder grid-full-width">${getTranslatedStr("articles.influence_selector.no_influences")}</p>`
             this.onEdit()
             return
         }
@@ -123,15 +121,12 @@ class stockInfluenceSelectorElement extends HTMLElement {
         fetch(`/api/stockgroups/?members=${influenceStockIDs}`).then(r => r.json()).then(resp => {
             inner.innerHTML = ""
             influences.forEach(influence => {
-                const elem = document.createElement("li")
-                elem.classList.add("stockOverview")
+                const elem = document.createElement("div")
+                elem.classList.add("containing")
                 elem.dataset.stockId = influence.StockID
                 elem.innerHTML = `
-                    <div class="containing">
-                        <div class="stockName">${sanitiseText(influence.StockName)}</div>
-                        <div class="influenceInputs">
-                            <edit-influence data-stock-price="${resp["Data"]["Members"].find(stock => Number(stock["ID"]) === Number(influence.StockID))["Price"]}"  data-permil="${influence.PermillePerDay}" data-minutes="${influence.LengthMinutes}" data-falloff-type="${influence.FalloffType}"></edit-influence>
-                        </div>
+                        <div class="name">${sanitiseText(influence.StockName)}</div>
+                        <edit-influence data-stock-price="${resp["Data"]["Members"].find(stock => Number(stock["ID"]) === Number(influence.StockID))["Price"]}"  data-permil="${influence.PermillePerDay}" data-minutes="${influence.LengthMinutes}" data-falloff-type="${influence.FalloffType}"></edit-influence>
                         <div>
                             <span class="closeBtn removeStockBtn">&minus;</span>
                         </div>
