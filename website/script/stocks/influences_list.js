@@ -1,6 +1,6 @@
 class stockInfluenceList extends HTMLElement {
     connectedCallback() {
-        this.stockid = Number(this.getAttribute("data-stock-id"))
+        this.stockid = Number(this.dataset.stockId)
 
         this.innerHTML = `<div class="inner">
                 <nav><h2>${getTranslatedStr("stocks.influences.influences")}</h2></nav>
@@ -19,7 +19,7 @@ class stockInfluenceList extends HTMLElement {
             let html = ""
             data.forEach(article => {
                 html += `
-                    <a is="a-button" href="/articles/${article["ArticleID"]}" data-article-id="${article["ArticleID"]}">
+                    <a is="a-button" class="containing" href="/articles/${article["ArticleID"]}" data-article-id="${article["ArticleID"]}">
                         <div class="name">${sanitiseText(article["ArticleTitle"])}</div>
                         <div class="value">${article["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>
                         <div class="value">${article["LengthMinutes"]}${getTranslatedStr("articles.length_minutes_short")}</div>

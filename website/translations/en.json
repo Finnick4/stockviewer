@@ -199,6 +199,13 @@
             "title": "All members",
             "loading": "Loading stock data...",
             "none": "This group doesn't have any members!"
+        },
+        "influences": {
+            "title_all": "Influences on members",
+            "title_unread": "Unseen influences",
+            "loading": "Loading influences…",
+            "no_articles": "There are no influences",
+            "no_unread_articles": "There are no unseen influences"
         }
     },
     "network": {

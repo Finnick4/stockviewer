@@ -50,6 +50,8 @@ func Handler(r *chi.Mux) {
 		router.Get("/{groupID}", stockgroups.GetStockGroup)
 		router.Get("/{groupID}/sse", stockgroups.GetStockGroupSSE)
 		router.Put("/{groupID}/star", stockgroups.StarStockGroup)
+		router.Get("/{groupID}/influences", stockgroups.GetInfluences)
+		router.Get("/{groupID}/influences/unread", stockgroups.GetUnreadInfluences)
 
 		router.With(middleware.ExtractPermissions).Patch("/{groupID}", stockgroups.EditStockGroup)
 

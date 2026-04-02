@@ -17,7 +17,6 @@ class recentArticlesElement extends HTMLElement {
         this.btnToggleViewed = this.querySelector("button.toggleViewed")
         this.titleElem = this.querySelector("div.titlebar h2")
         this.onlyUnread = false
-        this.classList.add("articleList")
 
         this.btnToggleViewed.addEventListener("click", () => {
             this.onlyUnread = !this.onlyUnread

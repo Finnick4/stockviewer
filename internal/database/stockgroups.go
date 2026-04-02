@@ -237,6 +237,80 @@ GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`, userID)
 	return data, nil
 }
 
+func GetActiveInfluencesOnStockGroup(userID string, groupID int32) ([]dto.ArticleOverview, error) {
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
+	EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1) AS viewed,
+	COUNT(DISTINCT stockinfluences."stockId") AS "affected", SUM(ABS(permille))
+FROM articles
+	JOIN stockinfluences ON stockinfluences."articleId" = articles.id
+	LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+	JOIN stockgroupmembers ON stockgroupmembers."stockId" = stockinfluences."stockId"
+WHERE stockinfluences."remainingLength" > 0 AND "groupId" = $2
+GROUP BY articles.id, articles.title
+ORDER BY articles.id DESC LIMIT 10;`, userID, groupID)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var articles []dto.ArticleOverview
+
+	for rows.Next() {
+		article := dto.ArticleOverview{}
+
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
+}
+
+func GetActiveUnreadInfluencesOnStockGroup(userID string, groupID int32) ([]dto.ArticleOverview, error) {
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
+	false AS viewed,
+	COUNT(DISTINCT stockinfluences."stockId") AS "affected", SUM(ABS(permille))
+FROM articles
+	JOIN stockinfluences ON stockinfluences."articleId" = articles.id
+	LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+	JOIN stockgroupmembers ON stockgroupmembers."stockId" = stockinfluences."stockId"
+WHERE stockinfluences."remainingLength" > 0 
+  AND (NOT EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1 AND articleviews."articleId" = articles.id)) 
+  AND "groupId" = $2
+GROUP BY articles.id, articles.title
+ORDER BY articles.id DESC LIMIT 10;`, userID, groupID)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var articles []dto.ArticleOverview
+
+	for rows.Next() {
+		article := dto.ArticleOverview{}
+
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
+}
+
 func CreateStockGroup(name string, description string, creatorID string) (int32, error) {
 	db := getDB()
 
