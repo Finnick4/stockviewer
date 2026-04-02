@@ -250,59 +250,32 @@ func GetStocksPriceDelta(tf dto.Timeframe) ([]dto.PriceDelta, error) {
 
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, name, shorthand, COALESCE(color, -1), d.avrg FROM stocks JOIN LATERAL (SELECT time_bucket($1, timestamp) AS bucket, avg(price) AS avrg
-		FROM stockprice sp
-		WHERE stocks.id = stockid
-		GROUP BY bucket
-		ORDER BY bucket DESC LIMIT 2) d ON true
-		ORDER BY id;`, tf.TotalWidth())
+	rows, err := db.Query(`SELECT
+    stockid, name, shorthand, COALESCE(color, -1) AS color,
+    first(price, timestamp) AS beg_price,
+    last(price, timestamp) AS end_price
+FROM stockprice
+    JOIN stocks ON stockprice.stockid = stocks.id
+WHERE timestamp > ("latestUpdate" - $1::interval)
+GROUP BY stockid, name, shorthand, color;`, tf.TotalWidth())
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	defer rows.Close()
-	// new - old - new - old
+
 	var data []dto.PriceDelta
-	var i = 1
-	var currentData dto.PriceDelta
-	var currentID int64
 
 	for rows.Next() {
-		var price float64
-		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &price)
-
+		var currentData dto.PriceDelta
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price1, &currentData.Price2)
 		if err != nil {
 			log.Error(err)
 			return nil, err
 		}
-
-		if i == 2 {
-			if currentID != currentData.ID {
-				newID := currentData.ID
-
-				currentData.Price1 = 0
-
-				currentData.DeltaAmount = currentData.Price2 - currentData.Price1
-				currentData.DeltaPercent = (float64(currentData.Price2) / float64(currentData.Price1)) - 1.0
-				currentData.ID = currentID
-				data = append(data, currentData)
-
-				currentData.ID = newID
-				currentData.Price2 = int64(price)
-				i = 1
-				continue
-			}
-			currentData.Price1 = int64(price)
-
-			currentData.DeltaAmount = currentData.Price2 - currentData.Price1
-			currentData.DeltaPercent = (float64(currentData.Price2) / float64(currentData.Price1)) - 1.0
-			data = append(data, currentData)
-			i = 1
-		} else {
-			currentID = currentData.ID
-			currentData.Price2 = int64(price)
-			i++
-		}
+		currentData.DeltaAmount = currentData.Price2 - currentData.Price1
+		currentData.DeltaPercent = (float64(currentData.Price2) / float64(currentData.Price1)) - 1.0
+		data = append(data, currentData)
 	}
 	return data, nil
 }
