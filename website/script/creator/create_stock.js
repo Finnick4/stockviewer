@@ -72,7 +72,7 @@ function showModalCreateStock(elem) {
         }
 
         if (price.value < 10000000) {
-            seterr(getTranslatedStr("stocks.modify.err_initial_price_too_low", {price: getShortNumber(10000000) + "€"}))
+            seterr(getTranslatedStr("stocks.modify.err_initial_price_too_low", {price: getShortNumber(10000000 / 100) + "€"}))
             return false
         }
 

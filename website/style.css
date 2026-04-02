@@ -80,7 +80,7 @@ main {
 
 main.homepage {
     display: grid;
-    grid-template: 40rem auto / repeat(6, 1fr);
+    grid-template: fit-content(40rem) auto / repeat(6, 1fr);
     gap: 1rem;
 }
 
@@ -101,7 +101,7 @@ main.homepage .articleInbox {
 
 main.individualStockPage {
     display: grid;
-    grid-template: 4rem 40.3rem 20rem / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: 4rem 40.3rem auto / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
@@ -160,7 +160,7 @@ div.author {
 
 main.stockGroupOverviewPage {
     display: grid;
-    grid-template: 4rem auto / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: 4rem fit-content(25rem) / repeat(5, 1fr);
     gap: 1rem;
 }
 main.stockGroupOverviewPage stock-group-header {

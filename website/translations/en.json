@@ -133,9 +133,11 @@
             "values_okay": "The provided values are okay"
         },
         "influences": {
-            "influences": "Influences",
+            "title_all": "Influences",
+            "title_unread": "Unseen Influences",
             "loading": "Loading influences on stock…",
-            "no_active_influences": "This stock is currently not influenced by any article…"
+            "no_active_influences": "This stock is currently not influenced by any article…",
+            "no_unread_influences": "There are no unseen influences for this stock…"
         },
         "related": {
             "related_stocks": "Related Stocks",

@@ -14,7 +14,6 @@ class stockgroupInfluenceListElement extends HTMLElement {
                     <p class="grid-full-width">${getTranslatedStr("stockgroups.influences.loading")}</p>
                 </div>
             </div>`
-        this.offset = 0
         this.articlesList = this.querySelector("div.contentTable")
         this.btnToggleViewed = this.querySelector("button.toggleViewed")
         this.titleElem = this.querySelector("div.titlebar h2")

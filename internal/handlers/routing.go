@@ -32,6 +32,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/{stockID}", stocks.GetStock)
 		router.Get("/{stockID}/sse", stocks.GetStockSSE)
 		router.Get("/{stockID}/influences", stocks.GetInfluences)
+		router.Get("/{stockID}/influences/unread", stocks.GetUnreadInfluences)
 		router.Get("/{stockID}/groups", stocks.GetStockGroupMembership)
 		router.Get("/{stockID}/groups/sse", stocks.GetStockGroupMembershipSSE)
 		router.Put("/{stockID}/star", stocks.StarStock)

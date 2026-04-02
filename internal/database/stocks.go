@@ -666,3 +666,36 @@ func GetActiveInfluencesOnStock(stockID int32) ([]dto.InfluenceOnStock, error) {
 
 	return data, nil
 }
+
+func GetActiveUnreadInfluencesOnStock(stockID int32, userID string) ([]dto.InfluenceOnStock, error) {
+	db := getDB()
+
+	rows, err := db.Query(`	
+	SELECT stockinfluences."articleId", stockinfluences."totalLength", stockinfluences.permille, stockinfluences."falloffType", articles.title
+	FROM stockinfluences
+    	JOIN articles ON stockinfluences."articleId" = articles.id
+		LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+	WHERE "stockId"= $1 AND stockinfluences."remainingLength" > 0 
+	  AND (NOT EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $2 AND articleviews."articleId" = articles.id)) ;`, stockID, userID)
+
+	defer rows.Close()
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var data []dto.InfluenceOnStock
+
+	for rows.Next() {
+		var currentData dto.InfluenceOnStock
+		err = rows.Scan(&currentData.ArticleID, &currentData.LengthMinutes, &currentData.PermillePerDay, &currentData.FalloffType, &currentData.ArticleTitle)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+
+	return data, nil
+}
