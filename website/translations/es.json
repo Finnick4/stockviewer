@@ -52,7 +52,8 @@
         "influences": {
             "influences": "Influencias",
             "loading": "Cargando datos sobre las acciones…",
-            "no_active_influences": "Actualmente, esta acción no es afectada por ningún artículo…"
+            "no_active_influences": "Actualmente, esta acción no es afectada por ningún artículo…",
+            "title_all": "Influencias"
         },
         "related": {
             "related_stocks": "Acciones similares",
