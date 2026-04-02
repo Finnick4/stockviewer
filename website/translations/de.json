@@ -52,7 +52,8 @@
         "influences": {
             "influences": "Einflüsse",
             "loading": "Lade Einflüsse auf die Aktie…",
-            "no_active_influences": "Die Aktie wird momentan von keinem Artikel beeinflusst…"
+            "no_active_influences": "Die Aktie wird momentan von keinem Artikel beeinflusst…",
+            "title_all": "Einflüsse"
         },
         "related": {
             "related_stocks": "Ähnliche Aktien",
