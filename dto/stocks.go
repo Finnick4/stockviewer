@@ -49,4 +49,6 @@ type PriceDelta struct {
 	Price2       int64
 	DeltaAmount  int64
 	DeltaPercent float64
+	Stars        int32
+	IsStarred    bool
 }

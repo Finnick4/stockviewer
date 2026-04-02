@@ -9,17 +9,12 @@ import (
 	"stockviewer/internal/database"
 	"stockviewer/internal/handlers/sse"
 
-	_ "github.com/glebarez/go-sqlite"
 	"github.com/gorilla/schema"
-
 	log "github.com/sirupsen/logrus"
 )
 
-func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Inquiring stocks")
-
-	token := r.Context().Value("token").(string)
-	userID := database.GetUserIDFromToken(token)
+func GetStarredStocksSSE(w http.ResponseWriter, r *http.Request) {
+	log.Debug("Getting starred stocks")
 
 	var params = dto.StockGetParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
@@ -33,13 +28,16 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
 	rc := http.NewResponseController(w)
 
 	var send func() error
 
 	if dto.IsValidTimeframeScope(params.Timeframe) {
 		send = func() error {
-			deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe), userID)
+			deltas, err := database.GetStarredStocksDelta(userID, dto.GenerateTimeframe(params.Timeframe))
 			if err != nil {
 				return err
 			}
@@ -58,7 +56,7 @@ func GetStocksSSE(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		send = func() error {
-			data, err := database.GetCurrentStockInformation(userID)
+			data, err := database.GetStarredStocks(userID)
 			if err != nil {
 				return err
 			}

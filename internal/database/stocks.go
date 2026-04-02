@@ -242,7 +242,7 @@ func GetActiveStockIds() ([]int32, error) {
 	return data, nil
 }
 
-func GetStocksPriceDelta(tf dto.Timeframe) ([]dto.PriceDelta, error) {
+func GetStocksPriceDelta(tf dto.Timeframe, userID string) ([]dto.PriceDelta, error) {
 	if tf.TotalWidth() == "AllTime" {
 		tf = dto.GenerateTimeframe(1)
 	}
@@ -251,13 +251,18 @@ func GetStocksPriceDelta(tf dto.Timeframe) ([]dto.PriceDelta, error) {
 	db := getDB()
 
 	rows, err := db.Query(`SELECT
-    stockid, name, shorthand, COALESCE(color, -1) AS color,
+    stockprice.stockid, name, shorthand, COALESCE(color, -1) AS color,
     first(price, timestamp) AS beg_price,
-    last(price, timestamp) AS end_price
+    last(price, timestamp) AS end_price,
+    (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stockprice.stockid) AS stars,
+    MAX(CASE
+    	WHEN starredstocks."userId" = $1 AND stockprice.stockid = starredstocks."stockId" THEN 1
+    	ELSE 0 END) AS starred
 FROM stockprice
     JOIN stocks ON stockprice.stockid = stocks.id
-WHERE timestamp > ("latestUpdate" - $1::interval)
-GROUP BY stockid, name, shorthand, color;`, tf.TotalWidth())
+	LEFT JOIN starredstocks ON stockprice.stockid = starredstocks."stockId"
+WHERE timestamp > ("latestUpdate" - $2::interval)
+GROUP BY stockprice.stockid, name, shorthand, color;`, userID, tf.TotalWidth())
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -268,7 +273,7 @@ GROUP BY stockid, name, shorthand, color;`, tf.TotalWidth())
 
 	for rows.Next() {
 		var currentData dto.PriceDelta
-		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price1, &currentData.Price2)
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price1, &currentData.Price2, &currentData.Stars, &currentData.IsStarred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -280,11 +285,13 @@ GROUP BY stockid, name, shorthand, color;`, tf.TotalWidth())
 	return data, nil
 }
 
-func GetStarredStocks(userID string) (dto.DetailedStockGroup, error) {
+func GetStarredStocksAsStockGroup(userID string) (dto.DetailedStockGroup, error) {
 	db := getDB()
 
 	rows, err := db.Query(`	
-	SELECT stocks.name, stocks.id, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count FROM stocks
+	SELECT stocks.name, stocks.id, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, 
+	       (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count
+	FROM stocks
 		JOIN starredstocks ON stocks.id = starredstocks."stockId"
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
 	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
@@ -310,6 +317,80 @@ func GetStarredStocks(userID string) (dto.DetailedStockGroup, error) {
 	}
 
 	return dto.DetailedStockGroup{ID: -1, Name: "Starred Stocks", Description: "All stocks that you have starred!", Members: data}, nil
+}
+
+func GetStarredStocks(userID string) ([]dto.DetailedStock, error) {
+	db := getDB()
+
+	rows, err := db.Query(`	
+	SELECT stocks.name, stocks.id, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count FROM stocks
+		JOIN starredstocks ON stocks.id = starredstocks."stockId"
+		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
+
+	defer rows.Close()
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var data []dto.DetailedStock
+
+	for rows.Next() {
+		var currentData dto.DetailedStock
+		err = rows.Scan(&currentData.Name, &currentData.ID, &currentData.Shorthand, &currentData.Color, &currentData.Price, &currentData.Stars)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		currentData.IsStarred = true
+		data = append(data, currentData)
+	}
+
+	return data, nil
+}
+
+func GetStarredStocksDelta(userID string, tf dto.Timeframe) ([]dto.PriceDelta, error) {
+	if tf.TotalWidth() == "AllTime" {
+		tf = dto.GenerateTimeframe(1)
+	}
+	log.Debugf("Getting starred stocks deltas in timeframe %v", tf)
+
+	db := getDB()
+
+	rows, err := db.Query(`SELECT
+    stockprice.stockid, name, shorthand, COALESCE(color, -1) AS color,
+    first(price, timestamp) AS beg_price,
+    last(price, timestamp) AS end_price,
+    (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stockprice.stockid) AS stars
+FROM stockprice
+    JOIN starredstocks ON stockprice.stockid = starredstocks."stockId"
+    JOIN stocks ON stockprice.stockid = stocks.id
+WHERE starredstocks."userId" = $1 AND timestamp > ("latestUpdate" - $2::interval)
+GROUP BY stockprice.stockid, name, shorthand, color;`, userID, tf.TotalWidth())
+
+	defer rows.Close()
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var data []dto.PriceDelta
+
+	for rows.Next() {
+		var currentData dto.PriceDelta
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price1, &currentData.Price2, &currentData.Stars)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		currentData.IsStarred = true
+		data = append(data, currentData)
+	}
+
+	return data, nil
 }
 
 func SetStockName(id int32, name string) error {

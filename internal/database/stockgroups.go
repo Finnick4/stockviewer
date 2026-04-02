@@ -50,7 +50,7 @@ func GetDetailedStockGroup(userID string, groupID int32) (dto.DetailedStockGroup
 	log.Debugf("Getting stock group %v", groupID)
 
 	if groupID == -1 {
-		return GetStarredStocks(userID)
+		return GetStarredStocksAsStockGroup(userID)
 	}
 
 	db := getDB()
