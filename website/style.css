@@ -84,10 +84,6 @@ main.homepage {
     gap: 1rem;
 }
 
-main.homepage ul.inner {
-    margin: 0;
-}
-
 main.homepage .starredStocksList {
     grid-column: 1/4;
     overflow: auto;

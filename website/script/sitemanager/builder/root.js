@@ -1,6 +1,6 @@
 function buildRootPage() {
     const main = `
-        <stockgroups-members-list class="starredStocksList" data-stock-group-id="-1" data-alt-title="Starred Stocks"></stockgroups-members-list>
+        <stock-list-starred-delta class="starredStocksList"></stock-list-starred-delta>
         <stockgroups-starred-list></stockgroups-starred-list>
         <relevant-articles class="articleInbox"></relevant-articles>
         `;
