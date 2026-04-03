@@ -180,3 +180,32 @@ func CreateUser(tag string, password string, creatorID string) error {
 	}
 	return nil
 }
+
+func GetAllUsers() ([]dto.UserOverview, error) {
+	log.Debugf("Getting all users")
+
+	db := getDB()
+
+	rows, err := db.Query(`SELECT id, tag, "displayName", status FROM users`)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var data []dto.UserOverview
+
+	for rows.Next() {
+		var currentData dto.UserOverview
+		err = rows.Scan(&currentData.ID, &currentData.Tag, &currentData.Name, &currentData.Status)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+
+	return data, nil
+}

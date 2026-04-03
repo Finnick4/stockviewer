@@ -18,6 +18,10 @@ func ExtractPermissions(next http.Handler) http.Handler {
 			return
 		}
 
+		if permissions["canEditUserPermissions"] == 1 || permissions["canEditUserName"] == 1 || permissions["canEditUserPassword"] == 1 || permissions["canDisableUsers"] == 1 || permissions["canDeleteUsers"] == 1 {
+			permissions["canViewUsers"] = 1
+		}
+
 		ctx := context.WithValue(r.Context(), "permissions", permissions)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

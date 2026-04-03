@@ -26,3 +26,10 @@ type UserIdentification struct {
 	Name string
 	ID   string
 }
+
+type UserOverview struct {
+	ID     string
+	Name   string
+	Tag    string
+	Status string
+}
