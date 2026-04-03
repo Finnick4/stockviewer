@@ -119,10 +119,10 @@ func InitialiseDB() {
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "permissions" (
-	"id"	SERIAL NOT NULL PRIMARY KEY UNIQUE,
 	"userid"	VARCHAR(36) NOT NULL,
 	"claimType" VARCHAR(64) NOT NULL,
 	"claimValue" INTEGER NOT NULL,
+	PRIMARY KEY ("userid", "claimType"),
 	CONSTRAINT "fk_permissions_userid" FOREIGN KEY("userid") REFERENCES users("id") ON DELETE CASCADE);`)
 	if err != nil {
 		log.Fatal(err)

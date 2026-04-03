@@ -5,6 +5,7 @@ import (
 	"errors"
 	"math"
 	"stockviewer/dto"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -42,12 +43,11 @@ func resetAdminPermissions() {
 
 	var err error
 
-	for _, perm := range permissions {
-		err = SetUserPermission(id, perm)
-		if err != nil {
-			log.Error(err)
-			return
-		}
+	err = SetUserPermissions(id, permissions)
+
+	if err != nil {
+		log.Error(err)
+		return
 	}
 }
 
@@ -155,30 +155,42 @@ func GetAllUserIDPermissions(id string) ([]dto.Permission, error) {
 // SetUserPermission sets or updates the permission of a user.
 func SetUserPermission(id string, permission dto.Permission) error {
 	db := getDB()
-	resp := db.QueryRow(`SELECT id FROM permissions WHERE userid = $1 AND "claimType" = $2;`, id, permission.Permission)
-	var permValue int32
-	err := resp.Scan(&permValue)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			// b) create new permission entry
-			_, error2 := db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3)`, id, permission.Permission, permission.Value)
-
-			if error2 != nil {
-				log.Error(error2)
-				return error2
-			}
-			return nil
-		}
-
-		log.Fatal(err)
-	}
-
-	// a) Update existing permission
-	_, err = db.Exec(`UPDATE permissions SET "claimValue" = $1 WHERE "claimType" = $2 AND userid = $3`, permission.Value, permission.Permission, id)
+	_, err := db.Exec(`INSERT INTO permissions (userid, "claimType", "claimValue") VALUES ($1, $2, $3) ON CONFLICT(userid, "claimType") DO UPDATE SET "claimValue"=EXCLUDED."claimValue";`, id, permission.Permission, permission.Value)
 
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+	return nil
+}
+
+func SetUserPermissions(id string, perms []dto.Permission) error {
+	log.Debug("Setting permissions of user!")
+	query := `INSERT INTO permissions (userid, "claimType", "claimValue") VALUES `
+	values := []interface{}{}
+	for i, perm := range perms {
+		values = append(values, id, perm.Permission, perm.Value)
+
+		vals := 3
+		n := i * vals
+		query += `(`
+
+		for j := 0; j < vals; j++ {
+			query += `$` + strconv.Itoa(n+j+1) + `, `
+		}
+		query = query[:len(query)-2] + `),`
+	}
+	query = query[:len(query)-1] + `ON CONFLICT(userid, "claimType") DO UPDATE SET "claimValue"=EXCLUDED."claimValue";`
+
+	db := getDB()
+	_, err := db.Exec(query, values...)
+
+	if err != nil {
+		log.Error(id)
+		log.Error(perms)
+		log.Error(err)
+		return err
+	}
+
 	return nil
 }
