@@ -3,6 +3,11 @@ function showModalCreateUser(elem) {
         elem.parentElement.togglePopover(false)
     }
 
+    if (!userInfo.checkPerm("canCreateUsers")) {
+        createModal(`<h2>${getTranslatedStr("users.create.title")}</h2><p>${getTranslatedStr("users.create.err_no_create_permission")}</p>`)
+        return
+    }
+
     let html = `<h2>${getTranslatedStr("users.create.title")}</h2>
                       <div class="pair">
                           <p>${getTranslatedStr("users.create.tag")}</p>
@@ -32,12 +37,6 @@ function showModalCreateUser(elem) {
     const pw = modal.querySelector(`.pw1`)
     const pwrep = modal.querySelector(`.pw2`)
 
-
-    userInformation.writePermission("canCreateUsers", perm => {
-        if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("users.create.title")}</h2><p>${getTranslatedStr("users.create.err_no_create_permission")}</p>`
-        }
-    })
 
     const seterr = err => {
         infotxt.innerHTML = err

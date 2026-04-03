@@ -66,23 +66,19 @@ function showModalEditArticles(articleId) {
         body.style.height = body.scrollHeight + "px"
 
         let permArticles = false, permInfluences = false, maxInfluence = 0
-        userInformation.writePermission("canEditArticles", perm => {
-            if (perm !== 1) {
-                modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("articles.modify.title_edit")}</h2><p>${getTranslatedStr("articles.modify.err_no_edit_permission")}</p>`
-            } else {
-                permArticles = true
-            }
-        })
-        userInformation.writePermission("canModifyInfluences", perm => {
-            if (perm !== 1) {
-                stockInfluenceSelector.readOnly = true
-            } else {
-                permInfluences = true
-            }
-        })
-        userInformation.writePermission("maxInfluencePermille", perm => {
-            maxInfluence = perm
-        })
+
+        if (!userInfo.checkPerm("canEditArticles")) {
+            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("articles.modify.title_edit")}</h2><p>${getTranslatedStr("articles.modify.err_no_edit_permission")}</p>`
+            return
+        } else {
+            permArticles = true
+        }
+        if (!userInfo.checkPerm("canModifyInfluences")) {
+            stockInfluenceSelector.readOnly = true
+        } else {
+            permInfluences = true
+        }
+        maxInfluence = userInfo.permissions.get("maxInfluencePermille")
 
         const seterr = err => {
             infotxt.innerHTML = err

@@ -3,6 +3,11 @@ function showModalCreateStock(elem) {
         elem.parentElement.togglePopover(false)
     }
 
+    if (!userInfo.checkPerm("canCreateStocks")) {
+        createModal(`<h2>${getTranslatedStr("stocks.modify.create_title")}</h2><p>${getTranslatedStr("stocks.modify.err_no_create_permission")}</p>`)
+        return
+    }
+
     let html = `<h2>${getTranslatedStr("stocks.modify.create_title")}</h2>
                         <div class="pair">
                             <p>${getTranslatedStr("stocks.name")}</p>
@@ -35,12 +40,6 @@ function showModalCreateStock(elem) {
     const color = modal.querySelector(`color-selector`)
     const price = modal.querySelector(`.price`)
 
-    userInformation.writePermission("canCreateStocks", perm => {
-        if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("stocks.modify.create_title")}</h2><p>${getTranslatedStr("stocks.modify.err_no_create_permission")}</p>`
-        }
-    })
-
     const seterr = err => {
         infotxt.innerHTML = err
         infotxt.classList.add("negative")
@@ -48,7 +47,6 @@ function showModalCreateStock(elem) {
     }
 
     const validate = () => {
-
         if (name.value.length > 32) {
             seterr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
             return false

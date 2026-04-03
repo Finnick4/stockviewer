@@ -8,12 +8,9 @@ class userManagerElement extends HTMLElement {
         `)
         this.innerHTML = `
         <button popovertarget="${this.dropdownid}" class="usermanager" style="anchor-name: --anchor-${this.dropdownid};">
-            <div class="name">loading...</div>
+            <div class="name">${sanitiseText(userInfo.name)}</div>
             <img class="icon" src="/icons/user.svg" alt="user icon" draggable="false">
         </button>`
-        userInformation.writeDisplayName(name => {
-            this.querySelector("div.name").innerHTML = sanitiseText(name)
-        })
     }
     disconnectedCallback() {
         deleteDropdown(this.dropdownid)

@@ -1,5 +1,5 @@
 
-function changeLanguage(targetLanguage) {
+function changeLanguage(targetLanguage, noReroute) {
     initialiseLanguages()
     langCode = ""
 
@@ -9,7 +9,9 @@ function changeLanguage(targetLanguage) {
         if (header !== null) {
             header.remove()
         }
-        router()
+        if (!Boolean(noReroute)) {
+            router()
+        }
     }
     if (typeof targetLanguage === "string" || Object.keys(supportedLanguages).includes(targetLanguage)) {
         langCode = targetLanguage

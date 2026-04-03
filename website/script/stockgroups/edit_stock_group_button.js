@@ -58,27 +58,21 @@ function showModalEditStockGroup(groupid) {
 
         let permName = false, permDesc = false, permMembers = false
 
-        userInformation.writePermission("canEditStockGroupNames", perm => {
-            if (perm !== 1) {
-                name.readOnly = true
-            } else {
-                permName = true
-            }
-        })
-        userInformation.writePermission("canEditStockGroupDescriptions", perm => {
-            if (perm !== 1) {
-                description.readOnly = true
-            } else {
-                permDesc = true
-            }
-        })
-        userInformation.writePermission("canEditStockGroupMembers", perm => {
-            if (perm !== 1) {
-                stockSelector.readOnly = true
-            } else {
-                permMembers = true
-            }
-        })
+        if (!userInfo.checkPerm("canEditStockGroupNames")) {
+            name.readOnly = true
+        } else {
+            permName = true
+        }
+        if (!userInfo.checkPerm("canEditStockGroupDescriptions")) {
+            description.readOnly = true
+        } else {
+            permDesc = true
+        }
+        if (!userInfo.checkPerm("canEditStockGroupMembers")) {
+            stockSelector.readOnly = true
+        } else {
+            permMembers = true
+        }
 
         const seterr = err => {
             infotxt.innerHTML = err

@@ -60,27 +60,23 @@ function showEditStockModal(stockID) {
 
         let permName = false, permPrice = false, permColor = false
 
-        userInformation.writePermission("canEditStockNames", perm => {
-            if (perm !== 1) {
-                name.readOnly = true
-            } else {
-                permName = true
-            }
-        })
-        userInformation.writePermission("canEditStockPrices", perm => {
-            if (perm !== 1) {
-                price.readOnly = true
-            } else {
-                permPrice = true
-            }
-        })
-        userInformation.writePermission("canEditStockColors", perm => {
-            if (perm !== 1) {
-                color.readOnly = true
-            } else {
-                permColor = true
-            }
-        })
+        if (!userInfo.checkPerm("canEditStockNames")) {
+            name.readOnly = true
+        } else {
+            permName = true
+        }
+
+        if (!userInfo.checkPerm("canEditStockPrices")) {
+            price.readOnly = true
+        } else {
+            permPrice = true
+        }
+
+        if (!userInfo.checkPerm("canEditStockColors")) {
+            color.readOnly = true
+        } else {
+            permColor = true
+        }
 
         const seterr = err => {
             infotxt.innerHTML = err

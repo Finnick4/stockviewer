@@ -3,6 +3,11 @@ function showModalCreateStockGroup(elem) {
         elem.parentElement.togglePopover(false)
     }
 
+    if (!userInfo.checkPerm("canCreateStockGroups")) {
+        createModal(`<h2>${getTranslatedStr("stockgroups.modify.title_create")}</h2><p>${getTranslatedStr("stockgroups.modify.err_no_create_permission")}</p>`)
+        return
+    }
+
     let html = `<h2>${getTranslatedStr("stockgroups.modify.title_create")}</h2>
                         <div class="pair">
                             <p>${getTranslatedStr("stockgroups.modify.name")}</p>
@@ -29,13 +34,6 @@ function showModalCreateStockGroup(elem) {
     const stockSelector = new stockSelectorElement()
     modal.querySelector(`div.stockSelector`).append(stockSelector)
 
-
-    userInformation.writePermission("canCreateStockGroups", perm => {
-        if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("stockgroups.modify.title_create")}</h2><p>${getTranslatedStr("stockgroups.modify.err_no_create_permission")}</p>`
-        }
-    })
-
     const seterr = err => {
         infotxt.innerHTML = err
         infotxt.classList.add("negative")
@@ -43,7 +41,6 @@ function showModalCreateStockGroup(elem) {
     }
 
     const validate = () => {
-
         if (name.value.length > 32) {
             seterr(getTranslatedStr("stockgroups.modify.err_name_too_long", {min: 2, max: 32}))
             return false

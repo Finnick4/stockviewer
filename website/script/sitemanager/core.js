@@ -5,7 +5,9 @@ function checkLoggedIn() {
         window.history.pushState(null, null, `${window.location.origin}/login`)
         buildPageLogin()
     } else {
-        initialiseUserInfo().then(() => router())
+        initialiseUserInfo().then(() => {
+            router()
+        })
     }
 }
 
@@ -77,5 +79,5 @@ window.addEventListener("popstate", e => {
     router()
 })
 
-changeLanguage()
+changeLanguage(undefined, true)
 checkLoggedIn()

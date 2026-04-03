@@ -3,6 +3,10 @@ function showModalCreateArticle(elem) {
         elem.parentElement.togglePopover(false)
     }
 
+    if (!userInfo.checkPerm("canCreateArticles")) {
+        createModal(`<h2>${getTranslatedStr("articles.modify.title_create")}</h2><p>${getTranslatedStr("articles.modify.err_no_create_permission")}</p>`)
+    }
+
     let html = `<h2>${getTranslatedStr("articles.modify.title_create")}</h2>
                       <div class="textField">
                           <p>${getTranslatedStr("articles.title")}</p>
@@ -29,24 +33,15 @@ function showModalCreateArticle(elem) {
     const stockInfluenceSelector = new stockInfluenceSelectorElement()
     modal.querySelector(`div.stockInfluenceSelector`).append(stockInfluenceSelector)
 
-    let permArticles = false, permInfluences = false, maxInfluence = 0
-    userInformation.writePermission("canCreateArticles", perm => {
-        if (perm !== 1) {
-            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("articles.modify.title_create")}</h2><p>${getTranslatedStr("articles.modify.err_no_create_permission")}</p>`
-        } else {
-            permArticles = true
-        }
-    })
-    userInformation.writePermission("canModifyInfluences", perm => {
-        if (perm !== 1) {
-            stockInfluenceSelector.readOnly = true
-        } else {
-            permInfluences = true
-        }
-    })
-    userInformation.writePermission("maxInfluencePermille", perm => {
-        maxInfluence = perm
-    })
+    let permInfluences = false, maxInfluence = 0
+
+    if (!userInfo.checkPerm("canModifyInfluences")) {
+        stockInfluenceSelector.readOnly = true
+    } else {
+        permInfluences = true
+    }
+    maxInfluence = userInfo.permissions.get("maxInfluencePermille")
+
 
 
     const seterr = err => {

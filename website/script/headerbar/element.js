@@ -9,17 +9,12 @@ class headerBarElement extends HTMLElement {
                     <a is="a-button" href="/groups">${getTranslatedStr("header.stock_groups")}</a>
                 </nav>
                 <search-bar></search-bar>
-                <nav class="create"></nav>
+                <nav class="create">${userInfo.hasAnyCreatePermissions ? "<create-data></create-data>" : ""}</nav>
                 <nav class="site-manager">
                     <theme-switcher></theme-switcher>
                     <user-manager></user-manager>
                 </nav>
                 `
-        userInformation.hasAnyCreatePermissions(b => {
-            if (b) {
-                this.querySelector(".create").innerHTML = "<create-data></create-data>"
-            }
-        })
     }
 }
 
