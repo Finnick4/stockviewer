@@ -33,3 +33,7 @@ type UserOverview struct {
 	Tag    string
 	Status string
 }
+
+type UserEditPermissionsParams struct {
+	Permissions []Permission
+}
