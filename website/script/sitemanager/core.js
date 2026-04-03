@@ -4,6 +4,8 @@ function checkLoggedIn() {
         console.log("not logged in!!!")
         window.history.pushState(null, null, `${window.location.origin}/login`)
         buildPageLogin()
+    } else {
+        initialiseUserInfo().then(() => router())
     }
 }
 
@@ -76,5 +78,4 @@ window.addEventListener("popstate", e => {
 })
 
 changeLanguage()
-router()
 checkLoggedIn()

@@ -46,7 +46,7 @@ function buildPageLogin() {
                 case 200:
                     inftxt.innerHTML = getTranslatedStr("login.success");
                     window.history.pushState(null, null, `${window.location.origin}`);
-                    router();
+                    initialiseUserInfo().then(() => router())
                     break;
                 case 401:
                     inftxt.innerHTML = getTranslatedStr("login.err_invalid_credentials");

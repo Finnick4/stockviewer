@@ -11,8 +11,8 @@ class editStockGroupButtonElement extends HTMLButtonElement {
 
         this.onclick = () => showModalEditStockGroup(this.groupid)
 
-        this.title = getTranslatedStr("stockgroups.modify.title_create")
-        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="${getTranslatedStr("stockgroups.modify.title_edit")}" draggable="false">`
+        this.title = getTranslatedStr("stockgroups.modify.edit_icon_alt_text")
+        this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="${getTranslatedStr("stockgroups.modify.edit_icon_alt_text")}" draggable="false">`
     }
 
 }
