@@ -15,7 +15,7 @@ import (
 func GetInfluences(w http.ResponseWriter, r *http.Request) {
 	stockID, err := strconv.Atoi(chi.URLParam(r, "stockID"))
 
-	if err != nil {
+	if err != nil || stockID == 0 {
 		api.RequestMalformedHandler(w, "Could not parse stock ID!")
 		return
 	}

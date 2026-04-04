@@ -22,6 +22,11 @@ func UpdateUsersPermission(w http.ResponseWriter, r *http.Request) {
 
 	userID := chi.URLParam(r, "userID")
 
+	if userID == "" {
+		api.RequestMalformedHandler(w, "Could not parse user ID.")
+		return
+	}
+
 	token := r.Context().Value("token").(string)
 	issuerID := database.GetUserIDFromToken(token)
 

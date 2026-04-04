@@ -15,8 +15,8 @@ import (
 func GetStockGroup(w http.ResponseWriter, r *http.Request) {
 	groupID, err := strconv.Atoi(chi.URLParam(r, "groupID"))
 
-	if err != nil {
-		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+	if err != nil || groupID == 0 {
+		api.RequestMalformedHandler(w, "Could not parse stock group ID!")
 		return
 	}
 

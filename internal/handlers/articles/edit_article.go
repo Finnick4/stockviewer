@@ -18,8 +18,8 @@ import (
 func EditArticle(w http.ResponseWriter, r *http.Request) {
 	articleID, err := strconv.Atoi(chi.URLParam(r, "articleID"))
 
-	if err != nil {
-		api.RequestMalformedHandler(w, "Could not parse stock ID!")
+	if err != nil || articleID == 0 {
+		api.RequestMalformedHandler(w, "Could not parse article ID!")
 		return
 	}
 
