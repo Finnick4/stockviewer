@@ -103,6 +103,7 @@ function showModalCreateUser(elem) {
             }).then(r => {
                 if (r.ok) {
                     closeModal(id)
+                    document.querySelectorAll(`.userDisplayElement`).forEach(e => e.update())
                 } else {
                     if (r.status >= 400 || r.status < 500) {
                         seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))

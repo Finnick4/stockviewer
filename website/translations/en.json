@@ -245,6 +245,16 @@
             "err_pw_implausible": "The password is not plausible",
             "err_pw_repeat": "The password isn't identical to the repetition",
             "values_okay": "Everything seems to be okay!"
+        },
+        "list": {
+            "title_edit": "All users",
+            "loading": "Loading users…"
+        },
+        "status": {
+            "active": "Active",
+            "to_be_activated": "Pending",
+            "disabled": "Disabled",
+            "invalid_status": "Unknown"
         }
     },
     "change_password": {
