@@ -914,3 +914,29 @@ div.contentTable .containing:hover {
 a.containing {
     text-decoration: none;
 }
+
+button.switch {
+    display: flex;
+    width: 4rem;
+    padding: 0;
+    border: solid var(--bg) .5rem;
+    transition: all .2s;
+}
+
+button.switch.true {
+    background-color: var(--positiv-muted);
+    justify-content: right;
+}
+
+button.switch.false {
+    background-color: var(--negative-muted);
+    justify-content: left;
+}
+
+button.switch div.knob {
+    transition: all .2s;
+    aspect-ratio: 1/1;
+    width: 1.5rem;
+    border-radius: 100%;
+    background-color: gray;
+}
