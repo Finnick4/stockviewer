@@ -37,3 +37,9 @@ type UserOverview struct {
 type UserEditPermissionsParams struct {
 	Permissions []Permission
 }
+
+type EditUserParams struct {
+	Name     string
+	Tag      string
+	Password string
+}

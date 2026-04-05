@@ -209,3 +209,49 @@ func GetAllUsers() ([]dto.UserOverview, error) {
 
 	return data, nil
 }
+
+func SetUserDisplayName(userID string, name string) error {
+	db := getDB()
+	_, err := db.Exec(`UPDATE users SET "displayName"=$1 WHERE id=$2;`, name, userID)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func SetUserTag(userID string, tag string) error {
+	db := getDB()
+	_, err := db.Exec(`UPDATE users SET tag=$1 WHERE id=$2;`, tag, userID)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func SetUserTagAndName(userID string, tag string, name string) error {
+	db := getDB()
+	_, err := db.Exec(`UPDATE users SET tag=$1, "displayName"=$2 WHERE id=$3;`, tag, name, userID)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func ResetUserPassword(userID string, pw string) error {
+	log.Infof("Password of %v was reset!", userID)
+	hashedPW, err := hashPW(pw)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	db := getDB()
+	_, err = db.Exec(`UPDATE users SET password=$1, status=2 WHERE id=$2;`, hashedPW, userID)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
