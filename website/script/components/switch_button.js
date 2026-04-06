@@ -18,19 +18,18 @@ class switchButtonElement extends HTMLButtonElement {
             if (this.readOnly) {
                 return
             }
-
-            console.log(`Switching...`)
             this.state = !this.state
-
-
-            if (this.state) {
-                this.classList.remove("false")
-                this.classList.add("true")
-            } else {
-                this.classList.remove("true")
-                this.classList.add("false")
-            }
+            this.update()
         })
+    }
+    update() {
+        if (this.state) {
+            this.classList.remove("false")
+            this.classList.add("true")
+        } else {
+            this.classList.remove("true")
+            this.classList.add("false")
+        }
     }
 }
 

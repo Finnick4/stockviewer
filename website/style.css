@@ -836,6 +836,10 @@ div.contentTable.grid-0-name-2 {
     grid-template-columns: 1fr auto auto;
 }
 
+div.contentTable.grid-0-name-1 {
+    grid-template-columns: 1fr auto;
+}
+
 div.contentTable.grid-influence-stock-selector {
     grid-template-columns: 1fr 1fr 2rem;
 }
@@ -942,5 +946,13 @@ button.switch.false div.knob {
 
 button.switch.true div.knob {
     transform: translate(1.5rem);
+}
+
+
+.containing button.switch.false {
+    background-color: var(--bg-light);
+}
+.containing:hover button.switch.false {
+    background-color: var(--bg-very-light);
 }
 

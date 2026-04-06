@@ -255,6 +255,19 @@
             "to_be_activated": "Pending",
             "disabled": "Disabled",
             "invalid_status": "Unknown"
+        },
+        "permissions": {
+            "edit": {
+                "title": "Edit permissions",
+                "err_no_edit_permission": "It doesn't seem like you are able to edit user permissions currently!",
+                "submit": "Save permissions"
+            },
+            "permissions": {
+                "canCreateStocks": {
+                    "title": "Can create stocks",
+                    "description": "Specifies whether the user is able to create new stocks."
+                }
+            }
         }
     },
     "change_password": {
