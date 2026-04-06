@@ -918,25 +918,29 @@ a.containing {
 button.switch {
     display: flex;
     width: 4rem;
-    padding: 0;
-    border: solid var(--bg) .5rem;
     transition: all .2s;
 }
 
 button.switch.true {
     background-color: var(--positiv-muted);
-    justify-content: right;
 }
-
-button.switch.false {
-    background-color: var(--negative-muted);
-    justify-content: left;
+button.switch.true:hover {
+    background-color: var(--positiv);
 }
 
 button.switch div.knob {
-    transition: all .2s;
+    transition: transform .2s;
     aspect-ratio: 1/1;
     width: 1.5rem;
     border-radius: 100%;
-    background-color: gray;
+    background-color: var(--icon-color);
 }
+
+button.switch.false div.knob {
+    transform: translate(0rem);
+}
+
+button.switch.true div.knob {
+    transform: translate(1.5rem);
+}
+

@@ -6,7 +6,7 @@ class switchButtonElement extends HTMLButtonElement {
     }
 
     connectedCallback() {
-        this.innerHTML = `<div class="knob false"></div>`
+        this.innerHTML = `<div class="knob"></div>`
         this.classList.add("false")
         this.classList.add("switch")
 
@@ -24,13 +24,9 @@ class switchButtonElement extends HTMLButtonElement {
 
 
             if (this.state) {
-                knob.classList.remove("false")
-                knob.classList.add("true")
                 this.classList.remove("false")
                 this.classList.add("true")
             } else {
-                knob.classList.remove("true")
-                knob.classList.add("false")
                 this.classList.remove("true")
                 this.classList.add("false")
             }
