@@ -196,6 +196,11 @@
         "create": {
             "tag": "Benutzer-Tag",
             "err_no_create_permission": "Es sieht so aus, als ob du derzeit keine Aktien erstellen kannst"
+        },
+        "permissions": {
+            "edit": {
+                "err_no_edit_permission": "Es sieht so aus, als ob du derzeit keine Artikel bearbeiten kannst"
+            }
         }
     },
     "change_password": {
