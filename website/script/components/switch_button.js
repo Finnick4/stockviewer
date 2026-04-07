@@ -29,6 +29,10 @@ class switchButtonElement extends HTMLButtonElement {
             this.classList.remove("true")
             this.classList.add("false")
         }
+        this.onEdit()
+    }
+    onEdit() {
+        return
     }
 }
 

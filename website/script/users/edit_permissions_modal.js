@@ -47,9 +47,10 @@ function showModalEditPermissions(userID, elem) {
             "canCreateArticles", "canEditArticles", "canModifyInfluences", "maxInfluencePermille",
             "canCreateUsers", "canEditUserPermissions", "canEditUserName", "canEditUserPassword", "canDisableUsers", "canDeleteUsers"
         ]
+        const isBoolPerm = perm => perm.startsWith("is") || perm.startsWith("can")
 
         for (const permName of permsList.reverse()) {
-            const boolPerm = permName.startsWith("is") || permName.startsWith("can")
+            const boolPerm = isBoolPerm(permName)
             const elem = document.createElement("div")
             elem.classList.add("permission")
             elem.classList.add("containing")
@@ -70,6 +71,50 @@ function showModalEditPermissions(userID, elem) {
 
             permissionsDiv.insertBefore(elem, permissionsDiv.firstChild)
         }
+
+        const setErr = createSetErr(infotxt)
+
+        const verify = () => {
+            console.log("Verifying!")
+            for (const permissionDiv of permissionsDiv.querySelectorAll(".permission")) {
+                const perm = permissionDiv.dataset.permission
+                const boolPerm = isBoolPerm(perm)
+                const newValue = boolPerm ? Number(permissionDiv.querySelector(".inputField").state) : Number(permissionDiv.querySelector(".inputField").value)
+                if ((originalPermMap.has(perm) && originalPermMap.get(perm) === newValue) || (!originalPermMap.has(perm) && newValue === 0)) {
+                    // There is no change in this permission. Skipping this permission
+                    continue
+                }
+                const userPermValue = userInfo.permissions.get(perm)
+                if (!userInfo.permissions.has(perm)) {
+                    setErr(getTranslatedStr("users.permissions.edit.err_no_permission", {permission: perm}))
+                    return false
+                }
+                if (boolPerm && userPermValue !== 1) {
+                    setErr(getTranslatedStr("users.permissions.edit.err_no_permission", {permission: perm}))
+                    return false
+                }
+                if (!boolPerm && userPermValue < newValue && userPermValue !== -1) {
+                    setErr(getTranslatedStr("users.permissions.edit.err_too_high_value", {permission: perm, proposed: newValue, own: userPermValue}))
+                    return false
+                }
+                if (!boolPerm && newValue === -1 && userPermValue !== -1) {
+                    setErr(getTranslatedStr("users.permissions.edit.err_uncapped", {permission: perm}))
+                    return false
+                }
+                if (!boolPerm && newValue < -1) {
+                    setErr(getTranslatedStr("users.permissions.edit.err_invalid", {permission: perm}))
+                    return false
+                }
+            }
+            infotxt.innerHTML = getTranslatedStr("users.permissions.edit.values_okay")
+            infotxt.classList.add("positive")
+            infotxt.classList.remove("negative")
+            return true
+        }
+
+        permissionsDiv.querySelectorAll("button.inputField").forEach(btn => btn.onEdit = () => verify())
+        permissionsDiv.querySelectorAll("input.inputField").forEach(inpt => inpt.addEventListener("input", () => verify()))
+        verify()
     })
 }
 
