@@ -1,5 +1,4 @@
 class switchButtonElement extends HTMLButtonElement {
-    static observedAttributes = ["state"]
 
     constructor() {
         super();
