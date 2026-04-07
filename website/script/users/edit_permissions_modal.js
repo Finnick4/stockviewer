@@ -42,7 +42,7 @@ function showModalEditPermissions(userID, elem) {
         const modal = document.getElementById(id);
         const infotxt = modal.querySelector(".info")
         const permissionsDiv = modal.querySelector("div.permissions")
-        const permsList = ["canCreateStocks", "canEditStockNames", "canEditStockColors", "canEditStockPrices", "canArchiveStocks", "isStockArchivist", "canDisableStocks",
+        const permsList = ["canCreateStocks", "canEditStockNames", "canEditStockColors", "canEditStockPrices", "canArchiveStocks", "isStockArchivist",
             "canCreateStockGroups", "canEditStockGroupNames", "canEditStockGroupDescriptions", "canEditStockGroupMembers", "canDeleteStockGroups",
             "canCreateArticles", "canEditArticles", "canModifyInfluences", "maxInfluencePermille",
             "canCreateUsers", "canEditUserPermissions", "canEditUserName", "canEditUserPassword", "canDisableUsers", "canDeleteUsers"

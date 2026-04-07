@@ -266,6 +266,86 @@
                 "canCreateStocks": {
                     "title": "Can create stocks",
                     "description": "Specifies whether the user is able to create new stocks."
+                },
+                "canEditStockNames": {
+                    "title": "Can edit stock names",
+                    "description": "Specifies whether the user is able to modify the name and shorthand of a stock."
+                },
+                "canEditStockColors": {
+                    "title": "Can edit stock color",
+                    "description": "Specifies whether the user can edit the color associated with a stock."
+                },
+                "canEditStockPrices": {
+                    "title": "Can edit stock prices",
+                    "description": "Specifies whether the user can change the price of a stock directly. This allows the user to set the price of a stock. Influencing the stock with an article is a separate permission and this permission is not required for the user to affect stocks in articles!"
+                },
+                "canArchiveStocks": {
+                    "title": "Can archive stocks",
+                    "description": "Specifies whether the user can set a stock to be archived. This also includes the ability to set an archived stock's state back to active. This however does not come with the ability to see archived stocks."
+                },
+                "isStockArchivist": {
+                    "title": "Can view archived stocks",
+                    "description": "Specifies whether the user can view archived stocks. This does not grant the ability to archive or unarchive a stock."
+                },
+                "canCreateStockGroups": {
+                    "title": "Can create stock groups",
+                    "description": "Specifies whether the user is able to create new stock groups."
+                },
+                "canEditStockGroupNames": {
+                    "title": "Can edit the name of stock groups",
+                    "description": "Specifies whether the user can change the name of an existing stock group."
+                },
+                "canEditStockGroupDescriptions": {
+                    "title": "Can edit the description of stock groups",
+                    "description": "Specifies whether the user can modify the description of an existing stock group."
+                },
+                "canEditStockGroupMembers": {
+                    "title": "Can change members of stock groups",
+                    "description": "Specifies whether the user can change the stock members of a stock group."
+                },
+                "canDeleteStockGroups": {
+                    "title": "Can delete stock groups",
+                    "description": "Specifies whether the user can delete stock groups permanently."
+                },
+                "canCreateArticles": {
+                    "title": "Can write articles",
+                    "description": "Specifies whether the user can write new articles. This permission does not implicitly grant the ability to also affect stocks with the new article!"
+                },
+                "canEditArticles": {
+                    "title": "Can edit articles",
+                    "description": "Specifies whether the user can edit already existing articles. This includes both the name and content."
+                },
+                "canModifyInfluences": {
+                    "title": "Can change article influences",
+                    "description": "Specifies whether the user can set, change and remove influences from existing articles and set influences on new articles. The highest influence possible is determined by another permission."
+                },
+                "maxInfluencePermille": {
+                    "title": "Maximum influence in permille",
+                    "description": "The highest influence a user can set for an influence. The value is an absolute value, so setting this to 10 allows the user to set an influence between -10 and 10 permille. If set to -1, there is no limit."
+                },
+                "canCreateUsers": {
+                    "title": "Can create users",
+                    "description": "Specifies whether the user can add new users."
+                },
+                "canEditUserPermissions": {
+                    "title": "Can change other user's permissions",
+                    "description": "Specifies whether the user is able to change the permissions of other users. The user has to also bear the permissions to change them for others."
+                },
+                "canEditUserName": {
+                    "title": "Can change other user's names",
+                    "description": "Specifies whether the user can change other user's display name and tag."
+                },
+                "canEditUserPassword": {
+                    "title": "Can change other user's password",
+                    "description": "Specifies whether the user can reset other user's password to a specific value. This new password has to be changed upon the next login of this user. Be careful when distributing this permission as a user with this permission could hijack the account of another as one can then log in with the reset password and subsequently log into the other account."
+                },
+                "canDisableUsers": {
+                    "title": "Can disable users",
+                    "description": "Specifies whether the user can disable another user. Such a user is barred from authenticating and performing anything. This permission also grant the ability to enable disabled users."
+                },
+                "canDeleteUsers": {
+                    "title": "Can delete users",
+                    "description": "Specifies whether the user can delete other users permanently. If the user to delete previously created anything, the authorship is removed. Stars and views are also permanently deleted and thus deducted from the total count."
                 }
             }
         }
