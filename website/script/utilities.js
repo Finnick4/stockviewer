@@ -66,3 +66,12 @@ function interpolateStr(str, obj) {
         }
     )
 }
+
+function createSetErr(elem) {
+    if (elem)
+    return err => {
+        elem.innerHTML = err
+        elem.classList.add("negative")
+        elem.classList.remove("positive")
+    }
+}

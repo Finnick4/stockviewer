@@ -34,19 +34,15 @@ function showModalCreateStockGroup(elem) {
     const stockSelector = new stockSelectorElement()
     modal.querySelector(`div.stockSelector`).append(stockSelector)
 
-    const seterr = err => {
-        infotxt.innerHTML = err
-        infotxt.classList.add("negative")
-        infotxt.classList.remove("positive")
-    }
+    const setErr = createSetErr(infotxt)
 
     const validate = () => {
         if (name.value.length > 32) {
-            seterr(getTranslatedStr("stockgroups.modify.err_name_too_long", {min: 2, max: 32}))
+            setErr(getTranslatedStr("stockgroups.modify.err_name_too_long", {min: 2, max: 32}))
             return false
         }
         if (name.value.length < 2) {
-            seterr(getTranslatedStr("stockgroups.modify.err_name_too_short", {min: 2, max: 32}))
+            setErr(getTranslatedStr("stockgroups.modify.err_name_too_short", {min: 2, max: 32}))
             return false
         }
 
@@ -91,9 +87,9 @@ function showModalCreateStockGroup(elem) {
                     })
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                        setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                        setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });

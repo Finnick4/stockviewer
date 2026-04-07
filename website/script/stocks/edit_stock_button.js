@@ -78,38 +78,34 @@ function showEditStockModal(stockID) {
             permColor = true
         }
 
-        const seterr = err => {
-            infotxt.innerHTML = err
-            infotxt.classList.add("negative")
-            infotxt.classList.remove("positive")
-        }
+        const setErr = createSetErr(infotxt)
 
         const validate = () => {
 
             if (name.value.length > 32) {
-                seterr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
+                setErr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
                 return false
             }
             if (name.value.length < 2) {
-                seterr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
+                setErr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
                 return false
             }
 
             if (shorthand.value.length > 5) {
-                seterr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
+                setErr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
                 return false
             }
             if (shorthand.value.length < 2) {
-                seterr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
+                setErr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
                 return false
             }
             if (!isNaN(shorthand.value)) {
-                seterr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
+                setErr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
                 return false
             }
 
             if (price.value < 2) {
-                seterr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
+                setErr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
                 return false
             }
 
@@ -138,9 +134,9 @@ function showEditStockModal(stockID) {
                         closeModal(id)
                     } else {
                         if (r.status >= 400 || r.status < 500) {
-                            seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                            setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                         } else {
-                            seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                            setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                         }
                     }
                 });

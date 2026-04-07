@@ -38,11 +38,7 @@ function showChangePasswordModal(elem) {
     const newPW1 = modal.querySelector(`.newpw1`)
     const newPW2 = modal.querySelector(`.newpw2`)
 
-    const seterr = err => {
-        infotxt.innerHTML = err
-        infotxt.classList.add("negative")
-        infotxt.classList.remove("positive")
-    }
+    const setErr = createSetErr(infotxt)
 
     const plausiblePW = pw => {
         return pw.length >= 8 && pw.length <= 72
@@ -50,26 +46,26 @@ function showChangePasswordModal(elem) {
 
     const validate = () => {
         if (tag.value.length > 32) {
-            seterr(getTranslatedStr("change_password.err_tag_too_long", {min: 2, max: 32}))
+            setErr(getTranslatedStr("change_password.err_tag_too_long", {min: 2, max: 32}))
             return false
         }
         if (tag.value.length <= 2) {
-            seterr(getTranslatedStr("change_password.err_tag_too_short", {min: 2, max: 32}))
+            setErr(getTranslatedStr("change_password.err_tag_too_short", {min: 2, max: 32}))
             return false
         }
 
         if (!plausiblePW(oldPW.value)) {
-            seterr(getTranslatedStr("change_password.err_old_pw_implausible"))
+            setErr(getTranslatedStr("change_password.err_old_pw_implausible"))
             return false
         }
 
         if (!plausiblePW(newPW1.value)) {
-            seterr(getTranslatedStr("change_password.err_new_pw_implausible"))
+            setErr(getTranslatedStr("change_password.err_new_pw_implausible"))
             return false
         }
 
         if (newPW1.value !== newPW2.value) {
-            seterr(getTranslatedStr("change_password.err_pw_repetition"))
+            setErr(getTranslatedStr("change_password.err_pw_repetition"))
             return false
         }
 
@@ -97,9 +93,9 @@ function showChangePasswordModal(elem) {
                     closeModal(id)
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                        setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                        setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });

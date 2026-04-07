@@ -80,20 +80,16 @@ function showModalEditArticles(articleId) {
         }
         maxInfluence = userInfo.permissions.get("maxInfluencePermille")
 
-        const seterr = err => {
-            infotxt.innerHTML = err
-            infotxt.classList.add("negative")
-            infotxt.classList.remove("positive")
-        }
+        const setErr = createSetErr(infotxt)
 
         const validate = () => {
             if (title.value.length < 10) {
-                seterr(getTranslatedStr("articles.modify.err_title_too_short", {min: 10, max: 96}))
+                setErr(getTranslatedStr("articles.modify.err_title_too_short", {min: 10, max: 96}))
                 return false
             }
 
             if (title.value.length > 96) {
-                seterr(getTranslatedStr("articles.modify.err_title_too_long", {min: 10, max: 96}))
+                setErr(getTranslatedStr("articles.modify.err_title_too_long", {min: 10, max: 96}))
                 return false
             }
 
@@ -102,7 +98,7 @@ function showModalEditArticles(articleId) {
                 if (!isNaN(stockid)) {
                     const influenceDropdownElem = stockInfluenceSelector.querySelector(`div.containing[data-stock-id="${stockid}"] edit-influence`).dropdownElem
                     if (influenceDropdownElem === undefined) {
-                        seterr(getTranslatedStr("articles.modify.err_influences_generic"))
+                        setErr(getTranslatedStr("articles.modify.err_influences_generic"))
                         escape = true
                         return;
                     }
@@ -112,17 +108,17 @@ function showModalEditArticles(articleId) {
                     const hasBeenAdded = originalState === undefined
 
                     if (isNaN(minutes.value) || minutes.value === "" || Number(minutes.value) <= 0) {
-                        seterr(getTranslatedStr("articles.modify.err_influences_length"))
+                        setErr(getTranslatedStr("articles.modify.err_influences_length"))
                         escape = true
                         return;
                     }
                     if (isNaN(permille.value) || permille.value === "" || Number(permille.value) === 0) {
-                        seterr(getTranslatedStr("articles.modify.err_influences_permille"))
+                        setErr(getTranslatedStr("articles.modify.err_influences_permille"))
                         escape = true
                         return
                     }
                     if ((hasBeenAdded || (Number(originalState.PermillePerDay) !== Number(permille.value))) && (maxInfluence !== -1 && Math.abs(Number(permille.value)) > maxInfluence)) {
-                        seterr(getTranslatedStr("articles.modify.err_influences_permille_too_high", {max: maxInfluence}))
+                        setErr(getTranslatedStr("articles.modify.err_influences_permille_too_high", {max: maxInfluence}))
                         escape = true
                         return
                     }
@@ -210,9 +206,9 @@ function showModalEditArticles(articleId) {
                         buildIndividualArticlePage(articleId)
                     } else {
                         if (r.status >= 400 || r.status < 500) {
-                            seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                            setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                         } else {
-                            seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                            setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                         }
                     }
                 });

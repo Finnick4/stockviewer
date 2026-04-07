@@ -36,14 +36,9 @@ function showModalCreateUser(elem) {
     const tag = modal.querySelector(`.tag`)
     const pw = modal.querySelector(`.pw1`)
     const pwrep = modal.querySelector(`.pw2`)
-
-
-    const seterr = err => {
-        infotxt.innerHTML = err
-        infotxt.classList.add("negative")
-        infotxt.classList.remove("positive")
-    }
-
+    
+    const setErr = createSetErr(infotxt)
+    
     const plausiblePW = pw => {
         return pw.length >= 8 && pw.length <= 72
     }
@@ -68,17 +63,17 @@ function showModalCreateUser(elem) {
 
     const validate = () => {
         if (!plausibleTag(tag.value)) {
-            seterr(getTranslatedStr("users.create.err_tag_implausible"))
+            setErr(getTranslatedStr("users.create.err_tag_implausible"))
             return false
         }
 
         if (!plausiblePW(pw.value)) {
-            seterr(getTranslatedStr("users.create.err_pw_implausible"))
+            setErr(getTranslatedStr("users.create.err_pw_implausible"))
             return false
         }
 
         if (pw.value !== pwrep.value) {
-            seterr(getTranslatedStr("users.create.err_pw_repeat"))
+            setErr(getTranslatedStr("users.create.err_pw_repeat"))
             return false
         }
 
@@ -106,9 +101,9 @@ function showModalCreateUser(elem) {
                     document.querySelectorAll(`.userDisplayElement`).forEach(e => e.update())
                 } else {
                     if (r.status >= 400 || r.status < 500) {
-                        seterr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                        setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
                     } else {
-                        seterr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                        setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                     }
                 }
             });
