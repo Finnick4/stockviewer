@@ -9,7 +9,7 @@ function showModalEditPermissions(elem) {
     }
 
     let html = `<h2>${getTranslatedStr("users.permissions.edit.title")}</h2>
-                        <div class="permissions contentTable grid-0-name-2">
+                        <div class="permissions contentTable grid-0-name-switch">
                             
                         </div>
                         <div class="pair">

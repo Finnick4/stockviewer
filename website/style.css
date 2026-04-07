@@ -293,6 +293,11 @@ div.sidebar a.btn.selected:hover {
     overflow: auto;
 }
 
+.modal .content {
+    display: grid;
+    gap: .5rem
+}
+
 .modal .content input {
     width: 32ch;
     height: 2rem;
@@ -326,14 +331,9 @@ div.sidebar a.btn.selected:hover {
     color: var(--text);
 }
 
-.modal .content div.textField {
-    margin-bottom: 1rem;
-}
-
 .modal .pair {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
 }
 .modal .pair:focus-within p {
     color: var(--text);
@@ -693,6 +693,8 @@ stock-chart svg line.axis {
     margin:auto;
     border-radius: var(--border-radius);
     width: 60%;
+    display: grid;
+    gap: 1rem;
 }
 
 .login-field input {
@@ -702,7 +704,6 @@ stock-chart svg line.axis {
 .login-field .pair {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
 }
 
 .login-field .pair:focus-within {
@@ -840,6 +841,10 @@ div.contentTable.grid-0-name-1 {
     grid-template-columns: 1fr auto;
 }
 
+div.contentTable.grid-0-name-switch {
+    grid-template-columns: 1fr 4rem;
+}
+
 div.contentTable.grid-influence-stock-selector {
     grid-template-columns: 1fr 1fr 2rem;
 }
@@ -923,6 +928,8 @@ button.switch {
     display: flex;
     width: 4rem;
     transition: all .2s;
+    padding: .5rem;
+    align-self: center;
 }
 
 button.switch.true {

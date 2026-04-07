@@ -10,7 +10,7 @@ class switchButtonElement extends HTMLButtonElement {
         this.classList.add("false")
         this.classList.add("switch")
 
-        this.state = "false"
+        this.update()
 
         const knob = this.querySelector("div.knob")
 
