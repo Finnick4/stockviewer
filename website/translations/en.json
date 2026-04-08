@@ -258,6 +258,7 @@
         },
         "permissions": {
             "edit": {
+                "button_alt_text": "Edit user permissions",
                 "title": "Edit permissions",
                 "err_no_edit_permission": "It doesn't seem like you are able to edit user permissions currently!",
                 "err_no_permisssion": "It seems like you do not have the permission '{permission}' and are trying to modify it!",

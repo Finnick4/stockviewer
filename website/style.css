@@ -828,6 +828,9 @@ div.contentTable.grid-1-name-3 {
 div.contentTable.grid-1-name-1 {
     grid-template-columns: auto 1fr auto;
 }
+div.contentTable.grid-1-name-2 {
+    grid-template-columns: auto 1fr auto auto;
+}
 
 div.contentTable.grid-0-name-3 {
     grid-template-columns: 1fr auto auto auto;
@@ -887,6 +890,16 @@ div.contentTable .containing:hover {
 .containing:hover .value {
     background-color: var(--bg-very-light);
     color: var(--text);
+}
+
+.containing button {
+    background-color: var(--bg-light);
+    z-index: auto;
+}
+
+.containing:hover button {
+    background-color: var(--bg-very-light);
+    z-index: auto;
 }
 
 .name {

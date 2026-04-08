@@ -24,6 +24,7 @@ class userListEdit extends HTMLElement {
                 <div class="containing" data-user-id="${user["ID"]}">
                     <div class="shorthand">${sanitiseText(user["Tag"])}</div>
                     <div class="name display">${sanitiseText(user["Name"])}</div>
+                    <button is="edit-user-permissions-button" data-user-id="${user["ID"]}"></button>
                     <div class="value status">${statusStr(user["Status"])}</div>
                 </div>`
             })
@@ -34,7 +35,7 @@ class userListEdit extends HTMLElement {
                             <h2>${getTranslatedStr("users.list.title_edit")}</h2>
                             <div></div>
                         </div>
-                        <div class="contentTable grid-1-name-1">
+                        <div class="contentTable grid-1-name-2">
                             ${html}
                         </div>
                     </div>
