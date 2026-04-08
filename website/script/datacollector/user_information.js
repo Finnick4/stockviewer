@@ -32,9 +32,9 @@ function initialiseUserInfo() {
                 const overview = responses[0].Data
                 const permissions = responses[1].Data
 
-                userInfo.name = overview.Name
-                userInfo.tag = overview.Tag
-                userInfo.user_id = overview.ID
+                userInfo.name = String(overview.Name)
+                userInfo.tag = String(overview.Tag)
+                userInfo.user_id = String(overview.ID)
                 userInfo.checkPerm = perm => userInfo.permissions.get(perm) === 1
 
                 const perms = new Map()

@@ -7,14 +7,17 @@ function showModalEditPermissions(userID, elem) {
         return;
     }
 
-
     if (!userInfo.checkPerm("canEditUserPermissions")) {
-        createModal(`<h2>${getTranslatedStr("users.permissions.edit.title")}</h2><p>${getTranslatedStr("stocks.modify.err_no_create_permission")}</p>`)
+        createModal(`<h2>${getTranslatedStr("users.permissions.edit.title")}</h2><p>${getTranslatedStr("users.permissions.edit.err_no_edit_permission")}</p>`)
+        return
+    }
+
+    if (userID === userInfo.user_id) {
+        createModal(`<h2>${getTranslatedStr("users.permissions.edit.title")}</h2><p>${getTranslatedStr("users.permissions.edit.err_edit_self")}</p>`)
         return
     }
 
     fetch(`/api/users/${userID}/permissions`).then(r => r.json()).then(resp => {
-        console.log(resp)
         const data = resp.Data
         const originalPermMap = new Map()
 
@@ -23,8 +26,6 @@ function showModalEditPermissions(userID, elem) {
                 originalPermMap.set(String(perm.Permission), Number(perm.Value))
             }
         }
-        console.log(originalPermMap)
-
 
 
         let html = `<h2>${getTranslatedStr("users.permissions.edit.title")}</h2>
@@ -74,8 +75,7 @@ function showModalEditPermissions(userID, elem) {
 
         const setErr = createSetErr(infotxt)
 
-        const verify = () => {
-            console.log("Verifying!")
+        const forEachEdited = fn => {
             for (const permissionDiv of permissionsDiv.querySelectorAll(".permission")) {
                 const perm = permissionDiv.dataset.permission
                 const boolPerm = isBoolPerm(perm)
@@ -84,27 +84,45 @@ function showModalEditPermissions(userID, elem) {
                     // There is no change in this permission. Skipping this permission
                     continue
                 }
+                fn(perm, newValue, boolPerm)
+            }
+        }
+
+        const verify = () => {
+            let escape = false
+            forEachEdited((perm, newValue, boolPerm) => {
+                if (escape) {
+                    return false
+                }
                 const userPermValue = userInfo.permissions.get(perm)
                 if (!userInfo.permissions.has(perm)) {
                     setErr(getTranslatedStr("users.permissions.edit.err_no_permission", {permission: perm}))
+                    escape = true
                     return false
                 }
                 if (boolPerm && userPermValue !== 1) {
                     setErr(getTranslatedStr("users.permissions.edit.err_no_permission", {permission: perm}))
+                    escape = true
                     return false
                 }
                 if (!boolPerm && userPermValue < newValue && userPermValue !== -1) {
                     setErr(getTranslatedStr("users.permissions.edit.err_too_high_value", {permission: perm, proposed: newValue, own: userPermValue}))
+                    escape = true
                     return false
                 }
                 if (!boolPerm && newValue === -1 && userPermValue !== -1) {
                     setErr(getTranslatedStr("users.permissions.edit.err_uncapped", {permission: perm}))
+                    escape = true
                     return false
                 }
                 if (!boolPerm && newValue < -1) {
                     setErr(getTranslatedStr("users.permissions.edit.err_invalid", {permission: perm}))
+                    escape = true
                     return false
                 }
+            })
+            if (escape) {
+                return false
             }
             infotxt.innerHTML = getTranslatedStr("users.permissions.edit.values_okay")
             infotxt.classList.add("positive")
@@ -114,6 +132,37 @@ function showModalEditPermissions(userID, elem) {
 
         permissionsDiv.querySelectorAll("button.inputField").forEach(btn => btn.onEdit = () => verify())
         permissionsDiv.querySelectorAll("input.inputField").forEach(inpt => inpt.addEventListener("input", () => verify()))
+
+        modal.querySelector(`.submit`).addEventListener("click", () => {
+            if (verify()) {
+                const editedPermissions = []
+                const addPermissionValue = (perm, value) => editedPermissions.push({Permission: perm, Value: value})
+
+                forEachEdited((perm, value) => {
+                    if (!isNaN(value)) {
+                        addPermissionValue(perm, value)
+                    }
+                })
+
+                fetch(`${window.location.origin}/api/users/${userID}/permissions`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        Permissions: editedPermissions
+                    })
+                }).then(r => {
+                    if (r.ok) {
+                        closeModal(id)
+                    } else {
+                        if (r.status >= 400 || r.status < 500) {
+                            setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                        } else {
+                            setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                        }
+                    }
+                });
+            }
+        })
+
         verify()
     })
 }

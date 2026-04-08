@@ -264,6 +264,7 @@
                 "err_too_high_value": "It seems like the value you try to set for the permission '{permission}' of {proposed} is higher than you are able to ({own})!",
                 "err_uncapped": "It seems like you are trying to set the permission '{permission}' to be uncapped while you do not have the same set for yourself!",
                 "err_invalid": "The value for permission '{permission}' has to be at least -1!",
+                "err_edit_self": "It seems like you are trying to change your own permissions!",
                 "submit": "Save permissions",
                 "values_okay": "Everything seems to be okay!"
             },
