@@ -57,7 +57,7 @@ function showModalEditPermissions(userID, elem) {
             elem.classList.add("containing")
             elem.dataset.permission = permName
             elem.innerHTML = `
-                    <p class="name">${getTranslatedStr(`users.permissions.permissions.${permName}.title`)}</p>
+                    <h3 class="name">${getTranslatedStr(`users.permissions.permissions.${permName}.title`)}</h3>
                     ${boolPerm ? `<button is="switch-button" class="inputField"></button>` : `<input type="number" value="0" class="inputField">`}
                     ${getTranslatedStr(`users.permissions.permissions.${permName}.description`) !== `users.permissions.permissions.${permName}.description` ? `<p class="description grid-full-width">${getTranslatedStr(`users.permissions.permissions.${permName}.description`)}</p>` :  ""}`
             if (originalPermMap.has(permName)) {
