@@ -190,6 +190,10 @@
     "users": {
         "create": {
             "tag": "Tag de l'utilisateur"
+        },
+        "tag": "Tag de l'utilisateur",
+        "edit": {
+            "title_other": "Modifier {nom}"
         }
     },
     "change_password": {
