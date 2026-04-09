@@ -210,5 +210,10 @@
         "submit": "Enviar",
         "err_tag_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)",
         "err_tag_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)"
+    },
+    "settings": {
+        "settings_pages": {
+            "name": "Nombre"
+        }
     }
 }
