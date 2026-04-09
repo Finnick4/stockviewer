@@ -199,5 +199,10 @@
     "change_password": {
         "tag": "Tag de l'utilisateur",
         "submit": "Soumettre"
+    },
+    "settings": {
+        "settings_pages": {
+            "name": "Nom"
+        }
     }
 }
