@@ -203,6 +203,9 @@
     "settings": {
         "settings_pages": {
             "name": "Nom"
+        },
+        "sessions": {
+            "change_pw_button_label": "changement"
         }
     }
 }
