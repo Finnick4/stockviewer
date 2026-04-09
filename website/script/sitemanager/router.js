@@ -25,6 +25,9 @@ function router(path = getCurrentPathWithoutSlash()) {
         case "admin":
             routerAdminPanel(segmentedPath);
             break;
+        case "settings":
+            routerSettingsPanel(segmentedPath);
+            break;
         case "groups":
             routerStockGroups(segmentedPath);
             break;
@@ -97,3 +100,21 @@ function routerAdminPanel(segmented) {
             build404Page();
     }
 }
+
+function routerSettingsPanel(segmented) {
+    if (segmented[0] !== "settings") {
+        return;
+    }
+
+    if (typeof(segmented[1]) === "undefined" || segmented[1] === "") {
+        window.history.pushState(null, null, `${window.location.origin}/settings`);
+        buildSettingsRootPage();
+        return;
+    }
+
+    switch (segmented[1]) {
+        default:
+            build404Page();
+    }
+}
+

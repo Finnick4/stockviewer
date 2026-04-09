@@ -388,5 +388,15 @@
         "err_new_pw_implausible": "The new password is not plausible!",
         "err_pw_repetition": "The new password isn't identical to the repetition!",
         "values_okay": "Everything seems to be okay!"
+    },
+    "settings": {
+        "generic_title": "Settings Panel",
+        "notice_sidebar": "Click on the sidebar to get to a specific page.",
+        "settings_pages": {
+            "name": "Name",
+            "preferences": "Preferences",
+            "sessions": "Sessions",
+            "other": "Other"
+        }
     }
 }
