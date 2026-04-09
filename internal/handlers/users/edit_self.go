@@ -1,0 +1,82 @@
+package users
+
+import (
+	"encoding/json"
+	"net/http"
+	"stockviewer/api"
+	"stockviewer/dto"
+	"stockviewer/internal/database"
+	"stockviewer/internal/utilities"
+
+	log "github.com/sirupsen/logrus"
+)
+
+func EditSelf(w http.ResponseWriter, r *http.Request) {
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
+	if userID == "" {
+		api.RequestMalformedHandler(w, "Could not parse user ID.")
+		return
+	}
+
+	var params = dto.EditUserParams{}
+
+	defer r.Body.Close()
+
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		api.RequestMalformedHandler(w, "Could not decode the body")
+		log.Error(err)
+		return
+	}
+
+	aimName := params.Name != ""
+	aimTag := params.Tag != ""
+
+	if aimName && !utilities.IsPlausibleUserName(params.Name) {
+		api.RequestMalformedHandler(w, "Invalid name!")
+		return
+	}
+	if aimTag && !utilities.IsPlausibleUserTag(params.Tag) {
+		api.RequestMalformedHandler(w, "Invalid tag!")
+		return
+	}
+
+	if aimName && aimTag {
+		err = database.SetUserTagAndName(userID, params.Tag, params.Name)
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
+	}
+	if !aimName && aimTag {
+		err = database.SetUserTag(userID, params.Tag)
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
+	}
+	if aimName && !aimTag {
+		err = database.SetUserDisplayName(userID, params.Name)
+		if err != nil {
+			log.Error(err)
+			api.InternalErrorHandler(w)
+			return
+		}
+	}
+	var response = api.SuccessResponse{
+		Code: http.StatusOK,
+		Data: "success",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
+}
