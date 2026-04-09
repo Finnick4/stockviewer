@@ -204,7 +204,10 @@
         },
         "tag": "Benutzer-Tag",
         "edit": {
-            "title_other": "{name} bearbeiten"
+            "title_other": "{name} bearbeiten",
+            "err_name_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
+            "err_tag_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
+            "err_tag_too_short": "Die Kurzschrift ist zu kurz! ({min} - {max} Zeichen)"
         }
     },
     "change_password": {
