@@ -331,11 +331,11 @@ div.sidebar a.btn.selected:hover {
     color: var(--text);
 }
 
-.modal .pair {
+.pair {
     display: flex;
     justify-content: space-between;
 }
-.modal .pair:focus-within p {
+.pair:focus-within p {
     color: var(--text);
 }
 
@@ -449,17 +449,19 @@ button {
     border-radius: var(--border-radius);
 }
 
+.dropdown button:hover {
+    z-index: 1;
+}
+
 button:hover {
     background-color: var(--highlight);
     box-shadow: var(--button-hover-shadow);
     top: auto;
-    z-index: 1;
 }
 button.selected:hover {
     background-color: var(--highlight);
     box-shadow: var(--button-hover-shadow);
     top: auto;
-    z-index: 1;
 }
 
 button.selected {

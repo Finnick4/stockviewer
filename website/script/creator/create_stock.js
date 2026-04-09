@@ -17,7 +17,7 @@ function showModalCreateStock(elem) {
                             <p>${getTranslatedStr("stocks.shorthand")}</p>
                             <input class="shorthand" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_shorthand_placeholder")}">
                         </div>
-                         <div class="pair">
+                        <div class="pair">
                             <p>${getTranslatedStr("stocks.color")}</p>
                             <color-selector data-color="-1"></color-selector>
                         </div>

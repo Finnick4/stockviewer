@@ -392,6 +392,11 @@
     "settings": {
         "generic_title": "Settings Panel",
         "notice_sidebar": "Click on the sidebar to get to a specific page.",
+        "sessions": {
+            "title": "Sessions",
+            "change_pw": "Change password",
+            "change_pw_button_label": "Change"
+        },
         "settings_pages": {
             "name": "Name",
             "preferences": "Preferences",

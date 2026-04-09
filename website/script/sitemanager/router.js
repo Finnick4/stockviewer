@@ -113,6 +113,9 @@ function routerSettingsPanel(segmented) {
     }
 
     switch (segmented[1]) {
+        case "sessions":
+            buildSettingsSessionsPage()
+            break;
         default:
             build404Page();
     }
