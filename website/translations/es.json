@@ -214,6 +214,9 @@
     "settings": {
         "settings_pages": {
             "name": "Nombre"
+        },
+        "sessions": {
+            "change_pw_button_label": "cambio"
         }
     }
 }
