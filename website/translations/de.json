@@ -215,5 +215,10 @@
         "submit": "Absenden",
         "err_tag_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
         "err_tag_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)"
+    },
+    "settings": {
+        "settings_pages": {
+            "name": "Name"
+        }
     }
 }
