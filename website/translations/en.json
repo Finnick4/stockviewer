@@ -234,6 +234,8 @@
         "err_generic": "An error occurred!"
     },
     "users": {
+        "tag": "User tag",
+        "name": "Display name",
         "create": {
             "title": "Create new user",
             "tag": "User tag",
@@ -245,6 +247,22 @@
             "err_pw_implausible": "The password is not plausible",
             "err_pw_repeat": "The password isn't identical to the repetition",
             "values_okay": "Everything seems to be okay!"
+        },
+        "edit": {
+            "edit.button_alt_text": "Edit user",
+            "title_other": "Edit {name}",
+            "placeholder_name": "New display name...",
+            "placeholder_tag": "usertag",
+            "new_pw": "Reset password to",
+            "values_okay": "The changes seem okay!",
+            "err_name_too_long": "The provided display name is too long ({min} - {max} characters)",
+            "err_name_too_short": "The provided display name is too short ({min} - {max} characters)",
+            "err_tag_too_long": "The provided tag is too long ({min} - {max} characters)",
+            "err_tag_too_short": "The provided tag is too short ({min} - {max} characters)",
+            "err_tag_numeric": "The tag may not be numeric!",
+            "err_tag_upper_case": "The tag cannot have upper case characters!",
+            "err_tag_invalid_character": "The tag may only contain numbers and lowercase characters.",
+            "err_pw_implausible": "The new password is not plausible!"
         },
         "list": {
             "title_edit": "All users",
