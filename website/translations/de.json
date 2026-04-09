@@ -201,6 +201,10 @@
             "edit": {
                 "err_no_edit_permission": "Es sieht so aus, als ob du derzeit keine Artikel bearbeiten kannst"
             }
+        },
+        "tag": "Benutzer-Tag",
+        "edit": {
+            "title_other": "{name} bearbeiten"
         }
     },
     "change_password": {
