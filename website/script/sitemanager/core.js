@@ -65,6 +65,7 @@ function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
             <div class="sidebar">
                 ${sidebar}
             </div>
+            <div class="sidebar_blocker"></div>
             <main class="${mainClasses}">
                 ${main}   
             </main>

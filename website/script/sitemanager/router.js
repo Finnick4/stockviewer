@@ -119,6 +119,12 @@ function routerSettingsPanel(segmented) {
         case "name":
             buildSettingsNamePage()
             break
+        case "starred_stocks":
+            buildSettingsStarredStocksPage()
+            break
+        case "starred_stock_groups":
+            buildSettingsStarredStockGroupsPage()
+            break
         default:
             build404Page();
     }

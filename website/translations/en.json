@@ -415,7 +415,13 @@
             "name": "Name",
             "preferences": "Preferences",
             "sessions": "Sessions",
+            "starred_stocks": "Starred stocks",
+            "starred_stock_groups": "Starred stock groups",
             "other": "Other"
+        },
+        "starred": {
+            "title_stocks": "Starred Stocks Overview",
+            "title_stock_groups": "Starred Stock Groups"
         }
     }
 }

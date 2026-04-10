@@ -52,6 +52,7 @@ h1 {
 }
 
 div.rootsplit {
+    margin-top: 4rem;
     display: grid;
     grid-template-columns: 15rem auto;
     grid-template-rows: auto;
@@ -65,6 +66,8 @@ div.sidebar {
     border-radius: var(--border-radius);
     padding: 1rem;
     height: calc(100vh - 9rem);
+    position: fixed;
+    width: 15rem;
 }
 
 nav.linklist {
@@ -73,7 +76,7 @@ nav.linklist {
 }
 
 main {
-    margin: 0 auto;
+    margin: 5rem auto 0 auto;
     width: var(--main-width);
 }
 
@@ -519,7 +522,8 @@ header-bar {
     grid-template-rows: auto;
     grid-template-columns: repeat(6, auto);
     text-decoration: none;
-    position: sticky;
+    position: fixed;
+    width: 100%;
     top: 0;
     background-color: var(--bg-very-dark);
 }
