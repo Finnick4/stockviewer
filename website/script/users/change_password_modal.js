@@ -40,10 +40,6 @@ function showChangePasswordModal(elem) {
 
     const setErr = createSetErr(infotxt)
 
-    const plausiblePW = pw => {
-        return pw.length >= 8 && pw.length <= 72
-    }
-
     const validate = () => {
         if (tag.value.length > 32) {
             setErr(getTranslatedStr("change_password.err_tag_too_long", {min: 2, max: 32}))
@@ -54,12 +50,12 @@ function showChangePasswordModal(elem) {
             return false
         }
 
-        if (!plausiblePW(oldPW.value)) {
+        if (!plausiblePassword(oldPW.value)) {
             setErr(getTranslatedStr("change_password.err_old_pw_implausible"))
             return false
         }
 
-        if (!plausiblePW(newPW1.value)) {
+        if (!plausiblePassword(newPW1.value)) {
             setErr(getTranslatedStr("change_password.err_new_pw_implausible"))
             return false
         }

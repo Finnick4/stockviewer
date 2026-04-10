@@ -38,10 +38,6 @@ function showModalCreateUser(elem) {
     const pwrep = modal.querySelector(`.pw2`)
     
     const setErr = createSetErr(infotxt)
-    
-    const plausiblePW = pw => {
-        return pw.length >= 8 && pw.length <= 72
-    }
 
     const plausibleTag = t => {
         if (t !== t.toLowerCase()) {
@@ -67,7 +63,7 @@ function showModalCreateUser(elem) {
             return false
         }
 
-        if (!plausiblePW(pw.value)) {
+        if (!plausiblePassword(pw.value)) {
             setErr(getTranslatedStr("users.create.err_pw_implausible"))
             return false
         }

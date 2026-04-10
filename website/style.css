@@ -343,11 +343,11 @@ div.sidebar a.btn.selected:hover {
     padding: 1rem;
 }
 
-.modal .info.positive {
+.info.positive {
     color: var(--positiv-muted);
 }
 
-.modal .info.negative {
+.info.negative {
     color: var(--negative-muted);
 }
 
@@ -1011,7 +1011,7 @@ div.containing.permission {
     width: 6rem;
 }
 
-div.submit {
+.modal div.submit {
     position: sticky;
     bottom: 0;
     background-color: var(--bg-dark);
@@ -1025,4 +1025,13 @@ div.modal .outer:has(div.submit) {
 
 div.pair:has(+ .contentTable) {
     margin-bottom: .5rem;
+}
+
+div.actions {
+    display: grid;
+    gap: .5rem;
+}
+
+div.actions button.submit {
+    padding: 1rem;
 }

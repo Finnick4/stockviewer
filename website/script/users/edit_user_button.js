@@ -67,45 +67,17 @@ function showEditUserModal(userID) {
         }
 
         const setErr = createSetErr(infotxt)
-        const plausiblePW = pw => {
-            return pw.length >= 8 && pw.length <= 72
-        }
 
         const validate = () => {
-            if (name.value.length > 32) {
-                setErr(getTranslatedStr("users.edit.err_name_too_long", {min: 2, max: 32}))
-                return false
-            }
-            if (name.value.length < 2) {
-                setErr(getTranslatedStr("users.edit.err_name_too_short", {min: 2, max: 32}))
+            if (!verifyUserName(name.value, setErr)) {
                 return false
             }
 
-            if (tag.value.length > 32) {
-                setErr(getTranslatedStr("users.edit.err_tag_too_long", {min: 2, max: 5}))
-                return false
-            }
-            if (tag.value.length < 2) {
-                setErr(getTranslatedStr("users.edit.err_tag_too_short", {min: 2, max: 5}))
-                return false
-            }
-            if (!isNaN(tag.value)) {
-                setErr(getTranslatedStr("users.edit.err_tag_numeric"))
-                return false
-            }
-            if (tag.value !== String(tag.value).toLowerCase()) {
-                setErr(getTranslatedStr("users.edit.err_tag_upper_case"))
-                return false
-            }
-            for (const chartag of tag.value) {
-                if (String(chartag).match(/[a-z]|[0-9]/i)) {
-                    continue
-                }
-                setErr(getTranslatedStr("users.edit.err_tag_invalid_character"))
+            if (!verifyUserTag(tag.value, setErr)) {
                 return false
             }
 
-            if (plausiblePW(pw.value)) {
+            if (!plausiblePassword(pw.value)) {
                 setErr(getTranslatedStr("users.edit.err_pw_implausible"))
                 return false
             }
