@@ -208,6 +208,17 @@
             "groups": {
                 "stocks": "Acciones",
                 "articles": "Artículos"
+            },
+            "permissions": {
+                "canCreateStocks": {
+                    "title": "Crear acción"
+                },
+                "canCreateStockGroups": {
+                    "title": "Crear grupo de acciones"
+                },
+                "canCreateUsers": {
+                    "title": "Crear usuario"
+                }
             }
         }
     },
