@@ -243,6 +243,10 @@
         },
         "sessions": {
             "change_pw_button_label": "Änderung"
+        },
+        "name": {
+            "tag": "Benutzer-Tag",
+            "submit": "Änderung"
         }
     }
 }
