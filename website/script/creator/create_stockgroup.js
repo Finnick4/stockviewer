@@ -19,7 +19,7 @@ function showModalCreateStockGroup(elem) {
                         </div>
                         <div class="stockSelector"></div>
                       
-                        <div class="pair">
+                        <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stockgroups.modify.submit_create")}</button>
                         </div>
@@ -62,7 +62,7 @@ function showModalCreateStockGroup(elem) {
         elem.addEventListener("input", () => validate())
     })
 
-    modal.querySelector(".submit").addEventListener("click", () => {
+    modal.querySelector(`button.submit`).addEventListener("click", () => {
         if (validate()) {
             const members = []
             stockSelector.savedStocks.forEach(stockid => {

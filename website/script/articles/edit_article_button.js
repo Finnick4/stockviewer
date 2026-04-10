@@ -47,7 +47,7 @@ function showModalEditArticles(articleId) {
                       </div>
                       <div class="stockInfluenceSelector"></div>
                                     
-                      <div class="pair">
+                      <div class="pair submit">
                           <div class="info"></div>
                           <button class="submit">${getTranslatedStr("articles.modify.submit_edit")}</button>
                       </div>
@@ -147,7 +147,7 @@ function showModalEditArticles(articleId) {
             })
         })
 
-        modal.querySelector(`.submit`).addEventListener("click", () => {
+        modal.querySelector(`button.submit`).addEventListener("click", () => {
             if (validate()) {
                 let added = [], edited = [], removed = artInfluences.map(x => Number(x.StockID))
                 const pushAddedInfluence = (stockid, permille, minutes, falloff) => {

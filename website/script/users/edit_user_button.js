@@ -38,7 +38,7 @@ function showEditUserModal(userID) {
                           <p>${getTranslatedStr("users.edit.new_pw")}</p>
                           <input type="password" class="pw">            
                         </div>
-                        <div class="pair">
+                        <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
                         </div>
@@ -120,7 +120,7 @@ function showEditUserModal(userID) {
             elem.addEventListener("input", () => validate())
         })
 
-        modal.querySelector(`.submit`).addEventListener("click", () => {
+        modal.querySelector(`button.submit`).addEventListener("click", () => {
             if (validate()) {
                 fetch(`/api/users/${userID}`, {
                     method: "PATCH",

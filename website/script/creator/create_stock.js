@@ -25,7 +25,7 @@ function showModalCreateStock(elem) {
                             <p>${getTranslatedStr("stocks.modify.initial_price_ct")}</p>
                             <input class="price" type="number">
                         </div>
-                        <div class="pair">
+                        <div class="submit pair">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
                         </div>
@@ -80,7 +80,7 @@ function showModalCreateStock(elem) {
         elem.addEventListener("input", () => validate())
     })
 
-    modal.querySelector(".submit").addEventListener("click", () => {
+    modal.querySelector(`button.submit`).addEventListener("click", () => {
         if (validate()) {
             fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}&color=${Number(parseInt(color.color, 16))}`, {
                 method: "POST"

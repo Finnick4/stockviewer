@@ -32,7 +32,7 @@ function showModalEditPermissions(userID, elem) {
                             <div class="permissions contentTable grid-0-name-1">
                                 
                             </div>
-                            <div class="pair">
+                            <div class="pair submit">
                                 <div class="info"></div>
                                 <button class="submit">${getTranslatedStr("users.permissions.edit.submit")}</button>
                             </div>
@@ -129,11 +129,12 @@ function showModalEditPermissions(userID, elem) {
             infotxt.classList.remove("negative")
             return true
         }
+        verify()
 
         permissionsDiv.querySelectorAll("button.inputField").forEach(btn => btn.onEdit = () => verify())
         permissionsDiv.querySelectorAll("input.inputField").forEach(inpt => inpt.addEventListener("input", () => verify()))
 
-        modal.querySelector(`.submit`).addEventListener("click", () => {
+        modal.querySelector(`input.submit`).addEventListener("click", () => {
             if (verify()) {
                 const editedPermissions = []
                 const addPermissionValue = (perm, value) => editedPermissions.push({Permission: perm, Value: value})
@@ -162,8 +163,6 @@ function showModalEditPermissions(userID, elem) {
                 });
             }
         })
-
-        verify()
     })
 }
 

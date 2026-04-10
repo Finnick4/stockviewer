@@ -1003,3 +1003,19 @@ div.containing.permission {
 .modal .content .permission .inputField {
     width: 6rem;
 }
+
+div.submit {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--bg-dark);
+    padding-top: .5rem;
+    padding-bottom: 2rem;
+}
+
+div.modal .outer:has(div.submit) {
+    padding-bottom: 0;
+}
+
+div.pair:has(+ .contentTable) {
+    margin-bottom: .5rem;
+}

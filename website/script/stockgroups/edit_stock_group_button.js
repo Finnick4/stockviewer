@@ -37,7 +37,7 @@ function showModalEditStockGroup(groupid) {
                         </div>
                         <div class="stockSelector"></div>
                       
-                        <div class="pair">
+                        <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stockgroups.modify.submit_edit")}</button>
                         </div>
@@ -102,7 +102,7 @@ function showModalEditStockGroup(groupid) {
             elem.addEventListener("input", () => validate())
         })
 
-        modal.querySelector(".submit").addEventListener("click", () => {
+        modal.querySelector("button.submit").addEventListener("click", () => {
             if (validate()) {
                 let added = [], removed = groupMembers.map(x => x)
                 stockSelector.savedStocks.forEach(stockid => {

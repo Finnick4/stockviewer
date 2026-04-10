@@ -24,7 +24,7 @@ function showModalCreateUser(elem) {
                           <input type="password" class="pw2">            
                       </div>
                                     
-                      <div class="pair">
+                      <div class="pair submit">
                           <div class="info"></div>
                           <button class="submit">${getTranslatedStr("users.create.submit")}</button>
                       </div>
@@ -87,7 +87,7 @@ function showModalCreateUser(elem) {
         elem.addEventListener("input", () => validate())
     })
 
-    modal.querySelector(`.submit`).addEventListener("click", () => {
+    modal.querySelector(`button.submit`).addEventListener("click", () => {
         if (validate()) {
             fetch(`${window.location.origin}/api/users`, {
                 method: "POST",

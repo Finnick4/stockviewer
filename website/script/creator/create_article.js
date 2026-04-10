@@ -19,7 +19,7 @@ function showModalCreateArticle(elem) {
                       </div>
                       <div class="stockInfluenceSelector"></div>
                                     
-                      <div class="pair">
+                      <div class="pair submit">
                           <div class="info"></div>
                           <button class="submit">${getTranslatedStr("articles.modify.submit_create")}</button>
                       </div>

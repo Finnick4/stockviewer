@@ -44,7 +44,7 @@ function showEditStockModal(stockID) {
                             <p>${getTranslatedStr("stocks.price_ct")}</p>
                             <input class="price" type="number" value="${sanitiseText(stockPrice)}">
                         </div>
-                        <div class="pair">
+                        <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
                         </div>
@@ -119,7 +119,7 @@ function showEditStockModal(stockID) {
             elem.addEventListener("input", () => validate())
         })
 
-        modal.querySelector(`.submit`).addEventListener("click", () => {
+        modal.querySelector(`button.submit`).addEventListener("click", () => {
             if (validate()) {
                 fetch(`${window.location.origin}/api/stocks/${stockID}`, {
                     method: "PATCH",
