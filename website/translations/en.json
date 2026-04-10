@@ -262,7 +262,8 @@
             "err_tag_numeric": "The tag may not be numeric!",
             "err_tag_upper_case": "The tag cannot have upper case characters!",
             "err_tag_invalid_character": "The tag may only contain numbers and lowercase characters.",
-            "err_pw_implausible": "The new password is not plausible!"
+            "err_pw_implausible": "The new password is not plausible!",
+            "err_tag_taken": "The provided tag is already taken. Choose another!"
         },
         "list": {
             "title_edit": "All users",

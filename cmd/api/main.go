@@ -16,6 +16,11 @@ import (
 )
 
 func main() {
+
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors: true,
+	})
+
 	err := godotenv.Load(".env")
 
 	if err != nil {

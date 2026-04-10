@@ -2,6 +2,7 @@ package users
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"stockviewer/api"
 	"stockviewer/dto"
@@ -51,6 +52,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	err = database.CreateUser(params.Tag, params.Password, creatorid)
 
 	if err != nil {
+		if errors.Is(err, dto.ErrTagAlreadyUsed) {
+			api.RequestMalformedHandler(w, "Tag already taken!")
+			return
+		}
 		api.InternalErrorHandler(w)
 		return
 	}

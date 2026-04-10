@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"stockviewer/dto"
+	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -175,6 +176,9 @@ func CreateUser(tag string, password string, creatorID string) error {
 	}
 
 	if err != nil {
+		if strings.HasPrefix(err.Error(), "pq: duplicate key value") {
+			return dto.ErrTagAlreadyUsed
+		}
 		log.Error(err)
 		return err
 	}
@@ -224,6 +228,9 @@ func SetUserTag(userID string, tag string) error {
 	db := getDB()
 	_, err := db.Exec(`UPDATE users SET tag=$1 WHERE id=$2;`, tag, userID)
 	if err != nil {
+		if strings.HasPrefix(err.Error(), "pq: duplicate key value") {
+			return dto.ErrTagAlreadyUsed
+		}
 		log.Error(err)
 		return err
 	}
@@ -234,6 +241,9 @@ func SetUserTagAndName(userID string, tag string, name string) error {
 	db := getDB()
 	_, err := db.Exec(`UPDATE users SET tag=$1, "displayName"=$2 WHERE id=$3;`, tag, name, userID)
 	if err != nil {
+		if strings.HasPrefix(err.Error(), "pq: duplicate key value") {
+			return dto.ErrTagAlreadyUsed
+		}
 		log.Error(err)
 		return err
 	}

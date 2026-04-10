@@ -2,6 +2,7 @@ package users
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"stockviewer/api"
 	"stockviewer/dto"
@@ -46,6 +47,10 @@ func EditSelf(w http.ResponseWriter, r *http.Request) {
 	if aimName && aimTag {
 		err = database.SetUserTagAndName(userID, params.Tag, params.Name)
 		if err != nil {
+			if errors.Is(err, dto.ErrTagAlreadyUsed) {
+				api.RequestMalformedHandler(w, "Tag already taken!")
+				return
+			}
 			log.Error(err)
 			api.InternalErrorHandler(w)
 			return
@@ -54,6 +59,10 @@ func EditSelf(w http.ResponseWriter, r *http.Request) {
 	if !aimName && aimTag {
 		err = database.SetUserTag(userID, params.Tag)
 		if err != nil {
+			if errors.Is(err, dto.ErrTagAlreadyUsed) {
+				api.RequestMalformedHandler(w, "Tag already taken!")
+				return
+			}
 			log.Error(err)
 			api.InternalErrorHandler(w)
 			return

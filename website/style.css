@@ -45,6 +45,7 @@ body {
     background-color: var(--bg-very-dark);
     color: var(--text-muted);
     height: calc(100vh - 5rem);
+    margin: 0;
 }
 
 h1 {
@@ -52,7 +53,7 @@ h1 {
 }
 
 div.rootsplit {
-    margin-top: 4rem;
+    margin-top: 5rem;
     display: grid;
     grid-template-columns: 15rem auto;
     grid-template-rows: auto;
@@ -78,6 +79,9 @@ nav.linklist {
 main {
     margin: 5rem auto 0 auto;
     width: var(--main-width);
+}
+.rootsplit main {
+    margin: 0 auto;
 }
 
 main.homepage {

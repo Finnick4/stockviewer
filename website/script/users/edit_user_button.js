@@ -107,7 +107,17 @@ function showEditUserModal(userID) {
                         closeModal(id)
                     } else {
                         if (r.status >= 400 || r.status < 500) {
-                            setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                            if (r.status === 400) {
+                                r.json().then(resp => {
+                                    if (resp.Message === "Tag already taken!") {
+                                        setErr(getTranslatedStr("users.edit.err_tag_taken"))
+                                    } else {
+                                        setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                                    }
+                                })
+                            } else {
+                                setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                            }
                         } else {
                             setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
                         }
