@@ -234,6 +234,10 @@
         },
         "sessions": {
             "change_pw_button_label": "cambio"
+        },
+        "name": {
+            "tag": "Etiqueta de usuario",
+            "submit": "cambio"
         }
     }
 }
