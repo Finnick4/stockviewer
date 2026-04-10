@@ -200,6 +200,10 @@
         "permissions": {
             "edit": {
                 "err_no_edit_permission": "Es sieht so aus, als ob du derzeit keine Artikel bearbeiten kannst"
+            },
+            "groups": {
+                "stocks": "Aktien",
+                "articles": "Artikel"
             }
         },
         "tag": "Benutzer-Tag",
