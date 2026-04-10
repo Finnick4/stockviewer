@@ -204,6 +204,23 @@
             "groups": {
                 "stocks": "Aktien",
                 "articles": "Artikel"
+            },
+            "permissions": {
+                "canCreateStocks": {
+                    "title": "Aktie erstellen"
+                },
+                "canCreateStockGroups": {
+                    "title": "Aktiengruppe erstellen"
+                },
+                "canCreateArticles": {
+                    "title": "Artikel verfassen"
+                },
+                "canEditArticles": {
+                    "title": "Artikel bearbeiten"
+                },
+                "canCreateUsers": {
+                    "title": "Benutzer erstellen"
+                }
             }
         },
         "tag": "Benutzer-Tag",
