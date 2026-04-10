@@ -877,6 +877,13 @@ div.contentTable .containing:hover {
     box-shadow: var(--button-hover-shadow);
 }
 
+div.contentTable .passthrough {
+    grid-column: 1/final;
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: .5rem .25rem;
+}
+
 .value {
     display: inline;
     background-color: var(--bg-light);

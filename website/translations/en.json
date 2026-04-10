@@ -287,6 +287,12 @@
                 "submit": "Save permissions",
                 "values_okay": "Everything seems to be okay!"
             },
+            "groups": {
+                "stocks": "Stocks",
+                "stock_groups": "Stock Groups",
+                "articles": "Articles",
+                "users": "Users"
+            },
             "permissions": {
                 "canCreateStocks": {
                     "title": "Can create stocks",

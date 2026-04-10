@@ -43,34 +43,45 @@ function showModalEditPermissions(userID, elem) {
         const modal = document.getElementById(id);
         const infotxt = modal.querySelector(".info")
         const permissionsDiv = modal.querySelector("div.permissions")
-        const permsList = ["canCreateStocks", "canEditStockNames", "canEditStockColors", "canEditStockPrices", "canArchiveStocks", "isStockArchivist",
-            "canCreateStockGroups", "canEditStockGroupNames", "canEditStockGroupDescriptions", "canEditStockGroupMembers", "canDeleteStockGroups",
-            "canCreateArticles", "canEditArticles", "canModifyInfluences", "maxInfluencePermille",
-            "canCreateUsers", "canEditUserPermissions", "canEditUserName", "canEditUserPassword", "canDisableUsers", "canDeleteUsers"
+        const permsList = [
+            {groupName: "stocks", perms: ["canCreateStocks", "canEditStockNames", "canEditStockColors", "canEditStockPrices", "canArchiveStocks", "isStockArchivist"]},
+            {groupName: "stock_groups", perms: ["canCreateStockGroups", "canEditStockGroupNames", "canEditStockGroupDescriptions", "canEditStockGroupMembers", "canDeleteStockGroups"]},
+            {groupName: "articles", perms: ["canCreateArticles", "canEditArticles", "canModifyInfluences", "maxInfluencePermille"]},
+            {groupName: "users", perms: ["canCreateUsers", "canEditUserPermissions", "canEditUserName", "canEditUserPassword", "canDisableUsers", "canDeleteUsers"]}
         ]
+
         const isBoolPerm = perm => perm.startsWith("is") || perm.startsWith("can")
 
-        for (const permName of permsList.reverse()) {
-            const boolPerm = isBoolPerm(permName)
-            const elem = document.createElement("div")
-            elem.classList.add("permission")
-            elem.classList.add("containing")
-            elem.dataset.permission = permName
-            elem.innerHTML = `
+        for (const permGroup of permsList) {
+            const groupElem = document.createElement("div")
+            groupElem.classList.add("permissionGroup")
+            groupElem.classList.add("passthrough")
+            groupElem.dataset.groupName = permGroup.groupName
+            groupElem.innerHTML = `<h2 class="grid-full-width">${getTranslatedStr(`users.permissions.groups.${permGroup.groupName}`)}</h2>`
+            permissionsDiv.appendChild(groupElem)
+
+            for (const permName of permGroup.perms) {
+                const boolPerm = isBoolPerm(permName)
+                const elem = document.createElement("div")
+                elem.classList.add("permission")
+                elem.classList.add("containing")
+                elem.dataset.permission = permName
+                elem.innerHTML = `
                     <h3 class="name">${getTranslatedStr(`users.permissions.permissions.${permName}.title`)}</h3>
                     ${boolPerm ? `<button is="switch-button" class="inputField"></button>` : `<input type="number" value="0" class="inputField">`}
                     ${getTranslatedStr(`users.permissions.permissions.${permName}.description`) !== `users.permissions.permissions.${permName}.description` ? `<p class="description grid-full-width">${getTranslatedStr(`users.permissions.permissions.${permName}.description`)}</p>` :  ""}`
-            if (originalPermMap.has(permName)) {
-                const inputElem = elem.querySelector(".inputField")
-                if (boolPerm) {
-                    inputElem.state = Number(originalPermMap.get(permName)) === 1
-                    inputElem.update()
-                } else {
-                    inputElem.value = Number(originalPermMap.get(permName))
+                if (originalPermMap.has(permName)) {
+                    const inputElem = elem.querySelector(".inputField")
+                    if (boolPerm) {
+                        inputElem.state = Number(originalPermMap.get(permName)) === 1
+                        inputElem.update()
+                    } else {
+                        inputElem.value = Number(originalPermMap.get(permName))
+                    }
                 }
-            }
 
-            permissionsDiv.insertBefore(elem, permissionsDiv.firstChild)
+                groupElem.appendChild(elem)
+            }
         }
 
         const setErr = createSetErr(infotxt)
