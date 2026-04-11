@@ -239,5 +239,10 @@
             "tag": "Etiqueta de usuario",
             "submit": "cambio"
         }
+    },
+    "confirm_modals": {
+        "phrase_repetition": {
+            "submit": "Enviar"
+        }
     }
 }
