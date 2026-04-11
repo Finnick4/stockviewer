@@ -217,5 +217,10 @@
             "tag": "Tag de l'utilisateur",
             "submit": "changement"
         }
+    },
+    "confirm_modals": {
+        "phrase_repetition": {
+            "submit": "Soumettre"
+        }
     }
 }
