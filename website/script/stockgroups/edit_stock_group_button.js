@@ -115,13 +115,6 @@ function showModalEditStockGroup(groupid) {
                         }
                     }
                 })
-                console.log({
-                    ID: Number(groupid),
-                    Name: permName && name.value !== groupName ? name.value : "",
-                    Description: permDesc && description.value !== groupDescription ? description.value : "",
-                    AddedMembers: permMembers && added.length !== 0 ? added : [],
-                    RemovedMembers: permMembers && removed.length !== 0 ? removed : []
-                })
                 fetch(`${window.location.origin}/api/stockgroups/${groupid}`, {
                     method: "PATCH",
                     body: JSON.stringify({
@@ -130,7 +123,6 @@ function showModalEditStockGroup(groupid) {
                         AddedMembers: permMembers && added.length !== 0 ? added : [],
                         RemovedMembers: permMembers && removed.length !== 0 ? removed : []
                     })
-
                 }).then(r => {
                     if (r.ok) {
                         closeModal(id)

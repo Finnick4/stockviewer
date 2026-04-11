@@ -300,6 +300,27 @@ div.sidebar a.btn.selected:hover {
     overflow: auto;
 }
 
+.modal.wider .outer {
+    width: 50%;
+}
+
+.modal.confirm-modal {
+    z-index: 2;
+}
+
+.modal.confirm-modal .outer {
+    width: fit-content;
+}
+.modal.confirm-modal input.repetition {
+    width: calc(100% - 1rem);
+}
+.modal.confirm-modal .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+
 .modal .content {
     display: grid;
     gap: .5rem
@@ -1042,4 +1063,10 @@ div.actions {
 
 div.actions button.submit {
     padding: 1rem;
+}
+
+.not-selectable {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

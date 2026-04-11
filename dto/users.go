@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"errors"
+)
+
 type UserLoginParams struct {
 	Tag      string
 	Password string
@@ -43,3 +47,5 @@ type EditUserParams struct {
 	Tag      string
 	Password string
 }
+
+var ErrTagAlreadyUsed = errors.New("there is already a user with the same tag present")

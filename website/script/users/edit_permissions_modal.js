@@ -41,6 +41,7 @@ function showModalEditPermissions(userID, elem) {
         const id = createModal(html)
 
         const modal = document.getElementById(id);
+        modal.classList.add("wider")
         const infotxt = modal.querySelector(".info")
         const permissionsDiv = modal.querySelector("div.permissions")
         const permsList = [

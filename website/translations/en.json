@@ -424,5 +424,18 @@
             "title_stocks": "Starred Stocks Overview",
             "title_stock_groups": "Starred Stock Groups"
         }
+    },
+    "confirm_modals": {
+        "phrase_repetition": {
+            "title": "Repeat to confirm!",
+            "input_placeholder": "Type here!",
+            "descriptions": {
+                "default": "Please type the phrase '{phrase}' again to confirm this action!",
+                "stock_name": "Please repeat the name of the stock ({phrase}) to confirm this action!"
+            },
+            "err_wrong_repetition": "The provided phrase is wrong!",
+            "submit": "Submit",
+            "cancel": "Cancel"
+        }
     }
 }
