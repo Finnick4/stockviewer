@@ -88,7 +88,10 @@ func GetStockPrices() ([]dto.StockPrice, error) {
 	db := getDB()
 
 	log.Debug("Getting all current stock prices")
-	rows, err := db.Query(`SELECT "stocks".id, stockprice.price FROM stocks JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate" WHERE stocks.status = 1;`)
+	rows, err := db.Query(`
+	SELECT "stocks".id, stockprice.price FROM stocks 
+	    JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate" 
+	WHERE stocks.status = 1;`)
 
 	if err != nil {
 		log.Error(err)
@@ -121,6 +124,7 @@ SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), sto
 FROM stocks
     JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate"
     LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId" AND stocks.id=starredstocks."stockId"
+WHERE stocks.status = 1 
 GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
 
 	if err != nil {
@@ -261,7 +265,7 @@ func GetStocksPriceDelta(tf dto.Timeframe, userID string) ([]dto.PriceDelta, err
 FROM stockprice
     JOIN stocks ON stockprice.stockid = stocks.id
 	LEFT JOIN starredstocks ON stockprice.stockid = starredstocks."stockId"
-WHERE timestamp > ("latestUpdate" - $2::interval)
+WHERE timestamp > ("latestUpdate" - $2::interval) AND stocks.status = 1
 GROUP BY stockprice.stockid, name, shorthand, color;`, userID, tf.TotalWidth())
 	if err != nil {
 		log.Error(err)
@@ -294,7 +298,8 @@ func GetStarredStocksAsStockGroup(userID string) (dto.DetailedStockGroup, error)
 	FROM stocks
 		JOIN starredstocks ON stocks.id = starredstocks."stockId"
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
+	WHERE starredstocks."userId" = $1 AND stocks.status = 1 
+	GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
 
 	defer rows.Close()
 
@@ -326,7 +331,8 @@ func GetStarredStocks(userID string) ([]dto.DetailedStock, error) {
 	SELECT stocks.name, stocks.id, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price, (SELECT COUNT("userId") FROM starredstocks WHERE starredstocks."stockId" = stocks.id) AS count FROM stocks
 		JOIN starredstocks ON stocks.id = starredstocks."stockId"
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
-	WHERE starredstocks."userId" = $1 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
+	WHERE starredstocks."userId" = $1 AND stocks.status = 1 
+	GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID)
 
 	defer rows.Close()
 
@@ -367,7 +373,7 @@ func GetStarredStocksDelta(userID string, tf dto.Timeframe) ([]dto.PriceDelta, e
 FROM stockprice
     JOIN starredstocks ON stockprice.stockid = starredstocks."stockId"
     JOIN stocks ON stockprice.stockid = stocks.id
-WHERE starredstocks."userId" = $1 AND timestamp > ("latestUpdate" - $2::interval)
+WHERE starredstocks."userId" = $1 AND timestamp > ("latestUpdate" - $2::interval) AND stocks.status = 1
 GROUP BY stockprice.stockid, name, shorthand, color;`, userID, tf.TotalWidth())
 
 	defer rows.Close()
@@ -698,4 +704,28 @@ func GetActiveUnreadInfluencesOnStock(stockID int32, userID string) ([]dto.Influ
 	}
 
 	return data, nil
+}
+
+func ArchiveStock(stockID int32) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stocks SET status=2 WHERE id = $1 AND status=1;`, stockID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func UnarchiveStock(stockID int32) error {
+	db := getDB()
+
+	_, err := db.Exec(`UPDATE stocks SET status=1 WHERE id = $1 AND status=2;`, stockID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
 }
