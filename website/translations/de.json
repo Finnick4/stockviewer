@@ -248,5 +248,10 @@
             "tag": "Benutzer-Tag",
             "submit": "Änderung"
         }
+    },
+    "confirm_modals": {
+        "phrase_repetition": {
+            "submit": "Absenden"
+        }
     }
 }
