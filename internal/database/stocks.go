@@ -729,3 +729,33 @@ func UnarchiveStock(stockID int32) error {
 	}
 	return nil
 }
+
+func GetArchivedStocks() ([]dto.DetailedStock, error) {
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), stockprice.price
+FROM stocks
+    JOIN stockprice ON stocks.id = stockprice.stockid AND stockprice.timestamp=stocks."latestUpdate"
+WHERE stocks.status = 2 
+GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var data []dto.DetailedStock
+
+	for rows.Next() {
+		var currentData dto.DetailedStock
+		err = rows.Scan(&currentData.ID, &currentData.Name, &currentData.Shorthand, &currentData.Color, &currentData.Price)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		data = append(data, currentData)
+	}
+	return data, nil
+}
