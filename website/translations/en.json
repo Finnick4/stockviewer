@@ -396,6 +396,15 @@
         "err_pw_repetition": "The new password isn't identical to the repetition!",
         "values_okay": "Everything seems to be okay!"
     },
+    "admin_panel": {
+        "generic_title": "Admin Panel",
+        "notice_sidebar": "Click on the sidebar to get to a specific page.",
+        "panels": {
+            "users": "Users",
+            "stocks": "Active Stocks",
+            "archived_stocks": "Stock Archive"
+        }
+    },
     "settings": {
         "generic_title": "Settings Panel",
         "notice_sidebar": "Click on the sidebar to get to a specific page.",
