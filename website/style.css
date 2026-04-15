@@ -718,6 +718,11 @@ stock-chart svg line.axis {
     stroke-linecap: square;
 }
 
+stock-chart svg text.price {
+    fill: var(--icon-color);
+    font-size: 24;
+}
+
 .login-field {
     background: var(--bg-dark);
     padding: 2rem;

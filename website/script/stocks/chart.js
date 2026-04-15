@@ -4,7 +4,7 @@ class stockChart extends HTMLElement {
         this.timeframe = 1
         this.width = 80
         this.height = 40
-        this.xPadding = 10
+        this.xPadding = 15
         this.yPadding = 5
         this.innerHTML = `
                         <div class="inner">
@@ -21,8 +21,13 @@ class stockChart extends HTMLElement {
                             </div>
                             <svg class="chart" viewbox="5 0 90 47">
                                 <path d="M10 25 L90 25" ></path>
-                                <line class="axis" x1="10" x2="10" y1="5" y2="46"></line>
-                                <line class="axis" x1="10" x2="90" y1="46" y2="46"></line>
+                                <text class="price max" x="5" y="5" font-size="2">???</text>
+                                <text class="price quatermax" x="5" y="15" font-size="2">???</text>
+                                <text class="price middle" x="5" y="25" font-size="2">???</text>
+                                <text class="price quatermin" x="5" y="35" font-size="2">???</text>
+                                <text class="price min" x="5" y="45" font-size="2">???</text>
+                                <line class="axis" x1="15" x2="15" y1="5" y2="46"></line>
+                                <line class="axis" x1="15" x2="95" y1="46" y2="46"></line>
                             </svg>
                         </div>
                         `
@@ -78,6 +83,19 @@ class stockChart extends HTMLElement {
         } else {
             pathElem.classList.add("negative")
         }
+        const quater = (max - min) / 4
+
+        const maxTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.max`)
+        const qmaxTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.quatermax`)
+        const middleTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.middle`)
+        const qminTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.quatermin`)
+        const minTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.min`)
+
+        maxTxt.innerHTML = getShortNumber(max)
+        qmaxTxt.innerHTML = getShortNumber(min + 3*quater)
+        middleTxt.innerHTML = getShortNumber(min + 2*quater)
+        qminTxt.innerHTML = getShortNumber(min + quater)
+        minTxt.innerHTML = getShortNumber(min)
     }
 }
 
