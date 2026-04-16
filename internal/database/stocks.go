@@ -761,3 +761,16 @@ GROUP BY stocks.id, stocks.name, stocks.shorthand, stocks.color, stockprice.pric
 	}
 	return data, nil
 }
+
+func DeleteStock(stockID int32) error {
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM stocks WHERE id=$1;`, stockID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	go notifiers.NotifyStockChange()
+	return nil
+}

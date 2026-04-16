@@ -24,6 +24,10 @@ type ArchiveParams struct {
 	Result bool
 }
 
+type StockDeleteParams struct {
+	Password string
+}
+
 type DetailedStock struct {
 	ID        int32
 	Name      string
