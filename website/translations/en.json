@@ -454,6 +454,17 @@
             "err_wrong_repetition": "The provided phrase is wrong!",
             "submit": "Submit",
             "cancel": "Cancel"
+        },
+        "authenticate_prompt": {
+            "title": "Enter password",
+            "input_placeholder": "Enter password here!",
+            "descriptions": {
+                "default": "Please enter your password to confirm this action!",
+                "stock_delete": "Please enter your password to delete this stock!"
+            },
+            "err_invalid_password": "Invalid password!",
+            "submit": "Authenticate",
+            "cancel": "Cancel"
         }
     }
 }

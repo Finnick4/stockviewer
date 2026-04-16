@@ -11,15 +11,7 @@ function subscribeToAPI(path, func) {
     if (Object.keys(currentSubscriptions).indexOf(path) === - 1) {
 
         if (Object.keys(currentSubscriptions).length >= 6) {
-            console.log("checking what to close!")
-            Object.keys(currentSubscriptions).forEach(path => {
-                if (currentSubscriptions[path].length === 0) {
-                    console.log("closing " + path)
-                    delete currentSubscriptions[path]
-                    subscriptionListeners[path].es.close()
-                    delete subscriptionListeners[path]
-                }
-            })
+            closeUnneededSubscriptions()
         }
 
         currentSubscriptions[path] = [{
@@ -65,6 +57,17 @@ function subscribeToAPI(path, func) {
     }
 }
 
+function closeUnneededSubscriptions() {
+    console.log("checking what to close!")
+    Object.keys(currentSubscriptions).forEach(path => {
+        if (currentSubscriptions[path].length === 0) {
+            console.log("closing " + path)
+            delete currentSubscriptions[path]
+            subscriptionListeners[path].es.close()
+            delete subscriptionListeners[path]
+        }
+    })
+}
 
 function addThisToFunctionCall(func, that) {
     return data => func(data, that)

@@ -82,7 +82,8 @@ function showModalCreateStock(elem) {
 
     modal.querySelector(`button.submit`).addEventListener("click", () => {
         if (validate()) {
-            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}&color=${Number(parseInt(color.color, 16))}`, {
+            const colorDec = Number(parseInt(color.color, 16))
+            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}&color=${isNaN(colorDec) ? 0 : colorDec}`, {
                 method: "POST"
             }).then(r => {
                 if (r.ok) {

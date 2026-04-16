@@ -92,9 +92,26 @@ function showEditStockModal(stockID) {
 
         if (permDelete) {
             const deleteBtn = modal.querySelector("button.delete")
-            deleteBtn.addEventListener("click", () => {
-                console.log("Clicked delete!")
-            })
+            deleteBtn.addEventListener("click", () => showAuthenticatePromptModal(password => new Promise((resolve, reject) => {
+                fetch(`/api/stocks/${stockID}`, {
+                    method: "DELETE",
+                    body: JSON.stringify({
+                        password: password
+                    })
+                }).then(r => {
+                    if (r.ok) {
+                        console.log("Okay!")
+                        closeModal(id)
+                        window.history.pushState(null, null, `${window.location.origin}/stocks`);
+                        router()
+                        closeUnneededSubscriptions()
+                        resolve()
+
+                    } else {
+                        reject()
+                    }
+                })
+            }), "stocks_delete"))
         }
         if (permArchive) {
             const archiveBtn = modal.querySelector("button.archive")
