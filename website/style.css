@@ -720,7 +720,6 @@ stock-chart svg line.axis {
 
 stock-chart svg text.price {
     fill: var(--icon-color);
-    font-size: 24;
 }
 
 .login-field {

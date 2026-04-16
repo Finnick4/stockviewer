@@ -37,6 +37,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/{stockID}/groups/sse", stocks.GetStockGroupMembershipSSE)
 		router.Put("/{stockID}/star", stocks.StarStock)
 
+		router.With(middleware.ExtractPermissions).Put("/{stockID}/archive", stocks.ArchiveStock)
 		router.With(middleware.ExtractPermissions).Patch("/{stockID}", stocks.EditStock)
 
 		router.Get("/", stocks.GetStocks)

@@ -20,6 +20,10 @@ type StarParams struct {
 	Result bool
 }
 
+type ArchiveParams struct {
+	Result bool
+}
+
 type DetailedStock struct {
 	ID        int32
 	Name      string

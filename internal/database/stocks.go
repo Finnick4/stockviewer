@@ -715,6 +715,7 @@ func ArchiveStock(stockID int32) error {
 		log.Error(err)
 		return err
 	}
+	go notifiers.NotifyStockChange()
 	return nil
 }
 
@@ -727,6 +728,7 @@ func UnarchiveStock(stockID int32) error {
 		log.Error(err)
 		return err
 	}
+	go notifiers.NotifyStockChange()
 	return nil
 }
 
