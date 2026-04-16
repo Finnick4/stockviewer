@@ -27,6 +27,10 @@ function showEditStockModal(stockID) {
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
         const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
+        const permArchive = userInfo.checkPerm("canArchiveStocks")
+        const permDelete = userInfo.checkPerm("canDeleteStocks")
+        const dangerZoneVisible = permDelete || permArchive
+
         let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
                         <div class="pair">
                             <p>${getTranslatedStr("stocks.name")}</p>
@@ -48,6 +52,24 @@ function showEditStockModal(stockID) {
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
                         </div>
+                        ${dangerZoneVisible ? `
+                            <div class="dangerZone">
+                                <h3 class="warning">${getTranslatedStr("stocks.modify.danger.title")}</h3>
+                                <p class="warning">${getTranslatedStr("stocks.modify.danger.subtitle")}</p>
+                                ${permArchive ? `
+                                    <div class="pair">
+                                        <p>${getTranslatedStr("stocks.modify.danger.archive")}</p>
+                                        <button class="archive">${getTranslatedStr("stocks.modify.danger.archive_button")}</button>                        
+                                    </div>
+                                ` : ""}
+                                ${permDelete ? `
+                                    <div class="pair">
+                                        <p>${getTranslatedStr("stocks.modify.danger.delete")}</p>
+                                        <button class="delete">${getTranslatedStr("stocks.modify.danger.delete_button")}</button>
+                                    </div>
+                                ` : ""}
+                            </div>` : ""}
+                               
                       `
         const id = createModal(html)
         const modal = document.getElementById(id)
@@ -57,6 +79,34 @@ function showEditStockModal(stockID) {
         const shorthand = modal.querySelector(`input.shorthand`)
         const color = modal.querySelector(`color-selector`)
         const price = modal.querySelector(`.price`)
+
+        if (permDelete) {
+            const deleteBtn = modal.querySelector("button.delete")
+            deleteBtn.addEventListener("click", () => {
+                console.log("Clicked delete!")
+            })
+        }
+        if (permArchive) {
+            const archiveBtn = modal.querySelector("button.archive")
+            archiveBtn.addEventListener("click", () => showRepeatPhraseModal(stockName, () => {
+                    fetch(`/api/stocks/${stockID}/archive`, {
+                        method: "PUT",
+                        body: JSON.stringify({
+                            result: true
+                        })
+                    }).then(r => {
+                        if (r.ok) {
+                            closeModal(id)
+                            window.history.pushState(null, null, `${window.location.origin}/stocks`);
+                            router()
+                        } else {
+                            console.error(`Something went wrong! 
+                                Code: ${r.status}
+                                MSG: ${r.statusText}`)
+                        }
+                    });
+                }, "stocks_archive"))
+        }
 
         let permName = false, permPrice = false, permColor = false
 

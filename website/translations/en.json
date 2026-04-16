@@ -130,7 +130,15 @@
             "err_price_too_low": "The price has to be at least {price}!",
             "err_initial_price_too_low": "The initial price has to be at least {price}!",
             "err_no_create_permission": "It doesn't seem like you are able to create stocks currently!",
-            "values_okay": "The provided values are okay"
+            "values_okay": "The provided values are okay",
+            "danger": {
+                "title": "Danger Zone",
+                "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
+                "archive": "Archive stock",
+                "archive_button": "Archive",
+                "delete": "Delete stock permanently",
+                "delete_button": "Delete"
+            }
         },
         "influences": {
             "title_all": "Influences",
@@ -440,7 +448,8 @@
             "input_placeholder": "Type here!",
             "descriptions": {
                 "default": "Please type the phrase '{phrase}' again to confirm this action!",
-                "stock_name": "Please repeat the name of the stock ({phrase}) to confirm this action!"
+                "stock_name": "Please repeat the name of the stock ({phrase}) to confirm this action!",
+                "stocks_archive": "Please repeat the name of the stock ({phrase}) to archive this stock!"
             },
             "err_wrong_repetition": "The provided phrase is wrong!",
             "submit": "Submit",

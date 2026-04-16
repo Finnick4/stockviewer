@@ -20,7 +20,7 @@ func resetAdminPermissions() {
 		dto.Permission{Permission: "canEditStockPrices", Value: 1},
 		dto.Permission{Permission: "canArchiveStocks", Value: 1},
 		dto.Permission{Permission: "isStockArchivist", Value: 1},
-		dto.Permission{Permission: "canDisableStocks", Value: 1},
+		dto.Permission{Permission: "canDeleteStocks", Value: 1},
 
 		dto.Permission{Permission: "canCreateUsers", Value: 1},
 		dto.Permission{Permission: "canEditUserPermissions", Value: 1},

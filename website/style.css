@@ -1052,12 +1052,25 @@ div.containing.permission {
     padding-bottom: 2rem;
 }
 
-div.modal .outer:has(div.submit) {
+div.modal .outer:has(div.submit, div.dangerZone) {
     padding-bottom: 0;
 }
 
 div.pair:has(+ .contentTable) {
     margin-bottom: .5rem;
+}
+
+div.dangerZone {
+    margin-bottom: 2rem;
+    padding: .5rem;
+    border: solid var(--negative) .25rem;
+    border-radius: var(--border-radius);
+    display: grid;
+    gap: .5rem;
+}
+div.dangerZone .warning {
+    text-align: center;
+    color: var(--negative-muted);
 }
 
 div.actions {
