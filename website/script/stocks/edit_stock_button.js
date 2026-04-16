@@ -27,27 +27,37 @@ function showEditStockModal(stockID) {
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
         const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
+        const permName = userInfo.checkPerm("canEditStockNames")
+        const permPrice = userInfo.checkPerm("canEditStockPrices")
+        const permColor = userInfo.checkPerm("canEditStockColors")
+
         const permArchive = userInfo.checkPerm("canArchiveStocks")
         const permDelete = userInfo.checkPerm("canDeleteStocks")
         const dangerZoneVisible = permDelete || permArchive
 
         let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
-                        <div class="pair">
-                            <p>${getTranslatedStr("stocks.name")}</p>
-                            <input class="name" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_name_placeholder")}" value="${sanitiseText(stockName)}">
-                        </div>
-                        <div class="pair">
-                            <p>${getTranslatedStr("stocks.shorthand")}</p>
-                            <input class="shorthand" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_shorthand_placeholder")}" value="${sanitiseText(stockShorthand)}">
-                        </div>
-                        <div class="pair">
-                            <p>${getTranslatedStr("stocks.color")}</p>
-                            <color-selector data-color="${stockColorHex}"></color-selector>
-                        </div>
-                        <div class="pair">
-                            <p>${getTranslatedStr("stocks.price_ct")}</p>
-                            <input class="price" type="number" value="${sanitiseText(stockPrice)}">
-                        </div>
+                        ${permName ? `
+                            <div class="pair">
+                                <p>${getTranslatedStr("stocks.name")}</p>
+                                <input class="name" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_name_placeholder")}" value="${sanitiseText(stockName)}">
+                            </div>
+                            <div class="pair">
+                                <p>${getTranslatedStr("stocks.shorthand")}</p>
+                                <input class="shorthand" type="text" placeholder="${getTranslatedStr("stocks.modify.stock_shorthand_placeholder")}" value="${sanitiseText(stockShorthand)}">
+                            </div>
+                        ` : ""}
+                        ${permColor ? `
+                            <div class="pair">
+                                <p>${getTranslatedStr("stocks.color")}</p>
+                                <color-selector data-color="${stockColorHex}"></color-selector>
+                            </div>
+                        ` : ""}
+                        ${permPrice ? `
+                            <div class="pair">
+                                <p>${getTranslatedStr("stocks.price_ct")}</p>
+                                <input class="price" type="number" value="${sanitiseText(stockPrice)}">
+                            </div>
+                        ` : ""}
                         <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
@@ -108,53 +118,33 @@ function showEditStockModal(stockID) {
                 }, "stocks_archive"))
         }
 
-        let permName = false, permPrice = false, permColor = false
-
-        if (!userInfo.checkPerm("canEditStockNames")) {
-            name.readOnly = true
-        } else {
-            permName = true
-        }
-
-        if (!userInfo.checkPerm("canEditStockPrices")) {
-            price.readOnly = true
-        } else {
-            permPrice = true
-        }
-
-        if (!userInfo.checkPerm("canEditStockColors")) {
-            color.readOnly = true
-        } else {
-            permColor = true
-        }
-
         const setErr = createSetErr(infotxt)
 
         const validate = () => {
 
-            if (name.value.length > 32) {
+            if (permName && name.value.length > 32) {
                 setErr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
                 return false
             }
-            if (name.value.length < 2) {
+            if (permName && name.value.length < 2) {
                 setErr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
                 return false
             }
 
-            if (shorthand.value.length > 5) {
+            if (permName && shorthand.value.length > 5) {
                 setErr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
                 return false
             }
-            if (shorthand.value.length < 2) {
+            if (permName && shorthand.value.length < 2) {
                 setErr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
                 return false
             }
-            if (!isNaN(shorthand.value)) {
+            if (permName && !isNaN(shorthand.value)) {
                 setErr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
                 return false
             }
 
-            if (price.value < 2) {
+            if (permPrice && price.value < 2) {
                 setErr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
                 return false
             }
