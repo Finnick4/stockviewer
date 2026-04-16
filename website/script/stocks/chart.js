@@ -91,11 +91,11 @@ class stockChart extends HTMLElement {
         const qminTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.quatermin`)
         const minTxt = document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg text.price.min`)
 
-        maxTxt.innerHTML = getShortNumber(max)
-        qmaxTxt.innerHTML = getShortNumber(min + 3*quater)
-        middleTxt.innerHTML = getShortNumber(min + 2*quater)
-        qminTxt.innerHTML = getShortNumber(min + quater)
-        minTxt.innerHTML = getShortNumber(min)
+        maxTxt.innerHTML = getShortNumber(max / 100)
+        qmaxTxt.innerHTML = getShortNumber((min + 3*quater) / 100)
+        middleTxt.innerHTML = getShortNumber((min + 2*quater) / 100)
+        qminTxt.innerHTML = getShortNumber((min + quater) / 100)
+        minTxt.innerHTML = getShortNumber(min / 100)
     }
 }
 
