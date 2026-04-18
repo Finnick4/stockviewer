@@ -15,13 +15,13 @@ func GetAllStockGroups(userID string) ([]dto.StockGroupOverview, error) {
 	db := getDB()
 
 	rows, err := db.Query(`	
-SELECT stockgroups.name, stockgroups.id, COALESCE(SUM(stockprice.price), 0) AS "totalPrice", COUNT(DISTINCT stockgroupmembers."stockId") AS "totalMembers", COUNT(DISTINCT starredstockgroups."userId") AS stars, MAX(CASE
+SELECT stockgroups.name, stockgroups.id, COALESCE(SUM(stockprice.price), 0) AS "totalPrice", COUNT(DISTINCT stocks.id) AS "totalMembers", COUNT(DISTINCT starredstockgroups."userId") AS stars, MAX(CASE
     WHEN starredstockgroups."userId" = $1 AND stockgroups.id = starredstockgroups."groupId" THEN 1
     ELSE 0 END) AS starred 
 FROM stockgroups
     LEFT JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-    LEFT JOIN stocks ON stockgroupmembers."stockId" = stocks.id
-    LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+    JOIN stocks ON stockgroupmembers."stockId" = stocks.id AND stocks.status=1
+    JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
     LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
 GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`, userID)
 	if err != nil {
@@ -95,7 +95,7 @@ GROUP BY stockgroups.name, stockgroups.description;`, userID, groupID)
     ELSE 0 END)
 	FROM stockgroups
 		JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-		JOIN stocks ON stockgroupmembers."stockId" = stocks.id
+		JOIN stocks ON stockgroupmembers."stockId" = stocks.id AND stocks.status = 1
 		JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
 		LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
 	WHERE stockgroups.id = $2 GROUP BY stocks.name, stocks.id, stocks.shorthand, stocks.color, stockprice.price ORDER BY stocks.id;`, userID, groupID)
@@ -130,7 +130,7 @@ SELECT stocks.id, stocks.name, stocks.shorthand, COALESCE(stocks.color, -1), sto
 FROM stocks
 	JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
 	LEFT JOIN starredstocks ON stocks.id = starredstocks."stockId"
-WHERE id IN (`
+WHERE status=1 AND id IN (`
 	values := []interface{}{}
 	values = append(values, userID)
 

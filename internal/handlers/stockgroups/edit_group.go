@@ -83,7 +83,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !database.AreActiveStockIDs(append(params.AddedMembers, params.AddedMembers...)) {
+	if !database.AreActiveStockIDs(append(params.AddedMembers, params.RemovedMembers...)) {
 		log.Debug("One of the stocks to be added or removed to or from the group is invalid.")
 		api.RequestMalformedHandler(w, "One of the stocks to be added or removed to or from the group is invalid.")
 		return
