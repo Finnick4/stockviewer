@@ -81,7 +81,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stockIDs := make([]int32, len(params.AddedInfluences)+len(params.EditedInfluences))
+	stockIDs := make([]int32, len(params.AddedInfluences)+len(params.EditedInfluences)+len(params.RemovedInfluences))
 	i := 0
 	for index, influence := range params.AddedInfluences {
 		if permMaxPermille != -1 && math.Abs(float64(influence.PermillePerDay)) > float64(permMaxPermille) {
@@ -118,6 +118,10 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		stockIDs[i] = influence.StockID
+		i++
+	}
+	for _, stock := range params.RemovedInfluences {
+		stockIDs[i] = stock
 		i++
 	}
 

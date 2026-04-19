@@ -233,7 +233,7 @@ func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
 
 	rows, err := db.Query(`
 SELECT stockinfluences."stockId", stocks.name, stockinfluences."creatorId", stockinfluences."totalLength", stockinfluences.permille, stockinfluences."falloffType" FROM stockinfluences
-	JOIN stocks ON stockinfluences."stockId" = stocks.id
+	JOIN stocks ON stockinfluences."stockId" = stocks.id AND stocks.status = 1
 WHERE stockinfluences."articleId" = $1 ORDER BY "stockId";
 `, articleID)
 	if err != nil {
@@ -264,6 +264,7 @@ func GetAllActiveInfluences() ([]dto.InfluenceFunctional, error) {
 
 	rows, err := db.Query(`
 	SELECT "stockId", permille, "falloffType", "totalLength", "remainingLength" FROM stockinfluences
+		JOIN stocks ON stockinfluences."stockId" = stocks.id AND stocks.status = 1
 	WHERE "remainingLength" > 0 ORDER BY "stockId";`)
 	if err != nil {
 		log.Error(err)
