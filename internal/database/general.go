@@ -2,9 +2,11 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
+	"stockviewer/dto"
 	"strings"
 	"sync"
 
@@ -75,7 +77,17 @@ func InitialiseDB() {
 	log.Info("Initialising the database")
 	db := getDB()
 
-	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
+	_, err := db.Exec(`
+CREATE TABLE IF NOT EXISTS "migrationlog" (
+	"version" INTEGER NOT NULL PRIMARY KEY UNIQUE,
+	"appliedAt"	TIMESTAMPTZ NOT NULL DEFAULT current_timestamp,
+	"info" TEXT
+	);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (
 	"id"	VARCHAR(36) NOT NULL PRIMARY KEY UNIQUE,
 	"tag"	VARCHAR(32) NOT NULL UNIQUE,
 	"displayName"	VARCHAR(32) NOT NULL,
@@ -231,9 +243,64 @@ func InitialiseDB() {
 
 	wg.Wait()
 
-	resp := db.QueryRow(`SELECT tag FROM users LIMIT 1;`)
-	var price string
-	err = resp.Scan(&price)
+	resp := db.QueryRow(`SELECT version FROM migrationlog ORDER BY version DESC LIMIT 1;`)
+	var appliedMigration int32
+	err = resp.Scan(&appliedMigration)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			appliedMigration = 0
+		} else {
+			log.Fatal(err)
+		}
+	}
+
+	log.Debug("Loading migrations")
+	migrationsFile, err := os.Open("./migrations.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var migrations []dto.Migration
+
+	err = json.NewDecoder(migrationsFile).Decode(&migrations)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if appliedMigration == 0 {
+		log.Info("As this is the first setup, migrations were skipped!")
+		_, err = db.Exec(`INSERT INTO migrationlog (version, info) VALUES ($1, $2)`, len(migrations), "Initial database setup")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if appliedMigration != 0 && appliedMigration < int32(len(migrations)) {
+		for index, migration := range migrations {
+			if int32(index+1) > appliedMigration {
+				for _, statement := range migration.Statements {
+					_, err = db.Exec(statement)
+					if err != nil {
+						log.Fatal(err)
+					}
+				}
+				log.Infof("Applying migration #%v: %v", index+1, migration.Info)
+				_, err = db.Exec(`INSERT INTO migrationlog (version, info) VALUES ($1, $2)`, index+1, migration.Info)
+				if err != nil {
+					log.Fatal(err)
+				}
+				appliedMigration = int32(index + 1)
+			}
+		}
+	}
+
+	if appliedMigration != 0 && appliedMigration == int32(len(migrations)) {
+		log.Infof("This instance is on the most current migration (#%v)", appliedMigration)
+	}
+
+	resp = db.QueryRow(`SELECT tag FROM users LIMIT 1;`)
+	var userTag string
+	err = resp.Scan(&userTag)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			log.Debug("No Users found in users table")
