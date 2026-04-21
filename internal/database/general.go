@@ -225,6 +225,16 @@ CREATE TABLE IF NOT EXISTS "migrationlog" (
 		log.Fatal(err)
 	}
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "starredarticles" (
+	"articleId"	INTEGER NOT NULL,
+	"userId"	VARCHAR(36) NOT NULL,
+	PRIMARY KEY ("articleId", "userId"),
+	CONSTRAINT "fk_starredarticles_group" FOREIGN KEY("articleId") REFERENCES articles("id") ON DELETE CASCADE,
+	CONSTRAINT "fk_starredarticles_user" FOREIGN KEY("userId") REFERENCES users("id") ON DELETE CASCADE);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "stockinfluences" (
 	"stockId"	INTEGER NOT NULL,
 	"articleId"	INTEGER NOT NULL,

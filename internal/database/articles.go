@@ -552,3 +552,27 @@ WHERE stockinfluences."stockId" = v."stockId";`
 	}
 	return nil
 }
+
+func StarArticleID(articleID int32, userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`INSERT INTO starredarticles ("articleId", "userId") VALUES ($1, $2) ON CONFLICT DO NOTHING;`, articleID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+func UnstarArticleID(articleID int32, userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM starredarticles WHERE "articleId" = $1 AND "userId" = $2;`, articleID, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
