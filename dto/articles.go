@@ -30,6 +30,8 @@ type ArticleOverview struct {
 	TotalInfluences          int32
 	TotalViews               int64
 	Viewed                   bool
+	TotalStars               int64
+	Starred                  bool
 }
 
 type DetailedArticle struct {
@@ -42,6 +44,8 @@ type DetailedArticle struct {
 	Influences        []InfluenceByArticle
 	TotalViews        int64
 	Viewed            bool
+	TotalStars        int64
+	Starred           bool
 }
 
 type CreateInfluenceParams struct {

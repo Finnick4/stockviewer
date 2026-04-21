@@ -132,9 +132,13 @@ func GetArticles(offset int32, userID string) ([]dto.ArticleOverview, error) {
 	}
 
 	rows, err := db.Query(`
-SELECT id, title, COUNT(DISTINCT stockinfluences."stockId"), COUNT(DISTINCT articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1 AND articleviews."articleId" = id) FROM articles
+SELECT id, title, COUNT(DISTINCT stockinfluences."stockId") AS countInfluences, 
+       COUNT(DISTINCT articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1 AND articleviews."articleId" = id), 
+       COUNT(DISTINCT starredarticles."userId"), EXISTS(SELECT 1 FROM starredarticles WHERE "userId" = $1 AND starredarticles."articleId" = id) 
+FROM articles
     LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
 	LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+	LEFT JOIN starredarticles ON articles.id = starredarticles."articleId"
 GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
 	defer rows.Close()
 	if err != nil {
@@ -149,7 +153,7 @@ GROUP BY id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
 
 	for rows.Next() {
 		var article dto.ArticleOverview
-		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews, &article.Viewed)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews, &article.Viewed, &article.TotalStars, &article.Starred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -168,9 +172,13 @@ func GetUnreadArticles(offset int32, userID string) ([]dto.ArticleOverview, erro
 	}
 
 	rows, err := db.Query(`
-SELECT articles.id, title, COUNT(DISTINCT stockinfluences."stockId") AS affected, COUNT(DISTINCT articleviews."userId") AS views, false AS viewed FROM articles
+SELECT articles.id, title, COUNT(DISTINCT stockinfluences."stockId") AS affected, 
+       COUNT(DISTINCT articleviews."userId") AS views, false AS viewed,
+       COUNT(DISTINCT starredarticles."userId"), false AS starred
+FROM articles
     LEFT JOIN stockinfluences ON articles.id = stockinfluences."articleId"
     LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+	LEFT JOIN starredarticles ON articles.id = starredarticles."articleId"
 WHERE (NOT EXISTS(SELECT 1 FROM articleviews WHERE "userId" = $1 AND articleviews."articleId" = articles.id))
   AND (SELECT created FROM users WHERE "id" = $1) < articles."createdAt"
 GROUP BY articles.id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offset*10)
@@ -187,7 +195,7 @@ GROUP BY articles.id, title ORDER BY id DESC LIMIT 10 OFFSET $2;`, userID, offse
 
 	for rows.Next() {
 		var article dto.ArticleOverview
-		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews, &article.Viewed)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalInfluences, &article.TotalViews, &article.Viewed, &article.TotalStars, &article.Starred)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -204,12 +212,17 @@ func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
 	article := dto.DetailedArticle{ID: articleID}
 
 	row := db.QueryRow(`
-		SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), CASE
-		WHEN articles."creatorId" IS NOT NULL THEN users."displayName"
-		ELSE ''
-		END, articles."createdAt", COUNT(DISTINCT articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "articleId" = $1 AND "userId" = $2) FROM articles 
+	SELECT articles.title, COALESCE(articles.content, ''), COALESCE(articles."creatorId", ''), (CASE
+			WHEN articles."creatorId" IS NOT NULL THEN users."displayName"
+			ELSE ''
+			END), 
+	    articles."createdAt", 
+		COUNT(DISTINCT articleviews."userId"), EXISTS(SELECT 1 FROM articleviews WHERE "articleId" = $1 AND "userId" = $2),
+	    COUNT(DISTINCT starredarticles."userId"), EXISTS(SELECT 1 FROM starredarticles WHERE "userId" = $2 AND starredarticles."articleId" = $1) 
+	FROM articles 
 			JOIN users ON articles."creatorId" = users.id
 			LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+			LEFT JOIN starredarticles ON articles.id = starredarticles."articleId"
 		WHERE articles.id = $1 
 		GROUP BY articles.title, articles.content, articles."creatorId", users."displayName", articles."createdAt";`, articleID, userID)
 
@@ -222,7 +235,7 @@ func GetArticle(articleID int32, userID string) (dto.DetailedArticle, error) {
 		return dto.DetailedArticle{}, err
 	}
 
-	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated, &article.TotalViews, &article.Viewed)
+	err = row.Scan(&article.Title, &article.Content, &article.AuthorID, &article.AuthorDisplayName, &article.TimeCreated, &article.TotalViews, &article.Viewed, &article.TotalStars, &article.Starred)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return dto.DetailedArticle{}, err
@@ -292,13 +305,15 @@ func GetArticlesActivelyAffectingStarredStocksAndStarredStockGroups(userID strin
 	db := getDB()
 
 	rows, err := db.Query(`
-	SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
-       EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1) AS viewed,
-       COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
+SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
+	EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1) AS viewed,
+	COUNT(DISTINCT starredarticles."userId"), EXISTS(SELECT 1 FROM starredarticles WHERE "userId" = $1 AND starredarticles."articleId" = id), 
+	COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
 FROM articles
          JOIN stockinfluences ON stockinfluences."articleId" = articles.id
          LEFT JOIN articleviews ON articles.id = articleviews."articleId"
          JOIN stocks ON stockinfluences."stockId" = stocks.id
+		 LEFT JOIN starredarticles ON articles.id = starredarticles."articleId"
 WHERE stockinfluences."remainingLength" > 0 AND "stockId"
     IN (SELECT DISTINCT stocks.id
         FROM stocks
@@ -321,7 +336,7 @@ ORDER BY articles.id DESC LIMIT 10;`, userID)
 	for rows.Next() {
 		article := dto.ArticleOverview{}
 
-		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalStars, &article.Starred, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -336,12 +351,14 @@ func GetUnreadArticlesActivelyAffectingStarredStocksAndStarredStockGroups(userID
 
 	rows, err := db.Query(`
 SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
-       false AS viewed,
-       COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
+	false AS viewed,
+	COUNT(DISTINCT starredarticles."userId"), false AS starred,
+	COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
 FROM articles
          JOIN stockinfluences ON stockinfluences."articleId" = articles.id
          LEFT JOIN articleviews ON articles.id = articleviews."articleId"
          JOIN stocks ON stockinfluences."stockId" = stocks.id
+		 LEFT JOIN starredarticles ON articles.id = starredarticles."articleId"
 WHERE stockinfluences."remainingLength" > 0
   AND (SELECT created FROM users WHERE "id" = $1) < articles."createdAt"
   AND NOT(EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1))
@@ -367,7 +384,7 @@ ORDER BY articles.id DESC LIMIT 10;`, userID)
 	for rows.Next() {
 		article := dto.ArticleOverview{}
 
-		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalStars, &article.Starred, &article.TotalRelevantInfluences, &article.TotalRelevantAbsPermille)
 		if err != nil {
 			log.Error(err)
 			return nil, err
