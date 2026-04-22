@@ -9,7 +9,7 @@ class articleHeader extends HTMLElement {
                 </div>
                 <div class="articleReception">
                     <div class="value views"></div>
-                    <div class="value hearts"></div>
+                    <div class="value stars"></div>
                 </div>
             </div>
         `
@@ -17,13 +17,13 @@ class articleHeader extends HTMLElement {
         this.elemAuthor = this.querySelector("div.author")
         this.elemTitle = this.querySelector("h1")
         this.elemViews = this.querySelector("div.views")
-        this.elemHearts = this.querySelector("div.hearts")
+        this.elemStars = this.querySelector("div.stars")
 
         this.titleVal = this.dataset.articleTitle === undefined ? getTranslatedStr("articles.unknown_title") : sanitiseText(this.dataset.articleTitle)
         this.authorName = this.dataset.authorName === undefined ? getTranslatedStr("articles.unknown_author") : sanitiseText(this.dataset.authorName)
         this.creationDate = this.dataset.creationDate === undefined ? new Date(1) : new Date(sanitiseText(this.dataset.creationDate))
         this.views = this.dataset.views === undefined ? 0 : Number(sanitiseText(this.dataset.views))
-        this.hearts = this.dataset.hearts === undefined ? 0 : Number(sanitiseText(this.dataset.hearts))
+        this.stars = this.dataset.stars === undefined ? 0 : Number(sanitiseText(this.dataset.stars))
 
         this.update()
     }
@@ -37,7 +37,7 @@ class articleHeader extends HTMLElement {
         }).format(this.creationDate)
         this.elemTitle.innerHTML = this.titleVal
         this.elemAuthor.innerHTML = this.authorName
-        this.elemHearts.innerHTML = `&#9825; ${getShortNumber(this.hearts)}`
+        this.elemStars.innerHTML = `&#9733; ${getShortNumber(this.stars)}`
         this.elemViews.innerHTML = `&#128065; ${getShortNumber(this.views)}`
     }
 }

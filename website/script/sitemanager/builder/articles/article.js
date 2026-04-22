@@ -37,6 +37,7 @@ function buildIndividualArticlePage(id) {
         articleTitleElem.creationDate =  new Date(data["TimeCreated"])
         articleTitleElem.titleVal = data["Title"]
         articleTitleElem.views = data["TotalViews"]
+        articleTitleElem.stars = data["TotalStars"]
         articleTitleElem.update()
 
         article.innerHTML = data["Content"] === "" ? `<i>${getTranslatedStr("articles.individual_page.empty_content_notice")}<br>
