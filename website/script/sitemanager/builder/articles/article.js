@@ -9,8 +9,8 @@ function buildIndividualArticlePage(id) {
                             <div></div>
                             <article-header></article-header>
                             <nav>
-                                <button is="star-article-button" data-articleid="${id}"></button>
-                                <button is="edit-article-button" data-articleid="${id}"></button>
+                                <button is="star-article-button" data-article-id="${id}"></button>
+                                <button is="edit-article-button" data-article-id="${id}"></button>
                             </nav>
                         </div>
                         <div class="article">
@@ -39,6 +39,8 @@ function buildIndividualArticlePage(id) {
         articleTitleElem.views = data["TotalViews"]
         articleTitleElem.stars = data["TotalStars"]
         articleTitleElem.update()
+
+        document.querySelector("main button.star").updateStatus(data["Starred"])
 
         article.innerHTML = data["Content"] === "" ? `<i>${getTranslatedStr("articles.individual_page.empty_content_notice")}<br>
             ${getTranslatedStr("articles.individual_page.empty_content_hint")}</i>` : parseStyle(data["Content"])

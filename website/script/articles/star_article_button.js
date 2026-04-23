@@ -5,16 +5,29 @@ class starArticleButtonElement extends HTMLButtonElement {
     }
 
     connectedCallback() {
-        this.articleid = this.getAttribute("data-articleid")
+        this.articleid = Number(this.dataset.articleId)
+        this.isStarred = this.dataset.isStarred === "true"
 
-        this.modalhtml = `
-            <h1>This is not yet implemented!</h1>
-            <p>In the future you will be able to star article ${this.articleid} with this button!</p>
-        `
         this.classList.add("star")
-        this.onclick = () => createModal(this.modalhtml)
+        this.onclick = () => {
+            const isStarred = this.isStarred
+            fetch(`/api/articles/${this.articleid}/star`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    result: !isStarred
+                })
+            }).catch(() => {
+                this.updateStatus(isStarred)
+            })
+            this.updateStatus(!isStarred)
+        }
 
-        this.innerHTML = `<img class="icon" src="/icons/star_empty.svg" alt="give star" draggable="false">`
+        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="${this.isStarred ? getTranslatedStr("articles.stars.icon_alt_text_starred") : getTranslatedStr("articles.stars.icon_alt_text_unstarred")}" draggable="false">`
+    }
+    updateStatus(newStatus) {
+        this.isStarred = newStatus === "true" || newStatus === true
+        this.title = this.isStarred ? getTranslatedStr("articles.stars.icon_alt_text_starred") : getTranslatedStr("articles.stars.icon_alt_text_unstarred")
+        this.innerHTML = `<img class="icon" src="/icons/star_${this.isStarred ? "filled" : "empty"}.svg" alt="${this.isStarred ? getTranslatedStr("articles.stars.icon_alt_text_starred") : getTranslatedStr("articles.stars.icon_alt_text_unstarred")}" draggable="false">`
     }
 }
 

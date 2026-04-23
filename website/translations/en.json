@@ -40,6 +40,10 @@
         "load_more": "Load more articles",
         "title": "Title",
         "content": "Content",
+        "stars": {
+            "icon_alt_text_starred": "Unstar article",
+            "icon_alt_text_unstarred": "Star article"
+        },
         "falloff_types": {
             "none": "None",
             "linear": "Linear",

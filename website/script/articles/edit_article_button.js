@@ -5,7 +5,7 @@ class editArticleButtonElement extends HTMLButtonElement {
     }
 
     connectedCallback() {
-        this.articleid = this.getAttribute("data-articleid")
+        this.articleid = Number(this.dataset.articleId)
 
         this.classList.add("edit")
 
