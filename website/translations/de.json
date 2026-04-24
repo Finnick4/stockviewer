@@ -78,7 +78,10 @@
         },
         "search_placeholder": "Suche nach Aktien…",
         "search_empty_query": "Suche eingeben…",
-        "search_empty_result": "Keine Aktien gefunden…"
+        "search_empty_result": "Keine Aktien gefunden…",
+        "archived_list": {
+            "loading": "Lade Aktiendaten…"
+        }
     },
     "network": {
         "issues": {
