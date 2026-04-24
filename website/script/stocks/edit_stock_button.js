@@ -20,16 +20,18 @@ class editStockButtonElement extends HTMLButtonElement {
 customElements.define('edit-stock-button', editStockButtonElement, {extends: "button"});
 
 
-function showEditStockModal(stockID) {
+function showEditStockModal(stockID, isArchived) {
     fetch(`/api/stocks/${stockID}`).then(r => r.json()).then(resp => {
+        isArchived = isArchived || isArchived === "true"
+
         const stockName = sanitiseText(resp["Data"]["Name"])
         const stockPrice = sanitiseText(resp["Data"]["Price"])
         const stockShorthand = sanitiseText(resp["Data"]["Shorthand"]).toUpperCase()
         const stockColorHex = Number(resp["Data"]["Color"]).toString(16)
 
-        const permName = userInfo.checkPerm("canEditStockNames")
-        const permPrice = userInfo.checkPerm("canEditStockPrices")
-        const permColor = userInfo.checkPerm("canEditStockColors")
+        const permName = userInfo.checkPerm("canEditStockNames")  && !isArchived
+        const permPrice = userInfo.checkPerm("canEditStockPrices") && !isArchived
+        const permColor = userInfo.checkPerm("canEditStockColors") && !isArchived
 
         const permArchive = userInfo.checkPerm("canArchiveStocks")
         const permDelete = userInfo.checkPerm("canDeleteStocks")
@@ -58,18 +60,19 @@ function showEditStockModal(stockID) {
                                 <input class="price" type="number" value="${sanitiseText(stockPrice)}">
                             </div>
                         ` : ""}
+                        ${permPrice || permColor || permName ? `
                         <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
-                        </div>
+                        </div> ` : ""}
                         ${dangerZoneVisible ? `
                             <div class="dangerZone">
                                 <h3 class="warning">${getTranslatedStr("stocks.modify.danger.title")}</h3>
                                 <p class="warning">${getTranslatedStr("stocks.modify.danger.subtitle")}</p>
                                 ${permArchive ? `
                                     <div class="pair">
-                                        <p>${getTranslatedStr("stocks.modify.danger.archive")}</p>
-                                        <button class="archive">${getTranslatedStr("stocks.modify.danger.archive_button")}</button>                        
+                                        <p>${getTranslatedStr(isArchived ? "stocks.modify.danger.unarchive" : "stocks.modify.danger.archive")}</p>
+                                        <button class="archive">${getTranslatedStr(isArchived ? "stocks.modify.danger.unarchive_button" : "stocks.modify.danger.archive_button")}</button>                        
                                     </div>
                                 ` : ""}
                                 ${permDelete ? `
@@ -119,12 +122,12 @@ function showEditStockModal(stockID) {
                     fetch(`/api/stocks/${stockID}/archive`, {
                         method: "PUT",
                         body: JSON.stringify({
-                            result: true
+                            result: !isArchived
                         })
                     }).then(r => {
                         if (r.ok) {
                             closeModal(id)
-                            window.history.pushState(null, null, `${window.location.origin}/stocks`);
+                            window.history.pushState(null, null, `${window.location.origin}/stocks${isArchived ? `/${stockID}` : ""}`);
                             router()
                         } else {
                             console.error(`Something went wrong! 
@@ -132,73 +135,75 @@ function showEditStockModal(stockID) {
                                 MSG: ${r.statusText}`)
                         }
                     });
-                }, "stocks_archive"))
+                }, isArchived ? "stocks_unarchive" : "stocks_archive"))
         }
 
-        const setErr = createSetErr(infotxt)
+        if (permName || permPrice || permColor) {
+            const setErr = createSetErr(infotxt)
 
-        const validate = () => {
+            const validate = () => {
 
-            if (permName && name.value.length > 32) {
-                setErr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
-                return false
+                if (permName && name.value.length > 32) {
+                    setErr(getTranslatedStr("stocks.modify.err_name_too_long", {min: 2, max: 32}))
+                    return false
+                }
+                if (permName && name.value.length < 2) {
+                    setErr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
+                    return false
+                }
+
+                if (permName && shorthand.value.length > 5) {
+                    setErr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
+                    return false
+                }
+                if (permName && shorthand.value.length < 2) {
+                    setErr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
+                    return false
+                }
+                if (permName && !isNaN(shorthand.value)) {
+                    setErr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
+                    return false
+                }
+
+                if (permPrice && price.value < 2) {
+                    setErr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
+                    return false
+                }
+
+                infotxt.innerHTML = getTranslatedStr("stocks.modify.values_okay")
+                infotxt.classList.add("positive")
+                infotxt.classList.remove("negative")
+                return true
             }
-            if (permName && name.value.length < 2) {
-                setErr(getTranslatedStr("stocks.modify.err_name_too_short", {min: 2, max: 32}))
-                return false
-            }
 
-            if (permName && shorthand.value.length > 5) {
-                setErr(getTranslatedStr("stocks.modify.err_shorthand_too_long", {min: 2, max: 5}))
-                return false
-            }
-            if (permName && shorthand.value.length < 2) {
-                setErr(getTranslatedStr("stocks.modify.err_shorthand_too_short", {min: 2, max: 5}))
-                return false
-            }
-            if (permName && !isNaN(shorthand.value)) {
-                setErr(getTranslatedStr("stocks.modify.err_shorthand_numeric"))
-                return false
-            }
+            modal.querySelectorAll(`.pair input`).forEach(elem => {
+                elem.addEventListener("input", () => validate())
+            })
 
-            if (permPrice && price.value < 2) {
-                setErr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
-                return false
-            }
-
-            infotxt.innerHTML = getTranslatedStr("stocks.modify.values_okay")
-            infotxt.classList.add("positive")
-            infotxt.classList.remove("negative")
-            return true
-        }
-
-        modal.querySelectorAll(`.pair input`).forEach(elem => {
-            elem.addEventListener("input", () => validate())
-        })
-
-        modal.querySelector(`button.submit`).addEventListener("click", () => {
-            if (validate()) {
-                fetch(`${window.location.origin}/api/stocks/${stockID}`, {
-                    method: "PATCH",
-                    body: JSON.stringify({
-                        name: permName && name.value !== stockName ? name.value : "",
-                        price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
-                        color: permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0,
-                        shorthand: permName && shorthand.value !== stockShorthand ? shorthand.value : ""
-                    })
-                }).then(r => {
-                    if (r.ok) {
-                        closeModal(id)
-                    } else {
-                        if (r.status >= 400 || r.status < 500) {
-                            setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+            modal.querySelector(`button.submit`).addEventListener("click", () => {
+                if (validate()) {
+                    fetch(`${window.location.origin}/api/stocks/${stockID}`, {
+                        method: "PATCH",
+                        body: JSON.stringify({
+                            name: permName && name.value !== stockName ? name.value : "",
+                            price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
+                            color: permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0,
+                            shorthand: permName && shorthand.value !== stockShorthand ? shorthand.value : ""
+                        })
+                    }).then(r => {
+                        if (r.ok) {
+                            closeModal(id)
                         } else {
-                            setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                            if (r.status >= 400 || r.status < 500) {
+                                setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                            } else {
+                                setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                            }
                         }
-                    }
-                });
-            }
-        })
-        validate()
+                    });
+                }
+            })
+            validate()
+        }
     })
 }

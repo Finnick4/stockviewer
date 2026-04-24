@@ -145,6 +145,8 @@
                 "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
                 "archive": "Archive stock",
                 "archive_button": "Archive",
+                "unarchive": "Unarchive stock",
+                "unarchive_button": "Unarchive",
                 "delete": "Delete stock permanently",
                 "delete_button": "Delete"
             }
@@ -458,7 +460,8 @@
             "descriptions": {
                 "default": "Please type the phrase '{phrase}' again to confirm this action!",
                 "stock_name": "Please repeat the name of the stock ({phrase}) to confirm this action!",
-                "stocks_archive": "Please repeat the name of the stock ({phrase}) to archive this stock!"
+                "stocks_archive": "Please repeat the name of the stock ({phrase}) to archive this stock!",
+                "stocks_unarchive": "Please repeat the name of the stock ({phrase}) to unarchive this stock!"
             },
             "err_wrong_repetition": "The provided phrase is wrong!",
             "submit": "Submit",

@@ -11,11 +11,11 @@ class stocklistArchived extends HTMLElement {
             data.forEach(e => {
                 const shortPrice = getShortNumber(e["Price"]/100)
                 html += `
-                            <a class="containing" is="a-button" href="/stocks/${e["ID"]}" data-stock-id="${e["ID"]}">
+                            <div class="containing" onclick="showEditStockModal(${e["ID"]}, true)" data-stock-id="${e["ID"]}">
                                 <div class="shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
                                 <div class="name">${sanitiseText(e["Name"])}</div>
                                 <div class="value">${shortPrice}</div>
-                            </a>`
+                            </div>`
             })
             if (html === "") {
                 html = `
