@@ -110,6 +110,11 @@
             "all_stocks": "All stocks",
             "loading": "Loading stock data…"
         },
+        "archived_list": {
+            "title": "Archived stocks",
+            "loading": "Loading stock data…",
+            "none": "There are no archived stocks!"
+        },
         "starred_list": {
             "title": "Starred stocks",
             "loading": "Loading starred stocks...",

@@ -96,6 +96,9 @@ function routerAdminPanel(segmented) {
         case "stocks":
             buildAdminStocksPage();
             break;
+        case "archived_stocks":
+            buildArchivedStocksPage();
+            break;
         default:
             build404Page();
     }
