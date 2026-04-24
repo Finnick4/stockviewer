@@ -78,7 +78,10 @@
         },
         "search_placeholder": "Buscar acciones…",
         "search_empty_query": "Escriba el texto que desea buscar…",
-        "search_empty_result": "No se han encontrado acciones…"
+        "search_empty_result": "No se han encontrado acciones…",
+        "archived_list": {
+            "loading": "Cargando datos de acciones…"
+        }
     },
     "network": {
         "issues": {
