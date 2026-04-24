@@ -148,6 +148,9 @@
             "stock_group_memberships": "Membreships des groupes de titres",
             "loading": "Chargement…",
             "no_membership": "Ce titre ne fait pas partie d'aucun groupe de titres…"
+        },
+        "archived_list": {
+            "loading": "Chargement des données d'actions…"
         }
     },
     "network": {
