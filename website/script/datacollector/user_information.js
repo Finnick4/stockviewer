@@ -46,6 +46,9 @@ function initialiseUserInfo() {
                 const locCheckPerm = perm => perms.get(perm) === 1
 
                 userInfo.hasAnyCreatePermissions = locCheckPerm("canCreateStocks") || locCheckPerm("canCreateArticles") || locCheckPerm("canCreateUsers")
+                userInfo.hasAnyEditStockPermissions = locCheckPerm("canEditStockNames") || locCheckPerm("canEditStockColors") || locCheckPerm("canEditStockPrices") || locCheckPerm("canArchiveStocks") || locCheckPerm("canDeleteStocks")
+                userInfo.canViewAdminPanelUsersTab = locCheckPerm("canEditUserPermissions") || locCheckPerm("canEditUserName") || locCheckPerm("canEditUserPassword") || locCheckPerm("canDisableUsers") || locCheckPerm("canDeleteUsers")
+                userInfo.canViewAdminPanel = userInfo.hasAnyEditStockPermissions || locCheckPerm("isStockArchivist") || userInfo.canViewAdminPanelUsersTab
 
                 userInfo.permissions = perms
 

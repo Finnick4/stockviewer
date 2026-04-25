@@ -146,7 +146,7 @@ function showModalEditPermissions(userID, elem) {
         permissionsDiv.querySelectorAll("button.inputField").forEach(btn => btn.onEdit = () => verify())
         permissionsDiv.querySelectorAll("input.inputField").forEach(inpt => inpt.addEventListener("input", () => verify()))
 
-        modal.querySelector(`input.submit`).addEventListener("click", () => {
+        modal.querySelector(`button.submit`).addEventListener("click", () => {
             if (verify()) {
                 const editedPermissions = []
                 const addPermissionValue = (perm, value) => editedPermissions.push({Permission: perm, Value: value})

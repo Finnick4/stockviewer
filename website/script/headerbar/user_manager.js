@@ -3,7 +3,7 @@ class userManagerElement extends HTMLElement {
     connectedCallback() {
         this.dropdownid = createDropdown(`
         <a is="a-button" class="btn" href="/settings">${getTranslatedStr("user_manager.dashboard_account")}</a>
-        <a is="a-button" class="btn" href="/admin">${getTranslatedStr("user_manager.dashboard_admin")}</a>
+        ${userInfo.canViewAdminPanel ? `<a is="a-button" class="btn" href="/admin">${getTranslatedStr("user_manager.dashboard_admin")}</a>` : ""}
         <button onclick="logout()">${getTranslatedStr("user_manager.logout")}</button>
         `)
         this.innerHTML = `
