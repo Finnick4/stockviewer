@@ -307,7 +307,7 @@ func GetArticlesActivelyAffectingStarredStocksAndStarredStockGroups(userID strin
 	rows, err := db.Query(`
 SELECT articles.id, articles.title, COUNT(DISTINCT articleviews."userId") AS views,
 	EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1) AS viewed,
-	COUNT(DISTINCT starredarticles."userId"), EXISTS(SELECT 1 FROM starredarticles WHERE "userId" = $1 AND starredarticles."articleId" = id), 
+	COUNT(DISTINCT starredarticles."userId"), EXISTS(SELECT 1 FROM starredarticles WHERE "userId" = $1 AND starredarticles."articleId" = articles.id), 
 	COUNT(DISTINCT stocks.id) AS "affected", SUM(ABS(permille))
 FROM articles
          JOIN stockinfluences ON stockinfluences."articleId" = articles.id
