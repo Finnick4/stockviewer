@@ -593,3 +593,43 @@ func UnstarArticleID(articleID int32, userID string) error {
 	}
 	return nil
 }
+
+func SearchArticleTitle(userID string, search string) ([]dto.ArticleOverview, error) {
+	log.Debugf("Searching for ten articles")
+	db := getDB()
+
+	search = "%" + search + "%"
+
+	rows, err := db.Query(`
+	SELECT articles.id, title,
+       COUNT(DISTINCT stockinfluences."stockId") AS views, EXISTS(SELECT 1 FROM articleviews WHERE articleviews."articleId" = articles.id AND "userId" = $1) AS viewed,
+       COUNT(DISTINCT starredarticles."userId") AS stars, EXISTS(SELECT 1 FROM starredarticles WHERE "userId" = $1 AND starredarticles."articleId" = articles.id) AS starred,
+       COUNT(DISTINCT stocks.id) AS "affected", GREATEST(SUM(ABS(permille)), 0)
+FROM articles
+         LEFT JOIN stockinfluences ON stockinfluences."articleId" = articles.id
+         LEFT JOIN articleviews ON articles.id = articleviews."articleId"
+         LEFT JOIN stocks ON stockinfluences."stockId" = stocks.id
+         LEFT JOIN starredarticles ON articles.id = starredarticles."articleId"
+WHERE title ILIKE $2 GROUP BY articles.id ORDER BY articles.id DESC LIMIT 10;`, userID, search)
+	defer rows.Close()
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		log.Error(err)
+		return nil, err
+	}
+
+	articles := make([]dto.ArticleOverview, 0, 10)
+
+	for rows.Next() {
+		var article dto.ArticleOverview
+		err = rows.Scan(&article.ID, &article.Title, &article.TotalViews, &article.Viewed, &article.TotalStars, &article.Starred, &article.TotalInfluences, &article.TotalRelevantInfluences)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	return articles, nil
+}
