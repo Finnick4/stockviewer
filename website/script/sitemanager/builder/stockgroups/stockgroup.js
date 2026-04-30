@@ -9,6 +9,7 @@ function buildIndividualStockGroupPage(id) {
                         <stockgroups-member-pie-chart data-stock-group-id="${id}"></stockgroups-member-pie-chart>
                         <stockgroups-members-list data-stock-group-id="${id}"></stockgroups-members-list>
                         <stock-group-description data-stock-group-id="${id}"></stock-group-description>
-                        <stockgroup-influence-list data-stock-group-id="${id}"></stockgroup-influence-list>`;
+                        <stockgroup-influence-list data-stock-group-id="${id}"></stockgroup-influence-list>
+                        <stock-group-chart data-stock-group-id="${id}"></stock-group-chart>`;
     setMainBodyHTML(main, "stockGroupOverviewPage");
 }

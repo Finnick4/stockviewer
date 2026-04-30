@@ -233,6 +233,9 @@
             "loading": "Loading influences…",
             "no_articles": "There are no influences",
             "no_unread_articles": "There are no unseen influences"
+        },
+        "chart": {
+            "stock_history": "Group member's history"
         }
     },
     "network": {

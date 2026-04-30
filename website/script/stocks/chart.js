@@ -1,7 +1,7 @@
 class stockChart extends HTMLElement {
     connectedCallback() {
         this.stockid = this.getAttribute("data-stock-id")
-        this.timeframe = 1
+        this.timeframe = 30
         this.width = 80
         this.height = 40
         this.xPadding = 15
@@ -69,6 +69,7 @@ class stockChart extends HTMLElement {
             path += `L${x} ${y} `
             circlesHTML += `<circle r="2" cx="${x}" cy="${y}" fill="red" opacity="0"><title>${(elem / 100).toLocaleString()}€</title></circle>`
         })
+        that.querySelectorAll("svg circle").forEach(e => e.remove())
         document.querySelector(`stock-chart[data-stock-id="${that.stockid}"] svg`).innerHTML += circlesHTML
         if (path !== "") {
             path = path.replace('L', 'M')

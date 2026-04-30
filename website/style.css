@@ -195,6 +195,11 @@ main.stockGroupOverviewPage stockgroup-influence-list {
     grid-column: 3/6;
     overflow: auto;
 }
+
+main.stockGroupOverviewPage stock-group-chart {
+    grid-column: 3/6;
+}
+
 main.stockGroupOverviewPage stock-group-description .inner {
     height: calc(100% - 2rem);
     font-size: 1.3rem;
@@ -719,6 +724,28 @@ stock-chart svg line.axis {
 }
 
 stock-chart svg text.price {
+    fill: var(--icon-color);
+}
+stock-group-chart svg path {
+    fill:none;
+    stroke-width:1;
+}
+
+stock-group-chart svg path.positive {
+    stroke:var(--positiv);
+}
+
+stock-group-chart svg path.negative {
+    stroke:var(--negative);
+}
+
+stock-group-chart svg line.axis {
+    stroke: var(--icon-color);
+    stroke-width: .75;
+    stroke-linecap: square;
+}
+
+stock-group-chart svg text.price {
     fill: var(--icon-color);
 }
 
