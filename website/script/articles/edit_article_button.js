@@ -39,11 +39,16 @@ function showModalEditArticles(articleId) {
         const permInfluences = userInfo.checkPerm("canModifyInfluences")
         const maxInfluence = userInfo.permissions.get("maxInfluencePermille")
 
+        const permDelete = userInfo.checkPerm("canDeleteArticles")
+        const dangerZoneVisible = permDelete
+
         let html = `<h2>${getTranslatedStr("articles.modify.title_edit")}</h2>
+                      ${!permArticles && !permInfluences && !permDelete ? `<p>${getTranslatedStr("articles.modify.err_no_edit_permission")}</p>` : ""}
+
                       ${permArticles ?`<div class="textField">
                           <p>${getTranslatedStr("articles.title")}</p>
                           <input type="text" class="title" value="${sanitiseText(artTitle)}">
-                      </div>` : `<p>${getTranslatedStr("articles.modify.err_no_edit_permission")}</p>`}
+                      </div>` : ""}
        
                       ${permArticles ? `<div class="textField">
                           <p>${getTranslatedStr("articles.content")}</p>
@@ -56,6 +61,17 @@ function showModalEditArticles(articleId) {
                           <div class="info"></div>
                           <button class="submit">${getTranslatedStr("articles.modify.submit_edit")}</button>
                       </div>` : ""}
+                      ${dangerZoneVisible ? `
+                            <div class="dangerZone">
+                                <h3 class="warning">${getTranslatedStr("articles.modify.danger.title")}</h3>
+                                <p class="warning">${getTranslatedStr("articles.modify.danger.subtitle")}</p>
+                                ${permDelete ? `
+                                    <div class="pair">
+                                        <p>${getTranslatedStr("articles.modify.danger.delete")}</p>
+                                        <button class="delete">${getTranslatedStr("articles.modify.danger.delete_button")}</button>                        
+                                    </div>
+                                ` : ""}
+                            </div>` : ""}
                       `
         const id = createModal(html)
         const modal = document.getElementById(id)
@@ -63,6 +79,25 @@ function showModalEditArticles(articleId) {
         const infotxt = modal.querySelector(`.info`)
         const title = modal.querySelector(`.title`)
         const body = modal.querySelector(`.body`)
+
+        if (permDelete) {
+            const deleteBtn = modal.querySelector("button.delete")
+            deleteBtn.addEventListener("click", () => showRepeatPhraseModal(artTitle, () => {
+                fetch(`/api/articles/${articleId}`, {
+                    method: "DELETE"
+                }).then(r => {
+                    if (r.ok) {
+                        closeModal(id)
+                        window.history.pushState(null, null, `${window.location.origin}/articles`);
+                        router()
+                    } else {
+                        console.error(`Something went wrong! 
+                                Code: ${r.status}
+                                MSG: ${r.statusText}`)
+                    }
+                });
+            },  "article_delete"))
+        }
 
         if (permArticles || permInfluences) {
             const stockInfluenceSelector = new stockInfluenceSelectorElement()

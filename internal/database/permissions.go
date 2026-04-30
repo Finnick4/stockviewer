@@ -33,6 +33,7 @@ func resetAdminPermissions() {
 		dto.Permission{Permission: "canEditArticles", Value: 1},
 		dto.Permission{Permission: "canModifyInfluences", Value: 1},
 		dto.Permission{Permission: "maxInfluencePermille", Value: -1},
+		dto.Permission{Permission: "canDeleteArticles", Value: 1},
 
 		dto.Permission{Permission: "canCreateStockGroups", Value: 1},
 		dto.Permission{Permission: "canEditStockGroupNames", Value: 1},

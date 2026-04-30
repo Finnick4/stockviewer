@@ -76,7 +76,13 @@
             "err_influences_length": "All lengths of influences have to be greater than 0 minutes",
             "err_influences_permille": "All permille values have to be numeric and not 0",
             "err_influences_permille_too_high": "You are not permitted to set permille values greater than {max}",
-            "values_okay": "The provided values are okay"
+            "values_okay": "The provided values are okay",
+            "danger": {
+                "title": "Danger Zone",
+                "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
+                "delete": "Delete article and influences permanently",
+                "delete_button": "Delete"
+            }
         },
         "influence_selector": {
             "title": "Stock influences",
@@ -461,7 +467,8 @@
                 "default": "Please type the phrase '{phrase}' again to confirm this action!",
                 "stock_name": "Please repeat the name of the stock ({phrase}) to confirm this action!",
                 "stocks_archive": "Please repeat the name of the stock ({phrase}) to archive this stock!",
-                "stocks_unarchive": "Please repeat the name of the stock ({phrase}) to unarchive this stock!"
+                "stocks_unarchive": "Please repeat the name of the stock ({phrase}) to unarchive this stock!",
+                "article_delete": "Please repeat the title of the article ({phrase}) to delete this article!"
             },
             "err_wrong_repetition": "The provided phrase is wrong!",
             "submit": "Submit",

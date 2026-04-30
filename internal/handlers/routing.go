@@ -85,6 +85,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/{articleID}", articles.GetArticle)
 		router.Put("/{articleID}/star", articles.StarArticle)
 		router.With(middleware.ExtractPermissions).Patch("/{articleID}", articles.EditArticle)
+		router.With(middleware.ExtractPermissions).Delete("/{articleID}", articles.DeleteArticle)
 
 		router.Get("/", articles.GetArticles)
 		router.Get("/unread", articles.GetUnreadArticles)
