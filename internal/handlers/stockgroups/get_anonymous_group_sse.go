@@ -13,8 +13,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Getting stock groups")
+func GetStockAnonymousGroupSSE(w http.ResponseWriter, r *http.Request) {
+	log.Debugf("Getting anonymous stock group")
 
 	var params = dto.AnonymousStockGroupGetParams{}
 
@@ -40,10 +40,9 @@ func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
 	rc := http.NewResponseController(w)
 
 	send := func() error {
-		log.Debug("Getting all stock groups")
-		data, err := database.GetAllStockGroups(userID)
+		log.Debug("Getting anonymous stock group")
+		data, err := database.GetAnonymousStockGroup(params.Members, userID)
 		if err != nil {
-			api.InternalErrorHandler(w)
 			log.Debug(err)
 			return err
 		}

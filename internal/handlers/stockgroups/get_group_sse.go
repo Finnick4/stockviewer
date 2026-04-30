@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
-	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/handlers/sse"
 	"strconv"
 
 	"github.com/go-chi/chi"
-	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -25,20 +23,8 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("Getting stock group %v", groupID)
 
-	var params = dto.StockGroupGetParams{}
-
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
-
-	var decoder *schema.Decoder = schema.NewDecoder()
-
-	// get parameters
-	err = decoder.Decode(&params, r.URL.Query())
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
 
 	if int32(groupID) < -1 {
 		log.Debugf("Cannot get stock group with id %v", int32(groupID))

@@ -2,19 +2,17 @@ package stockgroups
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"stockviewer/api"
 	"stockviewer/dto"
 	"stockviewer/internal/database"
-	"stockviewer/internal/handlers/sse"
 
 	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
-func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Getting stock groups")
+func GetStockAnonymousGroup(w http.ResponseWriter, r *http.Request) {
+	log.Debugf("Getting anonymous stock group")
 
 	var params = dto.AnonymousStockGroupGetParams{}
 
@@ -37,29 +35,24 @@ func GetStockGroupsSSE(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	rc := http.NewResponseController(w)
-
-	send := func() error {
-		log.Debug("Getting all stock groups")
-		data, err := database.GetAllStockGroups(userID)
-		if err != nil {
-			api.InternalErrorHandler(w)
-			log.Debug(err)
-			return err
-		}
-
-		resp, err := json.Marshal(data)
-		if err != nil {
-			return err
-		}
-
-		_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-		if err != nil {
-			return err
-		}
-		err = rc.Flush()
-		return err
+	data, err := database.GetAnonymousStockGroup(params.Members, userID)
+	if err != nil {
+		api.InternalErrorHandler(w)
+		log.Debug(err)
+		return
 	}
 
-	sse.SendSSEOnStockGroupChange(w, r, send)
+	var response = api.SuccessResponse{
+		Code: http.StatusOK,
+		Data: data,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		api.InternalErrorHandler(w)
+		log.Debug(err)
+		return
+	}
+	return
 }

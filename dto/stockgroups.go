@@ -6,8 +6,7 @@ type StockGroupCreateParams struct {
 	Members     []int32
 }
 
-type StockGroupGetParams struct {
-	ID      int32
+type AnonymousStockGroupGetParams struct {
 	Members []int32
 }
 

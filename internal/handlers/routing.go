@@ -59,6 +59,9 @@ func Handler(r *chi.Mux) {
 
 		router.With(middleware.ExtractPermissions).Patch("/{groupID}", stockgroups.EditStockGroup)
 
+		router.Get("/anonymous", stockgroups.GetStockAnonymousGroup)
+		router.Get("/anonymous/sse", stockgroups.GetStockAnonymousGroupSSE)
+
 		router.Get("/", stockgroups.GetStockGroups)
 		router.Get("/sse", stockgroups.GetStockGroupsSSE)
 		router.Get("/starred", stockgroups.GetStarredStockGroups)
