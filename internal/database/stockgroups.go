@@ -5,6 +5,7 @@ import (
 	"stockviewer/dto"
 	"stockviewer/internal/notifiers"
 	"strconv"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -536,4 +537,47 @@ func IsValidGroupID(groupID int32) bool {
 		return false
 	}
 	return exists
+}
+
+func GetStockGroupHistory(groupID int32, timeframe dto.Timeframe) ([]dto.StockPriceHistory, error) {
+	if timeframe.TotalWidth() == "AllTime" {
+		return nil, nil
+	}
+
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT stockprice.stockid, time_bucket($1, timestamp) AS bucket, avg(price) AS price
+FROM stockprice
+         JOIN stockgroupmembers ON stockprice.stockid=stockgroupmembers."stockId" AND stockgroupmembers."groupId"=$2
+GROUP BY stockprice.stockid, bucket
+ORDER BY bucket DESC LIMIT $3 * (SELECT COUNT(DISTINCT "stockId") FROM stockgroupmembers WHERE "groupId" = $2);`, timeframe.BucketWidth(), groupID, timeframe.Count())
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	historyMap := make(map[int32][]dto.StockPriceTime)
+
+	for rows.Next() {
+		var stockID int32
+		var ts time.Time
+		var avPrice float64
+
+		err = rows.Scan(&stockID, &ts, &avPrice)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		historyMap[stockID] = append(historyMap[stockID], dto.StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
+	}
+
+	var data []dto.StockPriceHistory
+
+	for stockID, history := range historyMap {
+		data = append(data, dto.StockPriceHistory{StockID: stockID, History: history})
+	}
+
+	return data, nil
 }

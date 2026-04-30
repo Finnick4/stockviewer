@@ -23,6 +23,7 @@ func GetArchivedStocks(w http.ResponseWriter, r *http.Request) {
 	data, err := database.GetArchivedStocks()
 	if err != nil {
 		log.Error(err)
+		api.InternalErrorHandler(w)
 		return
 	}
 

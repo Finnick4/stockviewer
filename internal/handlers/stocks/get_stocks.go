@@ -19,7 +19,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	var params = dto.StockGetParams{}
+	var params = dto.GetHistoryParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
@@ -38,6 +38,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 			deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe), userID)
 			if err != nil {
 				log.Error(err)
+				api.InternalErrorHandler(w)
 				return
 			}
 

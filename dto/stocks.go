@@ -8,7 +8,7 @@ type StockCreateParams struct {
 	InitPrice int64
 	Color     int32
 }
-type StockGetParams struct {
+type GetHistoryParams struct {
 	Timeframe int64
 }
 type StockGetHistoryParams struct {
@@ -46,6 +46,11 @@ type StockPrice struct {
 type StockPriceTime struct {
 	Price     int64
 	Timestamp time.Time
+}
+
+type StockPriceHistory struct {
+	StockID int32
+	History []StockPriceTime
 }
 
 type PriceDelta struct {

@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"stockviewer/api"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/handlers/sse"
 	"strconv"
 
 	"github.com/go-chi/chi"
+	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -26,6 +28,17 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
+	var params = dto.GetHistoryParams{}
+	var decoder *schema.Decoder = schema.NewDecoder()
+
+	// get parameters
+	err = decoder.Decode(&params, r.URL.Query())
+	if err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
+
 	if int32(groupID) < -1 {
 		log.Debugf("Cannot get stock group with id %v", int32(groupID))
 		api.RequestMalformedHandler(w, fmt.Sprintf("Cannot get stock group with id %v", int32(groupID)))
@@ -37,24 +50,46 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 	var send func() error
 
 	if int32(groupID) > 0 || int32(groupID) == -1 {
-		send = func() error {
-			data, err := database.GetDetailedStockGroup(userID, int32(groupID))
-			if err != nil {
-				log.Debug(err)
-				return err
-			}
+		if dto.IsValidTimeframeLength(params.Timeframe) {
+			send = func() error {
+				data, err := database.GetStockGroupHistory(int32(groupID), dto.GenerateTimeframe(params.Timeframe))
+				if err != nil {
+					log.Debug(err)
+					return err
+				}
 
-			resp, err := json.Marshal(data)
-			if err != nil {
-				return err
-			}
+				resp, err := json.Marshal(data)
+				if err != nil {
+					return err
+				}
 
-			_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-			if err != nil {
+				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+				if err != nil {
+					return err
+				}
+				err = rc.Flush()
 				return err
 			}
-			err = rc.Flush()
-			return err
+		} else {
+			send = func() error {
+				data, err := database.GetDetailedStockGroup(userID, int32(groupID))
+				if err != nil {
+					log.Debug(err)
+					return err
+				}
+
+				resp, err := json.Marshal(data)
+				if err != nil {
+					return err
+				}
+
+				_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+				if err != nil {
+					return err
+				}
+				err = rc.Flush()
+				return err
+			}
 		}
 	} else {
 		api.RequestMalformedHandler(w, "The provided ID is invalid.")

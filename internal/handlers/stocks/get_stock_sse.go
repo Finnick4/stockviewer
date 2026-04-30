@@ -31,7 +31,7 @@ func GetStockSSE(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
-	var params = dto.StockGetParams{}
+	var params = dto.GetHistoryParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 
 	// get parameters

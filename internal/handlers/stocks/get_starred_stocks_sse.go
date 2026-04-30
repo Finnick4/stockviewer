@@ -16,7 +16,7 @@ import (
 func GetStarredStocksSSE(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Getting starred stocks")
 
-	var params = dto.StockGetParams{}
+	var params = dto.GetHistoryParams{}
 	var decoder *schema.Decoder = schema.NewDecoder()
 	var err error
 
