@@ -1,5 +1,7 @@
 package dto
 
+import "fmt"
+
 type Timeframe struct {
 	count       int64
 	bucketWidth string
@@ -16,24 +18,19 @@ func (tf Timeframe) TotalWidth() string {
 	return tf.totalWidth
 }
 
-// GenerateTimeframe returns a Timeframe of a given scope. If the scope is invalid the returned timeframe will consist of default values.
-func GenerateTimeframe(scope int64) Timeframe {
-	switch scope {
-	case -1:
-		return Timeframe{count: 30, bucketWidth: "", totalWidth: "AllTime"} // 30 minutes
-	case 1:
-		return Timeframe{count: 30, bucketWidth: "1 minute", totalWidth: "30 minutes"} // 30 minutes
-	case 2:
-		return Timeframe{count: 30, bucketWidth: "2 minutes", totalWidth: "60 minutes"} // 1 hour
-	case 3:
-		return Timeframe{count: 30, bucketWidth: "12 minutes", totalWidth: "6 hours"} // 6 hours
-	case 4:
-		return Timeframe{count: 30, bucketWidth: "48 minutes", totalWidth: "24 hours"} // 24 hours
-	default:
+// GenerateTimeframe returns a Timeframe of a given length in minutes. If the scope is invalid the returned timeframe will consist of default values.
+func GenerateTimeframe(length int64) Timeframe {
+	if length == -1 {
+		return Timeframe{count: 30, bucketWidth: "", totalWidth: "AllTime"}
+	}
+	if length <= 0 {
 		return Timeframe{count: 0, bucketWidth: "0 minutes", totalWidth: "0 minutes"}
 	}
+
+	return Timeframe{count: 30, bucketWidth: fmt.Sprintf("%v minutes", float64(length)/30.0), totalWidth: fmt.Sprintf("%v minutes", length)}
+
 }
 
-func IsValidTimeframeScope(scope int64) bool {
-	return scope == -1 || (scope > 0 && scope <= 4)
+func IsValidTimeframeLength(length int64) bool {
+	return length == -1 || length > 0
 }

@@ -46,7 +46,7 @@ func GetStockSSE(w http.ResponseWriter, r *http.Request) {
 
 	var send func() error
 
-	if dto.IsValidTimeframeScope(params.Timeframe) {
+	if dto.IsValidTimeframeLength(params.Timeframe) {
 		send = func() error {
 			history, err := database.GetStockPriceHistory(int32(stockID), dto.GenerateTimeframe(params.Timeframe))
 			if err != nil {

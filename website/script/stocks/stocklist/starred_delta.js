@@ -43,10 +43,10 @@ class stocklistStarredDelta extends HTMLElement {
         that.innerHTML = `<div class="inner">
                         <div class="titlebar">
                             <nav class="timeframeSelector">
-                                <button class="tf" data-tf="1">30m</button>
-                                <button class="tf" data-tf="2">60m</button>
-                                <button class="tf" data-tf="3">6h</button>
-                                <button class="tf" data-tf="4">24h</button>                                                     
+                                <button class="tf" data-tf="30">30m</button>
+                                <button class="tf" data-tf="60">60m</button>
+                                <button class="tf" data-tf="360">6h</button>
+                                <button class="tf" data-tf="1440">24h</button>                                                     
                             </nav>
                             <h2>${getTranslatedStr("stocks.starred_list.title")}</h2>
                             <div></div>

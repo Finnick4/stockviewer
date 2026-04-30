@@ -10,10 +10,10 @@ class stockChart extends HTMLElement {
                         <div class="inner">
                             <div class="titlebar">
                             <nav class="timeframeSelector">
-                                <button class="tf selected" data-tf="1">30m</button>
-                                <button class="tf" data-tf="2">60m</button>
-                                <button class="tf" data-tf="3">6h</button>
-                                <button class="tf" data-tf="4">24h</button>
+                                <button class="tf selected" data-tf="30">30m</button>
+                                <button class="tf" data-tf="60">60m</button>
+                                <button class="tf" data-tf="360">6h</button>
+                                <button class="tf" data-tf="1440">24h</button>
                                 <button class="tf" data-tf="-1">all</button>                                                     
                             </nav>
                             <h2>${getTranslatedStr("stocks.chart.stock_history")}</h2>

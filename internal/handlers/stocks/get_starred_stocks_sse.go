@@ -35,7 +35,7 @@ func GetStarredStocksSSE(w http.ResponseWriter, r *http.Request) {
 
 	var send func() error
 
-	if dto.IsValidTimeframeScope(params.Timeframe) {
+	if dto.IsValidTimeframeLength(params.Timeframe) {
 		send = func() error {
 			deltas, err := database.GetStarredStocksDelta(userID, dto.GenerateTimeframe(params.Timeframe))
 			if err != nil {

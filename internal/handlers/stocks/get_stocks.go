@@ -33,7 +33,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 
 	var send func()
 
-	if dto.IsValidTimeframeScope(params.Timeframe) {
+	if dto.IsValidTimeframeLength(params.Timeframe) {
 		send = func() {
 			deltas, err := database.GetStocksPriceDelta(dto.GenerateTimeframe(params.Timeframe), userID)
 			if err != nil {

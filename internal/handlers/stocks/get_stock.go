@@ -41,7 +41,7 @@ func GetStock(w http.ResponseWriter, r *http.Request) {
 
 	var send func()
 
-	if dto.IsValidTimeframeScope(params.Timeframe) {
+	if dto.IsValidTimeframeLength(params.Timeframe) {
 		send = func() {
 			history, err := database.GetStockPriceHistory(int32(stockID), dto.GenerateTimeframe(params.Timeframe))
 			if err != nil {
