@@ -64,6 +64,12 @@ class stockGroupChart extends HTMLElement {
 
         const svg = that.querySelector("svg")
 
+        const pieChart = document.querySelector(`main stockgroups-member-pie-chart[data-stock-group-id="${that.groupid}"]`)
+        let stockColorMap = new Map()
+        if (pieChart !== null) {
+            stockColorMap = pieChart.stockColorMap
+        }
+
         data.forEach(stockHistory => {
             const stockid = stockHistory.StockID
             const prices = stockHistory.History.map(elem => elem["Price"]).reverse()
@@ -80,7 +86,9 @@ class stockGroupChart extends HTMLElement {
             if (path !== "") {
                 path = path.replace('L', 'M')
             }
-            const pathElemOuter = `<path class="${prices[0] < prices[prices.length - 1] ? "positive" : "negative"}" d="${path}" data-stock-id="${stockid}"></path>`
+            const classes = prices[0] < prices[prices.length - 1] ? "positive" : "negative"
+            const color = pieChart !== null ? stockColorMap.get(stockid) : ""
+            const pathElemOuter = `<path class="${color === "" ? classes : ""}" d="${path}" data-stock-id="${stockid}" style="stroke: ${color}"></path>`
             svg.innerHTML += pathElemOuter
         })
 
