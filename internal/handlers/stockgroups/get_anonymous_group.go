@@ -35,6 +35,30 @@ func GetStockAnonymousGroup(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token").(string)
 	userID := database.GetUserIDFromToken(token)
 
+	if dto.IsValidTimeframeLength(params.Timeframe) {
+		data, err := database.GetAnonymousStockGroupHistory(params.Members, dto.GenerateTimeframe(params.Timeframe))
+
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Debug(err)
+			return
+		}
+
+		var response = api.SuccessResponse{
+			Code: http.StatusOK,
+			Data: data,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err = json.NewEncoder(w).Encode(response)
+		if err != nil {
+			api.InternalErrorHandler(w)
+			log.Debug(err)
+			return
+		}
+		return
+	}
+
 	data, err := database.GetAnonymousStockGroup(params.Members, userID)
 	if err != nil {
 		api.InternalErrorHandler(w)

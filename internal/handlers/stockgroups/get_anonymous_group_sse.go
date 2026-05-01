@@ -39,25 +39,50 @@ func GetStockAnonymousGroupSSE(w http.ResponseWriter, r *http.Request) {
 
 	rc := http.NewResponseController(w)
 
-	send := func() error {
-		log.Debug("Getting anonymous stock group")
-		data, err := database.GetAnonymousStockGroup(params.Members, userID)
-		if err != nil {
-			log.Debug(err)
-			return err
-		}
+	var send func() error
 
-		resp, err := json.Marshal(data)
-		if err != nil {
-			return err
-		}
+	if dto.IsValidTimeframeLength(params.Timeframe) {
+		send = func() error {
+			data, err := database.GetAnonymousStockGroupHistory(params.Members, dto.GenerateTimeframe(params.Timeframe))
 
-		_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
-		if err != nil {
+			if err != nil {
+				log.Debug(err)
+				return err
+			}
+
+			resp, err := json.Marshal(data)
+			if err != nil {
+				return err
+			}
+
+			_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+			if err != nil {
+				return err
+			}
+			err = rc.Flush()
 			return err
 		}
-		err = rc.Flush()
-		return err
+	} else {
+		send = func() error {
+			log.Debug("Getting anonymous stock group")
+			data, err := database.GetAnonymousStockGroup(params.Members, userID)
+			if err != nil {
+				log.Debug(err)
+				return err
+			}
+
+			resp, err := json.Marshal(data)
+			if err != nil {
+				return err
+			}
+
+			_, err = fmt.Fprintf(w, "event:stockupdate\ndata:%s\n\n", string(resp))
+			if err != nil {
+				return err
+			}
+			err = rc.Flush()
+			return err
+		}
 	}
 
 	sse.SendSSEOnStockGroupChange(w, r, send)

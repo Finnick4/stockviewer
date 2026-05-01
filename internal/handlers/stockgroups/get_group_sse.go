@@ -52,7 +52,12 @@ func GetStockGroupSSE(w http.ResponseWriter, r *http.Request) {
 	if int32(groupID) > 0 || int32(groupID) == -1 {
 		if dto.IsValidTimeframeLength(params.Timeframe) {
 			send = func() error {
-				data, err := database.GetStockGroupHistory(int32(groupID), dto.GenerateTimeframe(params.Timeframe))
+				var data []dto.StockPriceHistory
+				if int32(groupID) == -1 {
+					data, err = database.GetStarredStocksHistoryAsStockGroup(userID, dto.GenerateTimeframe(params.Timeframe))
+				} else {
+					data, err = database.GetStockGroupHistory(int32(groupID), dto.GenerateTimeframe(params.Timeframe))
+				}
 				if err != nil {
 					log.Debug(err)
 					return err

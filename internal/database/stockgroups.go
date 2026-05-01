@@ -594,7 +594,7 @@ SELECT stockid, time_bucket($1, timestamp) AS bucket, avg(price) AS price
 FROM stockprice
 WHERE stockid IN (`
 	values := []interface{}{}
-	values = append(values, timeframe.BucketWidth(), timeframe.Count(), len(stockIDs))
+	values = append(values, timeframe.BucketWidth(), timeframe.Count()*int64(len(stockIDs)))
 
 	for i, id := range stockIDs {
 		values = append(values, id)
@@ -604,7 +604,7 @@ WHERE stockid IN (`
 
 	query = query[:len(query)-2] + `)
 GROUP BY stockprice.stockid, bucket
-ORDER BY bucket DESC LIMIT $2 * $3;
+ORDER BY bucket DESC LIMIT $2;
 ;`
 	rows, err := db.Query(query, values...)
 

@@ -7,7 +7,8 @@ type StockGroupCreateParams struct {
 }
 
 type AnonymousStockGroupGetParams struct {
-	Members []int32
+	Members   []int32
+	Timeframe int64
 }
 
 type StockGroupEditParams struct {
