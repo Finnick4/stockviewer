@@ -581,3 +581,102 @@ ORDER BY bucket DESC LIMIT $3 * (SELECT COUNT(DISTINCT "stockId") FROM stockgrou
 
 	return data, nil
 }
+
+func GetAnonymousStockGroupHistory(stockIDs []int32, timeframe dto.Timeframe) ([]dto.StockPriceHistory, error) {
+	if timeframe.TotalWidth() == "AllTime" {
+		return nil, nil
+	}
+
+	db := getDB()
+
+	query := `
+SELECT stockid, time_bucket($1, timestamp) AS bucket, avg(price) AS price
+FROM stockprice
+WHERE stockid IN (`
+	values := []interface{}{}
+	values = append(values, timeframe.BucketWidth(), timeframe.Count(), len(stockIDs))
+
+	for i, id := range stockIDs {
+		values = append(values, id)
+
+		query += `$` + strconv.Itoa(i+3) + `, `
+	}
+
+	query = query[:len(query)-2] + `)
+GROUP BY stockprice.stockid, bucket
+ORDER BY bucket DESC LIMIT $2 * $3;
+;`
+	rows, err := db.Query(query, values...)
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	historyMap := make(map[int32][]dto.StockPriceTime)
+
+	for rows.Next() {
+		var stockID int32
+		var ts time.Time
+		var avPrice float64
+
+		err = rows.Scan(&stockID, &ts, &avPrice)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		historyMap[stockID] = append(historyMap[stockID], dto.StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
+	}
+
+	var data []dto.StockPriceHistory
+
+	for stockID, history := range historyMap {
+		data = append(data, dto.StockPriceHistory{StockID: stockID, History: history})
+	}
+
+	return data, nil
+}
+
+func GetStarredStocksHistoryAsStockGroup(userID string, timeframe dto.Timeframe) ([]dto.StockPriceHistory, error) {
+	if timeframe.TotalWidth() == "AllTime" {
+		return nil, nil
+	}
+
+	db := getDB()
+
+	rows, err := db.Query(`
+SELECT stockprice.stockid, time_bucket($1, timestamp) AS bucket, avg(price) AS price
+FROM stockprice
+         JOIN starredstocks ON stockprice.stockid=starredstocks."stockId" AND "userId"=$3
+GROUP BY stockprice.stockid, bucket
+ORDER BY bucket DESC LIMIT $2 * (SELECT COUNT(DISTINCT "stockId") FROM starredstocks WHERE "userId" = $3);`, timeframe.BucketWidth(), timeframe.Count(), userID)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	historyMap := make(map[int32][]dto.StockPriceTime)
+
+	for rows.Next() {
+		var stockID int32
+		var ts time.Time
+		var avPrice float64
+
+		err = rows.Scan(&stockID, &ts, &avPrice)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		historyMap[stockID] = append(historyMap[stockID], dto.StockPriceTime{Timestamp: ts, Price: int64(avPrice)})
+	}
+
+	var data []dto.StockPriceHistory
+
+	for stockID, history := range historyMap {
+		data = append(data, dto.StockPriceHistory{StockID: stockID, History: history})
+	}
+
+	return data, nil
+}
