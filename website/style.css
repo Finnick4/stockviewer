@@ -726,6 +726,11 @@ stock-chart svg line.axis {
 stock-chart svg text.price {
     fill: var(--icon-color);
 }
+
+stock-group-chart svg path.unhighlighted {
+    stroke: var(--text-muted) !important;
+}
+
 stock-group-chart svg path {
     fill:none;
     stroke-width:1;
