@@ -107,7 +107,7 @@ main.homepage .articleInbox {
 
 main.individualStockPage {
     display: grid;
-    grid-template: 4rem 40.3rem auto / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: 4rem fit-content(25rem) auto / 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
@@ -181,10 +181,6 @@ main.stockGroupOverviewPage stockgroups-members-list {
     grid-column: 3/6;
     overflow: auto;
 }
-main.stockGroupOverviewPage stockgroups-members-list ul.inner {
-    height: calc(100% - 2rem);
-    margin: 0;
-}
 
 main.stockGroupOverviewPage stock-group-description {
     grid-column: 4/6;
@@ -202,7 +198,6 @@ main.stockGroupOverviewPage stock-group-chart {
 main.stockGroupOverviewPage stock-group-description .inner {
     height: calc(100% - 2rem);
     font-size: 1.3rem;
-    overflow: auto;
 }
 
 div.sidebar a {
@@ -661,6 +656,8 @@ theme-switcher button {
     background-color: var(--bg-dark);
     border-radius: var(--border-radius);
     padding: 1rem;
+    overflow: auto;
+    height: calc(100% - 2rem);
 }
 
 ul.inner {
