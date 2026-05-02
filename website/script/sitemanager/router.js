@@ -55,6 +55,12 @@ function routerStockGroups(segmented) {
         return;
     }
 
+    if (segmented[1] === "anonymous") {
+        const memberStr = new URLSearchParams(window.location.search).get("members")
+        buildAnonymousStockGroupPage(memberStr.split(","));
+        return;
+    }
+
     if (isNaN(segmented[1])) {
         window.history.pushState(null, null, `${window.location.origin}/groups`);
         buildStockGroupsOverviewPage();

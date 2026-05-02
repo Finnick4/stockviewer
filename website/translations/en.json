@@ -206,7 +206,8 @@
         },
         "header_element": {
             "loading_member_count": "??? stocks",
-            "loading_name": "Loading name..."
+            "loading_name": "Loading name...",
+            "anonymous_group_title": "Comparison"
         },
         "star_button": {
             "alt_unstarred": "Star stock group",

@@ -6,7 +6,11 @@ class stockgroupsMembersList extends HTMLElement {
                 <nav><h2>${this.titleVal}</h2></nav>
                 <p>${getTranslatedStr("stockgroups.members_list.loading")}</p>
             </div>`
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
+        if (Number(this.groupid) === 0) {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/anonymous/sse?members=${anonymousStockGroupMembers}`, addThisToFunctionCall(this.updateData, this))
+        } else {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
+        }
     }
 
     disconnectedCallback() {

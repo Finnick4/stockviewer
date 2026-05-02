@@ -1,16 +1,16 @@
 class stockGroupHeader extends HTMLElement {
     connectedCallback() {
         this.groupid = Number(this.dataset.stockGroupId)
-
+        this.isAnonymousStockGroup = Number(this.groupid) === 0
         this.innerHTML = `
                         <div class="titlebar">
                             <div class="info">
                                 <div class="value price">???€</div>
-                                <div class="value members">${getTranslatedStr("stockgroups.header_element.member_count")}</div>
+                                <div class="value members">${getTranslatedStr("stockgroups.header_element.loading_member_count")}</div>
                             </div>
                             <h1>${getTranslatedStr("stockgroups.header_element.loading_name")}</h1>
                             <nav class="buttons">
-                                <button is="star-stock-group-button" data-stock-group-id="${this.groupid}"></button>
+                                ${this.isAnonymousStockGroup ? `` : `<button is="star-stock-group-button" data-stock-group-id="${this.groupid}"></button>`}
                                 <button is="edit-stock-group-button" data-stock-group-id="${this.groupid}"></button>
                             </nav>
                         </div>
@@ -18,14 +18,18 @@ class stockGroupHeader extends HTMLElement {
         if (this.groupid < 0) {
             this.querySelector("nav.buttons").innerHTML = ""
         }
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
+        if (this.isAnonymousStockGroup) {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/anonymous/sse?members=${anonymousStockGroupMembers}`, addThisToFunctionCall(this.updateData, this))
+        } else {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
+        }
     }
     disconnectedCallback() {
         this.closeSubscription()
     }
 
     updateData(data, that) {
-        that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
+        that.querySelector("h1").innerHTML = that.isAnonymousStockGroup ? getTranslatedStr("stockgroups.header_element.anonymous_group_title") : sanitiseText(data["Name"])
         let totalValue = 0
         let memberCount = 0
         if (data["Members"] !== undefined && data["Members"] !== null) {

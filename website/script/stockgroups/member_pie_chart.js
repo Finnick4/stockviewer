@@ -2,7 +2,12 @@ class stockgroupsMemberPieChart extends HTMLElement {
     connectedCallback() {
         this.groupid = this.dataset.stockGroupId
         this.stockColorMap = new Map()
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
+
+        if (Number(this.groupid) === 0) {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/anonymous/sse?members=${anonymousStockGroupMembers}`, addThisToFunctionCall(this.updateData, this))
+        } else {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
+        }
 
         this.pie = document.createElement("div")
 

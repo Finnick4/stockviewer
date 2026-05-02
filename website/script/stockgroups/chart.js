@@ -29,7 +29,11 @@ class stockGroupChart extends HTMLElement {
                             </svg>
                         </div>
                         `
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.redrawGraph, this))
+        if (Number(this.groupid) === 0) {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/anonymous/sse?members=${anonymousStockGroupMembers}&Timeframe=${this.timeframe}`, addThisToFunctionCall(this.redrawGraph, this))
+        } else {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.redrawGraph, this))
+        }
         this.querySelectorAll("button.tf").forEach(b => {
             b.addEventListener("click", () => {
                 this.changeTimeframe(b.dataset.tf, this)

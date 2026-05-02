@@ -9,7 +9,11 @@ class editStockGroupButtonElement extends HTMLButtonElement {
 
         this.classList.add("edit")
 
-        this.onclick = () => showModalEditStockGroup(this.groupid)
+        if (Number(this.groupid) === 0) {
+
+        } else {
+            this.onclick = () => showModalEditStockGroup(this.groupid)
+        }
 
         this.title = getTranslatedStr("stockgroups.modify.edit_icon_alt_text")
         this.innerHTML = `<img class="icon" src="/icons/edit.svg" alt="${getTranslatedStr("stockgroups.modify.edit_icon_alt_text")}" draggable="false">`
