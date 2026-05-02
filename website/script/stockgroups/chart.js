@@ -87,8 +87,8 @@ class stockGroupChart extends HTMLElement {
                 path = path.replace('L', 'M')
             }
             const classes = prices[0] < prices[prices.length - 1] ? "positive" : "negative"
-            const color = pieChart !== null ? stockColorMap.get(stockid) : ""
-            const pathElemOuter = `<path class="${color === "" ? classes : ""}" d="${path}" data-stock-id="${stockid}" style="stroke: ${color}"></path>`
+            const color = stockColorMap.has(stockid) ? stockColorMap.get(stockid) : ""
+            const pathElemOuter = `<path class="${classes}" d="${path}" data-stock-id="${stockid}" ${color === "" ? "" : `style="stroke: ${color}"`}></path>`
             svg.innerHTML += pathElemOuter
         })
 
