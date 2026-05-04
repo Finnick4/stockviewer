@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/handlers"
 	"stockviewer/internal/stocks"
+	"strconv"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -50,6 +52,25 @@ func main() {
 		log.Warn("PORT is not set in .env! Using default value.")
 		port = "8000"
 	}
+
+	detailLevel, ok := os.LookupEnv("MAX_HISTORY_DETAIL")
+	if !ok {
+		log.Warn("MAX_HISTORY_DETAIL is not set in .env! Using default value.")
+		detailLevel = "30"
+	}
+
+	lvlInt, err := strconv.Atoi(detailLevel)
+
+	if err != nil {
+		log.Fatal("Failed to parse MAX_HISTORY_DETAIL from .env!")
+	}
+	if lvlInt <= 0 {
+		log.Fatal("Invalid environment variable MAX_HISTORY_DETAIL! This has to be at least 1 or greater!")
+	}
+	if lvlInt > 120 {
+		log.Warnf("Environment variable MAX_HISTORY_DETAIL of %v exceeds 120!", lvlInt)
+	}
+	dto.MaxDetailLevel = int64(lvlInt)
 
 	log.SetReportCaller(true)
 	var r *chi.Mux = chi.NewRouter()
