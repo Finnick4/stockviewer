@@ -10,10 +10,7 @@ class stockGroupChart extends HTMLElement {
                         <div class="inner">
                             <div class="titlebar">
                             <nav class="timeframeSelector">
-                                <button class="tf selected" data-tf="30">30m</button>
-                                <button class="tf" data-tf="60">60m</button>
-                                <button class="tf" data-tf="360">6h</button>
-                                <button class="tf" data-tf="1440">24h</button>
+                                <timeframe-selector></timeframe-selector>
                             </nav>
                             <h2>${getTranslatedStr("stockgroups.chart.stock_history")}</h2>
                             <div></div>
@@ -34,16 +31,10 @@ class stockGroupChart extends HTMLElement {
         } else {
             this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.redrawGraph, this))
         }
-        this.querySelectorAll("button.tf").forEach(b => {
-            b.addEventListener("click", () => {
-                this.changeTimeframe(b.dataset.tf, this)
-                const sel = this.querySelector("button.tf.selected")
-                if (sel !== null) {
-                    sel.classList.remove("selected")
-                }
-                b.className = "tf selected"
-            })
-        })
+        const tfSelector = this.querySelector("timeframe-selector")
+        tfSelector.onEdit = () => {
+            this.changeTimeframe(tfSelector.value, this)
+        }
     }
     disconnectedCallback() {
         this.closeSubscription()

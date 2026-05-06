@@ -489,5 +489,12 @@
             "submit": "Authenticate",
             "cancel": "Cancel"
         }
+    },
+    "timeframes": {
+        "durations": {
+            "minutes": "{duration}m",
+            "hours": "{duration}h",
+            "days": "{duration} days"
+        }
     }
 }
