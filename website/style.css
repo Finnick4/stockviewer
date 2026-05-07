@@ -246,6 +246,9 @@ div.sidebar a.btn.selected:hover {
 .dropdown button {
     background-color: var(--bg-light);
 }
+.dropdown button.selected {
+    background-color: var(--bg-very-light);
+}
 
 .dropdown a.btn {
     background-color: var(--bg-light);
