@@ -237,28 +237,66 @@ div.sidebar a.btn.selected:hover {
     /*noinspection CssInvalidFunction*/
     left: anchor(left);
     position-try-fallbacks: --fallback-right, --fallback-bottom;
+
+
+    button {
+        background-color: var(--bg-light);
+    }
+    button.selected {
+        background-color: var(--bg-very-light);
+    }
+    button:hover {
+        z-index: 1;
+    }
+    a.btn {
+        background-color: var(--bg-light);
+    }
+    .searchResult {
+        max-width: 32ch;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    div.pair {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: .25rem;
+    }
+    div.pair input {
+        width: 8rem;
+        padding: .25rem;
+        background-color: var(--bg-very-light);
+    }
+    div.pair:focus-within p {
+        color: var(--text);
+    }
+    div.pair button {
+        width: 8rem;
+        background-color: var(--bg-very-light);
+    }
+    div.pair falloff-selector {
+        align-self: center;
+    }
+    div.colorDisplayRow {
+        display: flex;
+        height: 2rem;
+        justify-content: space-evenly;
+        gap: .5rem;
+        margin: .25rem 0;
+
+        div.colorDisplay {
+            width: 100%;
+            border-radius: var(--border-radius);
+        }
+        div.colorDisplay:hover {
+            box-shadow: var(--button-hover-shadow);
+        }
+    }
 }
 
 .dropdown:popover-open {
     display: grid;
-}
-
-.dropdown button {
-    background-color: var(--bg-light);
-}
-.dropdown button.selected {
-    background-color: var(--bg-very-light);
-}
-
-.dropdown a.btn {
-    background-color: var(--bg-light);
-}
-
-.dropdown .searchResult {
-    max-width: 32ch;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 /*noinspection CssInvalidAtRule*/
@@ -290,17 +328,101 @@ div.sidebar a.btn.selected:hover {
     overflow: hidden;
     backdrop-filter: blur(3px);
     background-color: rgba(0,0,0,.4);
-}
-.modal .outer {
-    background-color: var(--bg-dark);
-    margin: 6rem auto;
-    padding: 2rem;
-    width: 40%;
-    max-height: calc(100% - 16rem);
-    color: var(--text-muted);
-    border-radius: var(--border-radius);
-    box-shadow: var(--popup-shadow);
-    overflow: auto;
+
+    .outer {
+        background-color: var(--bg-dark);
+        margin: 6rem auto;
+        padding: 2rem;
+        width: 40%;
+        max-height: calc(100% - 16rem);
+        color: var(--text-muted);
+        border-radius: var(--border-radius);
+        box-shadow: var(--popup-shadow);
+        overflow: auto;
+    }
+
+    .content {
+        display: grid;
+        gap: .5rem;
+
+        input {
+            width: 32ch;
+            height: 2rem;
+        }
+        input.price {
+            text-align: left;
+            margin: 0;
+        }
+        input.title {
+            width: calc(100% - 1rem);
+            margin: 0;
+        }
+        textarea {
+            resize: none;
+            font-family: "Ubuntu Sans";
+            padding: .5rem;
+            background-color: var(--bg);
+            border: none;
+            color: var(--text-muted);
+            border-radius: var(--border-radius);
+            width: calc(100% - 1rem);
+        }
+        textarea:focus {
+            outline: none;
+        }
+        div.textField:focus-within p {
+            color: var(--text);
+        }
+        .permission .inputField {
+            width: 6rem;
+        }
+    }
+
+    h2 {
+        color: var(--text);
+        text-align: center;
+    }
+
+    .closeBtn {
+        color: var(--icon-color);
+        float: right;
+        font-size: 30px;
+        /*noinspection CssUnknownProperty*/
+        user-drag: none;
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        transition: color .1s;
+    }
+    .closeBtn:hover {
+        color: var(--icon-color-highlight);
+        cursor: pointer;
+    }
+    button {
+        padding: 1rem;
+    }
+    stock-selector,stock-influence-selector .inner {
+        padding: 0;
+    }
+    stock-influence-selector falloff-selector button {
+        padding: .5rem;
+        min-height: 3rem;
+        background-color: var(--bg-light);
+    }
+
+    div.submit {
+        position: sticky;
+        bottom: 0;
+        background-color: var(--bg-dark);
+        padding-top: .5rem;
+        padding-bottom: 2rem;
+    }
+
+    .outer:has(div.submit, div.dangerZone) {
+        padding-bottom: 0;
+    }
 }
 
 .modal.wider .outer {
@@ -309,57 +431,17 @@ div.sidebar a.btn.selected:hover {
 
 .modal.confirm-modal {
     z-index: 2;
-}
-
-.modal.confirm-modal .outer {
-    width: fit-content;
-}
-.modal.confirm-modal input.repetition {
-    width: calc(100% - 1rem);
-}
-.modal.confirm-modal .buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .75rem;
-}
-
-
-.modal .content {
-    display: grid;
-    gap: .5rem
-}
-
-.modal .content input {
-    width: 32ch;
-    height: 2rem;
-}
-
-.modal .content input.price {
-    text-align: left;
-    margin: 0;
-}
-
-.modal .content input.title {
-    width: calc(100% - 1rem);
-    margin: 0;
-}
-
-.modal .content textarea {
-    resize: none;
-    font-family: "Ubuntu Sans";
-    padding: .5rem;
-    background-color: var(--bg);
-    border: none;
-    color: var(--text-muted);
-    border-radius: var(--border-radius);
-    width: calc(100% - 1rem);
-}
-.modal .content textarea:focus {
-    outline: none;
-}
-
-.modal .content div.textField:focus-within p {
-    color: var(--text);
+    .outer {
+        width: fit-content;
+    }
+    input.repetition {
+        width: calc(100% - 1rem);
+    }
+    .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .75rem;
+    }
 }
 
 .pair {
@@ -369,11 +451,6 @@ div.sidebar a.btn.selected:hover {
 .pair:focus-within p {
     color: var(--text);
 }
-
-.modal button {
-    padding: 1rem;
-}
-
 .info.positive {
     color: var(--positiv-muted);
 }
@@ -382,58 +459,10 @@ div.sidebar a.btn.selected:hover {
     color: var(--negative-muted);
 }
 
-.modal h2 {
-    color: var(--text);
-    text-align: center;
-}
-
-.modal .closeBtn {
-    color: var(--icon-color);
-    float: right;
-    font-size: 30px;
-    /*noinspection CssUnknownProperty*/
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    transition: color .1s;
-}
-.modal .closeBtn:hover {
-    color: var(--icon-color-highlight);
-    cursor: pointer;
-}
 .removeStockBtn {
     margin-right: .5rem;
 }
 
-.modal stock-selector .inner {
-    padding: 0;
-}
-.modal stock-influence-selector .inner {
-    padding: 0;
-}
-
-.modal .stockOverview:hover input {
-    background-color: var(--bg-very-light);
-}
-.modal .stockOverview:hover button {
-    background-color: var(--bg-very-light);
-}
-
-stock-influence-selector .stockOverview .containing {
-    display: flex;
-    justify-content: space-between;
-    padding: .25rem;
-    align-items: center;
-}
-
-.modal stock-influence-selector falloff-selector button {
-    padding: .5rem;
-    min-height: 3rem;
-    background-color: var(--bg-light);
-}
 
 edit-influence button.influenceOverview {
     background-color: var(--bg-light);
@@ -447,28 +476,6 @@ div.containing:hover edit-influence button.influenceOverview {
     background-color: var(--bg-very-light);
 }
 
-div.dropdown div.pair {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: .25rem;
-}
-div.dropdown div.pair input {
-    width: 8rem;
-    padding: .25rem;
-    background-color: var(--bg-very-light);
-}
-div.dropdown div.pair:focus-within p {
-    color: var(--text);
-}
-div.dropdown div.pair button {
-    width: 8rem;
-    background-color: var(--bg-very-light);
-}
-div.dropdown div.pair falloff-selector {
-    align-self: center;
-}
-
 button {
     font-family: Ubuntu, sans-serif;
     background-color: var(--bg);
@@ -480,9 +487,6 @@ button {
     border-radius: var(--border-radius);
 }
 
-.dropdown button:hover {
-    z-index: 1;
-}
 
 button:hover {
     background-color: var(--highlight);
@@ -554,32 +558,33 @@ header-bar {
     width: 100%;
     top: 0;
     background-color: var(--bg-very-dark);
-}
 
-header-bar h1 {
-    grid-column: 1;
-    padding-left: 1rem;
-}
+    h1 {
+        grid-column: 1;
+        padding-left: 1rem;
+    }
+    nav {
+        display: flex;
+        justify-content: space-evenly;
+        align-self: center;
+        margin: .5rem;
+    }
+    nav.create {
+        display: flex;
+        justify-content: flex-start;
+    }
+    a {
+        color: var(--text);
+        text-decoration: none;
+    }
+    search-bar {
+        grid-column: 3/4;
+        align-self: center;
+    }
+    nav.site-manager {
+        grid-column: 5;
+    }
 
-header-bar nav {
-    display: flex;
-    justify-content: space-evenly;
-    align-self: center;
-    margin: .5rem;
-}
-header-bar nav.create {
-    display: flex;
-    justify-content: flex-start;
-}
-
-header-bar a {
-    color: var(--text);
-    text-decoration: none;
-}
-
-header-bar search-bar {
-    grid-column: 3/4;
-    align-self: center;
 }
 
 search-bar {
@@ -587,19 +592,21 @@ search-bar {
     padding: .5rem;
     border-radius: var(--border-radius);
     transition: var(--bg-transition);
+
+    input{
+        width: 100%;
+        height: 2rem;
+        padding: 0;
+        border-radius: 0;
+    }
+    input:focus {
+        background-color: var(--bg-light);
+    }
 }
 
 search-bar:focus-within {
     background-color: var(--bg-light);
     box-shadow: var(--popup-shadow);
-}
-
-search-bar input:focus {
-    background-color: var(--bg-light);
-}
-
-input:focus {
-    background-color: var(--highlight);
 }
 
 input {
@@ -613,15 +620,10 @@ input {
     border-radius: var(--border-radius);
 }
 
-search-bar input{
-    width: 100%;
-    height: 2rem;
-    padding: 0;
-    border-radius: 0;
+input:focus {
+    background-color: var(--highlight);
 }
-header-bar nav.site-manager {
-    grid-column: 5;
-}
+
 nav.site-manager {
     color: var(--text);
     align-self: center;
@@ -632,20 +634,19 @@ nav.site-manager {
 }
 user-manager {
     align-self: center;
-}
 
-user-manager button {
-    display: flex;
-    align-content: center;
-    gap: 1ch
-}
-
-user-manager .name {
-    align-self: center;
-    text-align: center;
-}
-user-manager .icon {
-    align-self: center;
+    button {
+        display: flex;
+        align-content: center;
+        gap: .25rem
+    }
+    .name {
+        align-self: center;
+        text-align: center;
+    }
+    .icon {
+        align-self: center;
+    }
 }
 
 theme-switcher button {
@@ -661,33 +662,21 @@ theme-switcher button {
     padding: 1rem;
     overflow: auto;
     height: calc(100% - 2rem);
-}
 
-ul.inner {
-    display: flex;
-    flex-direction: column;
-    gap: 1ch;
-    list-style-type:none;
-    margin-top: 0;
-}
-
-ul.inner p {
-    color: var(--text-muted);
-    align-self: center;
-}
-.inner h2 {
-    color: var(--text);
-    text-align: center;
-}
-.inner h3 {
-    color: var(--text);
-    text-align: center;
+    h2 {
+        color: var(--text);
+        text-align: center;
+    }
+    h3 {
+        color: var(--text);
+        text-align: center;
+    }
 }
 
 .title {
     word-break: break-word;
     width: 40%;
-    margin: 1ch;
+    margin: .25rem;
     text-decoration: none;
     align-self: center;
     color: var(--text-muted);
@@ -704,54 +693,33 @@ button.tf {
     padding: .5rem;
 }
 
-stock-chart svg path {
-    fill:none;
-    stroke-width:1;
-}
+stock-chart,stock-group-chart {
+    svg path {
+        fill: none;
+        stroke-width: 1;
+    }
 
-stock-chart svg path.positive {
-    stroke:var(--positiv);
-}
+    svg path.positive {
+        stroke: var(--positiv);
+    }
 
-stock-chart svg path.negative {
-    stroke:var(--negative);
-}
+    svg path.negative {
+        stroke: var(--negative);
+    }
 
-stock-chart svg line.axis {
-    stroke: var(--icon-color);
-    stroke-width: .75;
-    stroke-linecap: square;
-}
+    svg line.axis {
+        stroke: var(--icon-color);
+        stroke-width: .75;
+        stroke-linecap: square;
+    }
 
-stock-chart svg text.price {
-    fill: var(--icon-color);
+    svg text.price {
+        fill: var(--icon-color);
+    }
 }
 
 stock-group-chart svg path.unhighlighted {
     stroke: var(--text-muted) !important;
-}
-
-stock-group-chart svg path {
-    fill:none;
-    stroke-width:1;
-}
-
-stock-group-chart svg path.positive {
-    stroke:var(--positiv);
-}
-
-stock-group-chart svg path.negative {
-    stroke:var(--negative);
-}
-
-stock-group-chart svg line.axis {
-    stroke: var(--icon-color);
-    stroke-width: .75;
-    stroke-linecap: square;
-}
-
-stock-group-chart svg text.price {
-    fill: var(--icon-color);
 }
 
 .login-field {
@@ -762,48 +730,47 @@ stock-group-chart svg text.price {
     width: 60%;
     display: grid;
     gap: 1rem;
-}
 
-.login-field input {
-    width: 32ch;
-}
+    input {
+        width: 32ch;
+    }
+    .pair {
+        display: flex;
+        justify-content: space-between;
 
-.login-field .pair {
-    display: flex;
-    justify-content: space-between;
-}
+        .info {
+            color: var(--negative-muted);
+        }
+    }
 
-.login-field .pair:focus-within {
-    color: var(--text);
-}
+    .pair:focus-within {
+        color: var(--text);
 
-.login-field button {
-    padding: 1rem;
-}
-
-.login-field .pair .info {
-    color: var(--negative-muted);
-}
-.login-field .pair:focus-within .info {
-    color: var(--negative);
+        .info {
+            color: var(--negative);
+        }
+    }
+    button {
+        padding: 1rem;
+    }
 }
 
 .titlebar {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
-}
 
-.titlebar h1 {
-    text-align: center;
-}
+    h1 {
+        text-align: center;
+    }
 
-.titlebar nav {
-    justify-self: right;
-}
+    nav {
+        justify-self: right;
+    }
 
-.titlebar nav.timeframeSelector {
-    justify-self: left;
+    nav.timeframeSelector {
+        justify-self: left;
+    }
 }
 
 nav.displaySelector {
@@ -830,22 +797,22 @@ article-header div.subtitle {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
-}
-article-header div.subtitle div:not(.value) {
-    max-width: 50%;
-    display: flex;
-    gap: .5rem;
-    align-items: center;
-}
-article-header div.subtitle div.value {
-    background-color: var(--bg);
-    height: 1.5rem;
-    align-self: center;
-    align-content: center;
-    text-align: center;
-    font-size: 16px;
-}
 
+    div:not(.value) {
+        max-width: 50%;
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+    }
+    div.value {
+        background-color: var(--bg);
+        height: 1.5rem;
+        align-self: center;
+        align-content: center;
+        text-align: center;
+        font-size: 16px;
+    }
+}
 influenced-stocks {
     width: 52rem;
     display: block;
@@ -863,20 +830,6 @@ div.piechart {
     cursor: not-allowed;
 }
 
-.dropdown div.colorDisplayRow {
-    display: flex;
-    height: 2rem;
-    justify-content: space-evenly;
-    gap: .5rem;
-    margin: .25rem 0;
-}
-.dropdown div.colorDisplayRow div.colorDisplay {
-    width: 100%;
-    border-radius: var(--border-radius);
-}
-.dropdown div.colorDisplayRow div.colorDisplay:hover {
-    box-shadow: var(--button-hover-shadow);
-}
 color-selector button.selector {
     font-family: Ubuntu, sans-serif;
     font-size: 16px;
@@ -886,6 +839,33 @@ color-selector button.selector {
 div.contentTable {
     display: grid;
     gap: .5rem .25rem;
+
+    .grid-full-width {
+        grid-column: 1/final;
+    }
+
+    .containing {
+        grid-column: 1/final;
+        display: grid;
+        grid-template-columns: subgrid;
+        background-color: var(--bg);
+        border-radius: var(--border-radius);
+        padding: .25rem;
+        transition: var(--bg-transition);
+    }
+
+    .containing:hover {
+        background-color: var(--bg-light);
+        color: var(--text);
+        box-shadow: var(--button-hover-shadow);
+    }
+
+    .passthrough {
+        grid-column: 1/final;
+        display: grid;
+        grid-template-columns: subgrid;
+        gap: .5rem .25rem;
+    }
 }
 
 div.contentTable.grid-1-name-3 {
@@ -922,33 +902,6 @@ div.contentTable.grid-stock-selector {
     grid-template-columns: 1fr 2rem;
 }
 
-div.contentTable .grid-full-width {
-    grid-column: 1/final;
-}
-
-div.contentTable .containing {
-    grid-column: 1/final;
-    display: grid;
-    grid-template-columns: subgrid;
-    background-color: var(--bg);
-    border-radius: var(--border-radius);
-    padding: .25rem;
-    transition: var(--bg-transition);
-}
-
-div.contentTable .containing:hover {
-    background-color: var(--bg-light);
-    color: var(--text);
-    box-shadow: var(--button-hover-shadow);
-}
-
-div.contentTable .passthrough {
-    grid-column: 1/final;
-    display: grid;
-    grid-template-columns: subgrid;
-    gap: .5rem .25rem;
-}
-
 .value {
     display: inline;
     background-color: var(--bg-light);
@@ -961,30 +914,55 @@ div.contentTable .passthrough {
     color: var(--text-muted);
 }
 
-.containing:hover .value {
-    background-color: var(--bg-very-light);
-    color: var(--text);
+.containing {
+    button {
+        background-color: var(--bg-light);
+        z-index: auto;
+    }
+    button.switch.false {
+        background-color: var(--bg-light);
+    }
+    input.inputField {
+        background-color: var(--bg-light);
+    }
+    input.inputField:focus {
+        background-color: var(--bg-very-light);
+    }
 }
 
-.containing button {
-    background-color: var(--bg-light);
-    z-index: auto;
+.containing:hover {
+    .value {
+        background-color: var(--bg-very-light);
+        color: var(--text);
+    }
+    button {
+        background-color: var(--bg-very-light);
+        z-index: auto;
+    }
+    .name {
+        color: var(--text);
+    }
+    .shorthand {
+        background-color: var(--bg-very-light);
+        color: var(--text);
+    }
+    button.switch.false {
+        background-color: var(--bg-very-light);
+    }
+    input.inputField:focus {
+        background-color: var(--highlight);
+    }
+    input.inputField {
+        background-color: var(--bg-very-light);
+    }
 }
 
-.containing:hover button {
-    background-color: var(--bg-very-light);
-    z-index: auto;
-}
 
 .name {
     word-break: break-word;
     text-decoration: none;
     align-self: center;
     color: var(--text-muted);
-}
-
-.containing:hover .name {
-    color: var(--text);
 }
 
 .shorthand:not(input) {
@@ -997,10 +975,6 @@ div.contentTable .passthrough {
     align-self: center;
     transition: var(--bg-transition);
     color: var(--text-muted);
-}
-.containing:hover .shorthand {
-    background-color: var(--bg-very-light);
-    color: var(--text);
 }
 
 .shorthand.colored {
@@ -1018,29 +992,26 @@ button.switch {
     transition: all .2s;
     padding: .5rem;
     align-self: center;
+
+    div.knob {
+        transition: transform .2s;
+        aspect-ratio: 1/1;
+        width: 1.5rem;
+        border-radius: 100%;
+        background-color: var(--icon-color);
+    }
 }
 
 button.switch.true {
     background-color: var(--positiv-muted);
+
+    div.knob {
+        transform: translate(1.5rem);
+    }
+
 }
 button.switch.true:hover {
     background-color: var(--positiv);
-}
-
-button.switch div.knob {
-    transition: transform .2s;
-    aspect-ratio: 1/1;
-    width: 1.5rem;
-    border-radius: 100%;
-    background-color: var(--icon-color);
-}
-
-button.switch.false div.knob {
-    transform: translate(0rem);
-}
-
-button.switch.true div.knob {
-    transform: translate(1.5rem);
 }
 
 div.containing.permission {
@@ -1051,41 +1022,8 @@ div.containing.permission {
     margin: 0;
 }
 
-
-.containing button.switch.false {
-    background-color: var(--bg-light);
-}
-.containing:hover button.switch.false {
-    background-color: var(--bg-very-light);
-}
-
-.containing input.inputField {
-    background-color: var(--bg-light);
-}
-.containing:hover input.inputField {
-    background-color: var(--bg-very-light);
-}
-.containing input.inputField:focus {
-    background-color: var(--bg-very-light);
-}
-.containing:hover input.inputField:focus {
-    background-color: var(--highlight);
-}
-
-.modal .content .permission .inputField {
-    width: 6rem;
-}
-
-.modal div.submit {
-    position: sticky;
-    bottom: 0;
-    background-color: var(--bg-dark);
-    padding-top: .5rem;
-    padding-bottom: 2rem;
-}
-
-div.modal .outer:has(div.submit, div.dangerZone) {
-    padding-bottom: 0;
+button.switch.false div.knob {
+    transform: translate(0rem);
 }
 
 div.pair:has(+ .contentTable) {
@@ -1108,10 +1046,10 @@ div.dangerZone .warning {
 div.actions {
     display: grid;
     gap: .5rem;
-}
 
-div.actions button.submit {
-    padding: 1rem;
+    button.submit {
+        padding: 1rem;
+    }
 }
 
 .not-selectable {
