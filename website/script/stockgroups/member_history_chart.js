@@ -9,9 +9,7 @@ class stockGroupChart extends HTMLElement {
         this.innerHTML = `
                         <div class="inner">
                             <div class="titlebar">
-                            <nav class="timeframeSelector">
-                                <timeframe-selector></timeframe-selector>
-                            </nav>
+                            <timeframe-selector></timeframe-selector>
                             <h2>${getTranslatedStr("stockgroups.chart.stock_history")}</h2>
                             <div></div>
                             </div>
