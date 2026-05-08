@@ -114,7 +114,8 @@
         "search_empty_result": "No stocks found…",
         "list": {
             "all_stocks": "All stocks",
-            "loading": "Loading stock data…"
+            "loading": "Loading stock data…",
+            "none": "You aren't any stocks yet…"
         },
         "archived_list": {
             "title": "Archived stocks",
@@ -123,8 +124,8 @@
         },
         "starred_list": {
             "title": "Starred stocks",
-            "loading": "Loading starred stocks...",
-            "none": "You haven't starred any stocks yet..."
+            "loading": "Loading starred stocks…",
+            "none": "You haven't starred any stocks yet…"
         },
         "chart": {
             "stock_history": "Stock history"
@@ -190,7 +191,7 @@
             "title_edit": "Edit {name}",
             "title_create": "Create stock group",
             "name": "Name",
-            "name_placeholder": "Group name...",
+            "name_placeholder": "Group name…",
             "description": "Description",
             "submit_create": "Create",
             "submit_edit":"Submit changes",
@@ -202,11 +203,11 @@
         "description_element": {
             "empty_notice": "This group doesn't have a description!",
             "empty_hint": "If you wanted, you could add one, given you have the required permission.",
-            "loading": "Loading description..."
+            "loading": "Loading description…"
         },
         "header_element": {
             "loading_member_count": "??? stocks",
-            "loading_name": "Loading name...",
+            "loading_name": "Loading name…",
             "anonymous_group_title": "Comparison"
         },
         "star_button": {
@@ -215,17 +216,17 @@
         },
         "list": {
             "title": "All stock groups",
-            "loading": "Loading stock groups...",
-            "none": "There aren't any stock groups yet..."
+            "loading": "Loading stock groups…",
+            "none": "There aren't any stock groups yet…"
         },
         "starred_list": {
             "title": "Starred stock groups",
-            "loading": "Loading starred stock groups...",
-            "none": "You haven't starred any stock groups yet..."
+            "loading": "Loading starred stock groups…",
+            "none": "You haven't starred any stock groups yet…"
         },
         "members_list": {
             "title": "All members",
-            "loading": "Loading stock data...",
+            "loading": "Loading stock data…",
             "none": "This group doesn't have any members!"
         },
         "influences": {
@@ -280,7 +281,7 @@
         "edit": {
             "edit.button_alt_text": "Edit user",
             "title_other": "Edit {name}",
-            "placeholder_name": "New display name...",
+            "placeholder_name": "New display name…",
             "placeholder_tag": "usertag",
             "new_pw": "Reset password to",
             "values_okay": "The changes seem okay!",

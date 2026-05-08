@@ -1,10 +1,23 @@
 class stocklistDelta extends HTMLElement {
     connectedCallback() {
-        this.timeframe = 1
         this.innerHTML = `<div class="inner">
-                <nav><h2>${getTranslatedStr("stocks.list.all_stocks")}</h2></nav>
-                <p>${getTranslatedStr("stocks.list.loading")}</p>
+                <div class="titlebar">
+                    <timeframe-selector></timeframe-selector>
+                    <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
+                    <div></div>
+                </div>
+                
+                <div class="contentTable grid-1-name-3">
+                    <p class="grid-full-width">${getTranslatedStr("stocks.list.loading")}</p>
+                </div>
             </div>`
+
+        const tfSelector = this.querySelector("timeframe-selector")
+        tfSelector.onEdit = () => {
+            this.changeTimeframe(tfSelector.value, this)
+        }
+        this.timeframe = tfSelector.value
+
         this.closeSubscription = subscribeToAPI(`/api/stocks/sse/?Timeframe=${this.timeframe}`, addThisToFunctionCall(this.updateData, this))
     }
 
@@ -19,6 +32,13 @@ class stocklistDelta extends HTMLElement {
     }
 
     updateData(data, that) {
+        const contentTable = that.querySelector(".contentTable")
+
+        if (data === null) {
+            contentTable.innerHTML = `<p class="grid-full-width">${getTranslatedStr("stocks.list.none")}</p>`
+            return
+        }
+
         let html = ""
         data.forEach(e => {
             const shortPrice = getShortNumber(e["Price2"]/100)
@@ -32,30 +52,7 @@ class stocklistDelta extends HTMLElement {
                             </a>`
         })
 
-        that.innerHTML = `<div class="inner">
-                        <div class="titlebar">
-                            <nav class="timeframeSelector">
-                                <button class="tf" data-tf="30">30m</button>
-                                <button class="tf" data-tf="60">60m</button>
-                                <button class="tf" data-tf="360">6h</button>
-                                <button class="tf" data-tf="1440">24h</button>                                                     
-                            </nav>
-                            <h2>${getTranslatedStr("stocks.list.all_stocks")}</h2>
-                            <div></div>
-                        </div>
-                        <div class="contentTable grid-1-name-3">
-                            ${html}
-                        </div>
-                    </div>
-                `
-        that.querySelectorAll("button.tf").forEach(b => {
-            if (Number(b.dataset.tf) === Number(that.timeframe)) {
-                b.classList.add("selected")
-            }
-            b.addEventListener("click", () => {
-                that.changeTimeframe(b.dataset.tf, that)
-            })
-        })
+        contentTable.innerHTML = html
     }
 }
 

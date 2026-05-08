@@ -503,13 +503,6 @@ button.selected {
     color: var(--text);
     background-color: var(--bg-light);
 }
-button.tf.selected {
-    color: var(--text);
-}
-
-button.tf:hover {
-    color: var(--text);
-}
 
 button:active {
     background-color: var(--bg-light);
@@ -682,17 +675,6 @@ theme-switcher button {
     color: var(--text-muted);
 }
 
-nav.timeframeSelector {
-    display: flex;
-    gap: .35rem;
-}
-
-button.tf {
-    color: var(--text-muted);
-    width: 7ch;
-    padding: .5rem;
-}
-
 stock-chart,stock-group-chart {
     svg path {
         fill: none;
@@ -766,10 +748,6 @@ stock-group-chart svg path.unhighlighted {
 
     nav {
         justify-self: right;
-    }
-
-    nav.timeframeSelector {
-        justify-self: left;
     }
 }
 
