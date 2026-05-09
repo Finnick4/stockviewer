@@ -5,9 +5,9 @@ class timeframeSelectorElement extends HTMLElement {
         this.value = steps[this.currentStep - 1]
 
         this.innerHTML = `
-<button class="increase">+</button>
-<button class="display"></button> 
-<button class="reduce">-</button>`
+    <button class="reduce">-</button>
+    <button class="display"></button> 
+    <button class="increase">+</button>`
 
         const increaseBtn = this.querySelector("button.increase")
         const displayBtn = this.querySelector("button.display")

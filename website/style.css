@@ -1030,6 +1030,12 @@ div.actions {
     }
 }
 
+timeframe-selector {
+    display: flex;
+    gap: .25rem;
+}
+
+
 .not-selectable {
     -webkit-user-select: none;
     -ms-user-select: none;
