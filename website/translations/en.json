@@ -495,7 +495,9 @@
         "durations": {
             "minutes": "{duration}m",
             "hours": "{duration}h",
-            "days": "{duration} days"
+            "day": "1 day",
+            "days": "{duration} days",
+            "allTime": "All Time"
         }
     }
 }

@@ -1,6 +1,6 @@
 class timeframeSelectorElement extends HTMLElement {
     connectedCallback() {
-        const steps = [30, 60, 360, 1440, 7200]
+        const steps = [30, 60, 360, 1440, 10080, 43200, 129600, 259200, 525600]
         this.currentStep = 1
         this.value = steps[this.currentStep - 1]
 
@@ -14,7 +14,19 @@ class timeframeSelectorElement extends HTMLElement {
         const decreaseBtn = this.querySelector("button.reduce")
 
         const getTranslatedDuration = duration => {
-            return getTranslatedStr("timeframes.durations.minutes", {duration: duration})
+            if (duration === -1) {
+                return getTranslatedStr("timeframes.durations.allTime")
+            }
+            if (duration < 120) {
+                return getTranslatedStr("timeframes.durations.minutes", {duration: duration})
+            }
+            if (duration < 1440) {
+                return getTranslatedStr("timeframes.durations.hours", {duration: duration / 60})
+            }
+            if (duration === 1440) {
+                return getTranslatedStr("timeframes.durations.day")
+            }
+            return getTranslatedStr("timeframes.durations.days", {duration: duration / 1440})
         }
 
         this.dropdownid = createDropdown(steps.reduce((str, duration, index) => str + `<button class="option" data-time-step="${index + 1}">${getTranslatedDuration(duration)}</button>`, ""))
