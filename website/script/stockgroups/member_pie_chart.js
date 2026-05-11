@@ -10,6 +10,7 @@ class stockgroupsMemberPieChart extends HTMLElement {
         }
 
         this.innerHTML = `<svg viewBox="0 0 100 100" class="piechart"></svg>`
+        this.classList.add("stockGroupMembersChartPathsHighlightable")
 
         this.pie = this.querySelector("svg")
     }

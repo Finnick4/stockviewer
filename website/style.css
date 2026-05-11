@@ -703,6 +703,9 @@ stock-chart,stock-group-chart {
 stock-group-chart svg path.unhighlighted {
     stroke: var(--text-muted) !important;
 }
+stockgroups-member-pie-chart svg path.unhighlighted {
+    fill: var(--text-muted) !important;
+}
 
 .login-field {
     background: var(--bg-dark);

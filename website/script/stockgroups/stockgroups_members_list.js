@@ -74,7 +74,7 @@ class stockgroupsMembersList extends HTMLElement {
         that.querySelectorAll(`a.containing`).forEach(elem => {
             const stockid = elem.dataset.stockId
             elem.addEventListener("mouseenter", () => {
-                document.querySelectorAll(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg path`).forEach(e => {
+                document.querySelectorAll(`.stockGroupMembersChartPathsHighlightable[data-stock-group-id="${that.groupid}"] svg path`).forEach(e => {
                     if (e.dataset.stockId !== stockid) {
                         e.classList.add("unhighlighted")
                     } else {
@@ -84,7 +84,7 @@ class stockgroupsMembersList extends HTMLElement {
                 })
             })
             elem.addEventListener("mouseleave", () => {
-                document.querySelectorAll(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg path.unhighlighted`).forEach(e => e.classList.remove("unhighlighted"))
+                document.querySelectorAll(`.stockGroupMembersChartPathsHighlightable[data-stock-group-id="${that.groupid}"] svg path.unhighlighted`).forEach(e => e.classList.remove("unhighlighted"))
             })
         })
     }

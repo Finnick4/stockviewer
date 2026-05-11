@@ -33,6 +33,8 @@ class stockGroupChart extends HTMLElement {
         tfSelector.onEdit = () => {
             this.changeTimeframe(tfSelector.value, this)
         }
+
+        this.classList.add("stockGroupMembersChartPathsHighlightable")
     }
     disconnectedCallback() {
         this.closeSubscription()
