@@ -9,11 +9,9 @@ class stockgroupsMemberPieChart extends HTMLElement {
             this.closeSubscription = subscribeToAPI(`/api/stockgroups/${this.groupid}/sse`, addThisToFunctionCall(this.updateData, this))
         }
 
-        this.pie = document.createElement("div")
+        this.innerHTML = `<svg viewBox="0 0 100 100" class="piechart"></svg>`
 
-        this.pie.className = "piechart"
-
-        this.appendChild(this.pie)
+        this.pie = this.querySelector("svg")
     }
 
     disconnectedCallback() {
@@ -22,7 +20,7 @@ class stockgroupsMemberPieChart extends HTMLElement {
 
     updateData(data, that) {
         if (that.pie === undefined) {
-            that.pie = that.querySelector("div.piechart")
+            that.pie = that.querySelector("svg")
         }
         that.stockColorMap = new Map()
 
@@ -65,21 +63,29 @@ class stockgroupsMemberPieChart extends HTMLElement {
             return color
         }
 
-        let from = 0, to = 0, css = "";
+        let elems = ""
+        let radOffset = 0
+        const centerX = 50, centerY = 50
+
         stocksSorted.forEach((stock, i) => {
-            to = from + Math.ceil(stock["Price"] / totalGroupValue * 360)
-            if (to > 360) {
-                to = 360
-            }
-            const col = Number(stock["Color"]) === -1 ? getColor(i) : "#" + getHexColor(Number(stock["Color"]))
+            const radWidth = stock["Price"] / totalGroupValue * 360 * Math.PI / 180
 
-            css += `${col} ${from}deg ${to}deg,`
-            from = to
+            const startX = Math.cos(radOffset) * 50 + centerX
+            const startY = Math.sin(radOffset) * 50 + centerY
 
-            that.stockColorMap.set(stock["ID"], col)
+            const endX = Math.cos(radWidth + radOffset) * 50 + centerX
+            const endY = Math.sin(radWidth + radOffset) * 50 + centerY
+
+            const color = Number(stock["Color"]) === -1 ? getColor(i) : "#" + getHexColor(Number(stock["Color"]))
+
+            elems += `<path d="M ${centerX} ${centerY} L ${startX} ${startY} A 50 50 0 0 1 ${endX} ${endY} Z" fill="${color}" data-stock-id="${stock["ID"]}"/>`
+
+            radOffset += radWidth
+
+            that.stockColorMap.set(stock["ID"], color)
         })
 
-        that.pie.style.cssText = `background: conic-gradient(${css.substring(0, css.length - 1)})`
+        that.pie.innerHTML = elems
     }
 }
 
