@@ -190,6 +190,7 @@
             "edit_icon_alt_text": "Edit stock group",
             "title_edit": "Edit {name}",
             "title_create": "Create stock group",
+            "title_create_from_anonymous": "Make stock group",
             "name": "Name",
             "name_placeholder": "Group name…",
             "description": "Description",
