@@ -20,8 +20,8 @@ func GetStockGroupChangeNotification() (<-chan bool, func()) {
 	stockGroupChangeMutex.Unlock()
 
 	return newChannel, func() {
-		close(newChannel)
 		stockGroupChangeMutex.Lock()
+		close(newChannel)
 		delete(openStockGroupChannels, id)
 		stockGroupChangeMutex.Unlock()
 	}
@@ -29,9 +29,14 @@ func GetStockGroupChangeNotification() (<-chan bool, func()) {
 
 func NotifyStockGroupChange() {
 	log.Debugf("Stock group change happened! To notify: %v", len(openStockGroupChannels))
+	stockGroupChangeMutex.Lock()
 	for _, c := range openStockGroupChannels {
 		go func() {
-			c <- true
+			_, ok := <-c
+			if ok {
+				c <- true
+			}
 		}()
 	}
+	stockGroupChangeMutex.Unlock()
 }
