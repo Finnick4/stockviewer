@@ -75,6 +75,47 @@ class searchBarElement extends HTMLElement {
                         html = getTranslatedStr("header.search.empty_result")
                     }
                     dropdown.innerHTML = html
+
+                    let selectedIndex = -1
+                    const updateSelectedResult = () => {
+                        dropdown.querySelectorAll(".searchResult").forEach((res, i) => {
+                            res.classList.remove("selected")
+                            if (selectedIndex === i) {
+                                res.classList.add("selected")
+                            }
+                        })
+                    }
+                    search.addEventListener("keydown", e => {
+                        if (e.key === "ArrowUp") {
+                            e.preventDefault()
+                            selectedIndex--
+                            if (selectedIndex < 0) {
+                                selectedIndex = 0
+                            }
+                            updateSelectedResult()
+                        }
+                        if (e.key === "ArrowDown") {
+                            e.preventDefault()
+                            selectedIndex++
+                            if (selectedIndex >= possibleStocks.length + possibleGroups.length) {
+                                selectedIndex = possibleStocks.length + possibleGroups.length - 1
+                            }
+                            updateSelectedResult()
+                        }
+                        if (e.key === "Enter") {
+                            dropdown.querySelector(".searchResult.selected")?.click()
+                            search.blur()
+                        }
+                        if (e.key === "Escape") {
+                            if (selectedIndex !== -1) {
+                                e.preventDefault()
+                                selectedIndex = -1
+                                updateSelectedResult()
+                            } else {
+                                search.blur()
+                            }
+                        }
+                    })
                 })
             })
         })

@@ -251,6 +251,14 @@ div.sidebar a.btn.selected:hover {
     a.btn {
         background-color: var(--bg-light);
     }
+    a.btn.selected {
+        background-color: var(--bg-very-light);
+        box-shadow: var(--button-hover-shadow);
+        z-index: 1;
+    }
+    a.btn.selected:hover {
+        background-color: var(--highlight);
+    }
     .searchResult {
         text-overflow: ellipsis;
         white-space: nowrap;
