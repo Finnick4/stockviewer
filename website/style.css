@@ -252,10 +252,13 @@ div.sidebar a.btn.selected:hover {
         background-color: var(--bg-light);
     }
     .searchResult {
-        max-width: 32ch;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+    }
+    p.sectionHeader {
+        text-align: center;
+        margin: .25rem 0;
     }
     div.pair {
         display: flex;
@@ -293,6 +296,10 @@ div.sidebar a.btn.selected:hover {
             box-shadow: var(--button-hover-shadow);
         }
     }
+}
+
+.dropdown.stockSelection .searchResult {
+    max-width: 32ch;
 }
 
 .dropdown:popover-open {

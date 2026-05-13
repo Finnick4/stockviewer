@@ -24,6 +24,8 @@ class stockSelectorElement extends HTMLElement {
             dropdown.togglePopover()
         })
 
+        dropdown.classList.add("stockSelection")
+
         dropdown.style.width = "calc(32ch -  1rem)"
 
         fetch("/api/stocks").then(r => r.json()).then(resp => {
@@ -127,6 +129,9 @@ class stockSelectorElement extends HTMLElement {
                 this.savedStocks.add(Number(stockid))
             })
         })
+    }
+    disconnectedCallback() {
+        deleteDropdown(this.dropdownid)
     }
 }
 

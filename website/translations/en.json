@@ -8,7 +8,9 @@
         "articles": "Articles",
         "stock_groups": "Groups",
         "search": {
-            "placeholder": "Search…"
+            "placeholder": "Search…",
+            "empty_query": "Type to search…",
+            "empty_result": "Nothing matches your search…"
         }
     },
     "creator": {
