@@ -43,7 +43,11 @@ class stockGroupChart extends HTMLElement {
     changeTimeframe(tf, that) {
         that.timeframe = tf
         that.closeSubscription()
-        that.closeSubscription = subscribeToAPI(`/api/stockgroups/${that.groupid}/sse?Timeframe=${that.timeframe}`, addThisToFunctionCall(that.redrawGraph, that))
+        if (Number(this.groupid) === 0) {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/anonymous/sse?members=${anonymousStockGroupMembers}&Timeframe=${that.timeframe}`, addThisToFunctionCall(that.redrawGraph, that))
+        } else {
+            this.closeSubscription = subscribeToAPI(`/api/stockgroups/${that.groupid}/sse?Timeframe=${this.timeframe}`, addThisToFunctionCall(that.redrawGraph, that))
+        }
     }
 
     redrawGraph(data, that) {

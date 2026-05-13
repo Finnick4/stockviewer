@@ -21,8 +21,8 @@ SELECT stockgroups.name, stockgroups.id, COALESCE(SUM(stockprice.price), 0) AS "
     ELSE 0 END) AS starred 
 FROM stockgroups
     LEFT JOIN stockgroupmembers ON stockgroups.id = stockgroupmembers."groupId"
-    JOIN stocks ON stockgroupmembers."stockId" = stocks.id AND stocks.status=1
-    JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
+    LEFT JOIN stocks ON stockgroupmembers."stockId" = stocks.id AND stocks.status=1
+    LEFT JOIN stockprice ON stocks."latestUpdate" = stockprice.timestamp AND stocks.id = stockprice.stockid
     LEFT JOIN starredstockgroups ON stockgroups.id = starredstockgroups."groupId"
 GROUP BY stockgroups.name, stockgroups.id ORDER BY stockgroups.id;`, userID)
 	if err != nil {
