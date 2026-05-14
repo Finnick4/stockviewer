@@ -129,7 +129,8 @@
         "influences": {
             "influences": "Influences",
             "loading": "Chargement des influences sur l'action…",
-            "no_active_influences": "Cette action n'est influencée par aucun article…"
+            "no_active_influences": "Cette action n'est influencée par aucun article…",
+            "title_all": "Articles"
         },
         "related": {
             "related_stocks": "Actions connexes",
