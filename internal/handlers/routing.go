@@ -58,6 +58,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/{groupID}/influences/unread", stockgroups.GetUnreadInfluences)
 
 		router.With(middleware.ExtractPermissions).Patch("/{groupID}", stockgroups.EditStockGroup)
+		router.With(middleware.ExtractPermissions).Delete("/{groupID}", stockgroups.DeleteStockGroup)
 
 		router.Get("/anonymous", stockgroups.GetStockAnonymousGroup)
 		router.Get("/anonymous/sse", stockgroups.GetStockAnonymousGroupSSE)

@@ -383,6 +383,20 @@ func RemoveStocksFromGroup(groupID int32, stockIDs []int32) error {
 	return nil
 }
 
+func DeleteStockGroup(id int32) error {
+	log.Infof("Deleting Stock Group %v", id)
+
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM stockgroups WHERE id=$1;`, id)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
 func AddStockToGroup(groupID int32, stockID int32, adderID string) error {
 	log.Debugf("Adding stock %v to group", stockID)
 	db := getDB()

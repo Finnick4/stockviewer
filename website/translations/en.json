@@ -204,7 +204,13 @@
             "err_no_create_permission": "It doesn't seem like you are able to create stock groups currently!",
             "err_name_too_long": "The name is too long! ({min} - {max} characters)",
             "err_name_too_short": "The name is too short! ({min} - {max} characters)",
-            "values_okay": "The provided values are okay"
+            "values_okay": "The provided values are okay",
+            "danger": {
+                "title": "Danger Zone",
+                "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
+                "delete": "Delete stock group permanently",
+                "delete_button": "Delete"
+            }
         },
         "description_element": {
             "empty_notice": "This group doesn't have a description!",
@@ -482,7 +488,8 @@
                 "stock_name": "Please repeat the name of the stock ({phrase}) to confirm this action!",
                 "stocks_archive": "Please repeat the name of the stock ({phrase}) to archive this stock!",
                 "stocks_unarchive": "Please repeat the name of the stock ({phrase}) to unarchive this stock!",
-                "article_delete": "Please repeat the title of the article ({phrase}) to delete this article!"
+                "article_delete": "Please repeat the title of the article ({phrase}) to delete this article!",
+                "stock_group_delete": "Please repeat the name of the stock group ({phrase}) to delete this group!"
             },
             "err_wrong_repetition": "The provided phrase is wrong!",
             "submit": "Submit",

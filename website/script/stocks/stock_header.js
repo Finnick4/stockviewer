@@ -11,7 +11,7 @@ class stockHeader extends HTMLElement {
                             <h1>Loading name...</h1>
                             <nav>
                                 <button is="star-stock-button" data-stock-id="${this.stockid}"></button>
-                                <button is="edit-stock-button" data-stock-id="${this.stockid}"></button>
+                                ${userInfo.hasAnyEditStockPermissions ? `<button is="edit-stock-button" data-stock-id="${this.stockid}"></button>` : ""}
                             </nav>
                         </div>
                         `

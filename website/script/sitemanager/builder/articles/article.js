@@ -10,7 +10,7 @@ function buildIndividualArticlePage(id) {
                             <article-header></article-header>
                             <nav>
                                 <button is="star-article-button" data-article-id="${id}"></button>
-                                <button is="edit-article-button" data-article-id="${id}"></button>
+                                ${userInfo.hasAnyEditArticlePermissions ? `<button is="edit-article-button" data-article-id="${id}"></button>` : ""}
                             </nav>
                         </div>
                         <div class="article">
