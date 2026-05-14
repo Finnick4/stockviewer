@@ -10,6 +10,7 @@ function signalLogout() {
 }
 
 function initialiseUserInfo() {
+    anonymousStockGroupMembers = []
     userInfo = {
         name: "",
         tag: "",

@@ -14,6 +14,7 @@
         }
     },
     "creator": {
+        "icon_alt_text": "Create new…",
         "stock": "Create Stock",
         "stock_group": "Create Stock Group",
         "article": "Create Article",
@@ -192,6 +193,8 @@
             "edit_icon_alt_text": "Edit stock group",
             "title_edit": "Edit {name}",
             "title_create": "Create stock group",
+            "title_edit_anonymous": "Edit comparison",
+            "title_create_anonymous": "Compare stocks",
             "title_create_from_anonymous": "Make stock group",
             "name": "Name",
             "name_placeholder": "Group name…",
@@ -207,6 +210,9 @@
             "empty_notice": "This group doesn't have a description!",
             "empty_hint": "If you wanted, you could add one, given you have the required permission.",
             "loading": "Loading description…"
+        },
+        "anonymous": {
+            "icon_alt_text": "Compare Stocks"
         },
         "header_element": {
             "loading_member_count": "??? stocks",

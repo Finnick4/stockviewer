@@ -7,8 +7,9 @@ class createDataElement extends HTMLElement {
         if (userInfo.checkPerm("canCreateArticles")) html += `<button onclick="showModalCreateArticle(this)">${getTranslatedStr("creator.article")}</button>`
         if (userInfo.checkPerm("canCreateUsers")) html += `<button onclick="showModalCreateUser(this)">${getTranslatedStr("creator.user")}</button>`
 
+        this.title = getTranslatedStr("creator.icon_alt_text")
         this.dropdownid = createDropdown(html)
-        this.innerHTML = `<button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};"><img class="icon" src="/icons/plussign.svg" alt="create new" draggable="false"></button>`
+        this.innerHTML = `<button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};"><img class="icon" src="/icons/plussign.svg" alt="${getTranslatedStr("creator.icon_alt_text")}" draggable="false"></button>`
     }
     disconnectedCallback() {
         deleteDropdown(this.dropdownid)

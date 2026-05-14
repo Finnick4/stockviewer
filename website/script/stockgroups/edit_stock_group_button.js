@@ -144,10 +144,12 @@ function showModalEditStockGroup(groupid) {
     })
 }
 
-function showModalEditAnonymousStockGroup(creating = false) {
-    fetch(`/api/stockgroups/anonymous?members=${anonymousStockGroupMembers}`).then(r => r.json()).then(resp => {
+function showModalEditAnonymousStockGroup(creating = false, initialStocks = []) {
+    const locMembers = creating ? initialStocks : anonymousStockGroupMembers
+
+    fetch(`/api/stockgroups/anonymous?members=${locMembers}`).then(r => r.json()).then(resp => {
         const groupMembers = resp["Data"]["Members"] !== null ? resp["Data"]["Members"].map(stock => Number(stock["ID"])) : []
-        let html = `<h2>${getTranslatedStr("stockgroups.modify.title_edit", {name: getTranslatedStr("stockgroups.header_element.anonymous_group_title")})}</h2>
+        let html = `<h2>${creating ? getTranslatedStr("stockgroups.modify.title_create_anonymous") : getTranslatedStr("stockgroups.modify.title_edit_anonymous")}</h2>
                         
                         <div class="stockSelector"></div>
                       
@@ -161,7 +163,9 @@ function showModalEditAnonymousStockGroup(creating = false) {
 
         const modal = document.getElementById(id);
         const stockSelector = new stockSelectorElement()
-        stockSelector.setStocks(groupMembers)
+        if (locMembers.length !== 0) {
+            stockSelector.setStocks(groupMembers)
+        }
         modal.querySelector(`div.stockSelector`).append(stockSelector)
 
         modal.querySelector("button.submit").addEventListener("click", () => {

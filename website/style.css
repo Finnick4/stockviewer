@@ -582,6 +582,7 @@ header-bar {
     nav.create {
         display: flex;
         justify-content: flex-start;
+        gap: .5rem;
     }
     a {
         color: var(--text);

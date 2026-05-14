@@ -79,12 +79,17 @@ class stockgroupsMemberPieChart extends HTMLElement {
 
             const color = Number(stock["Color"]) === -1 ? getColor(i) : "#" + getHexColor(Number(stock["Color"]))
 
-            elems += `<path d="M ${centerX} ${centerY} L ${startX} ${startY} A 50 50 0 0 1 ${endX} ${endY} Z" fill="${color}" data-stock-id="${stock["ID"]}"/>`
+            elems += `<path d="M ${centerX} ${centerY} L ${startX} ${startY} A 50 50 0 ${radWidth > Math.PI ? 1 : 0} 1 ${endX} ${endY} Z" fill="${color}" data-stock-id="${stock["ID"]}"/>`
 
             radOffset += radWidth
 
             that.stockColorMap.set(stock["ID"], color)
         })
+        if (stocksSorted.length === 1) {
+            const stockID = stocksSorted[0].ID
+            const color = that.stockColorMap.get(stockID)
+            elems = `<circle cx="50" cy="50" r="50" fill="${color}" data-stock-id="${stockID}"/>`
+        }
 
         that.pie.innerHTML = elems
     }
