@@ -161,10 +161,10 @@
             }
         },
         "influences": {
-            "title_all": "Influences",
-            "title_unread": "Unseen Influences",
-            "loading": "Loading influences on stock…",
-            "no_active_influences": "This stock is currently not influenced by any article…",
+            "title_all": "Articles",
+            "title_unread": "Unseen Articles",
+            "loading": "Loading articles influencing this stock…",
+            "no_active_influences": "This stock is currently not influenced by any articles…",
             "no_unread_influences": "There are no unseen influences for this stock…"
         },
         "related": {

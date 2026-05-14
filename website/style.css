@@ -244,6 +244,8 @@ div.sidebar a.btn.selected:hover {
     }
     button.selected {
         background-color: var(--bg-very-light);
+        box-shadow: var(--button-hover-shadow);
+        z-index: 1;
     }
     button:hover {
         z-index: 1;
