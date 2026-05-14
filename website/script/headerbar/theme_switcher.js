@@ -1,19 +1,34 @@
 
 class themeSwitcherElement extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<button onclick="themeSwitcherSwitch(this)"><img class="icon" src="/icons/lightmode.svg" alt="switch dark-/lightmode" draggable="false"></button>`
+        const storedTheme = localStorage.getItem("theme")
+        const theme = storedTheme === "light" ? "light" : "dark"
+
+        this.innerHTML = `<button class="switcher"></button>`
+        this.btn = this.querySelector(".switcher")
+        this.btn.addEventListener("click", () => this.switcher())
+
+        this.switcher(theme)
+    }
+    switcher(theme = "") {
+        if (theme === "") {
+            const storedTheme = localStorage.getItem("theme")
+            theme = storedTheme !== "light" ? "light" : "dark"
+        } else {
+            theme = theme === "light" ? "light" : "dark"
+        }
+
+        if (theme === "light") {
+            this.title = getTranslatedStr("header.theme.switch_dark")
+            this.btn.innerHTML = `<img class="icon" src="/icons/darkmode.svg" alt="${getTranslatedStr("header.theme.switch_dark")}" draggable="false">`
+            document.querySelector("body").dataset.theme = "light"
+        } else {
+            this.title = getTranslatedStr("header.theme.switch_light")
+            this.btn.innerHTML = `<img class="icon" src="/icons/lightmode.svg" alt="${getTranslatedStr("header.theme.switch_light")}" draggable="false">`
+            document.querySelector("body").dataset.theme = "dark"
+        }
+        localStorage.setItem("theme", theme)
     }
 }
-
-function themeSwitcherSwitch(elem) {
-    if (document.querySelector("body").getAttribute("data-theme") === "light") {
-        elem.innerHTML = `<img class="icon" src="/icons/lightmode.svg" alt="switch to lightmode" draggable="false">`
-        document.querySelector("body").setAttribute("data-theme", "dark")
-    } else {
-        elem.innerHTML = `<img class="icon" src="/icons/darkmode.svg" alt="switch to darkmode" draggable="false">`
-        document.querySelector("body").setAttribute("data-theme", "light")
-    }
-}
-
 
 customElements.define('theme-switcher', themeSwitcherElement);

@@ -1,11 +1,16 @@
 
 :root {
-    --bg-very-dark: hsl(0, 0%, 3%);
-    --bg-dark: hsl(0, 0%, 10%);
-    --bg: hsl(0, 0%, 15%);
-    --bg-light: hsl(0, 0%, 20%);
-    --bg-very-light: hsl(0, 0%, 25%);
-    --highlight: hsl(0, 0%, 30%);
+    --bg-very-dark: hsl(0, 2%, 3%);
+    --bg-dark: hsl(0, 2%, 10%);
+    --bg: hsl(0, 2%, 15%);
+    --bg-light: hsl(0, 2%, 20%);
+    --bg-very-light: hsl(0, 2%, 25%);
+    --highlight: hsl(0, 2%, 30%);
+
+    --border-intense: solid hsl(0, 3%, 27%) .1rem;;
+    --border: solid hsl(0, 3%, 22%) .1rem;
+    --border-muted: solid hsl(0, 3%, 19%) .1rem;;
+
     --text: hsl(0, 0%, 95%);
     --text-muted: hsl(0, 0%, 70%);
 
@@ -25,19 +30,24 @@
 }
 
 body[data-theme="light"] {
-    --bg-very-dark: hsl(0, 0%, 75%);
-    --bg-dark: hsl(0, 0%, 80%);
-    --bg: hsl(0, 0%, 85%);
-    --bg-light: hsl(0, 0%, 90%);
-    --bg-very-light: hsl(0, 0%, 95%);
-    --highlight: hsl(0, 0%, 100%);
+    --bg-very-dark: hsl(0, 3%, 90%);
+    --bg-dark: hsl(0, 3%, 92%);
+    --bg: hsl(0, 3%, 94%);
+    --bg-light: hsl(0, 3%, 96%);
+    --bg-very-light: hsl(0, 3%, 98%);
+    --highlight: hsl(0, 3%, 100%);
+
+    --border-intense: solid hsl(0, 3%, 75%) .1rem;;
+    --border: solid hsl(0, 3%, 80%) .1rem;
+    --border-muted: solid hsl(0, 3%, 85%) .1rem;;
+
     --text: hsl(0, 0%, 5%);
     --text-muted: hsl(0, 0%, 20%);
 
-    --positiv: hsl(110, 80%, 55%);
-    --positiv-muted: hsl(110, 80%, 45%);
-    --negative: hsl(0, 80%, 60%);
-    --negative-muted: hsl(0, 80%, 50%);
+    --positiv: hsl(110, 80%, 45%);
+    --positiv-muted: hsl(110, 80%, 40%);
+    --negative: hsl(0, 80%, 50%);
+    --negative-muted: hsl(0, 80%, 40%);
     --icon-color-highlight: var(--text);
 }
 
@@ -60,15 +70,6 @@ div.rootsplit {
     gap: 1rem;
     height: calc(100vh - 8rem);
     margin-left: .5rem;
-}
-
-div.sidebar {
-    background-color: var(--bg-dark);
-    border-radius: var(--border-radius);
-    padding: 1rem;
-    height: calc(100vh - 9rem);
-    position: fixed;
-    width: 15rem;
 }
 
 nav.linklist {
@@ -101,7 +102,7 @@ main.homepage stockgroups-starred-list {
 
 main.homepage .articleInbox {
     grid-column: 1/7;
-    height: 100%;
+    height: calc(100% + .2rem);
     overflow: auto;
 }
 
@@ -117,10 +118,10 @@ main.individualStockPage stock-header {
 
 main.individualStockPage stock-chart {
     grid-column: 1/4;
-    height: 100%;
+    height: calc(100% - .2rem);
 }
 main.individualStockPage stock-chart .inner {
-    height: calc(100% - 2rem);
+    height: calc(100% - 2.2rem);
 }
 
 main.individualStockPage stock-chart svg.chart {
@@ -196,31 +197,47 @@ main.stockGroupOverviewPage stock-group-chart {
 }
 
 main.stockGroupOverviewPage stock-group-description .inner {
-    height: calc(100% - 2rem);
+    height: calc(100% - 2.2rem);
     font-size: 1.3rem;
 }
 
-div.sidebar a {
-    color: var(--text);
-    text-decoration: none;
-    border-radius: var(--border-radius);
-    align-self: center;
-    text-align: center;
-}
 
-div.sidebar a.btn {
+div.sidebar {
     background-color: var(--bg-dark);
-}
+    border-radius: var(--border-radius);
+    border: var(--border);
+    padding: 1rem;
+    height: calc(100vh - 9rem);
+    position: fixed;
+    width: 15rem;
 
-div.sidebar a:hover {
-    background-color: var(--highlight);
-}
-
-div.sidebar a.btn.selected {
-    background-color: var(--bg-light);
-}
-div.sidebar a.btn.selected:hover {
-    background-color: var(--highlight);
+    a {
+        color: var(--text);
+        text-decoration: none;
+        border-radius: var(--border-radius);
+        align-self: center;
+        text-align: center;
+    }
+    a:hover {
+        background-color: var(--highlight);
+    }
+    a.btn {
+        background-color: var(--bg-dark);
+        border: solid var(--bg-dark) .1rem;
+    }
+    a.btn:hover {
+        border: var(--border-intense);
+        background-color: var(--highlight);
+    }
+    a.btn.selected {
+        background-color: var(--bg-light);
+        box-shadow: var(--button-hover-shadow);
+        border: var(--border);
+        z-index: 1;
+    }
+    a.btn.selected:hover {
+        background-color: var(--highlight);
+    }
 }
 
 .dropdown {
@@ -228,7 +245,7 @@ div.sidebar a.btn.selected:hover {
     box-shadow: var(--popup-shadow);
     color: var(--text-muted);
     border-radius: var(--border-radius);
-    border: 0;
+    border: var(--border);
     padding: 1rem;
     margin-block-start: .5rem;
     inset: auto;
@@ -240,22 +257,26 @@ div.sidebar a.btn.selected:hover {
 
 
     button {
+        border: solid var(--bg-light) .1rem;
         background-color: var(--bg-light);
     }
     button.selected {
         background-color: var(--bg-very-light);
         box-shadow: var(--button-hover-shadow);
+        border: var(--border-intense);
         z-index: 1;
     }
     button:hover {
         z-index: 1;
     }
     a.btn {
+        border: solid var(--bg-light) .1rem;
         background-color: var(--bg-light);
     }
     a.btn.selected {
         background-color: var(--bg-very-light);
         box-shadow: var(--button-hover-shadow);
+        border: var(--border-intense);
         z-index: 1;
     }
     a.btn.selected:hover {
@@ -355,6 +376,7 @@ div.sidebar a.btn.selected:hover {
         color: var(--text-muted);
         border-radius: var(--border-radius);
         box-shadow: var(--popup-shadow);
+        border: var(--border);
         overflow: auto;
     }
 
@@ -382,10 +404,12 @@ div.sidebar a.btn.selected:hover {
             border: none;
             color: var(--text-muted);
             border-radius: var(--border-radius);
+            border: var(--border);
             width: calc(100% - 1rem);
         }
         textarea:focus {
             outline: none;
+            border: var(--border-intense);
         }
         div.textField:focus-within p {
             color: var(--text);
@@ -502,6 +526,7 @@ button {
     padding: .5rem;
     font-size: 16px;
     border-radius: var(--border-radius);
+    border: var(--border);
 }
 
 
@@ -509,6 +534,7 @@ button:hover {
     background-color: var(--highlight);
     box-shadow: var(--button-hover-shadow);
     top: auto;
+    border: var(--border-intense);
 }
 button.selected:hover {
     background-color: var(--highlight);
@@ -537,6 +563,7 @@ a.btn {
     border-radius: var(--border-radius);
     text-decoration: none;
     text-align: center;
+    border: var(--border);
 }
 
 a.btn:hover {
@@ -544,6 +571,7 @@ a.btn:hover {
     box-shadow: var(--button-hover-shadow);
     top: auto;
     z-index: 1;
+    border: var(--border-intense);
 }
 
 .icon {
@@ -603,12 +631,14 @@ search-bar {
     padding: .5rem;
     border-radius: var(--border-radius);
     transition: var(--bg-transition);
+    border: var(--border);
 
     input{
         width: 100%;
         height: 2rem;
         padding: 0;
         border-radius: 0;
+        border: none;
     }
     input:focus {
         background-color: var(--bg-light);
@@ -618,6 +648,7 @@ search-bar {
 search-bar:focus-within {
     background-color: var(--bg-light);
     box-shadow: var(--popup-shadow);
+    border: var(--border-intense);
 }
 
 input {
@@ -629,6 +660,7 @@ input {
     transition: var(--bg-transition);
     padding: .5rem;
     border-radius: var(--border-radius);
+    border: var(--border);
 }
 
 input:focus {
@@ -670,9 +702,10 @@ theme-switcher button {
 .inner {
     background-color: var(--bg-dark);
     border-radius: var(--border-radius);
+    border: var(--border);
     padding: 1rem;
     overflow: auto;
-    height: calc(100% - 2rem);
+    height: calc(100% - 2.1rem);
 
     h2 {
         color: var(--text);
@@ -694,6 +727,9 @@ theme-switcher button {
 }
 
 stock-chart,stock-group-chart {
+    .inner {
+        overflow: hidden;
+    }
     svg path {
         fill: none;
         stroke-width: 1;
@@ -781,6 +817,7 @@ nav.displaySelector {
 .article {
     background-color: var(--bg-dark);
     border-radius: var(--border-radius);
+    border: var(--border);
     padding: 1rem;
     width: 50rem;
     line-height: 1.5em;
@@ -851,12 +888,14 @@ div.contentTable {
         border-radius: var(--border-radius);
         padding: .25rem;
         transition: var(--bg-transition);
+        border: var(--border-muted);
     }
 
     .containing:hover {
         background-color: var(--bg-light);
         color: var(--text);
         box-shadow: var(--button-hover-shadow);
+        border: var(--border);
     }
 
     .passthrough {
@@ -911,12 +950,14 @@ div.contentTable.grid-stock-selector {
     align-self: center;
     transition: var(--bg-transition);
     color: var(--text-muted);
+    border: var(--border);
 }
 
 .containing {
     button {
         background-color: var(--bg-light);
         z-index: auto;
+        border: var(--border);
     }
     button.switch.false {
         background-color: var(--bg-light);
@@ -933,10 +974,12 @@ div.contentTable.grid-stock-selector {
     .value {
         background-color: var(--bg-very-light);
         color: var(--text);
+        border: var(--border-intense);
     }
     button {
         background-color: var(--bg-very-light);
         z-index: auto;
+        border: var(--border-intense);
     }
     .name {
         color: var(--text);
@@ -944,6 +987,7 @@ div.contentTable.grid-stock-selector {
     .shorthand {
         background-color: var(--bg-very-light);
         color: var(--text);
+        border: var(--border-intense);
     }
     button.switch.false {
         background-color: var(--bg-very-light);
@@ -974,6 +1018,7 @@ div.contentTable.grid-stock-selector {
     align-self: center;
     transition: var(--bg-transition);
     color: var(--text-muted);
+    border: var(--border);
 }
 
 .shorthand.colored {

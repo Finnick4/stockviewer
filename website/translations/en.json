@@ -11,6 +11,10 @@
             "placeholder": "Search…",
             "empty_query": "Type to search…",
             "empty_result": "Nothing matches your search…"
+        },
+        "theme": {
+            "switch_dark": "Switch to dark mode",
+            "switch_light": "Switch to light mode"
         }
     },
     "creator": {
