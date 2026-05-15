@@ -51,7 +51,7 @@ class stockgroupsMembersList extends HTMLElement {
 
             html += `
                 <a class="containing" is="a-button" href="/stocks/${stock["ID"]}" data-stock-id="${stock["ID"]}">
-                    <div class="value shorthand colored" style="background-color: ${color}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
+                    <div class="value shorthand colored ${shouldUseDarkText(color) ? "dark" : "light"}" style="background-color: ${color}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
                     <div class="name">${sanitiseText(stock["Name"])}</div>
                     <div class="value">#${i + 1}</div>
                     <div class="value">${shortPrice}</div>

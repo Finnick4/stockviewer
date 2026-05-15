@@ -12,6 +12,8 @@
     --border-muted: solid hsl(0, 3%, 19%) .1rem;;
 
     --text: hsl(0, 0%, 95%);
+    --text-dark: hsl(0, 0%, 5%);
+    --text-light: hsl(0, 0%, 95%);
     --text-muted: hsl(0, 0%, 70%);
 
     --positiv: hsl(110, 80%, 50%);
@@ -42,6 +44,8 @@ body[data-theme="light"] {
     --border-muted: solid hsl(0, 3%, 85%) .1rem;;
 
     --text: hsl(0, 0%, 5%);
+    --text-dark: hsl(0, 0%, 5%);
+    --text-light: hsl(0, 0%, 95%);
     --text-muted: hsl(0, 0%, 20%);
 
     --positiv: hsl(110, 80%, 45%);
@@ -152,7 +156,7 @@ div.creationDate {
     background-color: var(--bg);
 }
 
-div.titlebar div.info div.value {
+div.titlebar div.info div.value:not(.colored) {
     color: var(--text);
     background-color: var(--bg);
 }
@@ -866,10 +870,19 @@ div.piechart {
     cursor: not-allowed;
 }
 
-color-selector button.selector {
-    font-family: Ubuntu, sans-serif;
-    font-size: 16px;
-    width: 34ch;
+color-selector {
+    button.selector {
+        font-family: Ubuntu, sans-serif;
+        font-size: 16px;
+        width: 34ch;
+    }
+
+    button.selector.colored.light {
+        color: var(--text-light);
+    }
+    button.selector.colored.dark {
+        color: var(--text-dark);
+    }
 }
 
 div.contentTable {
@@ -1021,8 +1034,11 @@ div.contentTable.grid-stock-selector {
     border: var(--border);
 }
 
-.shorthand.colored {
-    color: var(--text);
+.shorthand.colored.dark {
+    color: var(--text-dark);
+}
+.shorthand.colored.light {
+    color: var(--text-light);
 }
 
 a.containing {

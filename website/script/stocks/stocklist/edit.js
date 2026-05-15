@@ -18,7 +18,7 @@ class stocklistEdit extends HTMLElement {
             const shortPrice = getShortNumber(e["Price"]/100)
             html += `
                 <div class="containing" onclick="showEditStockModal(${e["ID"]})" data-stock-id="${e["ID"]}">
-                    <div class="shorthand ${Number(e["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
+                    <div class="shorthand ${Number(e["Color"]) === -1 ? "" : "colored"} ${shouldUseDarkText(getHexColor(Number(e["Color"]))) ? "dark" : "light"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
                     <div class="name">${sanitiseText(e["Name"])}</div>
                     <div class="value">${shortPrice}</div>
                 </div>`

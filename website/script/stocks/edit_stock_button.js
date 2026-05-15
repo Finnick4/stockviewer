@@ -37,7 +37,7 @@ function showEditStockModal(stockID, isArchived) {
         const permDelete = userInfo.checkPerm("canDeleteStocks")
         const dangerZoneVisible = permDelete || permArchive
 
-        let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="shorthand ${stockColorHex === "-1" ? "" : "colored"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
+        let html = `<h2>${getTranslatedStr("stocks.modify.edit_title",{name: stockName})} <div class="shorthand ${stockColorHex === "-1" ? "" : "colored"} ${shouldUseDarkText(getHexColor(stockColorHex)) ? "dark" : "light"}" style="background-color: #${getHexColor(stockColorHex)}">${stockShorthand}</div></h2>
                         ${permName ? `
                             <div class="pair">
                                 <p>${getTranslatedStr("stocks.name")}</p>

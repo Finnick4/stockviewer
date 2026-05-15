@@ -35,7 +35,7 @@ class affectedStocks extends HTMLElement {
 
             html += `
                 <a class="containing" is="a-button" href="/stocks/${stock["ID"]}" data-stock-id="${stock["ID"]}">
-                        <div class="shorthand ${Number(stock["Color"]) === -1 ? "" : "colored"}" style="background-color: ${color}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
+                        <div class="shorthand ${Number(stock["Color"]) === -1 ? "" : "colored"} ${shouldUseDarkText(color) ? "dark" : "light"}" style="background-color: ${color}">${sanitiseText(stock["Shorthand"]).toUpperCase()}</div> 
                         <div class="name">${sanitiseText(stock["Name"])}</div>
                         <div class="value">${shortPrice}</div>
                         <div class="value">${influence["PermillePerDay"]}${getTranslatedStr("articles.permille_per_day")}</div>

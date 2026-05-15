@@ -22,11 +22,13 @@ class stockHeader extends HTMLElement {
     }
 
     updateData(data, that) {
-        console.log(data)
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         that.querySelector("div.priceDisplay").innerHTML = getLocaleString(data["Price"]/100) + "€"
-        that.querySelector("div.shorthand").innerHTML = sanitiseText(data["Shorthand"]).toUpperCase()
-        that.querySelector("div.shorthand").style.backgroundColor = `#${getHexColor(Number(data["Color"]))}`
+        const shorthandElem = that.querySelector("div.shorthand")
+        shorthandElem.innerHTML = sanitiseText(data["Shorthand"]).toUpperCase()
+        shorthandElem.style.backgroundColor = `#${getHexColor(Number(data["Color"]))}`
+        shorthandElem.classList.remove("colored", "dark", "light")
+        shorthandElem.classList.add(Number(data.Color) === -1 ? "" : "colored", shouldUseDarkText(getHexColor(data.Color)) ? "dark" : "light")
         that.querySelector("nav button.star").updateStatus(data["IsStarred"])
     }
 }

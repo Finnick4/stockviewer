@@ -48,7 +48,7 @@ class relatedStocks extends HTMLElement {
         const addComparingElement = (elem) => {
             elements += `
                         <a class="containing" is="a-button" href="/stocks/${elem["ID"]}">
-                            <div class="shorthand ${Number(elem["Color"]) === -1 ? "" : "colored"}" style="background-color: #${getHexColor(elem["Color"])}">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
+                            <div class="shorthand ${Number(elem["Color"]) === -1 ? "" : "colored"} ${shouldUseDarkText(getHexColor(elem.Color)) ? "dark" : "light"}" style="background-color: #${getHexColor(elem["Color"])}">${sanitiseText(elem["Shorthand"]).toUpperCase()}</div>
                             <div class="name">${sanitiseText(elem["Name"])}</div>
                             <div class="value">${getShortNumber(elem["Price"]/100)}</div>
                             <div class="value">${(elem["Price"] - thisStock["Price"] >= 0 ? "+" : "") + getShortNumber(((elem["Price"] - thisStock["Price"])/100))}</div>
