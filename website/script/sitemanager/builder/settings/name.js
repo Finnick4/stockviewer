@@ -14,6 +14,10 @@ function buildSettingsNamePage() {
                 <div class="info"></div>
                 <button class="submit">${getTranslatedStr("settings.name.submit")}</button>
             </div>
+            <div class="pair">
+                <p>${getTranslatedStr("settings.name.language")}</p>
+                <language-selector></language-selector>
+            </div>
         </div>`
             
     setMainBodyHTMLAndSidebar(main, getSettingsSidebar("name"))

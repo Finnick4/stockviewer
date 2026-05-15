@@ -89,6 +89,5 @@ function shouldUseDarkText(color) {
     const b = parseInt(color.substring(4,6), 16)
 
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    console.log(`${color}: ${brightness > 128}`)
     return brightness > 128;
 }

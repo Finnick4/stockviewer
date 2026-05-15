@@ -1,7 +1,8 @@
 {
     "language": {
         "name_local": "English",
-        "name_global": "English"
+        "name_global": "English",
+        "display_format": "{local} ({global})"
     },
     "header": {
         "stocks": "Stocks",
@@ -466,6 +467,7 @@
             "title": "Naming",
             "name": "Display name",
             "tag": "User tag",
+            "language": "Display language",
             "submit": "Change",
             "values_okay": "Name and tag seem okay.",
             "success": "The change was successful! Changes might not be fully displayed till you reload the page!"

@@ -1,5 +1,6 @@
 
 function changeLanguage(targetLanguage, noReroute) {
+    // function initialiseLanguages() is placed in via Go. It initialises supportedLanguages with all translations
     initialiseLanguages()
     langCode = ""
 
@@ -15,6 +16,14 @@ function changeLanguage(targetLanguage, noReroute) {
     }
     if (typeof targetLanguage === "string" || Object.keys(supportedLanguages).includes(targetLanguage)) {
         langCode = targetLanguage
+        updateLanguage()
+        return
+    }
+
+    const localLanguage = localStorage.getItem("language")
+    if (Object.keys(supportedLanguages).includes(localLanguage)) {
+        console.log(`Found language in local storage: ${localLanguage}`)
+        langCode = localLanguage
         updateLanguage()
         return
     }

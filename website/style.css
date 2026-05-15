@@ -1090,6 +1090,10 @@ div.pair:has(+ .contentTable) {
     margin-bottom: .5rem;
 }
 
+div.pair language-selector button.display {
+    padding: 1rem;
+}
+
 div.dangerZone {
     margin-bottom: 2rem;
     padding: .5rem;
