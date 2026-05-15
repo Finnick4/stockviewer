@@ -12,5 +12,5 @@ function buildIndividualStockGroupPage(id) {
                         <stock-group-description data-stock-group-id="${id}"></stock-group-description>
                         <stockgroup-influence-list data-stock-group-id="${id}"></stockgroup-influence-list>
 `;
-    setMainBodyHTML(main, "stockGroupOverviewPage");
+    setMainBodyHTML(main, "individualStockGroupPage");
 }

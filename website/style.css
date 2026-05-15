@@ -93,72 +93,219 @@ main.homepage {
     display: grid;
     grid-template: fit-content(40rem) auto / repeat(6, 1fr);
     gap: 1rem;
-}
 
-main.homepage .starredStocksList {
-    grid-column: 1/4;
-    overflow: auto;
-}
-main.homepage stockgroups-starred-list {
-    grid-column: 4/7;
-    overflow: auto;
-}
-
-main.homepage .articleInbox {
-    grid-column: 1/7;
-    height: calc(100% + .2rem);
-    overflow: auto;
+    .starredStocksList {
+        grid-column: 1/4;
+        overflow: auto;
+    }
+    stockgroups-starred-list {
+        grid-column: 4/7;
+        overflow: auto;
+    }
+    .articleInbox {
+        grid-column: 1/7;
+        height: calc(100% + .2rem);
+        overflow: auto;
+    }
 }
 
 main.individualStockPage {
     display: grid;
-    grid-template: 4rem fit-content(25rem) auto / 1fr 1fr 1fr 1fr 1fr;
+    grid-template: repeat(3, auto) / repeat(5, 1fr);
     gap: 1rem;
+
+    stock-header {
+        grid-column: 1/6;
+    }
+    stock-chart {
+        grid-column: 1/4;
+        height: calc(100% - .2rem);
+
+        .inner {
+            height: calc(100% - 2.2rem);
+        }
+        svg.chart {
+             display: block;
+             margin: 0 auto;
+         }
+    }
+    related-stocks {
+        overflow: auto;
+        grid-column: 4/6;
+    }
+    stock-influence-list {
+        grid-column: 1/4;
+    }
+    stock-groups-list {
+        grid-column: 4/6;
+    }
 }
 
-main.individualStockPage stock-header {
-    grid-column: 1/6;
+main.individualStockGroupPage {
+    display: grid;
+    grid-template: auto fit-content(25rem) fit-content(25rem) / repeat(5, 1fr);
+    gap: 1rem;
+
+    stock-group-header {
+        grid-column: 1/6;
+    }
+    stockgroups-member-pie-chart {
+        grid-column: 1/3;
+        width: 75%;
+        margin: 0 auto
+    }
+    stockgroups-members-list {
+        grid-column: 3/6;
+        overflow: auto;
+    }
+    stock-group-description {
+        grid-column: 4/6;
+        overflow: auto;
+    }
+    stockgroup-influence-list {
+        grid-column: 1/6;
+    }
+    stock-group-chart {
+        grid-column: 1/4;
+    }
+    stock-group-description .inner {
+        height: calc(100% - 2.2rem);
+        font-size: 1.3rem;
+    }
 }
 
-main.individualStockPage stock-chart {
-    grid-column: 1/4;
-    height: calc(100% - .2rem);
+@media only screen and (max-width: 1550px) and (min-width: 1300px)  {
+    main.individualStockPage {
+        grid-template: repeat(4, auto) / repeat(6, 1fr);
+        stock-header {
+            grid-column: 1/7;
+        }
+        stock-chart {
+            grid-column: 1/4;
+        }
+        related-stocks {
+            grid-column: 4/7;
+        }
+        stock-groups-list {
+            grid-column: 4/7;
+        }
+    }
+
+    main.individualStockGroupPage {
+        grid-template: auto fit-content(25rem) repeat(3, auto) / repeat(5, 1fr);
+
+        stock-group-chart {
+             grid-column: 1/6;
+         }
+        stock-group-description {
+            grid-column: 1/6;
+            .inner {
+                height: auto;
+            }
+        }
+    }
 }
-main.individualStockPage stock-chart .inner {
-    height: calc(100% - 2.2rem);
+@media only screen and (max-width: 1300px)  {
+    main.individualStockPage {
+        grid-template: repeat(5, auto) / repeat(6, 1fr);
+        stock-header {
+            grid-column: 1/7;
+        }
+        stock-chart {
+            grid-column: 1/7;
+        }
+        related-stocks {
+            grid-column: 1/7;
+        }
+        stock-groups-list {
+            grid-column: 1/7;
+        }
+        stock-influence-list {
+            grid-row: 5;
+            grid-column: 1/7;
+        }
+    }
+    main.homepage {
+        grid-template: repeat(3, auto) / repeat(6, 1fr);
+
+        .starredStocksList {
+            grid-column: 1/end;
+        }
+        stockgroups-starred-list {
+            grid-column: 1/end;
+        }
+        .articleInbox {
+            grid-column: 1/end;
+        }
+    }
+    main.individualStockGroupPage {
+        grid-template: auto 25rem repeat(3, auto) / repeat(5, 1fr);
+
+        stockgroups-member-pie-chart {
+            grid-column: 1/6;
+            width: 25rem;
+            margin: 0 auto
+        }
+        stockgroups-members-list {
+            grid-column: 1/4;
+            overflow: auto;
+        }
+        stockgroup-influence-list {
+            grid-column: 1/6;
+        }
+        stock-group-chart {
+            grid-column: 1/6;
+        }
+        stock-group-description {
+            grid-column: 4/6;
+            grid-row: 3;
+            .inner {
+                height: auto;
+            }
+        }
+    }
+}
+@media only screen and (max-width: 1000px)  {
+    main.individualStockGroupPage {
+        grid-template: auto 25rem repeat(4, auto) / repeat(5, 1fr);
+
+        stockgroups-member-pie-chart {
+            grid-column: 1/6;
+            width: 25rem;
+            margin: 0 auto
+        }
+        stockgroups-members-list {
+            grid-column: 1/6;
+            overflow: auto;
+        }
+        stockgroup-influence-list {
+            grid-column: 1/6;
+        }
+        stock-group-description {
+            grid-column: 1/6;
+            grid-row: 4;
+            .inner {
+                height: auto;
+            }
+        }
+    }
 }
 
-main.individualStockPage stock-chart svg.chart {
-    display: block;
-    margin: 0 auto;
-}
-
-main.individualStockPage related-stocks {
-    overflow: auto;
-    grid-column: 4/6;
-}
-
-main.individualStockPage related-stocks ul.inner {
-    margin: 0;
-}
-
-
-main.individualStockPage stock-influence-list {
-    grid-column: 1/4;
-}
-
-main.individualStockPage stock-groups-list {
-    grid-column: 4/6;
-}
 
 div.creationDate {
     width: fit-content;
     background-color: var(--bg);
 }
 
-div.titlebar div.info div.value:not(.colored) {
-    color: var(--text);
-    background-color: var(--bg);
+div.titlebar div.info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+
+    div.value:not(.colored) {
+        color: var(--text);
+        background-color: var(--bg);
+    }
 }
 
 div.author {
@@ -168,43 +315,6 @@ div.author {
     overflow: hidden;
     align-content: center;
 }
-
-main.stockGroupOverviewPage {
-    display: grid;
-    grid-template: 4rem fit-content(25rem) fit-content(25rem) / repeat(5, 1fr);
-    gap: 1rem;
-}
-main.stockGroupOverviewPage stock-group-header {
-    grid-column: 1/6;
-}
-main.stockGroupOverviewPage stockgroups-member-pie-chart {
-    grid-column: 1/3;
-    width: 75%;
-    margin: 0 auto
-}
-main.stockGroupOverviewPage stockgroups-members-list {
-    grid-column: 3/6;
-    overflow: auto;
-}
-
-main.stockGroupOverviewPage stock-group-description {
-    grid-column: 4/6;
-    overflow: auto;
-}
-
-main.stockGroupOverviewPage stockgroup-influence-list {
-    grid-column: 1/6;
-}
-
-main.stockGroupOverviewPage stock-group-chart {
-    grid-column: 1/4;
-}
-
-main.stockGroupOverviewPage stock-group-description .inner {
-    height: calc(100% - 2.2rem);
-    font-size: 1.3rem;
-}
-
 
 div.sidebar {
     background-color: var(--bg-dark);
@@ -800,7 +910,7 @@ stockgroups-member-pie-chart svg path.unhighlighted {
 
 .titlebar {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
 
     h1 {

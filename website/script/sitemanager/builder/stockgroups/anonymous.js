@@ -19,5 +19,5 @@ function buildAnonymousStockGroupPage(members) {
                         <stockgroups-member-pie-chart data-stock-group-id="0"></stockgroups-member-pie-chart>
                         <stockgroups-members-list data-stock-group-id="0"></stockgroups-members-list>
                         <stock-group-chart data-stock-group-id="0"></stock-group-chart>`;
-    setMainBodyHTML(main, "stockGroupOverviewPage");
+    setMainBodyHTML(main, "individualStockGroupPage");
 }
