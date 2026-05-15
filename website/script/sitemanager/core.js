@@ -36,10 +36,11 @@ function setMainBodyHTML(main, mainClasses) {
         mainClasses = ""
     }
     const elemMain = document.querySelector("main");
-    const side = document.querySelector("div.sidebar");
+    const side = document.querySelector("header-bar nav.linklist");
 
-    if (elemMain !== null && side === null && document.querySelector("header-bar") !== null) {
-        elemMain.innerHTML = main;
+    if (elemMain !== null && side !== null && document.querySelector("header-bar") !== null) {
+        elemMain.innerHTML = main
+        side.innerHTML = ""
         elemMain.className = mainClasses
     } else {
         document.body.innerHTML = `
@@ -47,12 +48,13 @@ function setMainBodyHTML(main, mainClasses) {
         <main class="${mainClasses}">
         ${main}   
         </main>`
+        document.querySelector("header-bar nav.linklist").innerHTML = ""
     }
 }
 
 function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
     const elemMain = document.querySelector("main");
-    const side = document.querySelector("div.sidebar");
+    const side = document.querySelector("header-bar nav.linklist");
 
     if (elemMain !== null && side !== null && document.querySelector("header-bar") !== null) {
         elemMain.innerHTML = main;
@@ -61,15 +63,10 @@ function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
     } else {
         document.body.innerHTML = `
         <header-bar></header-bar>
-        <div class="rootsplit">
-            <div class="sidebar">
-                ${sidebar}
-            </div>
-            <div class="sidebar_blocker"></div>
-            <main class="${mainClasses}">
-                ${main}   
-            </main>
-        </div>`
+        <main class="${mainClasses}">
+            ${main}   
+        </main>`
+        document.querySelector("header-bar nav.linklist").innerHTML = sidebar
     }
 }
 

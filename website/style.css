@@ -23,7 +23,7 @@
     --icon-color: #888888;
     --icon-color-highlight: var(--text);
 
-    --main-width: 75%;
+    --main-width: 75vw;
     --border-radius: 2ch;
     --bg-transition: background-color .1s;
     --popup-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
@@ -66,27 +66,15 @@ h1 {
     color:var(--text);
 }
 
-div.rootsplit {
-    margin-top: 5rem;
-    display: grid;
-    grid-template-columns: 15rem auto;
-    grid-template-rows: auto;
-    gap: 1rem;
-    height: calc(100vh - 8rem);
-    margin-left: .5rem;
-}
-
-nav.linklist {
-    display: grid;
-    gap: .1rem;
+body:has(header-bar.shown) main {
+    --side-margin: calc((100vw - var(--main-width)) / 2);
+    margin: 1rem calc(var(--side-margin) - 17rem) 0 calc(var(--side-margin) + 17rem);
+    width: calc(var(--main-width) - 15rem);
 }
 
 main {
-    margin: 5rem auto 0 auto;
+    margin: 1rem auto 0 auto;
     width: var(--main-width);
-}
-.rootsplit main {
-    margin: 0 auto;
 }
 
 main.homepage {
@@ -701,43 +689,115 @@ a.btn:hover {
 }
 
 header-bar {
-    height: 5rem;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(5, 20%);
-    text-decoration: none;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    background-color: var(--bg-very-dark);
+    display: none;
+}
 
-    h1 {
-        grid-column: 1;
-        padding-left: 1rem;
-    }
-    nav {
-        display: flex;
-        justify-content: space-evenly;
-        align-self: center;
-        margin: .5rem;
-    }
-    nav.create {
-        display: flex;
-        justify-content: flex-start;
-        gap: .5rem;
-    }
+header-bar.shown {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: .5rem;
+    top: 0;
+    position: fixed;
+    text-decoration: none;
+    overflow: auto;
+
+    margin: 0;
+    background-color: var(--bg-dark);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border: var(--border);
+    padding: 1rem;
+    height: calc(100vh - 2.1rem);
+    width: 15rem;
+
     a {
         color: var(--text);
         text-decoration: none;
     }
-    search-bar {
-        grid-column: 3/4;
-        align-self: center;
+    h1 {
+        text-align: center;
+        order: 1;
     }
-    nav.site-manager {
-        grid-column: 5;
+    nav.move {
+        order: 4;
+        flex-direction: column;
+    }
+    nav {
+        width: calc(100% - 2rem);
+        display: flex;
+        justify-content: space-evenly;
+        align-self: center;
+        gap: .5rem;
+
+        a {
+            color: var(--text);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            align-self: center;
+            text-align: center;
+            padding: .5rem;
+            width: calc(100% - 1rem);
+
+            background-color: var(--bg-dark);
+            border: solid var(--bg-dark) .1rem;
+        }
+        a:hover {
+            background-color: var(--highlight);
+            box-shadow: var(--button-hover-shadow);
+            border: var(--border-intense);
+        }
+        a.selected {
+            background-color: var(--bg-light);
+            box-shadow: var(--button-hover-shadow);
+            border: var(--border);
+            z-index: 1;
+        }
+        a.selected:hover {
+            background-color: var(--highlight);
+        }
+    }
+    nav.linklist {
+        flex-direction: column;
+        order: 5;
     }
 
+    search-bar {
+        align-self: center;
+        order: 2;
+        width: calc(100% - 3rem);
+    }
+    nav.create {
+        order: 3;
+        flex-direction: column;
+        align-content: center;
+        margin: 0;
+        padding: 0;
+        justify-content: flex-start;
+        button {
+            display: flex;
+            align-content: center;
+            gap: .25rem;
+            width: 100%;
+
+            div.label {
+                display: block;
+                align-self: center;
+                text-align: center;
+            }
+        }
+    }
+
+    nav.site-manager {
+        order: 6;
+        margin-top: auto;
+        flex-direction: row-reverse;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    nav.site-manager user-manager button {
+        flex-direction: row-reverse;
+    }
 }
 
 search-bar {

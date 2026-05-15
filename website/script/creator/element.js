@@ -9,7 +9,10 @@ class createDataElement extends HTMLElement {
 
         this.title = getTranslatedStr("creator.icon_alt_text")
         this.dropdownid = createDropdown(html)
-        this.innerHTML = `<button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};"><img class="icon" src="/icons/plussign.svg" alt="${getTranslatedStr("creator.icon_alt_text")}" draggable="false"></button>`
+        this.innerHTML = `  <button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};">
+                                <img class="icon" src="/icons/plussign.svg" alt="${getTranslatedStr("creator.icon_alt_text")}" draggable="false">
+                                <div class="label">${getTranslatedStr("creator.icon_alt_text")}</div>
+                            </button>`
     }
     disconnectedCallback() {
         deleteDropdown(this.dropdownid)

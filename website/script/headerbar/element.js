@@ -1,6 +1,7 @@
 
 class headerBarElement extends HTMLElement {
     connectedCallback() {
+        this.classList.add("shown")
         this.innerHTML = `
                 <a is="a-button" href="/"><h1>Stock Viewer</h1></a>
                 <nav class="move">
@@ -13,12 +14,14 @@ class headerBarElement extends HTMLElement {
                     ${userInfo.hasAnyCreatePermissions ? "<create-data></create-data>" : ""}
                     <button onclick="showModalEditAnonymousStockGroup(true)" title="${getTranslatedStr("stockgroups.anonymous.icon_alt_text")}">
                         <img class="icon" src="/icons/compare.svg" alt="${getTranslatedStr("stockgroups.anonymous.icon_alt_text")}" draggable="false">
+                        <div class="label">${getTranslatedStr("stockgroups.anonymous.icon_alt_text")}</div>
                     </button>
                 </nav>
                 <nav class="site-manager">
                     <theme-switcher></theme-switcher>
                     <user-manager></user-manager>
                 </nav>
+                <nav class="linklist"></nav>
                 `
     }
 }

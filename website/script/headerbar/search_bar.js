@@ -26,9 +26,6 @@ class searchBarElement extends HTMLElement {
                 const stocksData = responses[0].Data
                 const stockGroupData = responses[1].Data
 
-                const stockIdNameMap = new Map(stocksData.map((stock) => [Number(stock["ID"]), String(stock["Name"])]));
-                const groupIdNameMap = new Map(stockGroupData.map((group) => [Number(group["ID"]), String(group["Name"])]));
-
                 search.addEventListener("input", e => {
                     let possibleStocks = [], possibleGroups = []
 
