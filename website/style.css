@@ -68,9 +68,7 @@ h1 {
 }
 
 sidebar-toggle.external {
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
+    display: none;
 }
 
 body:has(header-bar.side.shown) {
@@ -82,13 +80,22 @@ body:has(header-bar.side.shown) {
         display: none;
     }
 }
-body:has(header-bar.side) main {
-    margin: 1rem 1rem 0 1rem;
-    width: calc(100% - 2rem);
+body:has(header-bar.side) {
+    main {
+        margin: 1rem 1rem 0 1rem;
+        width: calc(100% - 2rem);
+    }
+
+    sidebar-toggle.external {
+        position: fixed;
+        display: block;
+        bottom: 1.1rem;
+        left: 1.1rem;
+    }
 }
 
 main {
-    margin: 1rem auto 0 auto;
+    margin: 5rem auto 0 auto;
     width: var(--main-width);
 }
 
@@ -128,9 +135,9 @@ main.individualStockPage {
             height: calc(100% - 2.2rem);
         }
         svg.chart {
-             display: block;
-             margin: 0 auto;
-         }
+            display: block;
+            margin: 0 auto;
+        }
     }
     related-stocks {
         grid-column: 4/6;
@@ -197,8 +204,8 @@ main.individualStockGroupPage {
         grid-template: auto fit-content(25rem) repeat(3, auto) / repeat(5, 1fr);
 
         stock-group-chart {
-             grid-column: 1/6;
-         }
+            grid-column: 1/6;
+        }
         stock-group-description {
             grid-column: 1/6;
             .inner {
@@ -702,6 +709,50 @@ a.btn:hover {
     height: 2rem;
 }
 
+header-bar {
+    height: 5rem;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(5, 1fr);
+    text-decoration: none;
+    position: fixed;
+    width: calc(100% - 1rem);
+    background-color: var(--bg-very-dark);
+    gap: .5rem;
+    margin: 0 .5rem;
+    top: 0;
+
+    a {
+        color: var(--text);
+        text-decoration: none;
+    }
+    h1 {
+
+    }
+    sidebar-toggle {
+        display: none;
+    }
+    button .label {
+        display: none;
+    }
+    nav {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-self: center;
+        gap: .5rem;
+    }
+    nav.linklist {
+        display: none;
+    }
+    nav.create {
+        justify-content: flex-start;
+    }
+    search-bar {
+        align-self: center;
+    }
+}
+
 header-bar.side {
     display: none;
 }
@@ -710,10 +761,6 @@ header-bar.side.shown {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: .5rem;
-    top: 0;
-    position: fixed;
-    text-decoration: none;
 
     margin: 0;
     background-color: var(--bg-dark);
@@ -723,10 +770,7 @@ header-bar.side.shown {
     height: calc(100vh - 2.1rem);
     width: 15rem;
 
-    a {
-        color: var(--text);
-        text-decoration: none;
-    }
+
     h1 {
         text-align: center;
         order: 1;
@@ -775,7 +819,6 @@ header-bar.side.shown {
     }
 
     search-bar {
-        align-self: center;
         order: 2;
         width: calc(100% - 1rem);
     }
@@ -807,9 +850,12 @@ header-bar.side.shown {
         justify-content: flex-end;
         flex-direction: row-reverse;
     }
+    sidebar-toggle {
+        display: block;
+    }
 
     nav.site-manager user-manager button div.name {
-            display: none;
+        display: none;
     }
 }
 

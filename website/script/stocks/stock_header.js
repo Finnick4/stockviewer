@@ -28,7 +28,10 @@ class stockHeader extends HTMLElement {
         shorthandElem.innerHTML = sanitiseText(data["Shorthand"]).toUpperCase()
         shorthandElem.style.backgroundColor = `#${getHexColor(Number(data["Color"]))}`
         shorthandElem.classList.remove("colored", "dark", "light")
-        shorthandElem.classList.add(Number(data.Color) === -1 ? "" : "colored", shouldUseDarkText(getHexColor(data.Color)) ? "dark" : "light")
+        if (Number(data.Color) !== -1) {
+            shorthandElem.classList.add("colored")
+        }
+        shorthandElem.classList.add(shouldUseDarkText(getHexColor(data.Color)) ? "dark" : "light")
         that.querySelector("nav button.star").updateStatus(data["IsStarred"])
     }
 }

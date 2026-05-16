@@ -1,14 +1,16 @@
 
 class headerBarElement extends HTMLElement {
     connectedCallback() {
-        const shouldBeSidebar = true
+        const userWantsSidebar = localStorage.getItem("headerAsSidebar") === "true"
 
-        if (shouldBeSidebar) {
+        if (userWantsSidebar) {
             this.classList.add("shown", "side")
-            const newToggle = new sidebarToggleElement()
-            newToggle.classList.add("external")
-            document.querySelector("body").appendChild(newToggle)
         }
+
+        const externalToggle = new sidebarToggleElement()
+        externalToggle.classList.add("external")
+        document.querySelector("body").appendChild(externalToggle)
+
         this.innerHTML = `
                 <a is="a-button" href="/"><h1>Stock Viewer</h1></a>
                 <nav class="move">
@@ -31,6 +33,7 @@ class headerBarElement extends HTMLElement {
                 </nav>
                 <nav class="linklist"></nav>
                 `
+        externalToggle.updateIcon()
     }
 }
 
