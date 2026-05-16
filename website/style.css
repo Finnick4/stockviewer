@@ -82,15 +82,15 @@ body:has(header-bar.side.shown) {
 }
 body:has(header-bar.side) {
     main {
-        margin: 1rem 1rem 0 1rem;
-        width: calc(100% - 2rem);
+        margin: 1rem 5rem 0 5rem;
+        width: calc(100% - 10rem);
     }
 
     sidebar-toggle.external {
         position: fixed;
         display: block;
-        bottom: 1.1rem;
-        left: 1.1rem;
+        bottom: 1.05rem;
+        left: 1.05rem;
     }
 }
 
@@ -215,6 +215,12 @@ main.individualStockGroupPage {
     }
 }
 @media only screen and (max-width: 1300px)  {
+    body:has(header-bar.side.shown) {
+        main {
+            margin: 1rem 5rem 0 5rem;
+            width: calc(100% - 10rem);
+        }
+    }
     main.individualStockPage {
         grid-template: repeat(5, auto) / repeat(6, 1fr);
         stock-header {

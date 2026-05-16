@@ -13,7 +13,10 @@ class searchBarElement extends HTMLElement {
         search.addEventListener("click", () => {
             dropdown.togglePopover()
         })
-        dropdown.style.width = `calc(${search.offsetWidth}px - 1rem)`
+        this.updateSearchDropdownWidth = () => {
+            dropdown.style.width = `calc(${search.offsetWidth}px - 1rem)`
+        }
+        this.updateSearchDropdownWidth()
 
         Promise.all([
             fetch("/api/stocks"),

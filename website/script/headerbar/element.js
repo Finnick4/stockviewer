@@ -2,9 +2,12 @@
 class headerBarElement extends HTMLElement {
     connectedCallback() {
         const userWantsSidebar = localStorage.getItem("headerAsSidebar") === "true"
+        let isSidebar = false
 
+        this.classList.add("shown")
         if (userWantsSidebar) {
-            this.classList.add("shown", "side")
+            this.classList.add("side")
+            isSidebar = true
         }
 
         const externalToggle = new sidebarToggleElement()
@@ -34,6 +37,26 @@ class headerBarElement extends HTMLElement {
                 <nav class="linklist"></nav>
                 `
         externalToggle.updateIcon()
+        const searchBar = this.querySelector("search-bar")
+
+        const checkToggleSidebar = () => {
+            if (window.innerWidth < 1300) {
+                if (!isSidebar) {
+                    this.classList.add("side")
+                    isSidebar = true
+                    externalToggle.updateIcon()
+                }
+            } else {
+                if (isSidebar && !userWantsSidebar) {
+                    this.classList.remove("side")
+                    isSidebar = false
+                }
+            }
+            searchBar.updateSearchDropdownWidth()
+        }
+
+        window.addEventListener("resize", checkToggleSidebar)
+        checkToggleSidebar()
     }
 }
 
