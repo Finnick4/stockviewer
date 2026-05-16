@@ -1,7 +1,14 @@
 
 class headerBarElement extends HTMLElement {
     connectedCallback() {
-        this.classList.add("shown")
+        const shouldBeSidebar = true
+
+        if (shouldBeSidebar) {
+            this.classList.add("shown", "side")
+            const newToggle = new sidebarToggleElement()
+            newToggle.classList.add("external")
+            document.querySelector("body").appendChild(newToggle)
+        }
         this.innerHTML = `
                 <a is="a-button" href="/"><h1>Stock Viewer</h1></a>
                 <nav class="move">
@@ -20,6 +27,7 @@ class headerBarElement extends HTMLElement {
                 <nav class="site-manager">
                     <theme-switcher></theme-switcher>
                     <user-manager></user-manager>
+                    <sidebar-toggle></sidebar-toggle>
                 </nav>
                 <nav class="linklist"></nav>
                 `

@@ -16,6 +16,10 @@
         "theme": {
             "switch_dark": "Switch to dark mode",
             "switch_light": "Switch to light mode"
+        },
+        "sidebar_toggle": {
+            "open": "Open the sidebar",
+            "close": "Close the sidebar"
         }
     },
     "creator": {

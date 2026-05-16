@@ -23,7 +23,8 @@
     --icon-color: #888888;
     --icon-color-highlight: var(--text);
 
-    --main-width: 75vw;
+    --main-width-sidebar: calc(100vw - 19rem);
+    --main-width: 75%;
     --border-radius: 2ch;
     --bg-transition: background-color .1s;
     --popup-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
@@ -66,10 +67,24 @@ h1 {
     color:var(--text);
 }
 
-body:has(header-bar.shown) main {
-    --side-margin: calc((100vw - var(--main-width)) / 2);
-    margin: 1rem calc(var(--side-margin) - 17rem) 0 calc(var(--side-margin) + 17rem);
-    width: calc(var(--main-width) - 15rem);
+sidebar-toggle.external {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+}
+
+body:has(header-bar.side.shown) {
+    main {
+        margin: 1rem 1rem 0 18rem;
+        width: var(--main-width-sidebar);
+    }
+    sidebar-toggle.external {
+        display: none;
+    }
+}
+body:has(header-bar.side) main {
+    margin: 1rem 1rem 0 1rem;
+    width: calc(100% - 2rem);
 }
 
 main {
@@ -107,7 +122,7 @@ main.individualStockPage {
     }
     stock-chart {
         grid-column: 1/4;
-        height: calc(100% - .2rem);
+        height: 100%;
 
         .inner {
             height: calc(100% - 2.2rem);
@@ -118,7 +133,6 @@ main.individualStockPage {
          }
     }
     related-stocks {
-        overflow: auto;
         grid-column: 4/6;
     }
     stock-influence-list {
@@ -688,11 +702,11 @@ a.btn:hover {
     height: 2rem;
 }
 
-header-bar {
+header-bar.side {
     display: none;
 }
 
-header-bar.shown {
+header-bar.side.shown {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -700,7 +714,6 @@ header-bar.shown {
     top: 0;
     position: fixed;
     text-decoration: none;
-    overflow: auto;
 
     margin: 0;
     background-color: var(--bg-dark);
@@ -723,7 +736,7 @@ header-bar.shown {
         flex-direction: column;
     }
     nav {
-        width: calc(100% - 2rem);
+        width: 100%;
         display: flex;
         justify-content: space-evenly;
         align-self: center;
@@ -764,7 +777,7 @@ header-bar.shown {
     search-bar {
         align-self: center;
         order: 2;
-        width: calc(100% - 3rem);
+        width: calc(100% - 1rem);
     }
     nav.create {
         order: 3;
@@ -790,13 +803,13 @@ header-bar.shown {
     nav.site-manager {
         order: 6;
         margin-top: auto;
+        gap: .5rem;
+        justify-content: flex-end;
         flex-direction: row-reverse;
-        align-items: flex-end;
-        justify-content: space-between;
     }
 
-    nav.site-manager user-manager button {
-        flex-direction: row-reverse;
+    nav.site-manager user-manager button div.name {
+            display: none;
     }
 }
 

@@ -18,7 +18,6 @@ function logout() {
     })
     document.cookie = "isLoggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    userInformation.signalLogout()
     checkLoggedIn()
 }
 
@@ -42,6 +41,7 @@ function setMainBodyHTML(main, mainClasses) {
         elemMain.innerHTML = main
         side.innerHTML = ""
         elemMain.className = mainClasses
+        document.querySelector("header-bar nav.move").querySelector("a.selected")?.classList.remove("selected")
     } else {
         document.body.innerHTML = `
         <header-bar></header-bar>
