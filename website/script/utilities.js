@@ -91,3 +91,20 @@ function shouldUseDarkText(color) {
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
     return brightness > 128;
 }
+
+function getTranslatedDuration(duration) {
+    if (duration === -1) {
+        return getTranslatedStr("timeframes.durations.allTime")
+    }
+    if (duration < 120) {
+        return getTranslatedStr("timeframes.durations.minutes", {duration: duration})
+    }
+    if (duration < 1440) {
+        return getTranslatedStr("timeframes.durations.hours", {duration: (duration / 60).toPrecision(2)})
+    }
+    if (duration === 1440) {
+        return getTranslatedStr("timeframes.durations.day")
+    }
+    return getTranslatedStr("timeframes.durations.days", {duration: (duration / 1440).toPrecision(2)})
+}
+

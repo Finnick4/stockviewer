@@ -13,22 +13,6 @@ class timeframeSelectorElement extends HTMLElement {
         const displayBtn = this.querySelector("button.display")
         const decreaseBtn = this.querySelector("button.reduce")
 
-        const getTranslatedDuration = duration => {
-            if (duration === -1) {
-                return getTranslatedStr("timeframes.durations.allTime")
-            }
-            if (duration < 120) {
-                return getTranslatedStr("timeframes.durations.minutes", {duration: duration})
-            }
-            if (duration < 1440) {
-                return getTranslatedStr("timeframes.durations.hours", {duration: duration / 60})
-            }
-            if (duration === 1440) {
-                return getTranslatedStr("timeframes.durations.day")
-            }
-            return getTranslatedStr("timeframes.durations.days", {duration: duration / 1440})
-        }
-
         this.dropdownid = createDropdown(steps.reduce((str, duration, index) => str + `<button class="option" data-time-step="${index + 1}">${getTranslatedDuration(duration)}</button>`, ""))
 
         const dropdown = document.getElementById(this.dropdownid)

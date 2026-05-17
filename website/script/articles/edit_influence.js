@@ -53,7 +53,7 @@ class editInfluence extends HTMLElement {
         this.innerHTML = `
             <button popovertarget="${this.dropdownid}" style="anchor-name: --anchor-${this.dropdownid};" class="influenceOverview">
                 <div>&#8597; ${this.permil}&permil;</div>
-                <div>&#9201; ${this.minutes}${getTranslatedStr("articles.length_minutes_short")}</div>
+                <div>&#9201; ${getTranslatedDuration(this.minutes)}</div>
                 <div>&#8600; ${this.idFalloff.get(Number(this.falloffType))}</div>
             </button>`
     }
