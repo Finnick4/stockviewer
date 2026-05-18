@@ -91,7 +91,12 @@ class stockgroupsMemberPieChart extends HTMLElement {
             elems = `<circle cx="50" cy="50" r="50" fill="${color}" data-stock-id="${stockID}"/>`
         }
 
+        console.log("Finished setting map")
+        that.onUpdate()
         that.pie.innerHTML = elems
+    }
+    onUpdate() {
+        return
     }
 }
 

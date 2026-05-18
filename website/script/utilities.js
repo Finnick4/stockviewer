@@ -108,3 +108,12 @@ function getTranslatedDuration(duration) {
     return getTranslatedStr("timeframes.durations.days", {duration: (duration / 1440).toPrecision(2)})
 }
 
+
+function makeOneTimeFunction(fn) {
+    let count = 0
+    return (...args) => {
+        if (count++ === 0) {
+            fn(...args)
+        }
+    }
+}

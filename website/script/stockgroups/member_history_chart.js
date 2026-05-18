@@ -64,46 +64,63 @@ class stockGroupChart extends HTMLElement {
         const svg = that.querySelector("svg")
 
         const pieChart = document.querySelector(`main stockgroups-member-pie-chart[data-stock-group-id="${that.groupid}"]`)
+        console.log(pieChart)
         let stockColorMap = new Map()
-        if (pieChart !== null) {
-            stockColorMap = pieChart.stockColorMap
+
+        const drawGraph = () => {
+            data.forEach(stockHistory => {
+                const stockid = stockHistory.StockID
+                const prices = stockHistory.History.map(elem => elem["Price"]).reverse()
+                const startOffset = maxCount - prices.length
+
+                let path = ""
+
+
+                prices.forEach((price, i) => {
+                    const x = ((i + startOffset) * hunit) + that.xPadding
+                    const y = (that.height - getHeight(price)) + that.yPadding
+                    path += `L${x} ${y} `
+                })
+                if (path !== "") {
+                    path = path.replace('L', 'M')
+                }
+                const classes = prices[0] < prices[prices.length - 1] ? "positive" : "negative"
+                const color = stockColorMap.has(stockid) ? stockColorMap.get(stockid) : ""
+                const pathElemOuter = `<path class="${classes}" d="${path}" data-stock-id="${stockid}" ${color === "" ? "" : `style="stroke: ${color}"`}></path>`
+                svg.innerHTML += pathElemOuter
+            })
+
+            const quater = (totalMax - totalMin) / 4
+
+            const maxTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.max`)
+            const qmaxTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.quatermax`)
+            const middleTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.middle`)
+            const qminTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.quatermin`)
+            const minTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.min`)
+
+            maxTxt.innerHTML = getShortNumber(totalMax / 100)
+            qmaxTxt.innerHTML = getShortNumber((totalMin + 3 * quater) / 100)
+            middleTxt.innerHTML = getShortNumber((totalMin + 2 * quater) / 100)
+            qminTxt.innerHTML = getShortNumber((totalMin + quater) / 100)
+            minTxt.innerHTML = getShortNumber(totalMin / 100)
         }
 
-        data.forEach(stockHistory => {
-            const stockid = stockHistory.StockID
-            const prices = stockHistory.History.map(elem => elem["Price"]).reverse()
-            const startOffset = maxCount - prices.length
-
-            let path = ""
-
-
-            prices.forEach((price, i) => {
-                const x = ((i + startOffset) * hunit) + that.xPadding
-                const y = (that.height - getHeight(price)) + that.yPadding
-                path += `L${x} ${y} `
-            })
-            if (path !== "") {
-                path = path.replace('L', 'M')
+        if (pieChart !== null) {
+            if (pieChart.stockColorMap.size === 0) {
+                pieChart.onUpdate = makeOneTimeFunction(() => {
+                    stockColorMap = pieChart.stockColorMap
+                    drawGraph()
+                })
+            } else {
+                stockColorMap = pieChart.stockColorMap
+                drawGraph()
             }
-            const classes = prices[0] < prices[prices.length - 1] ? "positive" : "negative"
-            const color = stockColorMap.has(stockid) ? stockColorMap.get(stockid) : ""
-            const pathElemOuter = `<path class="${classes}" d="${path}" data-stock-id="${stockid}" ${color === "" ? "" : `style="stroke: ${color}"`}></path>`
-            svg.innerHTML += pathElemOuter
-        })
+        } else {
+            drawGraph()
+        }
 
-        const quater = (totalMax - totalMin) / 4
 
-        const maxTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.max`)
-        const qmaxTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.quatermax`)
-        const middleTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.middle`)
-        const qminTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.quatermin`)
-        const minTxt = document.querySelector(`stock-group-chart[data-stock-group-id="${that.groupid}"] svg text.price.min`)
-
-        maxTxt.innerHTML = getShortNumber(totalMax / 100)
-        qmaxTxt.innerHTML = getShortNumber((totalMin + 3*quater) / 100)
-        middleTxt.innerHTML = getShortNumber((totalMin + 2*quater) / 100)
-        qminTxt.innerHTML = getShortNumber((totalMin + quater) / 100)
-        minTxt.innerHTML = getShortNumber(totalMin / 100)
+        console.log(stockColorMap)
     }
 }
 
