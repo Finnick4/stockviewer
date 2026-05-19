@@ -304,6 +304,12 @@ main.individualStockGroupPage {
             }
         }
     }
+    .modal div.outer {
+        width: calc(100% - 10rem);
+    }
+    .modal.wider div.outer {
+        width: calc(100% - 10rem);
+    }
 }
 
 
@@ -500,7 +506,7 @@ div.sidebar {
         background-color: var(--bg-dark);
         margin: 6rem auto;
         padding: 2rem;
-        width: 40%;
+        width: max(40rem, 40%);
         max-height: calc(100% - 16rem);
         color: var(--text-muted);
         border-radius: var(--border-radius);
@@ -596,7 +602,7 @@ div.sidebar {
 }
 
 .modal.wider .outer {
-    width: 50%;
+    width: max(50rem, 50%);
 }
 
 .modal.confirm-modal {
