@@ -49,7 +49,11 @@ func Step() {
 				progressPercentage := (float64(influences[i].RemainingLength) / float64(influences[i].TotalLength)) * 100
 				switch influences[i].FalloffType {
 				case 0:
+					influenceFactor += GetNoneFalloffInfluenceFactor(influences[i].PermillePerDay, progressPercentage)
+				case 1:
 					influenceFactor += GetLinearFalloffInfluenceFactor(influences[i].PermillePerDay, progressPercentage)
+				case 2:
+					influenceFactor += GetDelayedLinearFalloffInfluenceFactor(influences[i].PermillePerDay, progressPercentage)
 				default:
 					influenceFactor += GetLinearFalloffInfluenceFactor(influences[i].PermillePerDay, progressPercentage)
 				}

@@ -3,10 +3,9 @@ class editInfluence extends HTMLElement {
 
     connectedCallback() {
         this.idFalloff = new Map()
-        this.idFalloff.set(0, getTranslatedStr("articles.falloff_types.linear"))
+        this.idFalloff.set(0, getTranslatedStr("articles.falloff_types.none"))
         this.idFalloff.set(1, getTranslatedStr("articles.falloff_types.linear"))
-        this.idFalloff.set(2, getTranslatedStr("articles.falloff_types.quadratic"))
-        this.idFalloff.set(3, getTranslatedStr("articles.falloff_types.cubic"))
+        this.idFalloff.set(2, getTranslatedStr("articles.falloff_types.delayed"))
 
         this.permil = isNaN(Number(this.dataset.permil)) ? 0 : Number(this.dataset.permil)
         this.minutes = isNaN(Number(this.dataset.minutes)) ? 0 : Number(this.dataset.minutes)

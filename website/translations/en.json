@@ -59,8 +59,7 @@
         "falloff_types": {
             "none": "None",
             "linear": "Linear",
-            "quadratic": "Quadratic",
-            "cubic": "Cubic"
+            "delayed": "Delayed"
         },
         "affected_stocks": {
             "title": "Affected stocks",
