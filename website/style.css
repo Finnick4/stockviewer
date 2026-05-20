@@ -464,6 +464,15 @@ div.sidebar {
     }
 }
 
+.dropdown.up {
+    inset: auto;
+    /*noinspection CssInvalidFunction*/
+    bottom: anchor(top);
+    /*noinspection CssInvalidFunction*/
+    left: anchor(left);
+    margin-block-end: .5rem;
+}
+
 .dropdown.stockSelection .searchResult {
     max-width: 32ch;
 }

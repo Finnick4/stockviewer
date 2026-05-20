@@ -38,17 +38,23 @@ class headerBarElement extends HTMLElement {
                 `
         externalToggle.updateIcon()
         const searchBar = this.querySelector("search-bar")
+        const userManagerDropdown = document.getElementById(this.querySelector("user-manager").dropdownid)
+        if (isSidebar) {
+            userManagerDropdown.classList.add("up")
+        }
 
         const checkToggleSidebar = () => {
             if (window.innerWidth < 1300) {
                 if (!isSidebar) {
                     this.classList.add("side")
+                    userManagerDropdown.classList.add("up")
                     isSidebar = true
                     externalToggle.updateIcon()
                 }
             } else {
                 if (isSidebar && !userWantsSidebar) {
                     this.classList.remove("side")
+                    userManagerDropdown.classList.remove("up")
                     isSidebar = false
                 }
             }
