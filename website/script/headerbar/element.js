@@ -3,6 +3,7 @@ class headerBarElement extends HTMLElement {
     connectedCallback() {
         const userWantsSidebar = localStorage.getItem("headerAsSidebar") === "true"
         let isSidebar = false
+        this.imposedSidebar = false
 
         this.classList.add("shown")
         if (userWantsSidebar) {
@@ -43,8 +44,8 @@ class headerBarElement extends HTMLElement {
             userManagerDropdown.classList.add("up")
         }
 
-        const checkToggleSidebar = () => {
-            if (window.innerWidth < 1300) {
+        this.checkToggleSidebar = () => {
+            if (window.innerWidth < 1300 || this.imposedSidebar) {
                 if (!isSidebar) {
                     this.classList.add("side")
                     userManagerDropdown.classList.add("up")
@@ -52,17 +53,18 @@ class headerBarElement extends HTMLElement {
                     externalToggle.updateIcon()
                 }
             } else {
-                if (isSidebar && !userWantsSidebar) {
+                if (isSidebar && (!userWantsSidebar || !this.imposedSidebar)) {
                     this.classList.remove("side")
                     userManagerDropdown.classList.remove("up")
                     isSidebar = false
+                    externalToggle.updateIcon()
                 }
             }
             searchBar.updateSearchDropdownWidth()
         }
 
-        window.addEventListener("resize", checkToggleSidebar)
-        checkToggleSidebar()
+        window.addEventListener("resize", this.checkToggleSidebar)
+        this.checkToggleSidebar()
     }
 }
 

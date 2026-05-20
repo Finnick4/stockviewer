@@ -41,7 +41,6 @@ function setMainBodyHTML(main, mainClasses) {
         elemMain.innerHTML = main
         side.innerHTML = ""
         elemMain.className = mainClasses
-        document.querySelector("header-bar nav.move").querySelector("a.selected")?.classList.remove("selected")
     } else {
         document.body.innerHTML = `
         <header-bar></header-bar>
@@ -50,6 +49,10 @@ function setMainBodyHTML(main, mainClasses) {
         </main>`
         document.querySelector("header-bar nav.linklist").innerHTML = ""
     }
+    document.querySelector("header-bar nav.move").querySelector("a.selected")?.classList.remove("selected")
+    const header = document.querySelector("header-bar")
+    header.imposedSidebar = false
+    header.checkToggleSidebar()
 }
 
 function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
@@ -68,6 +71,10 @@ function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
         </main>`
         document.querySelector("header-bar nav.linklist").innerHTML = sidebar
     }
+    document.querySelector("header-bar nav.move").querySelector("a.selected")?.classList.remove("selected")
+    const header = document.querySelector("header-bar")
+    header.imposedSidebar = true
+    header.checkToggleSidebar()
 }
 
 
