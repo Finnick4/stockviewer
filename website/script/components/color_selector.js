@@ -5,10 +5,15 @@ class colorSelectorElement extends HTMLElement {
         this.readOnly = false
 
         const possibleColors = [
-            ["ca5551", "d55f59", "df6862", "ed756e", "f87e77", "ff8880", "ff9890"],
-            ["c85b32", "d2643c", "dd6d45", "eb7a52", "f5835b", "ff8d64", "ff9c75"],
-            ["b76c00", "c17500", "cb7f00", "d98b09", "e39420", "e99b2a", "faab3f"],
-            ["6c8e03", "759819", "7da127", "89ae37", "92b742", "9bc14d", "a8ce5a"]
+            ["3c096c", "5a189a", "7b2cbf", "9d4edd", "c77dff"], // purple
+            ["a4133c", "c9184a", "ff4d6d", "ff758f", "ff8fa3"], // pink
+            ["aa0000", "cd0000", "de1616", "ef2b2b", "ec4040"], // red
+            ["bb5008", "d0630e", "e47513", "f58d19", "fa9f1c"], // orange
+            ["ff8800", "ffa200", "ffb700", "ffd000", "ffea00"], // yellow
+            ["014f86", "2a6f97", "0096c7", "48cae4", "90e0ef"], // blue
+            ["245501", "245501", "538d22", "73a942", "aad576"], // green
+            ["7f5539", "9c6644", "b08968", "ddb892", "e6ccb2"], // brown
+            ["343a40", "495057", "6c757d", "adb5bd", "ced4da"], // gray
         ]
 
 
