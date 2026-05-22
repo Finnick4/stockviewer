@@ -247,5 +247,9 @@
         "phrase_repetition": {
             "submit": "Enviar"
         }
+    },
+    "miscellaneous": {
+        "articles_title": "Todos los artículos",
+        "stocks_title": "Todas las acciones"
     }
 }
