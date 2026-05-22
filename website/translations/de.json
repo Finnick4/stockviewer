@@ -256,5 +256,9 @@
         "phrase_repetition": {
             "submit": "Absenden"
         }
+    },
+    "miscellaneous": {
+        "articles_title": "Alle Artikel",
+        "stocks_title": "Alle Aktien"
     }
 }
