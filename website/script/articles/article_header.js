@@ -35,6 +35,7 @@ class articleHeader extends HTMLElement {
             hour: "2-digit",
             minute: "2-digit",
         }).format(this.creationDate)
+        document.title = this.titleVal
         this.elemTitle.innerHTML = this.titleVal
         this.elemAuthor.innerHTML = this.authorName
         this.elemStars.innerHTML = `&#9733; ${getShortNumber(this.stars)}`

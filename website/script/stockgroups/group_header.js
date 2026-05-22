@@ -33,7 +33,9 @@ class stockGroupHeader extends HTMLElement {
     }
 
     updateData(data, that) {
-        that.querySelector("h1").innerHTML = that.isAnonymousStockGroup ? getTranslatedStr("stockgroups.header_element.anonymous_group_title") : sanitiseText(data["Name"])
+        const title = that.isAnonymousStockGroup ? getTranslatedStr("stockgroups.header_element.anonymous_group_title") : sanitiseText(data["Name"])
+        document.title = title
+        that.querySelector("h1").innerHTML = title
         let totalValue = 0
         let memberCount = 0
         if (data["Members"] !== undefined && data["Members"] !== null) {

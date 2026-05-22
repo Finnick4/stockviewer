@@ -4,4 +4,5 @@ function buildSettingsStarredStockGroupsPage() {
         <stockgroups-starred-list></stockgroups-starred-list>`
             
     setMainBodyHTMLAndSidebar(main, getSettingsSidebar("starred_stock_groups"))
+    document.title = getTranslatedStr("miscellaneous.settings_starred_stock_groups_title")
 }

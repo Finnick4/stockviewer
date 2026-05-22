@@ -524,5 +524,17 @@
             "days": "{duration} days",
             "allTime": "All Time"
         }
+    },
+    "miscellaneous": {
+        "name": "Stock Viewer",
+        "default_title": "Stock Viewer",
+        "articles_title": "All Articles",
+        "stock_groups_title": "All Stock Groups",
+        "stocks_title": "All Stocks",
+        "settings_title": "Settings",
+        "settings_name_title": "Settings: Name",
+        "settings_sessions_title": "Settings: Session management",
+        "settings_starred_stocks_title": "Settings: Starred Stocks",
+        "settings_starred_groups_title": "Settings: Starred Stock Groups"
     }
 }

@@ -21,6 +21,7 @@ function buildSettingsNamePage() {
         </div>`
             
     setMainBodyHTMLAndSidebar(main, getSettingsSidebar("name"))
+    document.title = getTranslatedStr("miscellaneous.settings_name_title")
 
     const infotxt = document.querySelector("main div.actions .info")
     const setErr = createSetErr(infotxt)

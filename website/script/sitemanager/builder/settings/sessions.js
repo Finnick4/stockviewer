@@ -9,4 +9,5 @@ function buildSettingsSessionsPage() {
         </div>`
             
     setMainBodyHTMLAndSidebar(main, getSettingsSidebar("sessions"))
+    document.title = getTranslatedStr("miscellaneous.settings_sessions_title")
 }

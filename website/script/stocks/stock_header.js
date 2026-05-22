@@ -22,6 +22,7 @@ class stockHeader extends HTMLElement {
     }
 
     updateData(data, that) {
+        document.title = sanitiseText(data["Name"])
         that.querySelector("h1").innerHTML = sanitiseText(data["Name"])
         that.querySelector("div.priceDisplay").innerHTML = getLocaleString(data["Price"]/100) + "€"
         const shorthandElem = that.querySelector("div.shorthand")

@@ -34,6 +34,7 @@ function setMainBodyHTML(main, mainClasses) {
     if (typeof(mainClasses) === "undefined") {
         mainClasses = ""
     }
+    document.title = getTranslatedStr("miscellaneous.default_title")
     const elemMain = document.querySelector("main");
     const side = document.querySelector("header-bar nav.linklist");
 
@@ -56,6 +57,7 @@ function setMainBodyHTML(main, mainClasses) {
 }
 
 function setMainBodyHTMLAndSidebar(main, sidebar, mainClasses) {
+    document.title = getTranslatedStr("miscellaneous.default_title")
     const elemMain = document.querySelector("main");
     const side = document.querySelector("header-bar nav.linklist");
 
