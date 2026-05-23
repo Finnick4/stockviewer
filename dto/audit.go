@@ -42,3 +42,15 @@ type StockGroupLogEntry struct {
 	ActionType   int32
 	Change       string
 }
+
+type LoggedUser struct {
+	Tag         string
+	DisplayName string
+}
+
+type UserLogEntry struct {
+	TargetUserID string
+	IssuerUserID string
+	ActionType   int32
+	Change       string
+}

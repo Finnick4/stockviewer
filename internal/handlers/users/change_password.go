@@ -60,6 +60,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go database.LogUserChange(id, id, 4, "")
 	go database.RevokeAllTokensFromUserID(id)
 
 	var response = api.SuccessResponse{

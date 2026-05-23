@@ -132,3 +132,45 @@ func LogStockGroupChanges(entries []dto.StockGroupLogEntry) {
 		return
 	}
 }
+
+func LogUserChange(targetUserID string, issuerUserID string, actionType int32, change string) {
+	db := getDB()
+
+	_, err := db.Exec(`INSERT INTO audit_users ("targetedUserId", "issuerId", "actionType", "changedData") VALUES ($1, $2, $3, $4);`, targetUserID, issuerUserID, actionType, change)
+
+	if err != nil {
+		log.Errorf("Issue while trying to log user change (target: %v, issuer: %v, action: %v)", targetUserID, issuerUserID, actionType)
+		log.Error(err)
+		return
+	}
+}
+
+func LogUserChanges(entries []dto.UserLogEntry) {
+	query := `INSERT INTO audit_users ("targetedUserId", "issuerId", "actionType", "changedData") VALUES `
+	values := make([]interface{}, len(entries)*4)
+	for i, entry := range entries {
+		vals := 4
+		n := i * vals
+
+		values[n] = entry.TargetUserID
+		values[n+1] = entry.IssuerUserID
+		values[n+2] = entry.ActionType
+		values[n+3] = entry.Change
+
+		query += `(`
+
+		for j := 0; j < vals; j++ {
+			query += `$` + strconv.Itoa(n+j+1) + `, `
+		}
+		query = query[:len(query)-2] + `),`
+	}
+	query = query[:len(query)-1] + ";"
+	db := getDB()
+	_, err := db.Exec(query, values...)
+
+	if err != nil {
+		log.Errorf("Issue while trying to log multiple user changes (%v)", entries)
+		log.Error(err)
+		return
+	}
+}

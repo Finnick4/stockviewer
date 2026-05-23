@@ -60,6 +60,22 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		user := dto.LoggedUser{
+			Tag:         params.Tag,
+			DisplayName: params.Tag,
+		}
+		marshalled, err := json.Marshal(user)
+		if err != nil {
+			log.Error("Encountered issue while marshalling user for logging the creation of said user!")
+			log.Error(err)
+			return
+		}
+		newUserID := database.GetUserIDFromTag(params.Tag)
+
+		database.LogUserChange(newUserID, creatorid, 1, string(marshalled))
+	}()
+
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: "success",

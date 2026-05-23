@@ -62,6 +62,26 @@ func UpdateUsersPermission(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		entries := make([]dto.UserLogEntry, len(params.Permissions))
+
+		for i, perm := range params.Permissions {
+			marshalled, err := json.Marshal(perm)
+			if err != nil {
+				log.Errorf("Encountered an issue while marshalling changed permission (%v) for logging editing of said permission on user (%v)!", perm, userID)
+				log.Error(err)
+				return
+			}
+			entries[i] = dto.UserLogEntry{
+				TargetUserID: userID,
+				IssuerUserID: issuerID,
+				ActionType:   6,
+				Change:       string(marshalled),
+			}
+		}
+		database.LogUserChanges(entries)
+	}()
+
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: "success",

@@ -64,6 +64,9 @@ func EditOtherUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := r.Context().Value("token").(string)
+	issuerID := database.GetUserIDFromToken(token)
+
 	if aimName && aimTag {
 		err = database.SetUserTagAndName(userID, params.Tag, params.Name)
 		if err != nil {
@@ -75,6 +78,10 @@ func EditOtherUser(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChanges([]dto.UserLogEntry{
+			{TargetUserID: userID, IssuerUserID: issuerID, ActionType: 2, Change: params.Tag},
+			{TargetUserID: userID, IssuerUserID: issuerID, ActionType: 3, Change: params.Name},
+		})
 	}
 	if !aimName && aimTag {
 		err = database.SetUserTag(userID, params.Tag)
@@ -87,6 +94,7 @@ func EditOtherUser(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChange(userID, issuerID, 2, params.Tag)
 	}
 	if aimName && !aimTag {
 		err = database.SetUserDisplayName(userID, params.Name)
@@ -95,6 +103,7 @@ func EditOtherUser(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChange(userID, issuerID, 3, params.Name)
 	}
 	if aimPW {
 		err = database.ResetUserPassword(userID, params.Password)
@@ -103,6 +112,7 @@ func EditOtherUser(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChange(userID, issuerID, 5, "")
 	}
 
 	var response = api.SuccessResponse{

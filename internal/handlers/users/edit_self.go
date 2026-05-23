@@ -55,6 +55,10 @@ func EditSelf(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChanges([]dto.UserLogEntry{
+			{TargetUserID: userID, IssuerUserID: userID, ActionType: 2, Change: params.Tag},
+			{TargetUserID: userID, IssuerUserID: userID, ActionType: 3, Change: params.Name},
+		})
 	}
 	if !aimName && aimTag {
 		err = database.SetUserTag(userID, params.Tag)
@@ -67,6 +71,7 @@ func EditSelf(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChange(userID, userID, 2, params.Tag)
 	}
 	if aimName && !aimTag {
 		err = database.SetUserDisplayName(userID, params.Name)
@@ -75,6 +80,7 @@ func EditSelf(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogUserChange(userID, userID, 3, params.Name)
 	}
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
