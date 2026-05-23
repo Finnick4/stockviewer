@@ -35,6 +35,11 @@ func DeleteStockGroup(w http.ResponseWriter, r *http.Request) {
 		log.Error(err)
 		return
 	}
+	go func() {
+		token := r.Context().Value("token").(string)
+		userID := database.GetUserIDFromToken(token)
+		database.LogStockGroupChange(int32(groupID), userID, 6, "deleted")
+	}()
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,

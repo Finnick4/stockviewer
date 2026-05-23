@@ -8,6 +8,7 @@ import (
 	"stockviewer/dto"
 	"stockviewer/internal/database"
 	"stockviewer/internal/utilities"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -57,12 +58,47 @@ func CreateStockGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		group := dto.LoggedStockGroup{
+			Name:        params.Name,
+			Description: params.Description,
+		}
+		marshalled, err := json.Marshal(group)
+		if err != nil {
+			log.Error("Encountered issue while marshalling stock group for logging the creation of said group!")
+			log.Error(err)
+			return
+		}
+		database.LogStockGroupChange(groupID, userID, 1, string(marshalled))
+	}()
+
 	if len(params.Members) == 1 {
 		err = database.AddStockToGroup(groupID, params.Members[0], userID)
 	}
 	if len(params.Members) > 1 {
 		err = database.AddStocksToGroup(groupID, params.Members, userID)
 	}
+
+	if err != nil {
+		log.Error("Encountered issue while trying to add stock(s) to newly created group!")
+		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
+
+	go func() {
+		entries := make([]dto.StockGroupLogEntry, len(params.Members))
+
+		for i, member := range params.Members {
+			entries[i] = dto.StockGroupLogEntry{
+				StockGroupID: groupID,
+				UserID:       userID,
+				ActionType:   4,
+				Change:       strconv.Itoa(int(member)),
+			}
+		}
+		database.LogStockGroupChanges(entries)
+	}()
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,

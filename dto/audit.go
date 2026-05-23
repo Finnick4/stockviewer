@@ -30,3 +30,15 @@ type StockLogEntry struct {
 	ActionType int32
 	Change     string
 }
+
+type LoggedStockGroup struct {
+	Name        string
+	Description string
+}
+
+type StockGroupLogEntry struct {
+	StockGroupID int32
+	UserID       string
+	ActionType   int32
+	Change       string
+}

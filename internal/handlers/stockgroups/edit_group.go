@@ -105,6 +105,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogStockGroupChange(int32(groupID), userID, 2, params.Name)
 	}
 	if aimDescription {
 		err = database.SetStockGroupDescription(int32(groupID), params.Description)
@@ -113,6 +114,7 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogStockGroupChange(int32(groupID), userID, 3, params.Description)
 	}
 	if aimAddMembers {
 		if len(params.AddedMembers) == 1 {
@@ -126,6 +128,20 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+
+		go func() {
+			entries := make([]dto.StockGroupLogEntry, len(params.AddedMembers))
+
+			for i, member := range params.AddedMembers {
+				entries[i] = dto.StockGroupLogEntry{
+					StockGroupID: int32(groupID),
+					UserID:       userID,
+					ActionType:   4,
+					Change:       strconv.Itoa(int(member)),
+				}
+			}
+			database.LogStockGroupChanges(entries)
+		}()
 	}
 	if aimRemoveMembers {
 		if len(params.RemovedMembers) == 1 {
@@ -139,6 +155,19 @@ func EditStockGroup(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go func() {
+			entries := make([]dto.StockGroupLogEntry, len(params.RemovedMembers))
+
+			for i, member := range params.RemovedMembers {
+				entries[i] = dto.StockGroupLogEntry{
+					StockGroupID: int32(groupID),
+					UserID:       userID,
+					ActionType:   5,
+					Change:       strconv.Itoa(int(member)),
+				}
+			}
+			database.LogStockGroupChanges(entries)
+		}()
 	}
 
 	var response = api.SuccessResponse{
