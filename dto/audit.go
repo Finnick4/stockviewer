@@ -17,3 +17,16 @@ type ArticleLogEntry struct {
 	ActionType int32
 	Change     string
 }
+
+type LoggedStock struct {
+	Name      string
+	Shorthand string
+	Price     int64
+	Color     int32
+}
+type StockLogEntry struct {
+	StockID    int32
+	UserID     string
+	ActionType int32
+	Change     string
+}

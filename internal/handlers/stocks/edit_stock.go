@@ -7,6 +7,7 @@ import (
 	"stockviewer/api"
 	"stockviewer/dto"
 	"stockviewer/internal/database"
+	"stockviewer/internal/notifiers"
 	"stockviewer/internal/utilities"
 	"strconv"
 
@@ -110,6 +111,9 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := r.Context().Value("token").(string)
+	userID := database.GetUserIDFromToken(token)
+
 	if aimName && aimPrice && aimShorthand && aimColor {
 		err = database.UpdateCompleteStock(params)
 		if err != nil {
@@ -118,6 +122,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		success()
+		go notifiers.NotifyStockChange()
 		return
 	}
 
@@ -129,6 +134,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 				log.Error(err)
 				return
 			}
+			go database.LogStockChange(int32(stockID), userID, 2, params.Name)
 		}
 		if !aimName && aimShorthand {
 			err = database.SetStockShorthand(int32(stockID), params.Shorthand)
@@ -137,6 +143,7 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 				log.Error(err)
 				return
 			}
+			go database.LogStockChange(int32(stockID), userID, 3, params.Shorthand)
 		}
 		if aimName && aimShorthand {
 			err = database.SetStockNameAndShorthand(int32(stockID), params.Name, params.Shorthand)
@@ -145,11 +152,16 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 				log.Error(err)
 				return
 			}
+			go database.LogStockChanges([]dto.StockLogEntry{
+				{StockID: int32(stockID), UserID: userID, ActionType: 3, Change: params.Shorthand},
+				{StockID: int32(stockID), UserID: userID, ActionType: 2, Change: params.Name},
+			})
 		}
 
 	}
 	if aimColor {
 		database.SetStockColor(int32(stockID), params.Color)
+		go database.LogStockChange(int32(stockID), userID, 4, strconv.Itoa(int(params.Color)))
 	}
 	if aimPrice {
 		err = database.SetStockPrice(int32(stockID), params.Price)
@@ -158,7 +170,9 @@ func EditStock(w http.ResponseWriter, r *http.Request) {
 			log.Error(err)
 			return
 		}
+		go database.LogStockChange(int32(stockID), userID, 5, strconv.Itoa(int(params.Price)))
 	}
 
+	go notifiers.NotifyStockChange()
 	success()
 }

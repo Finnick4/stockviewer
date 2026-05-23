@@ -264,6 +264,19 @@ CREATE TABLE IF NOT EXISTS "migrationlog" (
 		log.Fatal(err)
 	}
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "audit_stocks" (
+    "actionId" SERIAL NOT NULL PRIMARY KEY,
+	"targetedStockId"	INTEGER NOT NULL,
+	"issuerId"	VARCHAR(36) NOT NULL,
+	"time" TIMESTAMPTZ NOT NULL DEFAULT current_timestamp,
+	"actionType" INTEGER NOT NULL,
+	"changedData" TEXT NOT NULL,
+	CONSTRAINT "fk_audit_stocks_target" FOREIGN KEY("targetedStockId") REFERENCES stocks("id") ON DELETE NO ACTION,
+	CONSTRAINT "fk_audit_stocks_issuer" FOREIGN KEY("issuerId") REFERENCES users("id") ON DELETE NO ACTION);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	wg.Wait()
 
 	resp := db.QueryRow(`SELECT version FROM migrationlog ORDER BY version DESC LIMIT 1;`)

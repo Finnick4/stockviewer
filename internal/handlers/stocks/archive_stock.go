@@ -41,8 +41,18 @@ func ArchiveStock(w http.ResponseWriter, r *http.Request) {
 
 	if params.Result {
 		err = database.ArchiveStock(int32(stockID))
+		go func() {
+			token := r.Context().Value("token").(string)
+			userID := database.GetUserIDFromToken(token)
+			database.LogStockChange(int32(stockID), userID, 6, "")
+		}()
 	} else {
 		err = database.UnarchiveStock(int32(stockID))
+		go func() {
+			token := r.Context().Value("token").(string)
+			userID := database.GetUserIDFromToken(token)
+			database.LogStockChange(int32(stockID), userID, 7, "")
+		}()
 	}
 
 	if err != nil {

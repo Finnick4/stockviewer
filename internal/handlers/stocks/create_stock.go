@@ -74,6 +74,22 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		stock := dto.LoggedStock{
+			Name:      params.Name,
+			Shorthand: params.Shorthand,
+			Color:     params.Color,
+			Price:     params.InitPrice,
+		}
+		marshalled, err := json.Marshal(stock)
+		if err != nil {
+			log.Error("Encountered issue while marshalling stock for logging the creation of said stock!")
+			log.Error(err)
+			return
+		}
+		database.LogStockChange(lastID, userid, 1, string(marshalled))
+	}()
+
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: lastID,

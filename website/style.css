@@ -1265,7 +1265,7 @@ div.contentTable.grid-stock-selector {
 }
 
 
-.name {
+.name:not(input) {
     word-break: break-word;
     text-decoration: none;
     align-self: center;

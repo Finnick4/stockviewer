@@ -56,6 +56,11 @@ func DeleteStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		userID := database.GetUserIDFromToken(token)
+		database.LogStockChange(int32(stockID), userID, 8, "deleted")
+	}()
+
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,
 		Data: "success",
