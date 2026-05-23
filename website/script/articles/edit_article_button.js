@@ -20,20 +20,19 @@ customElements.define('edit-article-button', editArticleButtonElement, {extends:
 
 function showModalEditArticles(articleId) {
     fetch(`/api/articles/${articleId}`).then(r => r.json()).then(resp => {
-        const artTitle = sanitiseText(resp["Data"]["Title"])
-        const artContent = sanitiseText(resp["Data"]["Content"])
+        const artTitle = sanitiseText(resp.Data.Title)
+        const artContent = sanitiseText(resp.Data.Content)
         const artInfluences = []
-        if (resp["Data"]["Influences"] !== null) {
-            resp["Data"]["Influences"].forEach(influence => {
-                artInfluences.push({
-                    "StockID": influence.StockID,
-                    "StockName": influence.StockName,
-                    "LengthMinutes": influence.LengthMinutes,
-                    "PermillePerDay": influence.PermillePerDay,
-                    "FalloffType": influence.FalloffType
-                })
+        resp.Data.Influences?.forEach(influence => {
+            artInfluences.push({
+                "StockID": influence.StockID,
+                "StockName": influence.StockName,
+                "LengthMinutes": influence.LengthMinutes,
+                "PermillePerDay": influence.PermillePerDay,
+                "FalloffType": influence.FalloffType
             })
-        }
+        })
+
 
         const permArticles = userInfo.checkPerm("canEditArticles")
         const permInfluences = userInfo.checkPerm("canModifyInfluences")
@@ -228,9 +227,9 @@ function showModalEditArticles(articleId) {
                     fetch(`${window.location.origin}/api/articles/${articleId}`, {
                         method: "PATCH",
                         body: JSON.stringify({
-                            title: title.value,
+                            title: title.value === artTitle ? "" : title.value,
                             content: body.value === artContent ? "" : body.value,
-                            RemoveContent: body.value === "",
+                            RemoveContent: body.value === "" && artContent !== "",
                             AddedInfluences: permInfluences ? added : [],
                             EditedInfluences: permInfluences ? edited : [],
                             RemovedInfluences: permInfluences ? removed : []

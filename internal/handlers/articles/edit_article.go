@@ -50,6 +50,8 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Info(params)
+
 	aimTitle := params.Title != ""
 	aimContent := params.Content != ""
 	aimDeleteContent := !aimContent && params.RemoveContent
@@ -141,6 +143,10 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		if aimContent {
+			go database.LogArticleChange(int32(articleID), userID, 3, params.Content)
+		}
+		go database.LogArticleChange(int32(articleID), userID, 2, params.Title)
 	}
 	if !aimTitle && aimContent {
 		// Changing the title or title and content is handled above!
@@ -150,6 +156,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogArticleChange(int32(articleID), userID, 3, params.Content)
 	}
 
 	if aimDeleteContent {
@@ -159,6 +166,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go database.LogArticleChange(int32(articleID), userID, 3, "")
 	}
 
 	if aimEditInfluences {
@@ -173,6 +181,31 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go func() {
+			entries := make([]dto.ArticleLogEntry, len(params.EditedInfluences))
+
+			for i, influenceParams := range params.EditedInfluences {
+				influence := dto.LoggedInfluence{
+					StockID:        influenceParams.StockID,
+					LengthMinutes:  influenceParams.LengthMinutes,
+					PermillePerDay: influenceParams.PermillePerDay,
+					FalloffType:    influenceParams.FalloffType,
+				}
+				marshalled, err := json.Marshal(influence)
+				if err != nil {
+					log.Errorf("Encountered an issue while marshalling influence for logging editing of said influence for an existing article (%v)!", articleID)
+					log.Error(err)
+					return
+				}
+				entries[i] = dto.ArticleLogEntry{
+					ArticleID:  int32(articleID),
+					UserID:     userID,
+					ActionType: 6,
+					Change:     string(marshalled),
+				}
+			}
+			database.LogArticleChanges(entries)
+		}()
 	}
 
 	if aimRemoveInfluences {
@@ -187,6 +220,19 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go func() {
+			entries := make([]dto.ArticleLogEntry, len(params.RemovedInfluences))
+
+			for i, stock := range params.RemovedInfluences {
+				entries[i] = dto.ArticleLogEntry{
+					ArticleID:  int32(articleID),
+					UserID:     userID,
+					ActionType: 7,
+					Change:     strconv.Itoa(int(stock)),
+				}
+			}
+			database.LogArticleChanges(entries)
+		}()
 	}
 
 	if aimAddInfluences {
@@ -197,6 +243,31 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 			api.InternalErrorHandler(w)
 			return
 		}
+		go func() {
+			entries := make([]dto.ArticleLogEntry, len(params.AddedInfluences))
+
+			for i, influenceParams := range params.AddedInfluences {
+				influence := dto.LoggedInfluence{
+					StockID:        influenceParams.StockID,
+					LengthMinutes:  influenceParams.LengthMinutes,
+					PermillePerDay: influenceParams.PermillePerDay,
+					FalloffType:    influenceParams.FalloffType,
+				}
+				marshalled, err := json.Marshal(influence)
+				if err != nil {
+					log.Errorf("Encountered an issue while marshalling influence for logging the creation of said influence for an existing article (%v)!", articleID)
+					log.Error(err)
+					return
+				}
+				entries[i] = dto.ArticleLogEntry{
+					ArticleID:  int32(articleID),
+					UserID:     userID,
+					ActionType: 5,
+					Change:     string(marshalled),
+				}
+			}
+			database.LogArticleChanges(entries)
+		}()
 	}
 
 	var response = api.SuccessResponse{

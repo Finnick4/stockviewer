@@ -158,7 +158,7 @@ class stockInfluenceSelectorElement extends HTMLElement {
         }
         const influenceStockIDs = influences.map(infl => infl.StockID)
 
-        fetch(`/api/stockgroups/?members=${influenceStockIDs}`).then(r => r.json()).then(resp => {
+        fetch(`/api/stockgroups/anonymous?members=${influenceStockIDs}`).then(r => r.json()).then(resp => {
             inner.innerHTML = ""
             influences.forEach(influence => {
                 const elem = document.createElement("div")

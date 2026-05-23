@@ -64,10 +64,8 @@ function subscribeToAPI(path, func) {
 }
 
 function closeUnneededSubscriptions() {
-    console.log("checking what to close!")
     Object.keys(currentSubscriptions).forEach(path => {
         if (currentSubscriptions[path].length === 0) {
-            console.log("closing " + path)
             delete currentSubscriptions[path]
             subscriptionListeners[path].es.close()
             delete subscriptionListeners[path]
@@ -99,7 +97,6 @@ document.addEventListener("visibilitychange", () => {
         if (currentSubscriptions.length === 0) {
             return
         }
-        console.log("Freezing subscriptions")
 
         for (const path of Object.keys(currentSubscriptions)) {
             const subscriptionGroup = currentSubscriptions[path]
@@ -120,7 +117,6 @@ document.addEventListener("visibilitychange", () => {
         }
 
         const addSSEListener = path => {
-            console.log(`Readding SSE Connection for ${path}`)
             subscriptionListeners[path] = {
                 es: undefined,
                 cache: []
@@ -139,18 +135,15 @@ document.addEventListener("visibilitychange", () => {
             })
         }
 
-        console.log("Unfreezing subscriptions")
         for (const path of Object.keys(frozenSubscriptions)) {
             const subscriptionGroup = frozenSubscriptions[path]
             if (Object.keys(currentSubscriptions).indexOf(path) !== - 1) {
-                console.log("Contains " + path)
                 for (const subscription of subscriptionGroup) {
                     currentSubscriptions[path].add(subscription)
                 }
 
                 addSSEListener(path)
             } else {
-                console.log("Doesn't contain " + path)
                 currentSubscriptions[path] = subscriptionGroup
 
                 addSSEListener(path)

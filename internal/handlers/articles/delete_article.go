@@ -35,6 +35,11 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 		log.Error(err)
 		return
 	}
+	go func() {
+		token := r.Context().Value("token").(string)
+		userID := database.GetUserIDFromToken(token)
+		database.LogArticleChange(int32(articleID), userID, 4, "deleted")
+	}()
 
 	var response = api.SuccessResponse{
 		Code: http.StatusOK,

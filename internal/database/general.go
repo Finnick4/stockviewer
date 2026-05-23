@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS "migrationlog" (
 	"articleId"	INTEGER NOT NULL,
 	"userId"	VARCHAR(36) NOT NULL,
 	PRIMARY KEY ("articleId", "userId"),
-	CONSTRAINT "fk_starredarticles_group" FOREIGN KEY("articleId") REFERENCES articles("id") ON DELETE CASCADE,
+	CONSTRAINT "fk_starredarticles_articles" FOREIGN KEY("articleId") REFERENCES articles("id") ON DELETE CASCADE,
 	CONSTRAINT "fk_starredarticles_user" FOREIGN KEY("userId") REFERENCES users("id") ON DELETE CASCADE);`)
 	if err != nil {
 		log.Fatal(err)
@@ -247,6 +247,19 @@ CREATE TABLE IF NOT EXISTS "migrationlog" (
 	CONSTRAINT "fk_stockinfluences_stockid" FOREIGN KEY("stockId") REFERENCES stocks("id") ON DELETE CASCADE,
 	CONSTRAINT "fk_stockinfluences_articleid" FOREIGN KEY("articleId") REFERENCES articles("id") ON DELETE CASCADE,
 	CONSTRAINT "fk_stockinfluences_creatorid" FOREIGN KEY("creatorId") REFERENCES users("id") ON DELETE SET NULL);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "audit_articles" (
+    "actionId" SERIAL NOT NULL PRIMARY KEY,
+	"targetedArticleId"	INTEGER NOT NULL,
+	"issuerId"	VARCHAR(36) NOT NULL,
+	"time" TIMESTAMPTZ NOT NULL DEFAULT current_timestamp,
+	"actionType" INTEGER NOT NULL,
+	"changedData" TEXT NOT NULL,
+	CONSTRAINT "fk_audit_articles_target" FOREIGN KEY("targetedArticleId") REFERENCES articles("id") ON DELETE NO ACTION,
+	CONSTRAINT "fk_audit_articles_issuer" FOREIGN KEY("issuerId") REFERENCES users("id") ON DELETE NO ACTION);`)
 	if err != nil {
 		log.Fatal(err)
 	}

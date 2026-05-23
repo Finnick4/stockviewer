@@ -14,7 +14,7 @@ class affectedStocks extends HTMLElement {
 
     setData(stockIDs, influences) {
         this.influences = influences
-        this.closeSubscription = subscribeToAPI(`/api/stockgroups/sse/?members=${stockIDs}`, addThisToFunctionCall(this.updateData, this))
+        this.closeSubscription = subscribeToAPI(`/api/stockgroups/anonymous/sse?members=${stockIDs}`, addThisToFunctionCall(this.updateData, this))
     }
 
     updateData(data, that) {

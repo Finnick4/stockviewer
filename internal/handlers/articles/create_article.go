@@ -80,10 +80,22 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	id, err := database.CreateArticle(params.Title, params.Content, userID)
 
 	if err != nil {
+		log.Errorf("Encountered issue while creating a new article! Params: %v, user: %v", params, userID)
 		log.Error(err)
 		api.InternalErrorHandler(w)
 		return
 	}
+
+	go func() {
+		article := dto.LoggedArticle{Title: params.Title, Content: params.Content}
+		marshalled, err := json.Marshal(article)
+		if err != nil {
+			log.Error("Encountered issue while marshalling article for logging the creation of said article!")
+			log.Error(err)
+			return
+		}
+		database.LogArticleChange(id, userID, 1, string(marshalled))
+	}()
 
 	if len(params.Influences) != 0 {
 		for i := range params.Influences {
@@ -101,6 +113,32 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 			_ = database.DeleteArticle(id)
 			return
 		}
+
+		go func() {
+			entries := make([]dto.ArticleLogEntry, len(params.Influences))
+
+			for i, influenceParams := range params.Influences {
+				influence := dto.LoggedInfluence{
+					StockID:        influenceParams.StockID,
+					LengthMinutes:  influenceParams.LengthMinutes,
+					PermillePerDay: influenceParams.PermillePerDay,
+					FalloffType:    influenceParams.FalloffType,
+				}
+				marshalled, err := json.Marshal(influence)
+				if err != nil {
+					log.Error("Encountered an issue while marshalling influence for logging the creation of said influence for a new article!")
+					log.Error(err)
+					return
+				}
+				entries[i] = dto.ArticleLogEntry{
+					ArticleID:  id,
+					UserID:     userID,
+					ActionType: 5,
+					Change:     string(marshalled),
+				}
+			}
+			database.LogArticleChanges(entries)
+		}()
 	}
 
 	var response = api.SuccessResponse{
