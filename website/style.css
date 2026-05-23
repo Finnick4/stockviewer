@@ -1010,10 +1010,10 @@ stock-chart,stock-group-chart {
 }
 
 stock-group-chart svg path.unhighlighted {
-    stroke: var(--text-muted) !important;
+    stroke: hsl(0, 3%, 80%) !important;
 }
 stockgroups-member-pie-chart svg path.unhighlighted {
-    fill: var(--text-muted) !important;
+    fill: hsl(0, 3%, 80%) !important;
 }
 
 .login-field {
