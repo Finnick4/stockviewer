@@ -526,6 +526,7 @@
         }
     },
     "miscellaneous": {
+        "version": "Version {version}",
         "name": "Stock Viewer",
         "default_title": "Stock Viewer",
         "articles_title": "All Articles",

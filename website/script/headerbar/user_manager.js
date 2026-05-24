@@ -2,9 +2,10 @@
 class userManagerElement extends HTMLElement {
     connectedCallback() {
         this.dropdownid = createDropdown(`
-        <a is="a-button" class="btn" href="/settings">${getTranslatedStr("user_manager.dashboard_account")}</a>
-        ${userInfo.canViewAdminPanel ? `<a is="a-button" class="btn" href="/admin">${getTranslatedStr("user_manager.dashboard_admin")}</a>` : ""}
-        <button onclick="logout()">${getTranslatedStr("user_manager.logout")}</button>
+            <a is="a-button" class="btn" href="/settings">${getTranslatedStr("user_manager.dashboard_account")}</a>
+            ${userInfo.canViewAdminPanel ? `<a is="a-button" class="btn" href="/admin">${getTranslatedStr("user_manager.dashboard_admin")}</a>` : ""}
+            <button onclick="logout()">${getTranslatedStr("user_manager.logout")}</button>
+            <p class="versionNotice">${getTranslatedStr("miscellaneous.version", {version: getVersion()})}</p>
         `)
         this.innerHTML = `
         <button popovertarget="${this.dropdownid}" class="usermanager" style="anchor-name: --anchor-${this.dropdownid};">

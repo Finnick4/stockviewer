@@ -464,6 +464,12 @@ div.sidebar {
     }
 }
 
+.dropdown p.versionNotice {
+    margin-bottom: 0;
+    margin-top: .25rem;
+    text-align: center;
+}
+
 .dropdown.up {
     inset: auto;
     /*noinspection CssInvalidFunction*/

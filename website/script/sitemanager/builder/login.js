@@ -19,18 +19,25 @@ function buildPageLogin() {
             </div>
         </div>
     `
+    const primaryBtn = document.querySelector("button.primary")
 
-    document.querySelector("button.primary").addEventListener("click", event => {
+    document.querySelectorAll("input").forEach(inpt => inpt.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            primaryBtn.click()
+        }
+    }))
+
+    primaryBtn.addEventListener("click", event => {
         const inftxt = document.querySelector(".info");
         inftxt.innerHTML = getTranslatedStr("login.checking");
         const tag = document.querySelector('input[type="text"]').value;
         const pw = document.querySelector('input[type="password"]').value;
 
-        if (tag.length === 0 || tag.length > 32) {
+        if (!verifyUserTag(tag, () => {})) {
             inftxt.innerHTML = getTranslatedStr("login.err_tag");
             return;
         }
-        if (pw.length === 0 || pw.length > 72) {
+        if (!plausiblePassword(pw)) {
             inftxt.innerHTML = getTranslatedStr("login.err_pw");
             return;
         }
