@@ -8,6 +8,6 @@ function buildSettingsSessionsPage() {
             </div>
         </div>`
             
-    setMainBodyHTMLAndSidebar(main, getSettingsSidebar("sessions"))
+    setMainBodyHTMLAndSidebar(main, getSettingsSidebar("sessions"), "settingsPage")
     document.title = getTranslatedStr("miscellaneous.settings_sessions_title")
 }

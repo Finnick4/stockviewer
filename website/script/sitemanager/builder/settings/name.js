@@ -20,7 +20,7 @@ function buildSettingsNamePage() {
             </div>
         </div>`
             
-    setMainBodyHTMLAndSidebar(main, getSettingsSidebar("name"))
+    setMainBodyHTMLAndSidebar(main, getSettingsSidebar("name"), "settingsPage")
     document.title = getTranslatedStr("miscellaneous.settings_name_title")
 
     const infotxt = document.querySelector("main div.actions .info")
