@@ -127,7 +127,7 @@ document.addEventListener("visibilitychange", () => {
             subscriptionListeners[path].es.addEventListener("stockupdate", event => {
                 subscriptionListeners[path].cache = JSON.parse(event.data)
                 pingDataSubscribed(path)
-                if (currentSubscriptions[path].length === 0) {
+                if (currentSubscriptions[path]?.length === 0) {
                     delete currentSubscriptions[path]
                     subscriptionListeners[path].es.close()
                     delete subscriptionListeners[path]
