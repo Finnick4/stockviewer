@@ -17,12 +17,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var HttpsMode bool
+
 func main() {
-
-	log.SetFormatter(&log.TextFormatter{
-		ForceColors: true,
-	})
-
 	err := godotenv.Load(".env")
 
 	if err != nil {
@@ -42,11 +39,6 @@ func main() {
 		log.SetLevel(loglvl)
 	}
 
-	address, ok := os.LookupEnv("ADDRESS")
-	if !ok {
-		log.Warn("ADDRESS is not set in .env! Using default value.")
-		address = "localhost"
-	}
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
 		log.Warn("PORT is not set in .env! Using default value.")
@@ -94,7 +86,7 @@ func main() {
 
 	log.Info("Starting GO API service...")
 
-	err = http.ListenAndServe(fmt.Sprintf("%v:%v", address, port), r)
+	err = http.ListenAndServe(fmt.Sprintf(":%v", port), r)
 
 	if err != nil {
 		log.Fatal(err)

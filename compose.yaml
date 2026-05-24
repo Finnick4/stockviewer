@@ -1,10 +1,9 @@
 services:
-  db:
+  stockviewer.database:
     image: timescale/timescaledb-ha:pg18
-    restart: always
+    container_name: stockviewer.database
+    restart: unless-stopped
     shm_size: 128mb
-    ports:
-      - ${DB_PORT}:${DB_PORT}
     volumes:
       - db:/home/postgres/pgdata/data/
     environment:
@@ -17,5 +16,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  stockviewer.application:
+    image: stockviewer
+    container_name: stockviewer.application
+    restart: unless-stopped
+    depends_on:
+      stockviewer.database:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
 volumes:
   db:

@@ -33,16 +33,9 @@ func CloseDB() {
 
 func connectToDB() {
 	log.Debug("Connecting to DB")
-	dbHost, ok := os.LookupEnv("DB_HOST")
-	if !ok {
-		log.Warn("DB_HOST is not set in .env! Using default value.")
-		dbHost = "localhost"
-	}
-	dbPort, ok := os.LookupEnv("DB_PORT")
-	if !ok {
-		log.Warn("DB_PORT is not set in .env! Using default value.")
-		dbPort = "5432"
-	}
+	dbHost := "stockviewer.database"
+
+	dbPort := "5432"
 	dbUser, ok := os.LookupEnv("DB_USER")
 	if !ok {
 		log.Fatal("DB_USER is not set in .env!")
@@ -57,16 +50,24 @@ func connectToDB() {
 		dbName = "stockviewer"
 	}
 	var err error
-	databaseConnection, err = sql.Open("postgres", fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName))
+	connectionString := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
+	databaseConnection, err = sql.Open("postgres", connectionString)
 	if err != nil {
+		log.Error("Fatal Error while trying to open database connection:")
 		log.Fatal(err)
 	}
 	row := databaseConnection.QueryRow("SELECT version()")
 
+	if row.Err() != nil {
+		log.Error("Fatal Error while sending database test query:")
+		log.Fatal(row.Err())
+	}
+
 	var v string
 	err = row.Scan(&v)
 	if err != nil {
-		log.Error(err)
+		log.Error("Fatal Error while trying to decode database test query response:")
+		log.Fatal(err)
 	}
 	log.Debug(v)
 }

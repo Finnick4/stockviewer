@@ -20,7 +20,7 @@ func CloseSession(w http.ResponseWriter, r *http.Request) {
 		Value:    "empty",
 		Path:     "/",
 		MaxAge:   -1,
-		Secure:   false, // TODO This is currently only a development environment. Down the road, a toggle to switch to a production environment has to be implemented to i.e. set secure = true.
+		Secure:   HTTPSOnlyMode(),
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	}
