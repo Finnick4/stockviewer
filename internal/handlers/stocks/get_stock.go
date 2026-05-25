@@ -8,7 +8,6 @@ import (
 	"stockviewer/internal/database"
 	"strconv"
 
-	_ "github.com/glebarez/go-sqlite"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/schema"
 

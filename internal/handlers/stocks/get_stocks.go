@@ -7,7 +7,6 @@ import (
 	"stockviewer/dto"
 	"stockviewer/internal/database"
 
-	_ "github.com/glebarez/go-sqlite"
 	"github.com/gorilla/schema"
 
 	log "github.com/sirupsen/logrus"

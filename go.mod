@@ -3,7 +3,6 @@ module stockviewer
 go 1.24.0
 
 require (
-	github.com/glebarez/go-sqlite v1.22.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/google/uuid v1.5.0
 	github.com/gorilla/schema v1.4.1
@@ -22,5 +21,4 @@ require (
 	modernc.org/libc v1.37.6 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
-	modernc.org/sqlite v1.28.0 // indirect
 )

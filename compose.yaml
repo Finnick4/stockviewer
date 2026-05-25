@@ -17,12 +17,25 @@ services:
       timeout: 5s
       retries: 5
   stockviewer.application:
-    image: stockviewer
+    # production image:
+    image: ghcr.io/finnick4/stockviewer:latest
+
+    # testing / development image:
+    # image: stockviewer-demo
+
     container_name: stockviewer.application
     restart: unless-stopped
     depends_on:
       stockviewer.database:
         condition: service_healthy
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL}
+      - PORT=${PORT}
+      - DB_HOST=stockviewer.database
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - HTTPS_MODE=${HTTPS_MODE}
     ports:
       - "8000:8000"
 volumes:

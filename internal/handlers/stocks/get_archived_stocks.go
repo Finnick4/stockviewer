@@ -6,7 +6,6 @@ import (
 	"stockviewer/api"
 	"stockviewer/internal/database"
 
-	_ "github.com/glebarez/go-sqlite"
 	log "github.com/sirupsen/logrus"
 )
 
