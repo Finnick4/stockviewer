@@ -40,9 +40,7 @@ function initialiseUserInfo() {
 
                 const perms = new Map()
 
-                for (const perm of permissions) {
-                    perms.set(String(perm.Permission), Number(perm.Value))
-                }
+                permissions?.forEach(perm => perms.set(String(perm.Permission), Number(perm.Value)))
 
                 const locCheckPerm = perm => perms.get(perm) === 1
 

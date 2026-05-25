@@ -18,10 +18,10 @@ services:
       retries: 5
   stockviewer.application:
     # production image:
-    image: ghcr.io/finnick4/stockviewer:latest
+    # image: ghcr.io/finnick4/stockviewer:latest
 
     # testing / development image:
-    # image: stockviewer-demo
+    image: stockviewer-demo
 
     container_name: stockviewer.application
     restart: unless-stopped
@@ -37,6 +37,6 @@ services:
       - DB_NAME=${DB_NAME}
       - HTTPS_MODE=${HTTPS_MODE}
     ports:
-      - "8000:8000"
+      - ${PORT}:${PORT}
 volumes:
   db:

@@ -48,7 +48,7 @@ class stocklistStarredDelta extends HTMLElement {
                     <div class="shorthand ${Number(e["Color"]) === -1 ? "" : "colored"} ${shouldUseDarkText(getHexColor(Number(e["Color"]))) ? "dark" : "light"}" style="background-color: #${getHexColor(Number(e["Color"]))}">${sanitiseText(e["Shorthand"]).toUpperCase()}</div>
                     <div class="name">${sanitiseText(e["Name"])}</div>
                     <div class="value">${shortPrice}</div>
-                    <div class="value">${(e["DeltaAmount"] >= 0 ? "+" : "") + getShortNumber(e["DeltaAmount"] / 100)}€</div>
+                    <div class="value">${(e["Price2"]-e["Price1"]) >= 0 ? "+" : ""}${getShortNumber((e["Price2"]-e["Price1"]) / 100)}€</div>
                     <div class="value">${getShortNumber((e["Price2"]/e["Price1"] - 1.0)*100)}%</div>
                 </a>`
         })
