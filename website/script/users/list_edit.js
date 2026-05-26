@@ -9,7 +9,7 @@ class userListEdit extends HTMLElement {
         this.update()
     }
     update() {
-        fetch(`/api/users/`).then(r => r.json()).then(resp =>{
+        loadUsersData(users => {
             const statusStr = status => {
                 switch (Number(status)) {
                     case 1: return getTranslatedStr("users.status.active")
@@ -19,7 +19,7 @@ class userListEdit extends HTMLElement {
                 }
             }
             let html = ""
-            resp["Data"].forEach(user => {
+            users.forEach(user => {
                 html += `
                 <div class="containing" data-user-id="${user["ID"]}">
                     <div class="shorthand">${sanitiseText(user["Tag"])}</div>

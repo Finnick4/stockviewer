@@ -19,112 +19,111 @@ customElements.define('edit-user-button', editUserButtonElement, {extends: "butt
 
 
 function showEditUserModal(userID) {
-    fetch(`/api/users`).then(r => r.json()).then(resp => {
-        const user = (resp.Data.filter(user => user.ID === userID))[0]
-        console.log(user)
-        const userName = sanitiseText(user.Name)
-        const userTag = sanitiseText(user.Tag)
+    const permName = userInfo.checkPerm("canEditUserName")
+    const permPW = userInfo.checkPerm("canEditUserPassword")
 
-        let html = `<h2>${getTranslatedStr("users.edit.title_other", {name: userName})} <div class="tag value">${userTag}</div></h2>
+    let html = `<h2>${getTranslatedStr("users.edit.title_other", {name: getTranslatedStr("users.edit.loading_name")})} <div class="tag value">${getTranslatedStr("users.edit.loading_tag")}</div></h2>
+                        ${permName ? `
                         <div class="pair">
                             <p>${getTranslatedStr("users.name")}</p>
-                            <input class="displayname" type="text" placeholder="${getTranslatedStr("users.edit.placeholder_name")}" value="${userName}">
+                            <input class="displayname" type="text" placeholder="${getTranslatedStr("users.edit.placeholder_name")}">
                         </div>
                         <div class="pair">
                             <p>${getTranslatedStr("users.tag")}</p>
-                            <input class="tag" type="text" placeholder="${getTranslatedStr("users.edit.placeholder_tag")}" value="${userTag}">
-                        </div>
-                        <div class="pair">
+                            <input class="tag" type="text" placeholder="${getTranslatedStr("users.edit.placeholder_tag")}">
+                        </div>` : ""}
+                        ${permPW ? `<div class="pair">
                           <p>${getTranslatedStr("users.edit.new_pw")}</p>
-                          <input type="password" class="pw">            
-                        </div>
+                          <input type="password" class="pw">
+                        </div>` : ""}
+                        ${permName || permPW ? `
                         <div class="pair submit">
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
-                        </div>
+                        </div>` : ""}
                       `
-        const id = createModal(html)
-        const modal = document.getElementById(id)
+    const id = createModal(html)
+    const modal = document.getElementById(id)
 
-        const infotxt = modal.querySelector(".info")
-        const name = modal.querySelector(`input.displayname`)
-        const tag = modal.querySelector(`input.tag`)
-        const pw = modal.querySelector(`input.pw`)
+    const infotxt = modal.querySelector(".info")
 
-        let permName = false, permPW = false
+    const name = modal.querySelector(`input.displayname`)
+    const tag = modal.querySelector(`input.tag`)
+    const pw = modal.querySelector(`input.pw`)
 
-        if (!userInfo.checkPerm("canEditUserName")) {
-            name.readOnly = true
-            tag.readOnly = true
-        } else {
-            permName = true
+    const setErr = createSetErr(infotxt)
+
+    const validate = () => {
+        if (permName && !verifyUserName(name.value, setErr)) {
+            return false
         }
 
-        if (!userInfo.checkPerm("canEditUserPassword")) {
-            pw.readOnly = true
-        } else {
-            permPW = true
+        if (permName && !verifyUserTag(tag.value, setErr)) {
+            return false
         }
 
-        const setErr = createSetErr(infotxt)
-
-        const validate = () => {
-            if (!verifyUserName(name.value, setErr)) {
-                return false
-            }
-
-            if (!verifyUserTag(tag.value, setErr)) {
-                return false
-            }
-
-            if (!plausiblePassword(pw.value)) {
-                setErr(getTranslatedStr("users.edit.err_pw_implausible"))
-                return false
-            }
-
-            infotxt.innerHTML = getTranslatedStr("users.edit.values_okay")
-            infotxt.classList.add("positive")
-            infotxt.classList.remove("negative")
-            return true
+        if (permPW && pw.Value !== "" && !plausiblePassword(pw.value)) {
+            setErr(getTranslatedStr("users.edit.err_pw_implausible"))
+            return false
         }
 
-        modal.querySelectorAll(`.pair input`).forEach(elem => {
-            elem.addEventListener("input", () => validate())
-        })
+        infotxt.innerHTML = getTranslatedStr("users.edit.values_okay")
+        infotxt.classList.add("positive")
+        infotxt.classList.remove("negative")
+        return true
+    }
+    let userName = "", userTag = ""
 
-        modal.querySelector(`button.submit`).addEventListener("click", () => {
-            if (validate()) {
-                fetch(`/api/users/${userID}`, {
-                    method: "PATCH",
-                    body: JSON.stringify({
-                        name: permName && name.value !== userName ? name.value : "",
-                        tag: permName && tag.value !== userTag ? tag.value : "",
-                        password: permPW && pw.value !== "" ? pw : ""
-                    })
-                }).then(r => {
-                    if (r.ok) {
-                        document.querySelectorAll(`.userDisplayElement`).forEach(e => e.update())
-                        closeModal(id)
-                    } else {
-                        if (r.status >= 400 || r.status < 500) {
-                            if (r.status === 400) {
-                                r.json().then(resp => {
-                                    if (resp.Message === "Tag already taken!") {
-                                        setErr(getTranslatedStr("users.edit.err_tag_taken"))
-                                    } else {
-                                        setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
-                                    }
-                                })
-                            } else {
-                                setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
-                            }
-                        } else {
-                            setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
-                        }
-                    }
-                });
-            }
-        })
+    loadUserData(userID, user => {
+        if (user === undefined) {
+            modal.querySelector(".content").innerHTML = `<h2>${getTranslatedStr("users.edit.err_invalid_user_header")}</h2><p>${getTranslatedStr("users.edit.err_invalid_user_hint")}</p>`
+            return
+        }
+        modal.querySelector("h2").innerHTML = `${getTranslatedStr("users.edit.title_other", {name: user.Name})} <div class="tag value">${user.Tag}</div>`
+        name.value = user.Name
+        userName = user.Name
+        tag.value = user.Tag
+        userTag = user.Tag
         validate()
     })
+
+
+    modal.querySelectorAll(`.pair input`).forEach(elem => {
+        elem.addEventListener("input", () => validate())
+    })
+
+    modal.querySelector(`button.submit`)?.addEventListener("click", () => {
+        if (validate()) {
+            fetch(`/api/users/${userID}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    name: permName && name.value !== userName ? name.value : "",
+                    tag: permName && tag.value !== userTag ? tag.value : "",
+                    password: permPW && pw.value !== "" ? pw.value : ""
+                })
+            }).then(r => {
+                if (r.ok) {
+                    document.querySelectorAll(`.userDisplayElement`).forEach(e => e.update())
+                    closeModal(id)
+                } else {
+                    if (r.status >= 400 || r.status < 500) {
+                        if (r.status === 400) {
+                            r.json().then(resp => {
+                                if (resp.Message === "Tag already taken!") {
+                                    setErr(getTranslatedStr("users.edit.err_tag_taken"))
+                                } else {
+                                    setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                                }
+                            })
+                        } else {
+                            setErr(getTranslatedStr("network.issues.generic_request", {code: r.status}))
+                        }
+                    } else {
+                        setErr(getTranslatedStr("network.issues.generic_server", {code: r.status}))
+                    }
+                }
+            });
+        }
+    })
+    validate()
 }

@@ -51,6 +51,7 @@ function initialiseUserInfo() {
 
                 userInfo.canViewAdminPanelUsersTab = locCheckPerm("canEditUserPermissions") || locCheckPerm("canEditUserName") || locCheckPerm("canEditUserPassword") || locCheckPerm("canDisableUsers") || locCheckPerm("canDeleteUsers")
                 userInfo.canViewAdminPanel = userInfo.hasAnyEditStockPermissions || locCheckPerm("isStockArchivist") || userInfo.canViewAdminPanelUsersTab
+                userInfo.canViewUsers = locCheckPerm("canEditUserPermissions") || locCheckPerm("canEditUserName") || locCheckPerm("canEditUserPassword") || locCheckPerm("canDisableUsers") || locCheckPerm("canDeleteUsers")
 
                 userInfo.permissions = perms
 

@@ -316,7 +316,11 @@
             "err_tag_upper_case": "The tag cannot have upper case characters!",
             "err_tag_invalid_character": "The tag may only contain numbers and lowercase characters.",
             "err_pw_implausible": "The new password is not plausible!",
-            "err_tag_taken": "The provided tag is already taken. Choose another!"
+            "err_tag_taken": "The provided tag is already taken. Choose another!",
+            "loading_name": "Loading display name…",
+            "loading_tag": "Loading tag…",
+            "err_invalid_user_header": "Invalid user",
+            "err_invalid_user_hint": "The user you are trying to edit does not seem to exist."
         },
         "list": {
             "title_edit": "All users",
