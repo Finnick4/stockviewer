@@ -33,7 +33,10 @@ func CloseDB() {
 
 func connectToDB() {
 	log.Debug("Connecting to DB")
-	dbHost := "stockviewer.database"
+	dbHost, ok := os.LookupEnv("DB_HOST")
+	if !ok {
+		dbHost = "stockviewer.database"
+	}
 
 	dbPort := "5432"
 	dbUser, ok := os.LookupEnv("DB_USER")

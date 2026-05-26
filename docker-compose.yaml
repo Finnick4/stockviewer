@@ -4,6 +4,8 @@ services:
     container_name: stockviewer.database
     restart: unless-stopped
     shm_size: 128mb
+    ports:
+      - "5432:5432"
     volumes:
       - db:/home/postgres/pgdata/data/
     environment:
@@ -17,10 +19,6 @@ services:
       timeout: 5s
       retries: 5
   stockviewer.application:
-    # production image:
-    # image: ghcr.io/finnick4/stockviewer:latest
-
-    # testing / development image:
     image: stockviewer-demo
 
     container_name: stockviewer.application
