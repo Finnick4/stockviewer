@@ -100,12 +100,16 @@ function getTranslatedDuration(duration) {
         return getTranslatedStr("timeframes.durations.minutes", {duration: duration})
     }
     if (duration < 1440) {
-        return getTranslatedStr("timeframes.durations.hours", {duration: (duration / 60).toPrecision(2)})
+        const fullHours = ((duration - (duration % 60)) / 60)
+        const remainingHour = (duration % 60)/60
+        return getTranslatedStr("timeframes.durations.hours", {duration:  fullHours + (remainingHour !== 0 ? remainingHour.toPrecision(2).substring(1) : "")})
     }
     if (duration === 1440) {
         return getTranslatedStr("timeframes.durations.day")
     }
-    return getTranslatedStr("timeframes.durations.days", {duration: (duration / 1440).toPrecision(2)})
+    const fullDays = ((duration - (duration % 1440)) / 1440)
+    const remainingDay = (duration % 1440)/1440
+    return getTranslatedStr("timeframes.durations.days", {duration: fullDays + (remainingDay !== 0 ? remainingDay.toPrecision(2).substring(1) : "")})
 }
 
 
