@@ -2,16 +2,19 @@ function showChangePasswordModal(elem) {
     if (elem != null && elem.parentElement.getAttribute("popover") != null) {
         elem.parentElement.togglePopover(false)
     }
+    const main = document.querySelector("body.login")
+    const mainTag = main?.querySelector(`input[type="text"]`)?.value
+    const mainPW = main?.querySelector(`input[type="password"]`)?.value
 
     let html = `<h2>${getTranslatedStr("change_password.title")}</h2>
                       <div class="pair">
                           <p>${getTranslatedStr("change_password.tag")}</p>
-                          <input type="text" class="tag">            
+                          <input type="text" class="tag" value="${mainTag ? mainTag : ""}">            
                       </div>
                         
                       <div class="pair">
                           <p>${getTranslatedStr("change_password.old_pw")}</p>
-                          <input type="password" class="oldpw">            
+                          <input type="password" class="oldpw" value="${mainPW ? mainPW : ""}">            
                       </div>
                       
                       <div class="pair">
@@ -37,6 +40,7 @@ function showChangePasswordModal(elem) {
     const oldPW = modal.querySelector(`.oldpw`)
     const newPW1 = modal.querySelector(`.newpw1`)
     const newPW2 = modal.querySelector(`.newpw2`)
+    const submitBtn = modal.querySelector(`.submit`)
 
     const setErr = createSetErr(infotxt)
 
@@ -73,9 +77,14 @@ function showChangePasswordModal(elem) {
 
     modal.querySelectorAll(`.pair input`).forEach(elem => {
         elem.addEventListener("input", () => validate())
+        elem.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                submitBtn.click()
+            }
+        })
     })
 
-    modal.querySelector(`.submit`).addEventListener("click", () => {
+    submitBtn.addEventListener("click", () => {
         if (validate()) {
             fetch(`${window.location.origin}/api/users/login`, {
                 method: "PATCH",
@@ -86,6 +95,11 @@ function showChangePasswordModal(elem) {
                 })
             }).then(r => {
                 if (r.ok) {
+                    const pwInpt = main.querySelector(`input[type="password"]`)
+                    if (main && pwInpt) {
+                        pwInpt.value = newPW1.value
+                        main.querySelector("button.primary")?.click()
+                    }
                     closeModal(id)
                 } else {
                     if (r.status >= 400 || r.status < 500) {

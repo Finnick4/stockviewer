@@ -62,7 +62,7 @@ function showEditUserModal(userID) {
             return false
         }
 
-        if (permPW && pw.Value !== "" && !plausiblePassword(pw.value)) {
+        if (permPW && pw.value !== "" && !plausiblePassword(pw.value)) {
             setErr(getTranslatedStr("users.edit.err_pw_implausible"))
             return false
         }

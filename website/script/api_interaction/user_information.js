@@ -22,9 +22,23 @@ function initialiseUserInfo() {
 
     return new Promise((resolve, reject) => {
         Promise.all([
-            fetch(window.location.origin + "/api/users/self/overview"),
-            fetch(window.location.origin + "/api/users/self/permissions")
+            fetch("/api/users/self/overview"),
+            fetch("/api/users/self/permissions")
         ]).then(results => {
+            let fails = false
+            results.forEach(r => {
+                if (r.status !== 200) {
+                    fails = true
+                }
+            })
+            if (fails) {
+                console.log("Failed to get user information")
+                document.cookie = "isLoggedIn=false"
+                window.history.pushState(null, null, `${window.location.origin}/login`)
+                buildPageLogin()
+                reject()
+                return
+            }
             const jsonPromises = []
 
             results.forEach(result => jsonPromises.push(result.json()))

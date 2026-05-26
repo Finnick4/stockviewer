@@ -316,6 +316,14 @@ main.settingsPage {
     .modal.wider div.outer {
         width: calc(100% - 10rem);
     }
+    body.login {
+        div.login-field {
+            width: calc(100% - 8rem);
+        }
+        input {
+            width: auto;
+        }
+    }
 }
 
 

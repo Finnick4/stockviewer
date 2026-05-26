@@ -19,6 +19,7 @@ function buildPageLogin() {
             </div>
         </div>
     `
+    document.body.className = "login"
     const primaryBtn = document.querySelector("button.primary")
 
     document.querySelectorAll("input").forEach(inpt => inpt.addEventListener("keydown", e => {
