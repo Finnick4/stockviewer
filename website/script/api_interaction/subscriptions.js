@@ -10,6 +10,15 @@ function subscribeToAPI(path, func) {
     }
     let id = currentSubscriptionCount++
     if (Object.keys(currentSubscriptions).indexOf(path) === - 1) {
+        if ((path === "/api/stocks/sse" || path === "/api/stocks/sse/") && stocksCache !== undefined) {
+            func(stocksCache)
+        }
+        if (/\/api\/stocks\/\d+\/sse\/?$/.test(path)) {
+            const stockID = Number((path.match(/\d+/))[0])
+            if (stockCache !== undefined && stockCache.has(stockID)) {
+                func(stockCache.get(stockID))
+            }
+        }
 
         if (Object.keys(currentSubscriptions).length >= 6) {
             closeUnneededSubscriptions()
@@ -30,6 +39,10 @@ function subscribeToAPI(path, func) {
         subscriptionListeners[path].es.addEventListener("stockupdate", event => {
             subscriptionListeners[path].cache = JSON.parse(event.data)
             pingDataSubscribed(path)
+            if (path === "/api/stocks/sse" || path === "/api/stocks/sse/") {
+                updateStocksCacheWith(subscriptionListeners[path].cache)
+            }
+
             if (currentSubscriptions[path].length === 0) {
                 delete currentSubscriptions[path]
                 subscriptionListeners[path].es.close()
