@@ -117,6 +117,17 @@ main.homepage {
         height: calc(100% + .2rem);
         overflow: auto;
     }
+    button.star {
+        display: none;
+    }
+    div.contentTable.grid-1-name-4 {
+        grid-template-columns: auto 1fr repeat(3, auto);
+    }
+
+    div.contentTable.grid-1-name-3 {
+        grid-template-columns: auto 1fr repeat(2, auto);
+    }
+
 }
 
 main.individualStockPage {
