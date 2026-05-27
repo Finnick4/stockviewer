@@ -17,13 +17,13 @@ function loadStocksData(callbackFN) {
 
 
 function loadStockData(stockID, callbackFN) {
-    if (stockCache === undefined || !stockCache.has(stockID)) {
-        loadUsersData(() => {
-            callbackFN(stockCache.get(stockID))
+    if (stockCache === undefined || !stockCache.has(Number(stockID))) {
+        loadStocksData(() => {
+            callbackFN(stockCache.get(Number(stockID)))
         })
         return;
     }
-    callbackFN(stockCache.get(stockID))
+    callbackFN(stockCache.get(Number(stockID)))
 }
 
 function invalidateStockCache() {

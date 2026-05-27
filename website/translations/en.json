@@ -167,7 +167,9 @@
                 "unarchive_button": "Unarchive",
                 "delete": "Delete stock permanently",
                 "delete_button": "Delete"
-            }
+            },
+            "loading_name": "Loading display name…",
+            "loading_shorthand": "LOADING"
         },
         "influences": {
             "title_all": "Articles",

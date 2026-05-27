@@ -32,8 +32,12 @@ class colorSelectorElement extends HTMLElement {
 
         const dropdown = document.getElementById(dropdownid)
         const selector = this.querySelector("button.selector")
-        this.color = getHexColor(this.dataset.color)
-        selector.style.backgroundColor = `#${this.color}`
+
+        this.setColor = col => {
+            this.color = getHexColor(col)
+            selector.style.backgroundColor = `#${this.color}`
+        }
+        this.setColor(this.dataset.color)
 
         selector.popovertarget = dropdownid
         selector.style.anchorName = `--anchor-${dropdownid}`
