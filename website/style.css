@@ -1190,23 +1190,27 @@ div.contentTable {
     }
 }
 
+div.contentTable.grid-1-name-4 {
+    grid-template-columns: auto 1fr repeat(4, auto);
+}
+
 div.contentTable.grid-1-name-3 {
-    grid-template-columns: auto 1fr auto auto auto;
+    grid-template-columns: auto 1fr repeat(3, auto);
 }
 
 div.contentTable.grid-1-name-1 {
     grid-template-columns: auto 1fr auto;
 }
 div.contentTable.grid-1-name-2 {
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr repeat(2, auto);
 }
 
 div.contentTable.grid-0-name-3 {
-    grid-template-columns: 1fr auto auto auto;
+    grid-template-columns: 1fr repeat(3, auto);
 }
 
 div.contentTable.grid-0-name-2 {
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr repeat(2, auto);
 }
 
 div.contentTable.grid-0-name-1 {
