@@ -13,6 +13,23 @@ function subscribeToAPI(path, func) {
         if ((path === "/api/stocks/sse" || path === "/api/stocks/sse/") && stocksCache !== undefined) {
             func(stocksCache)
         }
+        if (/\/api\/stocks\/sse\/?\?timeframe=\d/.test(path.toLowerCase()) && stocksCache !== undefined) {
+            const deltafied = stocksCache.map(stock => {
+                return {
+                    "ID": stock.ID,
+                    "Name": stock.Name,
+                    "Shorthand": stock.Shorthand,
+                    "Color": stock.Color,
+                    "Price1": stock.Price,
+                    "Price2": stock.Price,
+                    "DeltaAmount": 0,
+                    "DeltaPercent": 0.0,
+                    "Stars": stock.Stars,
+                    "IsStarred": stock.IsStarred
+                }
+            })
+            func(deltafied)
+        }
         if (/\/api\/stocks\/\d+\/sse\/?$/.test(path)) {
             const stockID = Number((path.match(/\d+/))[0])
             if (stockCache !== undefined && stockCache.has(stockID)) {

@@ -81,7 +81,7 @@ lang = {};
 supportedLanguages = `)...)
 		jsBuffer = append(jsBuffer, translationsCompileBuffer...)
 
-		jsBuffer = append(jsBuffer, []byte("}\nfunction getVersion() {\nreturn `1.0.0`\n}")...)
+		jsBuffer = append(jsBuffer, []byte("}\nfunction getVersion() {\nreturn `1.0.1`\n}")...)
 	}()
 }
 
