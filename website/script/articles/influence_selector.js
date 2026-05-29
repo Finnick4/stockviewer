@@ -20,14 +20,16 @@ class stockInfluenceSelectorElement extends HTMLElement {
 
         search.popovertarget = this.dropdownid
         search.style.anchorName = `--anchor-${this.dropdownid}`
+        search.addEventListener("focus", () => {
+            dropdown.togglePopover(true)
+        })
         search.addEventListener("click", () => {
-            dropdown.togglePopover()
+            dropdown.togglePopover(true)
         })
 
         dropdown.style.width = "calc(32ch -  1rem)"
 
-        fetch("/api/stocks").then(r => r.json()).then(resp => {
-            const data = resp["Data"]
+        loadStocksData(data =>{
             const idNameMap = new Map(data.map((stock) => [stock["ID"], stock["Name"]]));
 
             const addStock = id => {
@@ -62,14 +64,26 @@ class stockInfluenceSelectorElement extends HTMLElement {
                 this.onEdit()
             }
 
-            search.addEventListener("input", e => {
+            search.addEventListener("input", () => {
                 let possible = []
                 for (const stock of data) {
                     if (possible.length >= 5) {
                         break
                     }
-                    if (stock["Name"].toLowerCase().includes(e.target.value.toLowerCase()) || stock["Shorthand"].toLowerCase().includes(e.target.value.toLowerCase()) || (!isNaN(e.target.value) && String(stock["ID"]).includes(String(e.target.value)))) {
+                    if (this.savedStocks.has(Number(stock["ID"]))) {
+                        continue
+                    }
+                    if (stock["Name"].toLowerCase().includes(search.value.toLowerCase())) {
                         possible.push(stock)
+                        continue
+                    }
+                    if (stock["Shorthand"].toLowerCase().includes(search.value.toLowerCase())) {
+                        possible.push(stock)
+                        continue
+                    }
+                    if ((!isNaN(search.value) && String(stock["ID"]).includes(String(search.value)))) {
+                        possible.push(stock)
+                        continue
                     }
                 }
                 let html = ""

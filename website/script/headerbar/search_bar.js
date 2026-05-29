@@ -11,7 +11,10 @@ class searchBarElement extends HTMLElement {
         search.popovertarget = this.dropdownid
         this.style.anchorName = `--anchor-${this.dropdownid}`
         search.addEventListener("click", () => {
-            dropdown.togglePopover()
+            dropdown.togglePopover(true)
+        })
+        search.addEventListener("focus", () => {
+            dropdown.togglePopover(true)
         })
         this.updateSearchDropdownWidth = () => {
             dropdown.style.width = `calc(${search.offsetWidth}px - 1rem)`

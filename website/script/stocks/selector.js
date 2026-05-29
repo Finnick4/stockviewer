@@ -21,15 +21,17 @@ class stockSelectorElement extends HTMLElement {
         search.popovertarget = this.dropdownid
         search.style.anchorName = `--anchor-${this.dropdownid}`
         search.addEventListener("click", () => {
-            dropdown.togglePopover()
+            dropdown.togglePopover(true)
+        })
+        search.addEventListener("focus", () => {
+            dropdown.togglePopover(true)
         })
 
         dropdown.classList.add("stockSelection")
 
         dropdown.style.width = "calc(32ch -  1rem)"
 
-        fetch("/api/stocks").then(r => r.json()).then(resp => {
-            const data = resp["Data"]
+        loadStocksData(data => {
             const idNameMap = new Map(data.map((stock) => [stock["ID"], stock["Name"]]));
 
             const addStock = id => {
@@ -58,14 +60,26 @@ class stockSelectorElement extends HTMLElement {
                 this.savedStocks.add(Number(id))
             }
 
-            search.addEventListener("input", e => {
+            const refreshSearchResults = () => {
                 let possible = []
                 for (const stock of data) {
                     if (possible.length >= 5) {
                         break
                     }
-                    if (stock["Name"].toLowerCase().includes(e.target.value.toLowerCase()) || stock["Shorthand"].toLowerCase().includes(e.target.value.toLowerCase()) || (!isNaN(e.target.value) && String(stock["ID"]).includes(String(e.target.value)))) {
+                    if (this.savedStocks.has(Number(stock["ID"]))) {
+                        continue
+                    }
+                    if (stock["Name"].toLowerCase().includes(search.value.toLowerCase())) {
                         possible.push(stock)
+                        continue
+                    }
+                    if (stock["Shorthand"].toLowerCase().includes(search.value.toLowerCase())) {
+                        possible.push(stock)
+                        continue
+                    }
+                    if ((!isNaN(search.value) && String(stock["ID"]).includes(String(search.value)))) {
+                        possible.push(stock)
+                        continue
                     }
                 }
                 let html = ""
@@ -79,6 +93,7 @@ class stockSelectorElement extends HTMLElement {
                 dropdown.querySelectorAll(".searchResult").forEach(elem => {
                     elem.addEventListener("click", ev => {
                         addStock(ev.target.dataset.stockId)
+                        refreshSearchResults()
                     })
                 })
                 let selectedIndex = -1
@@ -120,7 +135,9 @@ class stockSelectorElement extends HTMLElement {
                         }
                     }
                 })
-            })
+            }
+
+            search.addEventListener("input", refreshSearchResults)
         })
 
     }
