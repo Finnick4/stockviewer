@@ -29,9 +29,9 @@ class relatedStocks extends HTMLElement {
 
     updateData(data, that) {
         const sorted = data.sort((a, b) => a["Price"] - b["Price"])
-        const thisStock = sorted.filter(e => e["ID"] === that.stockid)[0]
-        const thisStockIndex = sorted.indexOf(thisStock)
-
+        const foundStock = sorted.filter(e => Number(e["ID"]) === Number(that.stockid))[0]
+        const thisStockIndex = sorted.indexOf(foundStock)
+        const thisStock = thisStockIndex === -1 ? stockCache.get(Number(that.stockid)) : foundStock
 
         let elements = ""
 

@@ -89,8 +89,20 @@ function showModalCreateStock(elem) {
                 if (r.ok) {
                     closeModal(id)
                     r.json().then(resp => {
-                        window.history.pushState(null, null, `${window.location.origin}/stocks/${resp["Data"]}`);
-                        router(`/stocks/${resp["Data"]}`)
+                        const stockID = Number(resp.Data)
+                        const stock = {
+                            "ID": stockID,
+                            "Name": name.value,
+                            "Shorthand": shorthand.value,
+                            "Color": isNaN(colorDec) ? -1 : colorDec,
+                            "Price": price.value,
+                            "Stars": 0,
+                            "IsStarred": false
+                        }
+                        stockCache.set(stockID, stock)
+                        stocksCache.push(stock)
+                        window.history.pushState(null, null, `${window.location.origin}/stocks/${stockID}`);
+                        router(`/stocks/${stockID}`)
                     })
                 } else {
                     if (r.status >= 400 || r.status < 500) {
