@@ -48,10 +48,10 @@ class recentArticlesElement extends HTMLElement {
 
                 this.articlesList.innerHTML = `
                         ${html}
-                        <button class="loadMore grid-full-width">${getTranslatedStr("articles.load_more")}</button>
+                        ${resp.Data.length >= 10 ? `<button class="loadMore grid-full-width">${getTranslatedStr("articles.load_more")}</button>` : ""} 
                 `
                 const loadMoreBtn = this.querySelector("button.loadMore")
-                loadMoreBtn.addEventListener("click", () => {
+                loadMoreBtn?.addEventListener("click", () => {
                     fetch(`/api/articles${this.onlyUnread ? "/unread" : ""}?offset=${this.offset++}`).then(r => r.json()).then(resp => {
                         resp["Data"].forEach(e => {
                             const elem = new aLinkButtonElement()
