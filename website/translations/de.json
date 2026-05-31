@@ -47,7 +47,8 @@
             "stock_shorthand_placeholder": "Aktienkurzschrift..",
             "initial_price_ct": "Startpreis (ct)",
             "err_no_create_permission": "Es sieht so aus, als ob du derzeit keine Aktien erstellen kannst!",
-            "err_initial_price_too_low": "Der Preis muss mindestens {price} betragen!"
+            "err_initial_price_too_low": "Der Preis muss mindestens {price} betragen!",
+            "initial_price_euro": "Startpreis (ct)"
         },
         "influences": {
             "influences": "Einflüsse",
