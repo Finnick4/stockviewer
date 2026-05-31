@@ -52,7 +52,7 @@ function showEditStockModal(stockID, isArchived) {
                     ` : ""}
                     ${permPrice ? `
                         <div class="pair">
-                            <p>${getTranslatedStr("stocks.price_ct")}</p>
+                            <p>${getTranslatedStr("stocks.price_euro")}</p>
                             <input class="price" type="number">
                         </div>
                     ` : ""}
@@ -146,7 +146,7 @@ function showEditStockModal(stockID, isArchived) {
             shorthand.value = stockShorthand
         }
         if (permPrice) {
-            price.value = stockPrice
+            price.value = stockPrice / 100
         }
         if (permColor) {
             color.setColor(stockColorHex)
@@ -180,7 +180,7 @@ function showEditStockModal(stockID, isArchived) {
                 return false
             }
 
-            if (permPrice && price.value < 2) {
+            if (permPrice && price.value < 0.02) {
                 setErr(getTranslatedStr("stocks.modify.err_price_too_low", {price: "0.02€"}))
                 return false
             }
@@ -201,7 +201,7 @@ function showEditStockModal(stockID, isArchived) {
                     method: "PATCH",
                     body: JSON.stringify({
                         name: permName && name.value !== stockName ? name.value : "",
-                        price: permPrice && Number(price.value) !== stockPrice ? Number(price.value) : 0,
+                        price: permPrice && Number(price.value * 100) !== stockPrice ? Math.trunc(Number(price.value * 100)) : 0,
                         color: permColor && color.color !== stockColorHex ? Number(parseInt(color.color, 16)) : 0,
                         shorthand: permName && shorthand.value !== stockShorthand ? shorthand.value : ""
                     })

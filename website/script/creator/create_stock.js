@@ -22,7 +22,7 @@ function showModalCreateStock(elem) {
                             <color-selector data-color="-1"></color-selector>
                         </div>
                         <div class="pair">
-                            <p>${getTranslatedStr("stocks.modify.initial_price_ct")}</p>
+                            <p>${getTranslatedStr("stocks.modify.initial_price_euro")}</p>
                             <input class="price" type="number">
                         </div>
                         <div class="submit pair">
@@ -65,8 +65,8 @@ function showModalCreateStock(elem) {
             return false
         }
 
-        if (price.value < 10000000) {
-            setErr(getTranslatedStr("stocks.modify.err_initial_price_too_low", {price: getShortNumber(10000000 / 100) + "€"}))
+        if (price.value < 100000) {
+            setErr(getTranslatedStr("stocks.modify.err_initial_price_too_low", {price: getShortNumber(100000) + "€"}))
             return false
         }
 
@@ -83,7 +83,7 @@ function showModalCreateStock(elem) {
     modal.querySelector(`button.submit`).addEventListener("click", () => {
         if (validate()) {
             const colorDec = Number(parseInt(color.color, 16))
-            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value}&shorthand=${shorthand.value}&color=${isNaN(colorDec) ? 0 : colorDec}`, {
+            fetch(`${window.location.origin}/api/stocks/?name=${name.value}&initPrice=${price.value * 100}&shorthand=${shorthand.value}&color=${isNaN(colorDec) ? 0 : colorDec}`, {
                 method: "POST"
             }).then(r => {
                 if (r.ok) {
@@ -95,7 +95,7 @@ function showModalCreateStock(elem) {
                             "Name": name.value,
                             "Shorthand": shorthand.value,
                             "Color": isNaN(colorDec) ? -1 : colorDec,
-                            "Price": price.value,
+                            "Price": price.value * 100,
                             "Stars": 0,
                             "IsStarred": false
                         }
