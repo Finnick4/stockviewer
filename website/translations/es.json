@@ -205,7 +205,8 @@
             "title_other": "Editar {name}",
             "err_name_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
             "err_tag_too_long": "¡El nombre es demasiado largo! ({min} - {max} caracteres)",
-            "err_tag_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)"
+            "err_tag_too_short": "¡El nombre es demasiado corto! ({min} - {max} caracteres)",
+            "submit": "Enviar"
         },
         "permissions": {
             "groups": {
