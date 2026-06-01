@@ -22,6 +22,9 @@ function showEditUserModal(userID) {
     const permName = userInfo.checkPerm("canEditUserName")
     const permPW = userInfo.checkPerm("canEditUserPassword")
 
+    const permDelete = userInfo.checkPerm("canDeleteUsers")
+    const dangerZoneVisible = permDelete
+
     let html = `<h2>${getTranslatedStr("users.edit.title_other", {name: getTranslatedStr("users.edit.loading_name")})} <div class="tag value">${getTranslatedStr("users.edit.loading_tag")}</div></h2>
                         ${permName ? `
                         <div class="pair">
@@ -39,8 +42,20 @@ function showEditUserModal(userID) {
                         ${permName || permPW ? `
                         <div class="pair submit">
                             <div class="info"></div>
-                            <button class="submit">${getTranslatedStr("stocks.modify.submit")}</button>
+                            <button class="submit">${getTranslatedStr("users.edit.submit")}</button>
                         </div>` : ""}
+                        ${dangerZoneVisible ? `
+                        <div class="dangerZone">
+                            <h3 class="warning">${getTranslatedStr("users.edit.danger.title")}</h3>
+                            <p class="warning">${getTranslatedStr("users.edit.danger.subtitle")}</p>
+                            ${permDelete ? `
+                                <div class="pair">
+                                    <p>${getTranslatedStr("users.edit.danger.delete")}</p>
+                                    <button class="delete">${getTranslatedStr("users.edit.danger.delete_button")}</button>
+                                </div>
+                            ` : ""}
+                        </div>
+                        ` : ""}
                       `
     const id = createModal(html)
     const modal = document.getElementById(id)
@@ -50,6 +65,25 @@ function showEditUserModal(userID) {
     const name = modal.querySelector(`input.displayname`)
     const tag = modal.querySelector(`input.tag`)
     const pw = modal.querySelector(`input.pw`)
+
+    if (permDelete) {
+        const deleteBtn = modal.querySelector("button.delete")
+        deleteBtn.addEventListener("click", () => showAuthenticatePromptModal(password => new Promise((resolve, reject) => {
+            fetch(`/api/users/${userID}`, {
+                method: "DELETE",
+                body: JSON.stringify({
+                    password: password
+                })
+            }).then(r => {
+                if (r.ok) {
+                    closeModal(id)
+                    resolve()
+                } else {
+                    reject()
+                }
+            })
+        }), "user_delete"))
+    }
 
     const setErr = createSetErr(infotxt)
 

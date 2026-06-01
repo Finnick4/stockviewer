@@ -322,7 +322,14 @@
             "loading_name": "Loading display name…",
             "loading_tag": "Loading tag…",
             "err_invalid_user_header": "Invalid user",
-            "err_invalid_user_hint": "The user you are trying to edit does not seem to exist."
+            "err_invalid_user_hint": "The user you are trying to edit does not seem to exist.",
+            "submit": "Submit",
+            "danger": {
+                "title": "Danger Zone",
+                "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
+                "delete": "Delete user permanently",
+                "delete_button": "Delete"
+            }
         },
         "list": {
             "title_edit": "All users",
@@ -515,6 +522,7 @@
             "input_placeholder": "Enter password here!",
             "descriptions": {
                 "default": "Please enter your password to confirm this action!",
+                "user_delete": "Please enter your password to delete this user!",
                 "stock_delete": "Please enter your password to delete this stock!"
             },
             "err_invalid_password": "Invalid password!",
