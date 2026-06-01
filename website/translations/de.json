@@ -232,7 +232,8 @@
             "title_other": "{name} bearbeiten",
             "err_name_too_short": "Der Name ist zu kurz! ({min} - {max} Zeichen)",
             "err_tag_too_long": "Der Name ist zu lang! ({min} - {max} Zeichen)",
-            "err_tag_too_short": "Die Kurzschrift ist zu kurz! ({min} - {max} Zeichen)"
+            "err_tag_too_short": "Die Kurzschrift ist zu kurz! ({min} - {max} Zeichen)",
+            "submit": "Absenden"
         }
     },
     "change_password": {
