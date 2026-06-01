@@ -265,3 +265,15 @@ func ResetUserPassword(userID string, pw string) error {
 	}
 	return nil
 }
+
+func DeleteUser(userID string) error {
+	db := getDB()
+
+	_, err := db.Exec(`DELETE FROM users WHERE id=$1;`, userID)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}

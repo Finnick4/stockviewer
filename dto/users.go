@@ -49,3 +49,7 @@ type EditUserParams struct {
 }
 
 var ErrTagAlreadyUsed = errors.New("there is already a user with the same tag present")
+
+type UserDeleteParams struct {
+	Password string
+}
