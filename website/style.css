@@ -140,7 +140,7 @@ main.individualStockPage {
     }
     stock-chart {
         grid-column: 1/4;
-        height: 100%;
+        height: calc(100% - .2rem);
 
         .inner {
             height: calc(100% - 2.2rem);

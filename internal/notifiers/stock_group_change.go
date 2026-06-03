@@ -30,13 +30,14 @@ func GetStockGroupChangeNotification() (<-chan bool, func()) {
 func NotifyStockGroupChange() {
 	log.Debugf("Stock group change happened! To notify: %v", len(openStockGroupChannels))
 	stockGroupChangeMutex.Lock()
+	wg := sync.WaitGroup{}
+	wg.Add(len(openStockGroupChannels))
 	for _, c := range openStockGroupChannels {
 		go func() {
-			_, ok := <-c
-			if ok {
-				c <- true
-			}
+			c <- true
+			wg.Done()
 		}()
 	}
+	wg.Wait()
 	stockGroupChangeMutex.Unlock()
 }
