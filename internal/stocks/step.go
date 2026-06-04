@@ -62,9 +62,15 @@ func Step() {
 				break
 			}
 		}
-		influenceFactor /= 10
+		/*
+			influenceFactor => currently active influences in permil / day
 
-		var factor float64 = (float64((rand.Int63()%2050)-1000) + influenceFactor /* 1.000 -> 1% in a day */) / 1440.0
+			backgroundNoise => random value between -8 and 8.5 in permil / day
+			This results in an average daily change of +0.25 permil (0.025%)
+		*/
+		backgroundNoise := float64((rand.Int63()%1650)-800) / 100
+
+		factor := (backgroundNoise + influenceFactor) / 1440.0
 		stock.Price = int64(priceCT + (math.Pow(math.Log10(priceCT)+1, 2)*factor)*1000)
 		if stock.Price <= 1 {
 			stock.Price = 2
