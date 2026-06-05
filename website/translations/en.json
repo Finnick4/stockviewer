@@ -126,7 +126,7 @@
         "list": {
             "all_stocks": "All stocks",
             "loading": "Loading stock data…",
-            "none": "You aren't any stocks yet…"
+            "none": "There aren't any stocks yet…"
         },
         "archived_list": {
             "title": "Archived stocks",

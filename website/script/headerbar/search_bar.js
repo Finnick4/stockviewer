@@ -26,31 +26,38 @@ class searchBarElement extends HTMLElement {
         fetch("/api/stockgroups").then(r => r.json()).then(resp => {
             const stockGroupData = resp.Data
 
-            search.addEventListener("input", e => {
+            const updateSearch = query => {
                 let possibleStocks = [], possibleGroups = []
 
-                const lowerInput = e.target.value.toLowerCase()
+                const lowerInput = query.toLowerCase()
                 const includes = compareStr => compareStr.toLowerCase().includes(lowerInput)
-
-                if (lowerInput === "") {
-                    dropdown.innerHTML = getTranslatedStr("header.search.empty_query")
-                    return
-                }
 
                 for (const stock of stocksCache) {
                     if (possibleStocks.length >= 5) {
                         break
                     }
-                    if (includes(stock["Name"]) || includes(stock["Shorthand"]) || (!isNaN(lowerInput) && includes(String(stock["ID"])))) {
-                        possibleStocks.push(stock)
+                    if (lowerInput === "") {
+                        if (stock.IsStarred) {
+                            possibleStocks.push(stock)
+                        }
+                    } else {
+                        if (includes(stock["Name"]) || includes(stock["Shorthand"]) || (!isNaN(lowerInput) && includes(String(stock["ID"])))) {
+                            possibleStocks.push(stock)
+                        }
                     }
                 }
                 for (const group of stockGroupData) {
                     if (possibleGroups.length >= 5) {
                         break
                     }
-                    if (includes(group["Name"]) || (!isNaN(lowerInput) && includes(String(group["ID"])))) {
-                        possibleGroups.push(group)
+                    if (lowerInput === "") {
+                        if (group.IsStarred) {
+                            possibleGroups.push(group)
+                        }
+                    } else {
+                        if (includes(group["Name"]) || (!isNaN(lowerInput) && includes(String(group["ID"])))) {
+                            possibleGroups.push(group)
+                        }
                     }
                 }
                 let html = ""
@@ -69,7 +76,7 @@ class searchBarElement extends HTMLElement {
                 })
 
                 if (possibleStocks.length === 0 && possibleGroups.length === 0) {
-                    html = getTranslatedStr("header.search.empty_result")
+                    html = getTranslatedStr(lowerInput === "" ? "header.search.empty_query" : "header.search.empty_result")
                 }
                 dropdown.innerHTML = html
 
@@ -113,7 +120,13 @@ class searchBarElement extends HTMLElement {
                         }
                     }
                 })
+            }
+
+            search.addEventListener("input", e => {
+                updateSearch(e.target.value)
             })
+
+            updateSearch("")
         })
 
 
