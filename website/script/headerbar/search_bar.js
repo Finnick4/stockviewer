@@ -22,115 +22,109 @@ class searchBarElement extends HTMLElement {
         this.updateSearchDropdownWidth()
 
         loadStocksData(() => {})
+        loadStockGroupsData(() => {})
 
-        fetch("/api/stockgroups").then(r => r.json()).then(resp => {
-            const stockGroupData = resp.Data
+        const updateSearch = query => {
+            let possibleStocks = [], possibleGroups = []
 
-            const updateSearch = query => {
-                let possibleStocks = [], possibleGroups = []
+            const lowerInput = query.toLowerCase()
+            const includes = compareStr => compareStr.toLowerCase().includes(lowerInput)
 
-                const lowerInput = query.toLowerCase()
-                const includes = compareStr => compareStr.toLowerCase().includes(lowerInput)
-
-                for (const stock of stocksCache) {
-                    if (possibleStocks.length >= 5) {
-                        break
+            for (const stock of stocksCache) {
+                if (possibleStocks.length >= 5) {
+                    break
+                }
+                if (lowerInput === "") {
+                    if (stock.IsStarred) {
+                        possibleStocks.push(stock)
                     }
-                    if (lowerInput === "") {
-                        if (stock.IsStarred) {
-                            possibleStocks.push(stock)
-                        }
-                    } else {
-                        if (includes(stock["Name"]) || includes(stock["Shorthand"]) || (!isNaN(lowerInput) && includes(String(stock["ID"])))) {
-                            possibleStocks.push(stock)
-                        }
+                } else {
+                    if (includes(stock["Name"]) || includes(stock["Shorthand"]) || (!isNaN(lowerInput) && includes(String(stock["ID"])))) {
+                        possibleStocks.push(stock)
                     }
                 }
-                for (const group of stockGroupData) {
-                    if (possibleGroups.length >= 5) {
-                        break
+            }
+            for (const group of stockGroupsCache) {
+                if (possibleGroups.length >= 5) {
+                    break
+                }
+                if (lowerInput === "") {
+                    if (group.IsStarred) {
+                        possibleGroups.push(group)
                     }
-                    if (lowerInput === "") {
-                        if (group.IsStarred) {
-                            possibleGroups.push(group)
-                        }
-                    } else {
-                        if (includes(group["Name"]) || (!isNaN(lowerInput) && includes(String(group["ID"])))) {
-                            possibleGroups.push(group)
-                        }
+                } else {
+                    if (includes(group["Name"]) || (!isNaN(lowerInput) && includes(String(group["ID"])))) {
+                        possibleGroups.push(group)
                     }
                 }
-                let html = ""
-                if (possibleStocks.length > 0) {
-                    html += `<p class="sectionHeader">${getTranslatedStr("header.stocks")}</p>`
-                }
-                possibleStocks.forEach(stock => {
-                    html += `<a class="btn searchResult" is="a-button" href="/stocks/${stock.ID}" data-stock-id="${stock["ID"]}">${sanitiseText(stock["Name"])}</a>`
-                })
+            }
+            let html = ""
+            if (possibleStocks.length > 0) {
+                html += `<p class="sectionHeader">${getTranslatedStr("header.stocks")}</p>`
+            }
+            possibleStocks.forEach(stock => {
+                html += `<a class="btn searchResult" is="a-button" href="/stocks/${stock.ID}" data-stock-id="${stock["ID"]}">${sanitiseText(stock["Name"])}</a>`
+            })
 
-                if (possibleGroups.length > 0) {
-                    html += `<p class="sectionHeader">${getTranslatedStr("header.stock_groups")}</p>`
-                }
-                possibleGroups.forEach(group => {
-                    html += `<a class="btn searchResult" is="a-button" href="/groups/${group.ID}" data-stock-group-id="${group["ID"]}">${sanitiseText(group["Name"])}</a>`
-                })
+            if (possibleGroups.length > 0) {
+                html += `<p class="sectionHeader">${getTranslatedStr("header.stock_groups")}</p>`
+            }
+            possibleGroups.forEach(group => {
+                html += `<a class="btn searchResult" is="a-button" href="/groups/${group.ID}" data-stock-group-id="${group["ID"]}">${sanitiseText(group["Name"])}</a>`
+            })
 
-                if (possibleStocks.length === 0 && possibleGroups.length === 0) {
-                    html = getTranslatedStr(lowerInput === "" ? "header.search.empty_query" : "header.search.empty_result")
-                }
-                dropdown.innerHTML = html
+            if (possibleStocks.length === 0 && possibleGroups.length === 0) {
+                html = getTranslatedStr(lowerInput === "" ? "header.search.empty_query" : "header.search.empty_result")
+            }
+            dropdown.innerHTML = html
 
-                let selectedIndex = -1
-                const updateSelectedResult = () => {
-                    dropdown.querySelectorAll(".searchResult").forEach((res, i) => {
-                        res.classList.remove("selected")
-                        if (selectedIndex === i) {
-                            res.classList.add("selected")
-                        }
-                    })
-                }
-                search.addEventListener("keydown", e => {
-                    if (e.key === "ArrowUp") {
-                        e.preventDefault()
-                        selectedIndex--
-                        if (selectedIndex < 0) {
-                            selectedIndex = 0
-                        }
-                        updateSelectedResult()
-                    }
-                    if (e.key === "ArrowDown") {
-                        e.preventDefault()
-                        selectedIndex++
-                        if (selectedIndex >= possibleStocks.length + possibleGroups.length) {
-                            selectedIndex = possibleStocks.length + possibleGroups.length - 1
-                        }
-                        updateSelectedResult()
-                    }
-                    if (e.key === "Enter") {
-                        dropdown.querySelector(".searchResult.selected")?.click()
-                        search.blur()
-                    }
-                    if (e.key === "Escape") {
-                        if (selectedIndex !== -1) {
-                            e.preventDefault()
-                            selectedIndex = -1
-                            updateSelectedResult()
-                        } else {
-                            search.blur()
-                        }
+            let selectedIndex = -1
+            const updateSelectedResult = () => {
+                dropdown.querySelectorAll(".searchResult").forEach((res, i) => {
+                    res.classList.remove("selected")
+                    if (selectedIndex === i) {
+                        res.classList.add("selected")
                     }
                 })
             }
-
-            search.addEventListener("input", e => {
-                updateSearch(e.target.value)
+            search.addEventListener("keydown", e => {
+                if (e.key === "ArrowUp") {
+                    e.preventDefault()
+                    selectedIndex--
+                    if (selectedIndex < 0) {
+                        selectedIndex = 0
+                    }
+                    updateSelectedResult()
+                }
+                if (e.key === "ArrowDown") {
+                    e.preventDefault()
+                    selectedIndex++
+                    if (selectedIndex >= possibleStocks.length + possibleGroups.length) {
+                        selectedIndex = possibleStocks.length + possibleGroups.length - 1
+                    }
+                    updateSelectedResult()
+                }
+                if (e.key === "Enter") {
+                    dropdown.querySelector(".searchResult.selected")?.click()
+                    search.blur()
+                }
+                if (e.key === "Escape") {
+                    if (selectedIndex !== -1) {
+                        e.preventDefault()
+                        selectedIndex = -1
+                        updateSelectedResult()
+                    } else {
+                        search.blur()
+                    }
+                }
             })
+        }
 
-            updateSearch("")
+        search.addEventListener("input", e => {
+            updateSearch(e.target.value)
         })
 
-
-
+        updateSearch("")
     }
     disconnectedCallback() {
         deleteDropdown(this.dropdownid)
