@@ -37,6 +37,18 @@ function subscribeToAPI(path, func) {
             }
         }
 
+        if ((path === "/api/stockgroups/sse" || path === "/api/stockgroups/sse/") && stockGroupsCache !== undefined) {
+            func(stockGroupsCache)
+        }
+
+        if (/\/api\/stockgroups\/\d+\/sse\/?$/.test(path)) {
+            const groupID = Number((path.match(/\d+/))[0])
+            if (groupID !== -1 && stockGroupCache !== undefined && stockGroupCache.has(groupID)) {
+                func(stockGroupCache.get(groupID))
+            }
+        }
+
+
         if (Object.keys(currentSubscriptions).length >= 6) {
             closeUnneededSubscriptions()
         }
@@ -58,6 +70,9 @@ function subscribeToAPI(path, func) {
             pingDataSubscribed(path)
             if (path === "/api/stocks/sse" || path === "/api/stocks/sse/") {
                 updateStocksCacheWith(subscriptionListeners[path].cache)
+            }
+            if (path === "/api/stockgroups/sse" || path === "/api/stockgroups/sse/") {
+                updateStockGroupsCacheWith(subscriptionListeners[path].cache)
             }
 
             if (currentSubscriptions[path].length === 0) {
