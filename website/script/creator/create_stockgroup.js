@@ -82,6 +82,18 @@ function showModalCreateStockGroup(elem) {
                 if (r.ok) {
                     closeModal(id)
                     r.json().then(resp => {
+                        const groupID = Number(resp.Data)
+                        const totalValue = members.reduce((counter, member) => counter + stockCache?.get(member)?.Price)
+                        const group = {
+                            "ID": groupID,
+                            "Name": name.value,
+                            "MemberCount": members.length,
+                            "Stars": 0,
+                            "IsStarred": false,
+                            "TotalValue": totalValue
+                        }
+                        stockGroupCache.set(groupID, group)
+                        stockGroupsCache.push(group)
                         window.history.pushState(null, null, `${window.location.origin}/groups/${resp["Data"]}`);
                         router(`/groups/${resp["Data"]}`)
                     })
