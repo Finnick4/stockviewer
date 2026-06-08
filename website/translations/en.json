@@ -220,7 +220,8 @@
                 "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
                 "delete": "Delete stock group permanently",
                 "delete_button": "Delete"
-            }
+            },
+            "loading_name": "Loading name…"
         },
         "description_element": {
             "empty_notice": "This group doesn't have a description!",
