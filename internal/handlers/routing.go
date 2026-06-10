@@ -83,6 +83,7 @@ func Handler(r *chi.Mux) {
 		router.With(middleware.ExtractPermissions).Get("/{userID}/permissions", users.GetUsersPermission)
 		router.With(middleware.ExtractPermissions).Put("/{userID}/permissions", users.UpdateUsersPermission)
 		router.With(middleware.ExtractPermissions).Patch("/{userID}", users.EditOtherUser)
+		router.With(middleware.ExtractPermissions).Patch("/{userID}/disable", users.ChangeUserEnabledStatus)
 		router.With(middleware.ExtractPermissions).Delete("/{userID}", users.DeleteUser)
 
 	})

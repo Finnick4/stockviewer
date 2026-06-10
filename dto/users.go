@@ -53,3 +53,7 @@ var ErrTagAlreadyUsed = errors.New("there is already a user with the same tag pr
 type UserDeleteParams struct {
 	Password string
 }
+
+type DisableParams struct {
+	Result bool
+}

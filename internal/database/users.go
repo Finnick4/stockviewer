@@ -277,3 +277,33 @@ func DeleteUser(userID string) error {
 	}
 	return nil
 }
+
+func DisableUser(userID string) {
+	db := getDB()
+
+	_, err := db.Exec(`
+	UPDATE users SET status=(CASE
+                             WHEN status=1 THEN 3
+                             WHEN status=2 THEN 4
+                             ELSE status END)
+	WHERE id=$1;`, userID)
+	if err != nil {
+		log.Errorf("Ran into an error while trying to disable user %v", userID)
+		log.Error(err)
+	}
+}
+
+func EnableUser(userID string) {
+	db := getDB()
+
+	_, err := db.Exec(`
+	UPDATE users SET status=(CASE
+                             WHEN status=3 THEN 1
+                             WHEN status=4 THEN 2
+                             ELSE status END)
+	WHERE id=$1;`, userID)
+	if err != nil {
+		log.Errorf("Ran into an error while trying to enable user %v", userID)
+		log.Error(err)
+	}
+}
