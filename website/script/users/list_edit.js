@@ -15,6 +15,7 @@ class userListEdit extends HTMLElement {
                     case 1: return getTranslatedStr("users.status.active")
                     case 2: return getTranslatedStr("users.status.to_be_activated")
                     case 3: return getTranslatedStr("users.status.disabled")
+                    case 4: return getTranslatedStr("users.status.disabled")
                     default: return getTranslatedStr("users.status.invalid_status")
                 }
             }

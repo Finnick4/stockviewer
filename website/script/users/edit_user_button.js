@@ -23,7 +23,8 @@ function showEditUserModal(userID) {
     const permPW = userInfo.checkPerm("canEditUserPassword")
 
     const permDelete = userInfo.checkPerm("canDeleteUsers")
-    const dangerZoneVisible = permDelete
+    const permDisable = userInfo.checkPerm("canDisableUsers")
+    const dangerZoneVisible = permDelete || permDisable
 
     let html = `<h2>${getTranslatedStr("users.edit.title_other", {name: getTranslatedStr("users.edit.loading_name")})} <div class="tag value">${getTranslatedStr("users.edit.loading_tag")}</div></h2>
                         ${permName ? `
@@ -48,6 +49,12 @@ function showEditUserModal(userID) {
                         <div class="dangerZone">
                             <h3 class="warning">${getTranslatedStr("users.edit.danger.title")}</h3>
                             <p class="warning">${getTranslatedStr("users.edit.danger.subtitle")}</p>
+                            ${permDisable ? `
+                                <div class="pair">
+                                    <p>${getTranslatedStr("users.edit.danger.disable")}</p>
+                                    <button class="disable">${getTranslatedStr("users.edit.danger.disable_button")}</button>
+                                </div>
+                            ` : ""}                            
                             ${permDelete ? `
                                 <div class="pair">
                                     <p>${getTranslatedStr("users.edit.danger.delete")}</p>
@@ -65,6 +72,25 @@ function showEditUserModal(userID) {
     const name = modal.querySelector(`input.displayname`)
     const tag = modal.querySelector(`input.tag`)
     const pw = modal.querySelector(`input.pw`)
+    const disableBtn = modal.querySelector("button.disable")
+    let disableTarget = true
+
+    if (permDisable) {
+        disableBtn.addEventListener("click", () => {
+            fetch(`/api/users/${userID}/disable`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    result: disableTarget
+                })
+            }).then(r => {
+                if (r.ok) {
+                    closeModal(id)
+                    invalidateUserCache()
+                    document.querySelectorAll(`.userDisplayElement`).forEach(e => e.update())
+                }
+            })
+        })
+    }
 
     if (permDelete) {
         const deleteBtn = modal.querySelector("button.delete")
@@ -77,6 +103,8 @@ function showEditUserModal(userID) {
             }).then(r => {
                 if (r.ok) {
                     closeModal(id)
+                    invalidateUserCache()
+                    document.querySelectorAll(`.userDisplayElement`).forEach(e => e.update())
                     resolve()
                 } else {
                     reject()
@@ -118,6 +146,11 @@ function showEditUserModal(userID) {
         userName = user.Name
         tag.value = user.Tag
         userTag = user.Tag
+        if (Number(user.Status) !== 1 && Number(user.Status) !== 2) {
+            disableTarget = false
+            disableBtn.innerHTML = getTranslatedStr("users.edit.danger.enable_button")
+            modal.querySelector("p:has(+ button.disable)").innerHTML = getTranslatedStr("users.edit.danger.enable")
+        }
         validate()
     })
 

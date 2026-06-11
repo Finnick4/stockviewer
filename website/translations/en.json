@@ -305,7 +305,7 @@
             "values_okay": "Everything seems to be okay!"
         },
         "edit": {
-            "edit.button_alt_text": "Edit user",
+            "button_alt_text": "Edit user",
             "title_other": "Edit {name}",
             "placeholder_name": "New display name…",
             "placeholder_tag": "usertag",
@@ -329,7 +329,11 @@
                 "title": "Danger Zone",
                 "subtitle": "Be cautious with what you change here. All listed settings have drastic consequences!",
                 "delete": "Delete user permanently",
-                "delete_button": "Delete"
+                "delete_button": "Delete",
+                "disable": "Disable user",
+                "disable_button": "Disable",
+                "enable": "Enable user",
+                "enable_button": "Enable"
             }
         },
         "list": {
