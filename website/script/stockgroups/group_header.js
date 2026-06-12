@@ -11,10 +11,6 @@ class stockGroupHeader extends HTMLElement {
                             <h1>${getTranslatedStr("stockgroups.header_element.loading_name")}</h1>
                             <nav class="buttons">
                                 ${this.isAnonymousStockGroup ? `` : `<button is="star-stock-group-button" data-stock-group-id="${this.groupid}"></button>`}
-                                ${this.isAnonymousStockGroup && userInfo.checkPerm("canCreateStockGroups") ? 
-                                    `<button class="makeStockGroup" onclick="showModalCreateStockGroupFromAnonymous()" title="${getTranslatedStr("stockgroups.modify.title_create_from_anonymous")}">
-                                        <img class="icon" src="/icons/plussign.svg" alt="${getTranslatedStr("stockgroups.modify.title_create_from_anonymous")}" draggable="false">          
-                                    </button>` : ""}
                                 ${userInfo.hasAnyEditStockGroupPermissions || this.isAnonymousStockGroup ? `<button is="edit-stock-group-button" data-stock-group-id="${this.groupid}"></button>` : ""}
                             </nav>
                         </div>

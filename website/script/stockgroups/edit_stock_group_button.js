@@ -194,6 +194,9 @@ function showModalEditAnonymousStockGroup(creating = false, initialStocks = []) 
 
     fetch(`/api/stockgroups/anonymous?members=${locMembers}`).then(r => r.json()).then(resp => {
         const groupMembers = resp["Data"]["Members"] !== null ? resp["Data"]["Members"].map(stock => Number(stock["ID"])) : []
+
+        const permCreate = userInfo.checkPerm("canCreateStockGroups")
+
         let html = `<h2>${creating ? getTranslatedStr("stockgroups.modify.title_create_anonymous") : getTranslatedStr("stockgroups.modify.title_edit_anonymous")}</h2>
                         
                         <div class="stockSelector"></div>
@@ -202,6 +205,21 @@ function showModalEditAnonymousStockGroup(creating = false, initialStocks = []) 
                             <div class="info"></div>
                             <button class="submit">${getTranslatedStr("stockgroups.modify.submit_edit")}</button>
                         </div>
+                        
+                        ${permCreate && !creating ? `
+                        <div class="dangerZone">
+                            <h3 class="warning">${getTranslatedStr("stockgroups.modify.danger.title")}</h3>
+                            <p class="warning">${getTranslatedStr("stockgroups.modify.danger.subtitle")}</p>
+                           
+                            <div class="pair">
+                                <p>${getTranslatedStr("stockgroups.modify.title_create_from_anonymous")}</p>
+                                <button class="makeStockGroup" title="${getTranslatedStr("stockgroups.modify.title_create_from_anonymous")}">
+                                    <img class="icon" src="/icons/plussign.svg" alt="${getTranslatedStr("stockgroups.modify.title_create_from_anonymous")}" draggable="false">          
+                                </button>                     
+                            </div>
+                        </div>
+                      
+                        `: ""}
                         `
 
         const id = createModal(html)
@@ -212,6 +230,13 @@ function showModalEditAnonymousStockGroup(creating = false, initialStocks = []) 
             stockSelector.setStocks(groupMembers)
         }
         modal.querySelector(`div.stockSelector`).append(stockSelector)
+
+        if (permCreate && !creating) {
+            modal.querySelector("button.makeStockGroup").addEventListener("click", () => {
+                closeModal(id)
+                showModalCreateStockGroupFromAnonymous()
+            })
+        }
 
         modal.querySelector("button.submit").addEventListener("click", () => {
             window.history.pushState(null, null, `${window.location.origin}/groups/anonymous?members=${Array.from(stockSelector.savedStocks).toString()}`);
