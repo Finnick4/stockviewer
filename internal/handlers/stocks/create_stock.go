@@ -11,7 +11,6 @@ import (
 	"stockviewer/api"
 	"stockviewer/internal/database"
 
-	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -29,14 +28,13 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var params = dto.StockCreateParams{}
-	var decoder *schema.Decoder = schema.NewDecoder()
-	var err error
 
-	// get parameters
-	err = decoder.Decode(&params, r.URL.Query())
+	defer r.Body.Close()
+
+	err := json.NewDecoder(r.Body).Decode(&params)
 	if err != nil {
-		log.Error(err)
 		api.InternalErrorHandler(w)
+		log.Debug(err)
 		return
 	}
 
