@@ -45,7 +45,7 @@ function showModalEditPermissions(userID, elem) {
         const infotxt = modal.querySelector(".info")
         const permissionsDiv = modal.querySelector("div.permissions")
         const permsList = [
-            {groupName: "stocks", perms: ["canCreateStocks", "canEditStockNames", "canEditStockColors", "canEditStockPrices", "canArchiveStocks", "isStockArchivist"]},
+            {groupName: "stocks", perms: ["canCreateStocks", "canEditStockNames", "canEditStockColors", "canEditStockPrices", "canArchiveStocks", "isStockArchivist", "canDeleteStocks"]},
             {groupName: "stock_groups", perms: ["canCreateStockGroups", "canEditStockGroupNames", "canEditStockGroupDescriptions", "canEditStockGroupMembers", "canDeleteStockGroups"]},
             {groupName: "articles", perms: ["canCreateArticles", "canEditArticles", "canModifyInfluences", "maxInfluencePermille"]},
             {groupName: "users", perms: ["canCreateUsers", "canEditUserPermissions", "canEditUserName", "canEditUserPassword", "canDisableUsers", "canDeleteUsers"]}

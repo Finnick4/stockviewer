@@ -390,6 +390,10 @@
                     "title": "View archived stocks",
                     "description": "Specifies whether the user can view archived stocks. This does not grant the ability to archive or unarchive a stock."
                 },
+                "canDeleteStocks": {
+                    "title": "Delete Stocks",
+                    "description": "Specifies whether the user can permanently delete stocks."
+                },
                 "canCreateStockGroups": {
                     "title": "Create stock groups",
                     "description": "Specifies whether the user is able to create new stock groups."
